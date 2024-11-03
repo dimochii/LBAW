@@ -292,24 +292,26 @@ CREATE TRIGGER create_follow_notification
 AFTER INSERT ON UserFollower
 FOR EACH ROW
 EXECUTE FUNCTION follow_create_notification_trigger();
-
-
 CREATE OR REPLACE FUNCTION vote_create_notification_trigger()
 RETURNS TRIGGER AS $$
 DECLARE
     post_owner_id INT;
+    post_vote_postID INT;
 BEGIN
+    SELECT postID INTO post_vote_postID
+    FROM PostVote
+    WHERE voteID = NEW.voteID;
+
     SELECT authenticatedUserID INTO post_owner_id
     FROM Author
-    WHERE postID = NEW.postID;
+    WHERE postID = post_vote_postID;
 
-    IF post_owner_id = NEW.voterID THEN
+    IF post_owner_id = NEW.authenticatedUserID THEN
         RETURN NULL; 
     END IF;
 
-    INSERT INTO Notification (isRead, link, authenticatedUserID)
+    INSERT INTO Notification (isRead, authenticatedUserID)
     VALUES (FALSE, post_owner_id); 
-
 
     INSERT INTO UpvoteNotification (notificationID, voteID)
     VALUES (currval('Notification_notificationID_seq'), NEW.voteID);
@@ -317,12 +319,6 @@ BEGIN
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE TRIGGER create_vote_notification
-AFTER INSERT ON Vote
-FOR EACH ROW
-EXECUTE FUNCTION vote_create_notification_trigger();
-
 
 CREATE FUNCTION comment_create_notification_trigger()
 RETURNS TRIGGER AS $$
@@ -337,29 +333,30 @@ BEGIN
         RETURN NULL;  
     END IF;
 
-    INSERT INTO Notification (isRead, link, authenticatedUserID)
-    VALUES (FALSE, post_owner_id); 
+    INSERT INTO Notification (isRead, authenticatedUserID)
+    VALUES (FALSE, post_owner_id) 
+    RETURNING notificationID INTO NEW.notificationID; 
 
     INSERT INTO CommentNotification (notificationID, commentID)
-    VALUES (currval('notification_id_seq'), NEW.commentID); 
+    VALUES (NEW.notificationID, NEW.commentID); 
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER create_comment_notification
-AFTER INSERT ON Comment
-FOR EACH ROW
-EXECUTE FUNCTION comment_create_notification_trigger();
-
-
-
-CREATE FUNCTION update_reputation_vote_trigger()
+CREATE OR REPLACE FUNCTION update_reputation_vote_trigger()
 RETURNS TRIGGER AS $$
 DECLARE
     post_owner_id INT;
 BEGIN
-    SELECT authenticatedUserID INTO post_owner_id  FROM Author WHERE postID = NEW.postID;
+    SELECT a.authenticatedUserID INTO post_owner_id
+    FROM Author a
+    JOIN Post p ON a.postID = p.postID
+    WHERE p.postID = NEW.postID;
+
+    IF post_owner_id IS NULL THEN
+        RETURN NULL; 
+    END IF;
 
     IF post_owner_id = NEW.authenticatedUserID THEN
         RETURN NULL;  
@@ -371,7 +368,7 @@ BEGIN
         ELSE
             UPDATE AuthenticatedUser SET reputation = reputation - 1 WHERE authenticatedUserID = post_owner_id;
         END IF;
-    ELSEIF TG_OP = 'DELETE' THEN
+    ELSIF TG_OP = 'DELETE' THEN
         IF OLD.upvote THEN
             UPDATE AuthenticatedUser SET reputation = reputation - 1 WHERE authenticatedUserID = post_owner_id;
         ELSE
@@ -383,21 +380,23 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE TRIGGER update_reputation_vote
 AFTER INSERT OR DELETE ON PostVote 
 FOR EACH ROW
 EXECUTE FUNCTION update_reputation_vote_trigger();
 
-
-CREATE FUNCTION update_reputation_comment_trigger()
+CREATE OR REPLACE FUNCTION update_reputation_comment_trigger()
 RETURNS TRIGGER AS $$
 DECLARE
     post_owner_id INT;
 BEGIN
-    SELECT authenticatedUserID INTO post_owner_id
-    FROM Author
-    WHERE postID = NEW.postID;
+    SELECT a.authenticatedUserID INTO post_owner_id
+    FROM Author a
+    WHERE a.postID = NEW.postID;
+
+    IF post_owner_id IS NULL THEN
+        RETURN NULL;
+    END IF;
 
     IF post_owner_id = NEW.authenticatedUserID THEN
         RETURN NULL;
@@ -414,9 +413,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_reputation_comment
-AFTER INSERT OR DELETE ON PostVote 
+AFTER INSERT OR DELETE ON Comment 
 FOR EACH ROW
 EXECUTE FUNCTION update_reputation_comment_trigger();
+
 
 
 
@@ -442,7 +442,3 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE TRIGGER check_before_posting
-BEFORE INSERT ON Post
-FOR EACH ROW
-EXECUTE FUNCTION check_before_posting();
