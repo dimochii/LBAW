@@ -10,10 +10,10 @@ class Topic extends Post
     use HasFactory;
     protected $table = 'Topic';
     public $timestamps = false;
-    protected $fillable = ['postID', 'reviewDate', 'status'];
+    protected $fillable = ['post_id', 'reviewDate', 'status'];
 
     public function post()
     {
-        return $this->belongsTo(Post::class, 'postID');
+        return $this->belongsTo(Post::class);
     }
 }

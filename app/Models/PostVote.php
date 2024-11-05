@@ -5,12 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class News extends Post
+class PostVote extends Vote
 {
     use HasFactory;
-    protected $table = 'News';
+    protected $table = 'PostVote';
     public $timestamps = false;
-    protected $fillable = ['post_id', 'newsURL'];
+    protected $fillable = ['vote_id', 'post_id'];
+    protected $primaryKey = ['vote_id', 'post_id'];
+
+    public function vote()
+    {
+        return $this->belongsTo(Vote::class);
+    }
 
     public function post()
     {

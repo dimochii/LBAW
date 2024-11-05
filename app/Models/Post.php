@@ -11,7 +11,7 @@ class Post extends Model
     protected $table = 'Post';
     const CREATED_AT = 'creationDate';
     const UPDATED_AT = null;
-    protected $fillable = ['title', 'creationDate', 'content', 'communityID'];
+    protected $fillable = ['title', 'creationDate', 'content', 'community_id'];
 
     public function community()
     {

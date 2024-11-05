@@ -12,7 +12,7 @@ class Community extends Model
     /*by default, Laravel assumes  public $timestamps = true, where $timestamps are created_at and updated_at*/ 
     const CREATED_AT = 'creationDate';
     const UPDATED_AT = null; // we only want the created_at
-    protected $fillable = ['name', 'description', 'creationDate', 'privacy', 'imageID'];
+    protected $fillable = ['name', 'description', 'creationDate', 'privacy', 'image_id'];
 
     public function image() 
     {
