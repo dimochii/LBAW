@@ -26,4 +26,10 @@ class AuthenticatedUser extends Model
         return $this->belongsToMany(Community::class, 'CommunityFollower');
     }
 
+    public function authoredPosts()
+    {
+        return $this->belongsToMany(Post::class, 'Author')
+                    ->withPivot('pinned')
+    }
+
 }

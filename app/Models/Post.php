@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
+    use HasFactory;
+    protected $table = 'Post';
+    const CREATED_AT = 'creationDate';
+    const UPDATED_AT = null;
+    protected $fillable = ['title', 'creationDate', 'content', 'communityID'];
+
+    public function community()
+    {
+        return $this->belongsTo(Community::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function postvotes()
+    {
+        return $this->hasMany(PostVote::class);
+    }
+
+    public function news()
+    {
+        return $this->hasOne(News::class);
+    }
+
+    public function topic()
+    {
+        return $this->hasOne(Topic::class);
+    }
+
+    public function authors()
+    {
+        return $this->belongsToMany(AuthenticatedUser::class, 'Author')
+                    ->withPivot('pinned')
+    }
+
+    public function favourites()
+    {
+        return $this->belongsToMany(AuthenticatedUser::class, 'FavouritePost');
+    }
+}
