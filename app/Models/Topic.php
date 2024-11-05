@@ -9,7 +9,8 @@ class Topic extends Post
 {
     use HasFactory;
     protected $table = 'Topic';
-    public $timestamps = false;
+    const CREATED_AT = null;
+    const UPDATED_AT = 'reviewDate';
     protected $fillable = ['post_id', 'reviewDate', 'status'];
 
     public function post()

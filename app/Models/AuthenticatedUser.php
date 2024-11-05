@@ -13,7 +13,7 @@ class AuthenticatedUser extends Model
     const UPDATED_AT = null;
     protected $fillable = [
         'name', 'username', 'email', 'password', 'reputation', 
-        'isSuspended', 'creationDate', 'birthDate', 'description', 'isAdmin', 'imageID'
+        'isSuspended', 'creationDate', 'birthDate', 'description', 'isAdmin', 'image_id'
     ];
 
     public function image()
@@ -26,10 +26,46 @@ class AuthenticatedUser extends Model
         return $this->belongsToMany(Community::class, 'CommunityFollower');
     }
 
+    public function follows()
+    {
+        return $this->hasMany(AuthenticatedUser::class, 'UserFollower')
+    }
+
+    public function followers()
+    {
+        return $this->hasMany(AuthenticatedUser::class, 'UserFollower')
+    }
+    
     public function authoredPosts()
     {
         return $this->belongsToMany(Post::class, 'Author')
                     ->withPivot('pinned')
     }
+
+    public function favouritePosts()
+    {
+        return $this->belongsToMany(Post::class, 'FavouritePost')
+    }
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class)
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)
+    }
+
+    public function suspensions()
+    {
+        return $this->hasMany(Supension::class)
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class)
+    }
+    
 
 }

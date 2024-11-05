@@ -23,7 +23,7 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function postvotes()
+    public function votes()
     {
         return $this->hasMany(PostVote::class);
     }
@@ -46,6 +46,6 @@ class Post extends Model
 
     public function favourites()
     {
-        return $this->belongsToMany(AuthenticatedUser::class, 'FavouritePost');
+        return $this->belongsToMany(AuthenticatedUser::class,'FavouritePost');
     }
 }
