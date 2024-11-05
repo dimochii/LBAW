@@ -66,6 +66,15 @@ class AuthenticatedUser extends Model
     {
         return $this->hasMany(Report::class)
     }
-    
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class)
+    }
+
+    public function followUserNotification()
+    {
+        return $this->hasOne(FollowNotification::class)
+    }
+    
 }

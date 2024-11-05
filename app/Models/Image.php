@@ -9,8 +9,7 @@ class Image extends Model
 {
     use HasFactory;
     protected $table = 'Image';
-    const CREATED_AT = 'creationDate';
-    const UPDATED_AT = null;
+    public $timestamps = false;
     protected $fillable = ['path'];
 
     public function community() {

@@ -12,8 +12,13 @@ class Vote extends Model
     public $timestamps = false;
     protected $fillable = ['upvote', 'authenticatedUser_id'];
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(AuthenticatedUser::class);
+    }
+
+    public function voteNotification()
+    {
+        return $this->hasOne(UpvoteNotification::class);
     }
 }

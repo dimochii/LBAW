@@ -48,4 +48,9 @@ class Post extends Model
     {
         return $this->belongsToMany(AuthenticatedUser::class,'FavouritePost');
     }
+
+    public function postNotification()
+    {
+        return $this->hasOne(PostNotification::class);
+    }
 }
