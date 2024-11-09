@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FollowNotification extends Notification
 {
     use HasFactory;
-    protected $table = 'FollowNotification';
+    protected $table = 'follownotification';
     public $timestamps = false;
 
     protected $fillable = ['notification_id', 'authenticatedUser_id'];

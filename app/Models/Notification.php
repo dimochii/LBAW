@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory;
-    protected $table = 'Notification'; 
+    protected $table = 'notification'; 
     const CREATED_AT = 'notificationDate';
     const UPDATED_AT = null;
 

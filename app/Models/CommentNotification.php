@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CommentNotification extends Model
 {
     use HasFactory;
-    protected $table = 'CommentNotification';
+    protected $table = 'commentnotification';
     public $timestamps = false;
 
     protected $fillable = ['notification_id', 'comment_id'];

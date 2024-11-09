@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Community extends Model
 {
     use HasFactory;
-    protected $table = 'Community';
+    protected $table = 'community';
     /*by default, Laravel assumes  public $timestamps = true, where $timestamps are created_at and updated_at*/ 
     const CREATED_AT = 'creationDate';
     const UPDATED_AT = null; // we only want the created_at

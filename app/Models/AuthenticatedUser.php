@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AuthenticatedUser extends Model
 {
-    use Notifiable, use HasFactory;
-    protected $table = 'AuthenticatedUser';
-    const CREATED_AT = 'creationDate';
+    use HasFactory;
+    protected $table = 'authenticateduser';
+    const CREATED_AT = 'creationdate';
     const UPDATED_AT = null;
     protected $fillable = [
         'name', 'username', 'email', 'password', 'reputation', 
-        'isSuspended', 'creationDate', 'birthDate', 'description', 'isAdmin', 'image_id'
+        'issuspended', 'creationdate', 'birthdate', 'description', 'isadmin', 'image_id'
     ];
 
     public function image()
@@ -23,58 +25,58 @@ class AuthenticatedUser extends Model
 
     public function communities(): BelongsToMany
     {
-        return $this->belongsToMany(Community::class, 'CommunityFollower');
+        return $this->belongsToMany(Community::class, 'communityfollower');
     }
 
     public function follows()
     {
-        return $this->hasMany(AuthenticatedUser::class, 'UserFollower')
+        return $this->hasMany(AuthenticatedUser::class, 'userfollower');
     }
 
     public function followers()
     {
-        return $this->hasMany(AuthenticatedUser::class, 'UserFollower')
+        return $this->hasMany(AuthenticatedUser::class, 'userfollower');
     }
     
     public function authoredPosts()
     {
-        return $this->belongsToMany(Post::class, 'Author')
-                    ->withPivot('pinned')
+        return $this->belongsToMany(Post::class, 'author')
+                    ->withPivot('pinned');
     }
 
     public function favouritePosts()
     {
-        return $this->belongsToMany(Post::class, 'FavouritePost')
+        return $this->belongsToMany(Post::class, 'favouritepost');
     }
 
     public function votes()
     {
-        return $this->hasMany(Vote::class)
+        return $this->hasMany(Vote::class);
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class)
+        return $this->hasMany(Comment::class);
     }
 
     public function suspensions()
     {
-        return $this->hasMany(Supension::class)
+        return $this->hasMany(Supension::class);
     }
 
     public function reports()
     {
-        return $this->hasMany(Report::class)
+        return $this->hasMany(Report::class);
     }
 
     public function notifications()
     {
-        return $this->hasMany(Notification::class)
+        return $this->hasMany(Notification::class);
     }
 
     public function followUserNotification()
     {
-        return $this->hasOne(FollowNotification::class)
+        return $this->hasOne(FollowNotification::class);
     }
     
 }

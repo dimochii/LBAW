@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class News extends Post
 {
     use HasFactory;
-    protected $table = 'News';
+    protected $table = 'news';
     public $timestamps = false;
     protected $fillable = ['post_id', 'newsURL'];
 
