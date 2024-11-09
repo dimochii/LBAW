@@ -10,7 +10,7 @@ class News extends Post
     use HasFactory;
     protected $table = 'news';
     public $timestamps = false;
-    protected $fillable = ['post_id', 'newsURL'];
+    protected $fillable = ['post_id', 'newsurl'];
 
     public function post()
     {

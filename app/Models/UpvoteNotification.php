@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UpvoteNotification extends Model
 {
     use HasFactory;
-    protected $table = 'UpvoteNotification';
+    protected $table = 'upvotenotification';
     public $timestamps = false;
 
     protected $fillable = ['notification_id', 'vote_id'];

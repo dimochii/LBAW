@@ -9,10 +9,10 @@ class Notification extends Model
 {
     use HasFactory;
     protected $table = 'notification'; 
-    const CREATED_AT = 'notificationDate';
+    const CREATED_AT = 'notificationdate';
     const UPDATED_AT = null;
 
-    protected $fillable = ['isRead','notificationDate','authenticatedUser_id'];
+    protected $fillable = ['isread','notificationdate','authenticateduser_id'];
 
 
     public function user()

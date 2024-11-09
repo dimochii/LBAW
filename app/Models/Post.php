@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
-    protected $table = 'Post';
-    const CREATED_AT = 'creationDate';
+    protected $table = 'post';
+    const CREATED_AT = 'creationdate';
     const UPDATED_AT = null;
-    protected $fillable = ['title', 'creationDate', 'content', 'community_id'];
+    protected $fillable = ['title', 'creationdate', 'content', 'community_id'];
 
     public function community()
     {

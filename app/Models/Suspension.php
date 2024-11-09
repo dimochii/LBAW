@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Suspension extends Model
 {
     use HasFactory;
-    protected $table = 'Suspension';
+    protected $table = 'suspension';
     public $timestamps = false;
-    protected $fillable = ['reason', 'start', 'duration', 'authenticatedUser_id'];
+    protected $fillable = ['reason', 'start', 'duration', 'authenticateduser_id'];
 
     public function user()
     {

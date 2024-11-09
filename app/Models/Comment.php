@@ -11,8 +11,8 @@ class Comment extends Model
     protected $table = 'comment';
     public $timestamps = true;
     protected $fillable = [
-        'content', 'creationDate', 'updated', 
-        'authenticatedUser_id', 'post_id', 'parentComment_id'
+        'content', 'creationdate', 'updated', 
+        'authenticateduser_id', 'post_id', 'parentcomment_id'
     ];
 
     public function user()

@@ -11,8 +11,8 @@ class FollowNotification extends Notification
     protected $table = 'follownotification';
     public $timestamps = false;
 
-    protected $fillable = ['notification_id', 'authenticatedUser_id'];
-    protected $primaryKey = ['notification_id', 'authenticatedUser_id'];
+    protected $fillable = ['notification_id', 'authenticateduser_id'];
+    protected $primaryKey = ['notification_id', 'authenticateduser_id'];
 
     public function notification()
     {

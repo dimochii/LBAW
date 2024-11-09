@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Topic extends Post
 {
     use HasFactory;
-    protected $table = 'Topic';
+    protected $table = 'topic';
     const CREATED_AT = null;
-    const UPDATED_AT = 'reviewDate';
-    protected $fillable = ['post_id', 'reviewDate', 'status'];
+    const UPDATED_AT = 'reviewdate';
+    protected $fillable = ['post_id', 'reviewdate', 'status'];
 
     public function post()
     {

@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     use HasFactory;
-    protected $table = 'Report';
-    const CREATED_AT = 'reportDate';
+    protected $table = 'report';
+    const CREATED_AT = 'reportdate';
     const UPDATED_AT = null;
-    protected $fillable = ['reason', 'reportDate', 'isOpen', 'reportType', 'authenticatedUser_id'];
+    protected $fillable = ['reason', 'reportdate', 'isopen', 'reporttype', 'authenticateduser_id'];
 
     public function user()
     {
