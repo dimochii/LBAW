@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Vote extends Model
 {
     use HasFactory;
-    protected $table = 'vote';
     public $timestamps = false;
-    protected $fillable = ['upvote', 'authenticateduser_id'];
+    protected $fillable = ['upvote', 'authenticated_user_id'];
 
     public function user()
     {

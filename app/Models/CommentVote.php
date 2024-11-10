@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class CommentVote extends Vote
 {
     use HasFactory;
-    protected $table = 'commentvote';
     public $timestamps = false;
     protected $fillable = ['vote_id', 'comment_id'];
     protected $primaryKey = ['vote_id', 'comment_id'];

@@ -2,205 +2,199 @@ DROP SCHEMA IF EXISTS lbaw2454 CASCADE;
 CREATE SCHEMA lbaw2454;
 
 SET search_path TO lbaw2454;
-CREATE TYPE topicstatus AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
-CREATE TYPE reporttype AS ENUM ('userreport', 'commentreport',
-'itemreport', 'topicreport');
+CREATE TYPE topic_status AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
+CREATE TYPE report_type AS ENUM ('userreport', 'commentreport', 'itemreport', 'topicreport');
 
-
-CREATE TABLE image (
-	id SERIAL PRIMARY KEY,
-	path VARCHAR(512) NOT NULL
+CREATE TABLE images (
+    id SERIAL PRIMARY KEY,
+    path VARCHAR(512) NOT NULL
 );
 
-CREATE TABLE community (
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(255) NOT NULL UNIQUE,
-	description TEXT,
-	creationdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (creationdate <= CURRENT_TIMESTAMP),
-	privacy BOOLEAN DEFAULT FALSE,
-	image_id INT,
-	FOREIGN KEY (image_id) REFERENCES image(id)
+CREATE TABLE communities (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    description TEXT,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (creation_date <= CURRENT_TIMESTAMP),
+    privacy BOOLEAN DEFAULT FALSE,
+    image_id INT,
+    FOREIGN KEY (image_id) REFERENCES images(id)
 );
 
-CREATE TABLE post (
-	id SERIAL PRIMARY KEY,
-	title VARCHAR(255) NOT NULL,
-	creationdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (creationdate <= CURRENT_TIMESTAMP),
-	content TEXT NOT NULL,
-	community_id INT,
-	FOREIGN KEY (community_id) REFERENCES community(id)
+CREATE TABLE posts (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (creation_date <= CURRENT_TIMESTAMP),
+    content TEXT NOT NULL,
+    community_id INT,
+    FOREIGN KEY (community_id) REFERENCES communities(id)
 );
 
-CREATE TABLE authenticateduser (
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(255) NOT NULL,
-	username VARCHAR(255) NOT NULL UNIQUE,
-	email VARCHAR(255) NOT NULL UNIQUE CHECK (email LIKE '%_@__%.__%'),
-	password VARCHAR(255) NOT NULL,
-	reputation INT DEFAULT 0,
-	issuspended BOOLEAN DEFAULT FALSE,
-	creationdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (creationdate <= CURRENT_TIMESTAMP),
-	birthdate TIMESTAMP NOT NULL CHECK (birthdate < CURRENT_TIMESTAMP),
-	description TEXT,
-	isadmin BOOLEAN DEFAULT FALSE,
-	image_id INT,
-	FOREIGN KEY (image_id) REFERENCES image(id)
+CREATE TABLE authenticated_users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE CHECK (email LIKE '%_@__%.__%'),
+    password VARCHAR(255) NOT NULL,
+    reputation INT DEFAULT 0,
+    is_suspended BOOLEAN DEFAULT FALSE,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (creation_date <= CURRENT_TIMESTAMP),
+    birth_date TIMESTAMP NOT NULL CHECK (birth_date < CURRENT_TIMESTAMP),
+    description TEXT,
+    is_admin BOOLEAN DEFAULT FALSE,
+    image_id INT,
+    FOREIGN KEY (image_id) REFERENCES images(id)
 );
 
-CREATE TABLE userfollower (
-	follower_id INT,
-	followed_id INT,
-	PRIMARY KEY (follower_id, followed_id),
-	FOREIGN KEY (follower_id) REFERENCES authenticateduser(id),
-	FOREIGN KEY (followed_id) REFERENCES authenticateduser(id)
+CREATE TABLE user_followers (
+    follower_id INT,
+    followed_id INT,
+    PRIMARY KEY (follower_id, followed_id),
+    FOREIGN KEY (follower_id) REFERENCES authenticated_users(id),
+    FOREIGN KEY (followed_id) REFERENCES authenticated_users(id)
 );
 
-CREATE TABLE communitymoderator (
-	authenticateduser_id INT,
-	community_id INT,
-	PRIMARY KEY (authenticateduser_id, community_id),
-	FOREIGN KEY (authenticateduser_id) REFERENCES authenticateduser(id),
-	FOREIGN KEY (community_id) REFERENCES community(id)
+CREATE TABLE community_moderators (
+    authenticated_user_id INT,
+    community_id INT,
+    PRIMARY KEY (authenticated_user_id, community_id),
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
+    FOREIGN KEY (community_id) REFERENCES communities(id)
 );
 
-CREATE TABLE vote (
-	id SERIAL PRIMARY KEY,
-	upvote BOOLEAN NOT NULL,
-	authenticateduser_id INT,
-	FOREIGN KEY (authenticateduser_id) REFERENCES authenticateduser(id)
+CREATE TABLE votes (
+    id SERIAL PRIMARY KEY,
+    upvote BOOLEAN NOT NULL,
+    authenticated_user_id INT,
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id)
 );
 
-CREATE TABLE postvote (
-	vote_id INT,
-	post_id INT,
-	PRIMARY KEY (vote_id, post_id),
-	FOREIGN KEY (vote_id) REFERENCES vote(id),
-	FOREIGN KEY (post_id) REFERENCES post(id)
+CREATE TABLE post_votes (
+    vote_id INT,
+    post_id INT,
+    PRIMARY KEY (vote_id, post_id),
+    FOREIGN KEY (vote_id) REFERENCES votes(id),
+    FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
-CREATE TABLE comment (
-	id SERIAL PRIMARY KEY,
-	content TEXT NOT NULL,
-	creationdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (creationdate <= CURRENT_TIMESTAMP),
-	updated BOOLEAN DEFAULT FALSE,
-	authenticateduser_id INT,
-	post_id INT,
-	parentcomment_id INT,
-	FOREIGN KEY (authenticateduser_id) REFERENCES authenticateduser(id),
-	FOREIGN KEY (post_id) REFERENCES post(id),
-	FOREIGN KEY (parentcomment_id) REFERENCES comment(id)
+CREATE TABLE comments (
+    id SERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (creation_date <= CURRENT_TIMESTAMP),
+    updated BOOLEAN DEFAULT FALSE,
+    authenticated_user_id INT,
+    post_id INT,
+    parent_comment_id INT,
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
+    FOREIGN KEY (post_id) REFERENCES posts(id),
+    FOREIGN KEY (parent_comment_id) REFERENCES comments(id)
 );
 
-CREATE TABLE commentvote (
-	vote_id INT,
-	comment_id INT,
-	PRIMARY KEY (vote_id, comment_id),
-	FOREIGN KEY (vote_id) REFERENCES vote(id),
-	FOREIGN KEY (comment_id) REFERENCES comment(id)
+CREATE TABLE comment_votes (
+    vote_id INT,
+    comment_id INT,
+    PRIMARY KEY (vote_id, comment_id),
+    FOREIGN KEY (vote_id) REFERENCES votes(id),
+    FOREIGN KEY (comment_id) REFERENCES comments(id)
 );
 
 CREATE TABLE news (
-	post_id INT PRIMARY KEY,
-	newsurl VARCHAR(255) NOT NULL,
-	FOREIGN KEY (post_id) REFERENCES post(id)
+    post_id INT PRIMARY KEY,
+    news_url VARCHAR(255) NOT NULL,
+    FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
-CREATE TABLE topic (
-	post_id INT PRIMARY KEY,
-	reviewdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (reviewdate <= CURRENT_TIMESTAMP),
-    status topicstatus NOT NULL DEFAULT 'PENDING',
-	FOREIGN KEY (post_id) REFERENCES post(id)
+CREATE TABLE topics (
+    post_id INT PRIMARY KEY,
+    review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (review_date <= CURRENT_TIMESTAMP),
+    status topic_status NOT NULL DEFAULT 'PENDING',
+    FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
-
-CREATE TABLE notification (
-	id SERIAL PRIMARY KEY,
-	isread BOOLEAN DEFAULT FALSE,
-	notificationdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (notificationdate <= CURRENT_TIMESTAMP),
-	authenticateduser_id INT,
-	FOREIGN KEY (authenticateduser_id) REFERENCES authenticateduser(id)
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    is_read BOOLEAN DEFAULT FALSE,
+    notification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (notification_date <= CURRENT_TIMESTAMP),
+    authenticated_user_id INT,
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id)
 );
 
-CREATE TABLE follownotification (
-	id SERIAL PRIMARY KEY,
-	follower_id INT,
-	notification_id INT,
-	FOREIGN KEY (notification_id) REFERENCES notification(id),
-	FOREIGN KEY (follower_id) REFERENCES authenticateduser(id)
+CREATE TABLE follow_notifications (
+    id SERIAL PRIMARY KEY,
+    follower_id INT,
+    notification_id INT,
+    FOREIGN KEY (notification_id) REFERENCES notifications(id),
+    FOREIGN KEY (follower_id) REFERENCES authenticated_users(id)
 );
 
-CREATE TABLE upvotenotification (
-	id SERIAL PRIMARY KEY,
-	vote_id INT,
-	notification_id INT,
-	FOREIGN KEY (notification_id) REFERENCES notification(id),
-	FOREIGN KEY (vote_id) REFERENCES vote(id)
+CREATE TABLE upvote_notifications (
+    id SERIAL PRIMARY KEY,
+    vote_id INT,
+    notification_id INT,
+    FOREIGN KEY (notification_id) REFERENCES notifications(id),
+    FOREIGN KEY (vote_id) REFERENCES votes(id)
 );
 
-CREATE TABLE commentnotification (
-	id SERIAL PRIMARY KEY,
-	comment_id INT,
-	notification_id INT,
-	FOREIGN KEY (notification_id) REFERENCES notification(id),
-	FOREIGN KEY (comment_id) REFERENCES comment(id)
+CREATE TABLE comment_notifications (
+    id SERIAL PRIMARY KEY,
+    comment_id INT,
+    notification_id INT,
+    FOREIGN KEY (notification_id) REFERENCES notifications(id),
+    FOREIGN KEY (comment_id) REFERENCES comments(id)
 );
 
-CREATE TABLE postnotification (
-	id SERIAL PRIMARY KEY,
-	post_id INT,
-	notification_id INT,
-	FOREIGN KEY (notification_id) REFERENCES notification(id),
-	FOREIGN KEY (post_id) REFERENCES post(id)
+CREATE TABLE post_notifications (
+    id SERIAL PRIMARY KEY,
+    post_id INT,
+    notification_id INT,
+    FOREIGN KEY (notification_id) REFERENCES notifications(id),
+    FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
-CREATE TABLE suspension (
-	id SERIAL PRIMARY KEY,
-	reason TEXT NOT NULL,
-	start TIMESTAMP NOT NULL,
-	duration TIMESTAMP,
-	authenticateduser_id INT,
-	FOREIGN KEY (authenticateduser_id) REFERENCES authenticateduser(id)
+CREATE TABLE suspensions (
+    id SERIAL PRIMARY KEY,
+    reason TEXT NOT NULL,
+    start TIMESTAMP NOT NULL,
+    duration TIMESTAMP,
+    authenticated_user_id INT,
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id)
 );
 
-CREATE TABLE report (
-	id SERIAL PRIMARY KEY,
-	reason TEXT NOT NULL,
-	reportdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (reportdate <= CURRENT_TIMESTAMP),
-	isopen BOOLEAN DEFAULT TRUE,
-	reporttype topicstatus NOT NULL,
-	authenticateduser_id INT,
-	FOREIGN KEY (authenticateduser_id) REFERENCES authenticateduser(id)
+CREATE TABLE reports (
+    id SERIAL PRIMARY KEY,
+    reason TEXT NOT NULL,
+    report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (report_date <= CURRENT_TIMESTAMP),
+    is_open BOOLEAN DEFAULT TRUE,
+    report_type report_type NOT NULL,
+    authenticated_user_id INT,
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id)
 );
 
-
-CREATE TABLE communityfollower (
-	authenticateduser_id INT,
-	community_id INT,
-	PRIMARY KEY (authenticateduser_id, community_id),
-	FOREIGN KEY (authenticateduser_id) REFERENCES authenticateduser(id),
-	FOREIGN KEY (community_id) REFERENCES community(id)
+CREATE TABLE community_followers (
+    authenticated_user_id INT,
+    community_id INT,
+    PRIMARY KEY (authenticated_user_id, community_id),
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
+    FOREIGN KEY (community_id) REFERENCES communities(id)
 );
 
-CREATE TABLE author (
-	authenticateduser_id INT,
-	post_id INT,
-	pinned BOOLEAN DEFAULT FALSE,
-	PRIMARY KEY (authenticateduser_id, post_id),
-	FOREIGN KEY (authenticateduser_id) REFERENCES authenticateduser(id),
-	FOREIGN KEY (post_id) REFERENCES post(id)
+CREATE TABLE authors (
+    authenticated_user_id INT,
+    post_id INT,
+    pinned BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (authenticated_user_id, post_id),
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
+    FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
-CREATE TABLE favoritepost (
-	authenticateduser_id INT,
-	post_id INT,
-	PRIMARY KEY (authenticateduser_id, post_id),
-	FOREIGN KEY (authenticateduser_id) REFERENCES authenticateduser(id),
-	FOREIGN KEY (post_id) REFERENCES post(id)
+CREATE TABLE favorite_posts (
+    authenticated_user_id INT,
+    post_id INT,
+    PRIMARY KEY (authenticated_user_id, post_id),
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
+    FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
----------------------------------------------------
-ALTER TABLE authenticateduser
-ADD COLUMN tsvector_name TSVECTOR;
+ALTER TABLE authenticated_users ADD COLUMN tsvector_name TSVECTOR;
 
 CREATE FUNCTION user_name_update() RETURNS TRIGGER AS $$
 BEGIN
@@ -211,13 +205,13 @@ BEGIN
 END $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER user_name_update
-BEFORE INSERT OR UPDATE ON authenticateduser
+BEFORE INSERT OR UPDATE ON authenticated_users
 FOR EACH ROW
 EXECUTE FUNCTION user_name_update();
 
-CREATE INDEX idx_user_name_search ON authenticateduser USING GIN (tsvector_name);
+CREATE INDEX idx_user_name_search ON authenticated_users USING GIN (tsvector_name);
 
-ALTER TABLE post ADD COLUMN tsvector_title TSVECTOR;
+ALTER TABLE posts ADD COLUMN tsvector_title TSVECTOR;
 
 CREATE FUNCTION post_title_update() RETURNS TRIGGER AS $$
 BEGIN
@@ -228,13 +222,13 @@ BEGIN
 END $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER post_title_update
-BEFORE INSERT OR UPDATE ON post
+BEFORE INSERT OR UPDATE ON posts
 FOR EACH ROW
 EXECUTE FUNCTION post_title_update();
 
-CREATE INDEX idx_post_title_search ON post USING GIN (tsvector_title);
+CREATE INDEX idx_post_title_search ON posts USING GIN (tsvector_title);
 
-ALTER TABLE post ADD COLUMN tsvector_content TSVECTOR;
+ALTER TABLE posts ADD COLUMN tsvector_content TSVECTOR;
 
 CREATE FUNCTION post_content_update() RETURNS TRIGGER AS $$
 BEGIN
@@ -245,21 +239,20 @@ BEGIN
 END $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER post_content_update
-BEFORE INSERT OR UPDATE ON post
+BEFORE INSERT OR UPDATE ON posts
 FOR EACH ROW
 EXECUTE FUNCTION post_content_update();
 
-CREATE INDEX idx_post_content_search ON post USING GIN (tsvector_content);
+CREATE INDEX idx_post_content_search ON posts USING GIN (tsvector_content);
 
-CREATE INDEX idx_post_creation_date_btree ON post USING btree (creationdate);
-CLUSTER post USING idx_post_creation_date_btree;
+CREATE INDEX idx_post_creation_date_btree ON posts USING btree (creation_date);
+CLUSTER posts USING idx_post_creation_date_btree;
 
-CREATE INDEX idx_topic_status_hash ON topic USING hash(status);
+CREATE INDEX idx_topic_status_hash ON topics USING hash(status);
+CREATE INDEX idx_topic_review_date_btree ON topics USING btree (review_date);
 
-CREATE INDEX idx_topic_review_date_btree ON topic USING btree (reviewdate);
-
-CREATE FUNCTION comment_update_trigger() 
-RETURNS TRIGGER AS $$
+-- Triggers for Notifications and Reputation Updates
+CREATE FUNCTION comment_update_trigger() RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated := TRUE;
     RETURN NEW;
@@ -267,7 +260,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER set_comment_updated
-AFTER UPDATE OF content ON comment
+AFTER UPDATE OF content ON comments
 FOR EACH ROW
 WHEN (OLD.content IS DISTINCT FROM NEW.content)
 EXECUTE FUNCTION comment_update_trigger();
@@ -277,166 +270,44 @@ RETURNS TRIGGER AS $$
 DECLARE
     new_notification_id INT;
 BEGIN
-    INSERT INTO notification (isread, authenticateduser_id)
+    INSERT INTO notifications (is_read, authenticated_user_id)
     VALUES (FALSE, NEW.followed_id)
     RETURNING id INTO new_notification_id;
 
-    INSERT INTO follownotification (notification_id, follower_id)
+    INSERT INTO follow_notifications (notification_id, follower_id)
     VALUES (new_notification_id, NEW.follower_id);
 
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION vote_create_notification_trigger()
+CREATE OR REPLACE FUNCTION vote_create_notification_trigger()
 RETURNS TRIGGER AS $$
 DECLARE
-    post_owner_id INT;
-    post_vote_post_id INT;
+    new_notification_id INT;  
 BEGIN
-    SELECT post_id INTO post_vote_post_id
-    FROM postvote
-    WHERE vote_id = NEW.id;
+    INSERT INTO notifications (is_read, authenticated_user_id)
+    VALUES (FALSE, NEW.authenticated_user_id) 
+    RETURNING id INTO new_notification_id;
 
-    SELECT authenticateduser_id INTO post_owner_id
-    FROM author
-    WHERE post_id = post_vote_post_id;
-
-    IF post_owner_id = NEW.authenticateduser_id THEN
-        RETURN NULL; 
-    END IF;
-
-    INSERT INTO notification (isread, authenticateduser_id)
-    VALUES (FALSE, post_owner_id); 
-
-    INSERT INTO upvotenotification (id, vote_id)
-    VALUES (currval('notification_id_seq'), NEW.id);
-
-    RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE FUNCTION comment_create_notification_trigger()
-RETURNS TRIGGER AS $$
-DECLARE
-    post_owner_id INT;
-BEGIN
-    SELECT authenticateduser_id INTO post_owner_id 
-    FROM author 
-    WHERE post_id = NEW.post_id;
-
-    IF post_owner_id = NEW.authenticateduser_id THEN
-        RETURN NULL;  
-    END IF;
-
-    INSERT INTO notification (isread, authenticateduser_id)
-    VALUES (FALSE, post_owner_id) 
-    RETURNING id INTO NEW.notification_id; 
-
-    INSERT INTO commentnotification (id, comment_id)
-    VALUES (NEW.notification_id, NEW.id); 
+    INSERT INTO upvote_notifications (notification_id, vote_id)
+    VALUES (new_notification_id, NEW.id);
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE FUNCTION update_reputation_vote_trigger()
-RETURNS TRIGGER AS $$
-DECLARE
-    post_owner_id INT;
-BEGIN
-    SELECT authenticateduser_id INTO post_owner_id
-    FROM author a
-    JOIN post p ON a.post_id = p.id
-    WHERE p.id = NEW.post_id;
-
-    IF post_owner_id IS NULL THEN
-        RETURN NULL; 
-    END IF;
-
-    IF post_owner_id = NEW.authenticateduser_id THEN
-        RETURN NULL;  
-    END IF;
-
-    IF TG_OP = 'INSERT' THEN
-        IF NEW.upvote THEN
-            UPDATE authenticateduser SET reputation = reputation + 1 WHERE id = post_owner_id;
-        ELSE
-            UPDATE authenticateduser SET reputation = reputation - 1 WHERE id = post_owner_id;
-        END IF;
-    ELSIF TG_OP = 'DELETE' THEN
-        IF OLD.upvote THEN
-            UPDATE authenticateduser SET reputation = reputation - 1 WHERE id = post_owner_id;
-        ELSE
-            UPDATE authenticateduser SET reputation = reputation + 1 WHERE id = post_owner_id;
-        END IF;
-    END IF;
-
-    RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_reputation_vote
-AFTER INSERT OR DELETE ON postvote 
+CREATE TRIGGER follow_notification_trigger
+AFTER INSERT ON user_followers
 FOR EACH ROW
-EXECUTE FUNCTION update_reputation_vote_trigger();
+EXECUTE FUNCTION follow_create_notification_trigger();
 
-CREATE FUNCTION update_reputation_comment_trigger()
-RETURNS TRIGGER AS $$
-DECLARE
-    post_owner_id INT;
-BEGIN
-    SELECT authenticateduser_id INTO post_owner_id
-    FROM author
-    WHERE post_id = NEW.post_id;
-
-    IF post_owner_id IS NULL THEN
-        RETURN NULL;
-    END IF;
-
-    IF post_owner_id = NEW.authenticateduser_id THEN
-        RETURN NULL;
-    END IF;
-
-    IF TG_OP = 'INSERT' THEN
-        UPDATE authenticateduser SET reputation = reputation + 1 WHERE id = post_owner_id;
-    ELSIF TG_OP = 'DELETE' THEN
-        UPDATE authenticateduser SET reputation = reputation - 1 WHERE id = post_owner_id;
-    END IF;
-
-    RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_reputation_comment
-AFTER INSERT OR DELETE ON comment 
+CREATE TRIGGER upvote_notification_trigger
+AFTER INSERT ON votes
 FOR EACH ROW
-EXECUTE FUNCTION update_reputation_comment_trigger();
-
-CREATE FUNCTION check_before_posting()
-RETURNS TRIGGER AS $$
-DECLARE
-    author_exists BOOLEAN; 
-BEGIN
-    SELECT EXISTS (
-        SELECT 1 
-        FROM communityfollower
-        WHERE authenticateduser_id = NEW.authenticateduser_id
-          AND community_id = NEW.community_id
-    ) INTO author_exists;
-
-    IF NOT author_exists THEN
-        RAISE EXCEPTION 'author does not belong to the specified community. Cannot post.';
-    END IF;
-
-    RETURN NEW; 
-END;
-$$ LANGUAGE plpgsql;
-
-
+EXECUTE FUNCTION vote_create_notification_trigger();
 
 -- Step 1: Insert images
-INSERT INTO image (path) VALUES
+INSERT INTO images (path) VALUES
 ('images/user1.jpg'),
 ('images/user2.jpg'),
 ('images/user3.jpg'),
@@ -490,7 +361,7 @@ INSERT INTO image (path) VALUES
 
 
 -- Step 2: Insert Users into authenticateduser
-INSERT INTO authenticateduser (name, username, email, password, birthdate, description, image_id)
+INSERT INTO authenticated_users (name, username, email, password, birth_date, description, image_id)
 VALUES
 ('Anonymous', 'Anonymous', 'anonymous@example.com', 'anonymous123', '1000-01-01', 'Anonymous.', 1),
 ('Bob Johnson', 'bob', 'bob@example.com', 'password123', '1988-02-02', 'Loves to share news.', 2),
@@ -544,7 +415,7 @@ VALUES
 ('X-Men', 'xmen', 'xmen@example.com', 'password123', '1963-02-19', 'Superhero team with various powers.', 50);
 
 -- Step 3: Insert Communities
-INSERT INTO community (name, description, privacy, image_id) VALUES
+INSERT INTO communities (name, description, privacy, image_id) VALUES
 ('Tech community', 'A place for tech enthusiasts to share knowledge.', FALSE, 1),
 ('Book Lovers', 'A community for book lovers.', TRUE, 2),
 ('Anime Fans', 'Discuss your favorite anime and manga.', FALSE, 3),
@@ -557,7 +428,7 @@ INSERT INTO community (name, description, privacy, image_id) VALUES
 ('Nature Lovers', 'Share your nature photography and stories.', TRUE, 10);
 
 -- Step 4: Insert posts
-INSERT INTO post (title, content, community_id) VALUES
+INSERT INTO posts (title, content, community_id) VALUES
 ('The Rise of AI', 'Artificial Intelligence is revolutionizing the world.', 1),
 ('Must-Read Books of 2024', 'Here are some books you shouldn’t miss this year.', 2),
 ('Top Anime of the Season', 'Let’s discuss the best anime airing this season.', 3),
@@ -570,8 +441,7 @@ INSERT INTO post (title, content, community_id) VALUES
 ('Wildlife Photography Tips', 'Capture nature beautifully.', 10);
 
 -- Step 5: Insert comments
-INSERT INTO comment (content, creationdate, authenticateduser_id, post_id) VALUES
-('Great insights! I totally agree with you.', CURRENT_TIMESTAMP, 1, 1),
+INSERT INTO comments (content, creation_date, authenticated_user_id, post_id) VALUES('Great insights! I totally agree with you.', CURRENT_TIMESTAMP, 1, 1),
 ('I can’t wait to read these books!', CURRENT_TIMESTAMP, 2, 2),
 ('Anime has really evolved over the years.', CURRENT_TIMESTAMP, 3, 3),
 ('Looking forward to discussing more on this!', CURRENT_TIMESTAMP, 1, 3),
@@ -584,8 +454,7 @@ INSERT INTO comment (content, creationdate, authenticateduser_id, post_id) VALUE
 
 -- Step 6: Insert votes
 -- Each user votes for some posts and comments
-INSERT INTO vote (upvote, authenticateduser_id) VALUES
-(TRUE, 1), 
+INSERT INTO votes (upvote, authenticated_user_id) VALUES(TRUE, 1), 
 (FALSE, 2), 
 (TRUE, 3),
 (TRUE, 4),
@@ -637,8 +506,7 @@ INSERT INTO vote (upvote, authenticateduser_id) VALUES
 (FALSE, 50);
 
 -- Step 7: Link votes to posts
-INSERT INTO postvote (vote_id, post_id) VALUES
-(1, 1),
+INSERT INTO post_votes (vote_id, post_id) VALUES(1, 1),
 (2, 2),
 (3, 3),
 (4, 4),
@@ -690,16 +558,14 @@ INSERT INTO postvote (vote_id, post_id) VALUES
 (50, 5);
 
 -- Step 8: Insert comments votes
-INSERT INTO commentvote (vote_id, comment_id) VALUES
-(1, 1),
+INSERT INTO comment_votes (vote_id, comment_id) VALUES(1, 1),
 (2, 2),
 (3, 3),
 (4, 4),
 (5, 5);
 
 -- Step 9: Insert topics
-INSERT INTO topic (post_id, reviewdate, status) VALUES
-(1, CURRENT_TIMESTAMP, 'PENDING'),
+INSERT INTO topics (post_id, review_date, status) VALUES(1, CURRENT_TIMESTAMP, 'PENDING'),
 (2, CURRENT_TIMESTAMP, 'ACCEPTED'),
 (3, CURRENT_TIMESTAMP, 'REJECTED'),
 (4, CURRENT_TIMESTAMP, 'PENDING'),
@@ -711,8 +577,7 @@ INSERT INTO topic (post_id, reviewdate, status) VALUES
 (10, CURRENT_TIMESTAMP, 'ACCEPTED');
 
 -- Step 10: Insert news
-INSERT INTO news (post_id, newsurl) VALUES
-(1, 'http://example.com/news1'),
+INSERT INTO news (post_id, news_url) VALUES(1, 'http://example.com/news1'),
 (2, 'http://example.com/news2'),
 (3, 'http://example.com/news3'),
 (4, 'http://example.com/news4'),
@@ -724,8 +589,7 @@ INSERT INTO news (post_id, newsurl) VALUES
 (10, 'http://example.com/news10');
 
 -- Step 11: Insert notifications
-INSERT INTO notification (isread, authenticateduser_id) VALUES
-(FALSE, 1),
+INSERT INTO notifications (is_read, authenticated_user_id) VALUES(FALSE, 1),
 (FALSE, 2),
 (TRUE, 3),
 (FALSE, 4),
@@ -777,8 +641,7 @@ INSERT INTO notification (isread, authenticateduser_id) VALUES
 (TRUE, 50);
 
 
-INSERT INTO follownotification (notification_id, follower_id) VALUES
-(1, 2),
+INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
 (2, 3),
 (3, 4),
 (4, 5),

@@ -10,12 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class AuthenticatedUser extends Model
 {
     use HasFactory;
-    protected $table = 'authenticateduser';
-    const CREATED_AT = 'creationdate';
+    const CREATED_AT = 'creation_date';
     const UPDATED_AT = null;
     protected $fillable = [
         'name', 'username', 'email', 'password', 'reputation', 
-        'issuspended', 'creationdate', 'birthdate', 'description', 'isadmin', 'image_id'
+        'is_suspended', 'creation_date', 'birth_date', 'description', 'is_admin', 'image_id'
     ];
 
     public function image()
@@ -25,28 +24,28 @@ class AuthenticatedUser extends Model
 
     public function communities(): BelongsToMany
     {
-        return $this->belongsToMany(Community::class, 'communityfollower');
+        return $this->belongsToMany(Community::class, 'community_followers');
     }
 
     public function follows()
     {
-        return $this->hasMany(AuthenticatedUser::class, 'userfollower');
+        return $this->hasMany(AuthenticatedUser::class, 'user_followers');
     }
 
     public function followers()
     {
-        return $this->hasMany(AuthenticatedUser::class, 'userfollower');
+        return $this->hasMany(AuthenticatedUser::class, 'user_followers');
     }
     
     public function authoredPosts()
     {
-        return $this->belongsToMany(Post::class, 'author')
+        return $this->belongsToMany(Post::class, 'authors')
                     ->withPivot('pinned');
     }
 
     public function favouritePosts()
     {
-        return $this->belongsToMany(Post::class, 'favouritepost');
+        return $this->belongsToMany(Post::class, 'favourite_posts');
     }
 
     public function votes()

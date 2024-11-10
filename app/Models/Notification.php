@@ -8,11 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory;
-    protected $table = 'notification'; 
-    const CREATED_AT = 'notificationdate';
+    const CREATED_AT = 'notification_date';
     const UPDATED_AT = null;
 
-    protected $fillable = ['isread','notificationdate','authenticateduser_id'];
+    protected $fillable = ['is_read','notification_date','authenticated_user_id'];
 
 
     public function user()

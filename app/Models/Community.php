@@ -8,11 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Community extends Model
 {
     use HasFactory;
-    protected $table = 'community';
     /*by default, Laravel assumes  public $timestamps = true, where $timestamps are created_at and updated_at*/ 
-    const CREATED_AT = 'creationdate';
+    const CREATED_AT = 'creation_date';
     const UPDATED_AT = null; // we only want the created_at
-    protected $fillable = ['name', 'description', 'creationdate', 'privacy', 'image_id'];
+    protected $fillable = ['name', 'description', 'creation_date', 'privacy', 'image_id'];
 
     public function image() 
     {
@@ -26,11 +25,11 @@ class Community extends Model
 
     public function moderators()
     {
-        return $this->belongsToMany(AuthenticatedUser::class, 'CommunityModerator');
+        return $this->belongsToMany(AuthenticatedUser::class, 'community_moderators');
     }
 
     public function followers()
     {
-        return $this->belongsToMany(AuthenticatedUser::class, 'CommunityFollower');
+        return $this->belongsToMany(AuthenticatedUser::class, 'community_followers');
     }
 }

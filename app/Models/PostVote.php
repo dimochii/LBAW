@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class PostVote extends Vote
 {
     use HasFactory;
-    protected $table = 'postvote';
     public $timestamps = false;
     protected $fillable = ['vote_id', 'post_id'];
     protected $primaryKey = ['vote_id', 'post_id'];

@@ -8,10 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
-    protected $table = 'post';
-    const CREATED_AT = 'creationdate';
+    const CREATED_AT = 'creation_date';
     const UPDATED_AT = null;
-    protected $fillable = ['title', 'creationdate', 'content', 'community_id'];
+    protected $fillable = ['title', 'creation_date', 'content', 'community_id'];
 
     public function community()
     {
@@ -40,13 +39,13 @@ class Post extends Model
 
     public function authors()
     {
-        return $this->belongsToMany(AuthenticatedUser::class, 'Author')
+        return $this->belongsToMany(AuthenticatedUser::class, 'authors')
                     ->withPivot('pinned')
     }
 
     public function favourites()
     {
-        return $this->belongsToMany(AuthenticatedUser::class,'FavouritePost');
+        return $this->belongsToMany(AuthenticatedUser::class,'favourite_post');
     }
 
     public function postNotification()

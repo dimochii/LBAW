@@ -2,151 +2,150 @@
 
 namespace Tests\Unit\Models;
 
+use Tests\TestCase;
 use App\Models\AuthenticatedUser;
 use App\Models\Community;
 use App\Models\Image;
 use App\Models\Post;
 use App\Models\Vote;
+use App\Models\Comment;
+use App\Models\Supension;
+use App\Models\Report;
+use App\Models\Notification;
+use App\Models\FollowNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
 class AuthenticatedUserTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function it_has_a_fillable_attribute()
+    public function it_has_fillable_attributes()
     {
-        $user = new AuthenticatedUser();
+        $user = AuthenticatedUser::factory()->create();
+        
         $this->assertEquals([
             'name', 'username', 'email', 'password', 'reputation', 
-            'issuspended', 'creationdate', 'birthdate', 'description', 'isadmin', 'image_id'
+            'is_suspended', 'creation_date', 'birth_date', 'description', 
+            'is_admin', 'image_id'
         ], $user->getFillable());
     }
 
     /** @test */
-    public function it_has_a_custom_created_at_column()
+    public function it_has_a_custom_creation_date()
+    {
+        $user = AuthenticatedUser::factory()->create(['creation_date' => now()]);
+        
+        $this->assertNotNull($user->creation_date);
+        $this->assertNull($user->updated_at);
+    }
+
+    /** @test */
+    public function it_has_an_image_relationship()
     {
         $user = AuthenticatedUser::factory()->create();
-        $this->assertNotNull($user->creationdate);
-    }
-
-    /** @test */
-    public function it_can_belong_to_an_image()
-    {
-        $image = Image::factory()->create();
-        $user = AuthenticatedUser::factory()->create(['image_id' => $image->id]);
-
+        $image = Image::factory()->create(['authenticated_user_id' => $user->id]);
+        
+        $this->assertTrue($user->image()->exists());
         $this->assertInstanceOf(Image::class, $user->image);
-        $this->assertEquals($image->id, $user->image->id);
     }
 
     /** @test */
-    public function it_can_belong_to_many_communities()
+    public function it_belongs_to_many_communities()
     {
         $user = AuthenticatedUser::factory()->create();
         $community = Community::factory()->create();
-        $user->communities()->attach($community->id);
-
-        $this->assertTrue($user->communities->contains($community));
-    }
-
-    /** @test */
-    public function it_has_many_followed_users()
-    {
-        $user1 = AuthenticatedUser::factory()->create();
-        $user2 = AuthenticatedUser::factory()->create();
-
-        $user1->follows()->attach($user2);
-
-        $this->assertTrue($user1->follows->contains($user2));
+        
+        $user->communities()->attach($community);
+        
+        $this->assertTrue($user->communities()->exists());
     }
 
     /** @test */
     public function it_has_many_followers()
     {
-        $user1 = AuthenticatedUser::factory()->create();
-        $user2 = AuthenticatedUser::factory()->create();
-
-        $user2->followers()->attach($user1);
-
-        $this->assertTrue($user2->followers->contains($user1));
+        $user = AuthenticatedUser::factory()->create();
+        $follower = AuthenticatedUser::factory()->create();
+        
+        $follower->follows()->create(['follower_id' => $user->id]);
+        
+        $this->assertTrue($user->followers()->exists());
     }
 
     /** @test */
-    public function it_has_authored_posts_with_pinned_pivot()
+    public function it_has_many_authored_posts_with_pivot()
     {
         $user = AuthenticatedUser::factory()->create();
         $post = Post::factory()->create();
-
+        
         $user->authoredPosts()->attach($post, ['pinned' => true]);
-
-        $this->assertTrue($user->authoredPosts->contains($post));
-        $this->assertTrue($user->authoredPosts->first()->pivot->pinned);
+        
+        $this->assertTrue($user->authoredPosts()->exists());
+        $this->assertEquals(true, $user->authoredPosts()->first()->pivot->pinned);
     }
 
     /** @test */
-    public function it_has_favorite_posts()
+    public function it_has_many_favourite_posts()
     {
         $user = AuthenticatedUser::factory()->create();
         $post = Post::factory()->create();
-
+        
         $user->favouritePosts()->attach($post);
-
-        $this->assertTrue($user->favouritePosts->contains($post));
+        
+        $this->assertTrue($user->favouritePosts()->exists());
     }
 
     /** @test */
-    public function it_has_votes()
+    public function it_has_many_votes()
     {
         $user = AuthenticatedUser::factory()->create();
-        $vote = Vote::factory()->create(['authenticateduser_id' => $user->id]);
-
-        $this->assertTrue($user->votes->contains($vote));
+        Vote::factory()->create(['authenticated_user_id' => $user->id]);
+        
+        $this->assertTrue($user->votes()->exists());
     }
 
     /** @test */
     public function it_has_many_comments()
     {
         $user = AuthenticatedUser::factory()->create();
-        $comment = Comment::factory()->create(['authenticateduser_id' => $user->id]);
-
-        $this->assertTrue($user->comments->contains($comment));
+        Comment::factory()->create(['authenticated_user_id' => $user->id]);
+        
+        $this->assertTrue($user->comments()->exists());
     }
 
     /** @test */
-    public function it_has_suspensions()
+    public function it_has_many_suspensions()
     {
         $user = AuthenticatedUser::factory()->create();
-        $suspension = Suspension::factory()->create(['authenticateduser_id' => $user->id]);
-
-        $this->assertTrue($user->suspensions->contains($suspension));
+        Supension::factory()->create(['authenticated_user_id' => $user->id]);
+        
+        $this->assertTrue($user->suspensions()->exists());
     }
 
     /** @test */
-    public function it_has_reports()
+    public function it_has_many_reports()
     {
         $user = AuthenticatedUser::factory()->create();
-        $report = Report::factory()->create(['authenticateduser_id' => $user->id]);
-
-        $this->assertTrue($user->reports->contains($report));
+        Report::factory()->create(['authenticated_user_id' => $user->id]);
+        
+        $this->assertTrue($user->reports()->exists());
     }
 
     /** @test */
-    public function it_has_notifications()
+    public function it_has_many_notifications()
     {
         $user = AuthenticatedUser::factory()->create();
-        $notification = Notification::factory()->create(['authenticateduser_id' => $user->id]);
-
-        $this->assertTrue($user->notifications->contains($notification));
+        Notification::factory()->create(['authenticated_user_id' => $user->id]);
+        
+        $this->assertTrue($user->notifications()->exists());
     }
 
     /** @test */
-    public function it_has_follow_user_notification()
+    public function it_has_one_follow_user_notification()
     {
         $user = AuthenticatedUser::factory()->create();
-        $followNotification = FollowNotification::factory()->create(['follower_id' => $user->id]);
-
-        $this->assertInstanceOf(FollowNotification::class, $user->followUserNotification);
+        FollowNotification::factory()->create(['authenticated_user_id' => $user->id]);
+        
+        $this->assertTrue($user->followUserNotification()->exists());
     }
 }

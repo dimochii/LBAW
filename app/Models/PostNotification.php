@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class PostNotification extends Notification
 {
     use HasFactory;
-    protected $table = 'postnotification';
     public $timestamps = false;
 
     protected $fillable = ['notification_id', 'post_id'];
