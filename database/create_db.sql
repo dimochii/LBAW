@@ -3,7 +3,7 @@ CREATE SCHEMA lbaw2454;
 
 SET search_path TO lbaw2454;
 CREATE TYPE topic_status AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
-CREATE TYPE report_type AS ENUM ('userreport', 'commentreport', 'itemreport', 'topicreport');
+CREATE TYPE report_type AS ENUM ('user_report', 'comment_report', 'item_report', 'topic_report');
 
 CREATE TABLE images (
     id SERIAL PRIMARY KEY,
@@ -305,6 +305,8 @@ CREATE TRIGGER upvote_notification_trigger
 AFTER INSERT ON votes
 FOR EACH ROW
 EXECUTE FUNCTION vote_create_notification_trigger();
+
+
 
 -- Step 1: Insert images
 INSERT INTO images (path) VALUES
@@ -639,6 +641,35 @@ INSERT INTO notifications (is_read, authenticated_user_id) VALUES(FALSE, 1),
 (TRUE, 48),
 (FALSE, 49),
 (TRUE, 50);
+
+INSERT INTO reports (reason, report_date, is_open, report_type, authenticated_user_id) VALUES
+-- User Reports
+('User is spamming the community with irrelevant content', '2024-01-15 10:30:00', true, 'user_report', 1),
+('Harassment and inappropriate messages', '2024-01-16 14:20:00', false, 'user_report', 2),
+('Multiple accounts used for vote manipulation', '2024-01-17 09:15:00', true, 'user_report', 3),
+('Impersonating another user', '2024-01-18 16:45:00', true, 'user_report', 4),
+('Spreading misinformation', '2024-01-19 11:25:00', false, 'user_report', 5),
+
+-- Comment Reports
+('Hate speech in comment', '2024-01-20 13:10:00', true, 'comment_report', 6),
+('Spam comment with malicious links', '2024-01-21 15:30:00', false, 'comment_report', 7),
+('Harassment in comment section', '2024-01-22 17:45:00', true, 'comment_report', 8),
+('Off-topic and inflammatory comments', '2024-01-23 09:20:00', false, 'comment_report', 9),
+('Personal information shared in comment', '2024-01-24 14:15:00', true, 'comment_report', 10),
+
+-- Item (Post) Reports
+('Copyright violation in post', '2024-01-25 10:45:00', true, 'item_report', 11),
+('Misleading news article', '2024-01-26 16:30:00', false, 'item_report', 12),
+('Inappropriate content in post', '2024-01-27 11:20:00', true, 'item_report', 13),
+('Duplicate post spam', '2024-01-28 13:40:00', false, 'item_report', 14),
+('False information in news post', '2024-01-29 15:55:00', true, 'item_report', 15),
+
+-- Topic Reports
+('Topic violates community guidelines', '2024-01-30 12:25:00', true, 'topic_report', 16),
+('Inappropriate topic title', '2024-02-01 14:35:00', false, 'topic_report', 17),
+('Topic contains sensitive material', '2024-02-02 16:50:00', true, 'topic_report', 18),
+('Topic promotes harmful behavior', '2024-02-03 09:30:00', false, 'topic_report', 19),
+('Topic contains personal attacks', '2024-02-04 11:45:00', true, 'topic_report', 20);
 
 
 INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
