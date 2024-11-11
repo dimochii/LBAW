@@ -2,7 +2,7 @@ DROP SCHEMA IF EXISTS lbaw2454 CASCADE;
 CREATE SCHEMA lbaw2454;
 
 SET search_path TO lbaw2454;
-CREATE TYPE topic_status AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
+CREATE TYPE topic_status AS ENUM ('pending', 'accepted', 'rejected');
 CREATE TYPE report_type AS ENUM ('user_report', 'comment_report', 'item_report', 'topic_report');
 
 CREATE TABLE images (
@@ -106,7 +106,7 @@ CREATE TABLE news (
 CREATE TABLE topics (
     post_id INT PRIMARY KEY,
     review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (review_date <= CURRENT_TIMESTAMP),
-    status topic_status NOT NULL DEFAULT 'PENDING',
+    status topic_status NOT NULL DEFAULT 'pending',
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
@@ -567,16 +567,16 @@ INSERT INTO comment_votes (vote_id, comment_id) VALUES(1, 1),
 (5, 5);
 
 -- Step 9: Insert topics
-INSERT INTO topics (post_id, review_date, status) VALUES(1, CURRENT_TIMESTAMP, 'PENDING'),
-(2, CURRENT_TIMESTAMP, 'ACCEPTED'),
-(3, CURRENT_TIMESTAMP, 'REJECTED'),
-(4, CURRENT_TIMESTAMP, 'PENDING'),
-(5, CURRENT_TIMESTAMP, 'ACCEPTED'),
-(6, CURRENT_TIMESTAMP, 'PENDING'),
-(7, CURRENT_TIMESTAMP, 'ACCEPTED'),
-(8, CURRENT_TIMESTAMP, 'PENDING'),
-(9, CURRENT_TIMESTAMP, 'REJECTED'),
-(10, CURRENT_TIMESTAMP, 'ACCEPTED');
+INSERT INTO topics (post_id, review_date, status) VALUES(1, CURRENT_TIMESTAMP, 'pending'),
+(2, CURRENT_TIMESTAMP, 'accepted'),
+(3, CURRENT_TIMESTAMP, 'rejected'),
+(4, CURRENT_TIMESTAMP, 'pending'),
+(5, CURRENT_TIMESTAMP, 'accepted'),
+(6, CURRENT_TIMESTAMP, 'pending'),
+(7, CURRENT_TIMESTAMP, 'accepted'),
+(8, CURRENT_TIMESTAMP, 'pending'),
+(9, CURRENT_TIMESTAMP, 'rejected'),
+(10, CURRENT_TIMESTAMP, 'accepted');
 
 -- Step 10: Insert news
 INSERT INTO news (post_id, news_url) VALUES(1, 'http://example.com/news1'),
