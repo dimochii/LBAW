@@ -39,8 +39,7 @@ class AuthenticatedUser extends Model
     
     public function authoredPosts()
     {
-        return $this->belongsToMany(Post::class, 'authors')
-                    ->withPivot('pinned');
+        return $this->belongsToMany(Post::class, 'authors')->withPivot('pinned');
     }
 
     public function favouritePosts()
@@ -60,7 +59,7 @@ class AuthenticatedUser extends Model
 
     public function suspensions()
     {
-        return $this->hasMany(Supension::class);
+        return $this->hasMany(Suspension::class);
     }
 
     public function reports()
