@@ -365,7 +365,7 @@ INSERT INTO images (path) VALUES
 -- Step 2: Insert Users into authenticateduser
 INSERT INTO authenticated_users (name, username, email, password, birth_date, description, image_id)
 VALUES
-('Anonymous', 'Anonymous', 'anonymous@example.com', 'anonymous123', '1000-01-01', 'Anonymous.', 1),
+('Anonymous', 'Anonymous', 'anonymous@example.com', '$2y$10$FLtQvBMa8TZpNeHMG1EnTu8QbbEZe8e2GJbzqfSdnQyht4ozH1zRa', '1000-01-01', 'Anonymous.', 1),
 ('Bob Johnson', 'bob', 'bob@example.com', 'password123', '1988-02-02', 'Loves to share news.', 2),
 ('Charlie Brown', 'charlie', 'charlie@example.com', 'password123', '1992-03-03', 'Tech enthusiast.', 3),
 ('Diana Prince', 'diana', 'diana@example.com', 'password123', '1985-04-04', 'Avid reader and commenter.', 4),
