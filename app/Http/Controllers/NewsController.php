@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller
 {
@@ -13,12 +12,6 @@ class NewsController extends Controller
      */
     public function list()
     {
-        // Check if the user is logged in
-        if (!Auth::check()) {
-            // Redirect to login page if not logged in
-            return redirect('/login');
-        }
-
         // Get all news articles from the database
         $news = News::with('post')->orderBy('post_id', 'desc')->get();
 
@@ -28,3 +21,4 @@ class NewsController extends Controller
         ]);
     }
 }
+
