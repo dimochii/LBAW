@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Topic;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class TopicController extends Controller
@@ -12,7 +14,7 @@ class TopicController extends Controller
             'post_id' => $post->id,
         ]);
 
-        return redirect()->route('news')->with('success', 'News created successfully');
+        return redirect()->route('news')->with('success', 'Topic created successfully');
 
     }
 }
