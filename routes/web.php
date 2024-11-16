@@ -42,3 +42,8 @@ Route::controller(RegisterController::class)->group(function () {
 });
 //Route::get('/news', [NewsController::class, 'list'])->middleware('auth')->name('news.list');
 Route::get('/news', [NewsController::class, 'list'])->name('news');
+
+// To do
+Route::get('/messages', [MessageController::class, 'index'])->name('messages');
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
