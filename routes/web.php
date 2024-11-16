@@ -40,4 +40,5 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
-Route::get('/news', [NewsController::class, 'list'])->middleware('auth')->name('news.list');
+//Route::get('/news', [NewsController::class, 'list'])->middleware('auth')->name('news.list');
+Route::get('/news', [NewsController::class, 'list'])->name('news');
