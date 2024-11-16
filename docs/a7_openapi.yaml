@@ -1,0 +1,1224 @@
+openapi: 3.0.0
+
+info:
+  version: "1.0"
+  title: "WhatsUp API "
+  description: "API documentation for the WhatsUp platform, a community-driven news sharing and discussion platform. Web Resources Specification (A7)."
+
+tags:
+  - name: "M01: Authentication"
+  - name: "M02: User Management"
+  - name: "M03: Hubs Management"
+  - name: "M04: News and Topics"
+  - name: "M05: User Comments"
+  - name: "M06: Notifications"
+  - name: "M07: Search"
+  - name: "M08: Images"
+
+paths:
+  /auth/login:
+    get:
+      tags:
+        - "M01: Authentication"
+      summary: Get Log in form
+      responses:
+        "200":
+          description: Log in form fetched.
+        "400":
+          description: Error fetching.
+    post:
+      tags:
+        - "M01: Authentication"
+      summary: Log in to the platform
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful login
+        "302":
+          description: Redirects to the home page after successful login.
+        "401":
+          description: Invalid login credentials
+
+  /auth/signup:
+    get:
+      tags:
+        - "M01: Authentication"
+      summary: Get Sign up form
+      responses:
+        "200":
+          description: Sign up form fetched.
+        "400":
+          description: Error fetching.
+    post:
+      summary: Register a new user
+      description: Allows a visitor to sign up and create an account.
+      tags:
+        - "M01: Authentication"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupRequest"
+      responses:
+        "201":
+          description: User created successfully.
+        "400":
+          description: Invalid input.
+
+  /auth/logout:
+    post:
+      summary: Log out of the platform
+      tags:
+        - "M01: Authentication"
+      responses:
+        "204":
+          description: Successfully logged out.
+
+  /images/user/{userID}:
+    get:
+      summary: Fetch user profile image
+      tags:
+        - "M08: Images"
+      parameters:
+        - name: userID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Profile image fetched
+          content:
+            image/png: {}
+        "404":
+          description: User not found.
+
+  /images/h/{hubID}:
+    get:
+      summary: Fetch hub's image
+      tags:
+        - "M08: Images"
+      parameters:
+        - name: hubID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Hub image fetched
+          content:
+            image/png: {}
+        "404":
+          description: Hub not found.
+
+  /global:
+    get:
+      summary: Retrieve global page.
+      description: Retrieves the global page with the top news and topics.
+      tags:
+        - "M04: News and Topics"
+      responses:
+        "200":
+          description: List of top news and topics.
+
+  /recent:
+    get:
+      summary: Retrieve recent page.
+      description: Retrieves the recent page with the most recent news and topics.
+      tags:
+        - "M04: News and Topics"
+      responses:
+        "200":
+          description: List of recent news and topics.
+
+  /h/{hubName}/submit:
+    post:
+      summary: Submit a new post (news or topic)
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The name of the hub (community) where the post is being submitted.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postType:
+                  type: string
+                  enum: [news, topic]
+                  description: The type of post being submitted (news or topic).
+                title:
+                  type: string
+                  description: The title of the post.
+                  example: "How Trump Won the War Over ‘Normal’"
+                content:
+                  type: string
+                  description: The content of the post.
+                  example: "Lorem Ipsum Trump"
+              required:
+                - postType
+                - title
+                - content
+      responses:
+        "201":
+          description: Post successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  postID:
+                    type: string
+                    description: The unique identifier of the newly created post.
+                  postType:
+                    type: string
+                    enum: [news, topic]
+                    description: The type of post that was created (news or topic).
+                  link:
+                    type: string
+                    description: A URL to the newly created post (either news or topic)
+                    example: "/h/{hubName}/news/{postID}"
+
+        "400":
+          description: Invalid request (e.g., missing required fiels).
+        "404":
+          description: Hub not found.
+
+  /h/{hubName}/news/{newsID}:
+    get:
+      summary: Fetch a news item and its comments
+      description: Fetches a news item tied to a specific hub and a defined ammount of its comments.
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: newsID
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: News item and comments fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsWithComments'
+        "404":
+          description: News item not found.
+
+    put:
+      summary: Edit an existing news post
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the hub.
+        - name: newsID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the news post.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Updated title of the news post.
+                content:
+                  type: string
+                  description: Updated content of the news post.
+              required: [title, content]
+              example:
+                title: "Updated News Title"
+                content: "Updated news content."
+      responses:
+        "200":
+          description: Successfully updated the news post.
+        "404":
+          description: News post not found.
+        "403":
+          description: Unauthorized to edit this post.
+
+    delete:
+      summary: Delete a news post.
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: topicID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: News post successfully deleted.
+        "403":
+          description: User is not authorized to delete this news post.
+        "404":
+          description: News not found.
+
+  /h/{hubName}/news/{newsID}/comments:
+    get:
+      summary: Fetch comments for a specific news item (lazy loading)
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: newsID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: cursor
+          in: query
+          schema:
+            type: string
+            description: The cursor pointing to the next set of results.
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            description: The number of results to fetch (default and max limits may apply).
+      responses:
+        "200":
+          description: Comments fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+                  nextCursor:
+                    type: string
+                    nullable: true
+                    description: The cursor to fetch the next set of results. Null if no more results.
+    post:
+      summary: Add a new comment to a news post
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the hub.
+        - name: newsID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the news post.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: Content of the new comment.
+                parentCommentID:
+                  type: string
+                  description: ID of the parent comment for threading (optional).
+              required: [content]
+              example:
+                content: "This is a new comment."
+                parentCommentID: "optional-parent-comment-id"
+      responses:
+        "201":
+          description: Comment successfully created.
+        "404":
+          description: News post not found.
+
+  /h/{hubName}/news/{newsID}/comments/{commentID}:
+    put:
+      summary: Edit an existing comment on a news post
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the hub.
+        - name: newsID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the news post.
+        - name: commentID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the comment to edit.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: Updated content of the comment.
+              required: [content]
+              example:
+                content: "This is the updated comment."
+      responses:
+        "200":
+          description: Successfully updated the comment.
+        "404":
+          description: Comment or news post not found.
+        "403":
+          description: Unauthorized to edit this comment.
+    
+    delete:
+      summary: Delete a comment from a news post
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the hub.
+        - name: newsID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the news post.
+        - name: commentID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the comment to delete.
+      responses:
+        "204":
+          description: Comment successfully deleted.
+        "404":
+          description: Comment or news post not found.
+        "403":
+          description: Unauthorized to delete this comment.
+
+  /h/{hubName}/news/{newsID}/comments/{commentID}/vote:
+    post:
+      summary: Upvote or downvote a comment
+      tags: 
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: newsID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: commentID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Vote intention saved.
+        "404":
+          description: News post or comment not found.
+
+  /h/{hubName}/news/{newsID}/vote:
+    get: 
+      summary: Get user's vote
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: newsID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved the user's vote for the news post.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  voteType:
+                    type: string
+                    enum: [upvote, downvote, null]
+                    description: The type of vote (upvote, downvote, or null to indicate no vote).
+                example:
+                  voteType: upvote
+        "400": 
+          description: News post or hub not found.
+    post:
+      summary: Upvote or downvote a news post
+      tags:
+        - "M04: News and Topics"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postID:
+                  type: string
+                  description: The ID of the news post to vote on.
+                voteType:
+                  type: string
+                  enum: [upvote, downvote, null]
+                  description: The type of vote (upvote, downvote, or null to remove vote).
+              required:
+                - newsID
+                - voteType
+      responses:
+        "200":
+          description: Vote intention saved.
+        "404":
+          description: News post not found.
+
+  /h/{hubName}/topics/{topicID}:
+    get:
+      summary: Fetch a topic and its comments
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: topicID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Topic and comments fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topic:
+                    type: object
+                    description: Details about the topic
+                  comments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+        "404":
+          description: Topic not found
+
+    put:
+      summary: Edit an existing topic discussion
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the hub.
+        - name: topicID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the topic discussion.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Updated title of the topic.
+                content:
+                  type: string
+                  description: Updated content of the topic.
+              required: [title, content]
+              example:
+                title: "Updated Topic Title"
+                content: "Updated topic discussion content."
+      responses:
+        "200":
+          description: Successfully updated the topic discussion.
+        "404":
+          description: Topic discussion not found.
+        "403":
+          description: Unauthorized to edit this topic.
+
+    delete:
+      summary: Delete a topic discussion.
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: topicID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Topic successfully deleted.
+        "403":
+          description: User is not authorized to delete this topic.
+        "404":
+          description: Topic not found.
+
+  /h/{hubName}/topics/{topicID}/comments:
+    get:
+      summary: Fetch comments for a specific topic discussion (lazy loading)
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: newsID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: cursor
+          in: query
+          schema:
+            type: string
+            description: The cursor pointing to the next set of results.
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            description: The number of results to fetch (default and max limits may apply).
+      responses:
+        "200":
+          description: Comments fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+                  nextCursor:
+                    type: string
+                    nullable: true
+                    description: The cursor to fetch the next set of results. Null if no more results.
+    post:
+      summary: Add a new comment to a topic discussion
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the hub.
+        - name: topicID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the topic discussion.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: Content of the new comment.
+                parentCommentID:
+                  type: string
+                  description: ID of the parent comment for threading (optional).
+              required: [content]
+              example:
+                content: "This is a new comment."
+                parentCommentID: "optional-parent-comment-id"
+      responses:
+        "201":
+          description: Comment successfully created.
+        "404":
+          description: Topic discussion not found.
+
+  /h/{hubName}/topics/{topicID}/comments/{commentID}:
+    put:
+      summary: Edit an existing comment on a topic discussion
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the hub.
+        - name: topicID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the topic discussion.
+        - name: commentID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the comment to edit.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: Updated content of the comment.
+              required: [content]
+              example:
+                content: "This is the updated comment."
+      responses:
+        "200":
+          description: Successfully updated the comment.
+        "404":
+          description: Comment or topic discussion not found.
+        "403":
+          description: Unauthorized to edit this comment.
+    
+    delete:
+      summary: Delete a comment from a topic discussion
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the hub.
+        - name: topicID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the topic discussion.
+        - name: commentID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the comment to delete.
+      responses:
+        "204":
+          description: Comment successfully deleted.
+        "404":
+          description: Comment or topic discussion not found.
+        "403":
+          description: Unauthorized to delete this comment.
+
+  /h/{hubName}/topics/{topicID}/vote:
+    get: 
+      summary: Get user's vote
+      tags:
+        - "M04: News and Topics"
+      parameters:
+        - name: hubName
+          in: path
+          required: true
+          description: Name of the hub.
+          schema:
+            type: string
+        - name: topicID
+          in: path
+          required: true
+          description: Unique identifier for the topic.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved the user's vote for the topic.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  voteType:
+                    type: string
+                    enum: [upvote, downvote, null]
+                    description: The type of vote (upvote, downvote, or null to indicate no vote).
+                example:
+                  voteType: upvote
+        "400": 
+          description: Topic or hub not found.
+
+    post:
+      summary: Upvote or downvote a topic discussion
+      tags:
+        - "M04: News and Topics"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postID:
+                  type: string
+                  description: The ID of the topic discussion to vote on.
+                voteType:
+                  type: string
+                  enum: [upvote, downvote, null]
+                  description: The type of vote (upvote, downvote, or null to remove vote).
+              required:
+                - newsID
+                - voteType
+      responses:
+        "200":
+          description: Vote intention saved.
+        "404":
+          description: Topic discussion not found.
+
+  /vote/comment/{commentID}:
+    post:
+      summary: Upvote or downvote a post
+      tags:
+        - "M05: User Comments"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postID:
+                  type: string
+                  description: The ID of the post to vote on.
+                voteType:
+                  type: string
+                  enum: [upvote, downvote, null]
+                  description: The type of vote (upvote, downvote, or null to remove vote).
+              required:
+                - postID
+                - voteType
+      responses:
+        "200":
+          description: Vote intention saved.
+        "404":
+          description: Post not found.
+
+  /comments/{commentID}:
+    get:
+      summary: Fetch a specific comment and its context
+      tags:
+        - "M05: User Comments"
+      parameters:
+        - name: commentID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Comment fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    $ref: "#/components/schemas/Comment"
+                  context:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+
+    delete:
+      summary: Delete a comment
+      tags:
+        - "M05: User Comments"
+      responses:
+        "200":
+          description: Comment deleted successfully.
+        "404":
+          description: Comment not found.
+
+  /users/{userId}:
+    get:
+      summary: View user profile
+      tags:
+        - "M02: User Management"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User profile details.
+        "404":
+          description: User not found.
+
+  /users/{userID}/follow:
+    post:
+      summary: Follow a user
+      tags:
+        - "M02: User Management"
+      responses:
+        "200":
+          description: Followed successfully.
+        "404":
+          description: User not found.
+
+    delete:
+      summary: Unfollow a user
+      tags:
+        - "M02: User Management"
+      responses:
+        "200":
+          description: Unfollowed successfully.
+        "404":
+          description: User not found.
+
+  /users/{userID}/suspension:
+    get:
+      summary: Check user suspension status
+      tags:
+        - "M02: User Management"
+      responses:
+        "200":
+          description: Suspension details retrieved.
+        "404":
+          description: User not found.
+
+    put:
+      summary: Suspend a user
+      tags:
+        - "M02: User Management"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                duration:
+                  type: string
+      responses:
+        "200":
+          description: User suspended.
+        "404":
+          description: User not found.
+
+    delete:
+      summary: Lift a user suspension
+      tags:
+        - "M02: User Management"
+      responses:
+        "200":
+          description: Suspension lifted.
+        "404":
+          description: User not found.
+
+  /hubs:
+    get:
+      summary: Retrieve communities
+      description: Retrieves the top or recent communities based on user preferences.
+      tags:
+        - "M03: Hubs Management"
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          description: Filter for top/recent communities.
+          schema:
+            type: string
+            enum: [top, recent]
+      responses:
+        "200":
+          description: List of communities.
+
+  /hubs/{communityID}/follow:
+    post:
+      summary: Follow a community
+      tags:
+        - "M03: Hubs Management"
+      responses:
+        "200":
+          description: Followed successfully.
+        "404":
+          description: Community not found.
+
+  /reports:
+    post:
+      summary: Submit a report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reportedID:
+                  type: string
+                reportType:
+                  type: string
+                  enum: [user, post, comment]
+                details:
+                  type: string
+      responses:
+        "201":
+          description: Report submitted successfully.
+
+    get:
+      summary: Retrieve all reports (admin only)
+      responses:
+        "200":
+          description: Reports retrieved.
+
+  /reports/{reportID}:
+    put:
+      summary: Resolve a report
+      responses:
+        "200":
+          description: Report resolved.
+        "404":
+          description: Report not found.
+
+    delete:
+      summary: Delete a report
+      responses:
+        "200":
+          description: Report deleted.
+        "404":
+          description: Report not found.
+
+  /notifications:
+    get:
+      summary: Fetch user notifications
+      parameters:
+        - name: unread
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Notifications fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Notification"
+
+  /notifications/{notificationID}/read:
+    post:
+      summary: Mark a notification as read
+      parameters:
+        - name: notificationID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Notification marked as read.
+
+components:
+  schemas:
+    SignupRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        username:
+          type: string
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    CreateNewsRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        communityId:
+          type: string
+
+    CreateCommunityRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    
+    Comment:
+      type: object
+      properties:
+        commentID:
+          type: string
+        parentCommentID:
+          type: string          
+        content:
+          type: string
+        userID:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        vote:
+          type: string
+          enum: [upvote, downvote, null]
+        
+    Notification:
+      type: object
+      properties:
+        notificationID:
+          type: integer
+        type:
+          type: string
+        content:
+          type: string
+        read:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+    
+    NewsPost:
+      type: object
+      properties:
+        newsID: 
+          type: integer
+        date:
+          type: string
+          format: date-time
+        title: 
+          type: string
+        content: 
+          type: string
+        newsURL:
+          type: string
+
+    NewsWithComments:
+      type: object
+      properties:
+        news:
+          $ref: '#/components/schemas/NewsPost'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        vote:
+          type: string
+          enum: [upvote, downvote, null]
+
+    Topic:
+      type: object
+      properties:
+        topicID: 
+          type: integer
+        date:
+          type: string
+          format: date-time
+        title: 
+          type: string
+        content: 
+          type: string
