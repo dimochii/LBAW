@@ -580,11 +580,11 @@ INSERT INTO topics (post_id, review_date, status) VALUES(1, CURRENT_TIMESTAMP, '
 
 -- Step 10: Insert news
 INSERT INTO news (post_id, news_url) VALUES(1, 'http://example.com/news1'),
-(2, 'http://example.com/news2'),
+(2, 'http://example.com/'),
 (3, 'http://example.com/news3'),
 (4, 'http://example.com/news4'),
 (5, 'http://example.com/news5'),
-(6, 'http://example.com/news6'),
+(6, 'http://exanews2mple.com/news6'),
 (7, 'http://example.com/news7'),
 (8, 'http://example.com/news8'),
 (9, 'http://example.com/news9'),

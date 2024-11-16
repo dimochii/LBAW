@@ -3,8 +3,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Post;
+use App\Models\News;
+use App\Models\Topic;
 
 class PostController extends Controller
 {
-    //
+    public function createPost()
+    {
+        return view('posts.create');
+    }
+    public function create(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'community_id' => 'nullable|exists:communities,id',
+            'type' => 'required|in:news,topic',
+            'news_url' => 'required_if:type,news|url',
+        ]);
+
+        // Create the base post
+        $post = Post::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'community_id' => $request->community_id,
+        ]);
+
+        // Handle the specific type
+        if ($request->type === 'news') {
+            return app(NewsController::class)->createNews($post, $request->news_url);
+        } elseif ($request->type === 'topic') {
+            return app(NewsController::class)->createNews($post, $request->news_url);
+        } else {
+            return app(TopicController::class)->createTopic($post);
+        }
+
+
+        return response()->json(['message' => 'Invalid type'], 400);
+    }
 }
