@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class AuthenticatedUser extends Model
+class AuthenticatedUser extends Authenticatable
 {
     use HasFactory;
     const CREATED_AT = 'creation_date';
@@ -16,6 +17,16 @@ class AuthenticatedUser extends Model
         'name', 'username', 'email', 'password', 'reputation', 
         'is_suspended', 'creation_date', 'birth_date', 'description', 'is_admin', 'image_id'
     ];
+
+    public function getAuthIdentifierName()
+    {
+        return 'email';
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
 
     public function image()
     {
