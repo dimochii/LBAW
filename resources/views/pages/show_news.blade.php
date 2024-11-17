@@ -40,7 +40,7 @@
             @auth
                 <!-- Check if the authenticated user is one of the authors -->
                 @if ($newsItem->post->authors->contains('id', Auth::user()->id))
-                    <a href="{{ route('post.create') }}" class="btn btn-warning mt-3">Edit Post</a>
+                    <a href="{{ route('news.edit', ['post_id' => $newsItem->post->id]) }}" class="btn btn-warning mt-3">Edit Post</a>
                 @endif
             @endauth
         </div>
