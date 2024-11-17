@@ -45,6 +45,9 @@ Route::controller(RegisterController::class)->group(function () {
 //Route::get('/news', [NewsController::class, 'list'])->middleware('auth')->name('news.list');
 Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
+Route::post('/news/{post_id}/upvote', [NewsController::class, 'upvote'])->name('news.upvote');
+Route::post('/news/{post_id}/downvote', [NewsController::class, 'downvote'])->name('news.downvote');
+
     //News editing
 Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware('auth')->name('news.edit');
 Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('auth')->name('news.update');

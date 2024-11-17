@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use App\Models\Post;
+use App\Models\Vote;
+use App\Models\PostVote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,12 +16,23 @@ class NewsController extends Controller
      */
     public function list()
     {
-        $news = News::with('post')->orderBy('post_id', 'desc')->get();
-
+        $news = News::with('post')->get();
+    
+        foreach ($news as $item) {
+            $item->upvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
+                $query->where('post_id', $item->post_id);
+            })->where('upvote', true)->count();
+    
+            $item->downvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
+                $query->where('post_id', $item->post_id);
+            })->where('upvote', false)->count();
+        }
+    
         return view('pages.news', [
             'news' => $news
         ]);
     }
+    
     public function show($post_id)
     {
         $newsItem = News::with('post')->where('post_id', $post_id)->firstOrFail();
@@ -78,5 +91,58 @@ class NewsController extends Controller
         return view('pages.show_news', compact('newsItem'));
         //return redirect()->route('news.edit', $post_id)->with('success', 'News updated successfully');
     }
+
+
+
+    public function upvote($post_id)
+    {
+        $post = Post::findOrFail($post_id);
+        $user = Auth::user();
+
+        // Check if the user has already voted
+        $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
+
+        if ($existingVote) {
+            if ($existingVote->upvote) {
+                return redirect()->back()->with('success', 'You have already upvoted this post.');
+            }
+            // Change downvote to upvote
+            $existingVote->update(['upvote' => true]);
+        } else {
+            // Create a new vote and link it to the post
+            $vote = Vote::create(['upvote' => true, 'authenticated_user_id' => $user->id]);
+            PostVote::insert([
+                'vote_id' => $vote->id,
+                'post_id' => $post->id,
+            ]);        }
+
+        return redirect()->back()->with('success', 'Post upvoted successfully.');
+    }
+
+    public function downvote($post_id)
+    {
+        $post = Post::findOrFail($post_id);
+        $user = Auth::user();
+
+        // Check if the user has already voted
+        $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
+
+        if ($existingVote) {
+            if (!$existingVote->upvote) {
+                return redirect()->back()->with('success', 'You have already downvoted this post.');
+            }
+            // Change upvote to downvote
+            $existingVote->update(['upvote' => false]);
+        } else {
+            // Create a new vote and link it to the post
+            $vote = Vote::create(['upvote' => false, 'authenticated_user_id' => $user->id]);
+            PostVote::insert([
+                'vote_id' => $vote->id,
+                'post_id' => $post->id,
+            ]);        }
+
+        return redirect()->back()->with('success', 'Post downvoted successfully.');
+    }
+
     
 }

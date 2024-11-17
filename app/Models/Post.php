@@ -24,7 +24,7 @@ class Post extends Model
 
     public function votes()
     {
-        return $this->hasMany(PostVote::class);
+        return $this->hasManyThrough(Vote::class, PostVote::class, 'post_id', 'id', 'id', 'vote_id');
     }
 
     public function news()
