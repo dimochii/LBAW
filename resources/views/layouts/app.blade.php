@@ -21,9 +21,9 @@
 </head>
 <body class="h-full">
     <div class="min-h-screen flex flex-col">
-        <!-- Top Header - Added border-b-2 for bottom border -->
+        <!-- Top Header -->
         <header class="flex items-center justify-between h-12 border-b-2 border-black">
-            <!-- Logo Section - Match sidebar width -->
+            <!-- Logo Section -->
             <div class="w-48 bg-whatsup-green h-full flex items-center border-r-2 border-black">
                 <a href="{{ url('/') }}" class="px-4 text-white font-semibold text-xl">
                     whatsUP
@@ -74,9 +74,10 @@
             </div>
         </header>
 
+        <!-- Main Content Area with all three columns -->
         <div class="flex flex-1">
-            <!-- Sidebar - Changed border-r to border-r-2 -->
-            <aside class="w-48 bg-gray-50 border-r-2 border-black">
+            <!-- Left Sidebar -->
+            <aside class="w-48 flex-shrink-0 bg-gray-50 border-r-2 border-black">
                 <nav class="divide-y-2 divide-black">
                     <!-- Primary Links -->
                     <div class="py-4">
@@ -158,6 +159,72 @@
                     @yield('content')
                 </section>
             </main>
+
+            <!-- Right Sidebar - Always visible but conditionally populated -->
+            @if (Request::is('hub/*') || Request::is('news'))
+            <aside class="w-64 flex-shrink-0 bg-gray-50 border-l-2 border-black">
+                <!-- Hub Info Section -->
+                <div class="p-4 border-b-2 border-black">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex-shrink-0"></div>
+                        <div>
+                            <h2 class="font-medium">/Economics</h2>
+                            <p class="text-sm text-gray-600">
+                                Discussing economic trends, policies, and finance. Get involved in economic discussions.
+                            </p>
+                            <div class="mt-2 flex items-center space-x-4 text-sm text-gray-600">
+                                <div class="flex items-center">
+                                    <span>123k</span>
+                                    <span class="ml-1">Reading</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span>123k</span>
+                                    <span class="ml-1">Following</span>
+                                </div>
+                            </div>
+                            <button class="mt-2 px-4 py-1 text-sm bg-black text-white rounded-full hover:bg-black/80">
+                                follow +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Moderators Section -->
+                <div class="p-4">
+                    <h3 class="text-sm font-medium text-gray-500 mb-3">moderators</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex-shrink-0"></div>
+                            <div>
+                                <p class="text-sm font-medium">@admin</p>
+                                <p class="text-xs text-gray-500">Administrator</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex-shrink-0"></div>
+                            <div>
+                                <p class="text-sm font-medium">@friends</p>
+                                <p class="text-xs text-gray-500">Moderator</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex-shrink-0"></div>
+                            <div>
+                                <p class="text-sm font-medium">@walkPro123</p>
+                                <p class="text-xs text-gray-500">Moderator</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-red-500 rounded-full flex-shrink-0"></div>
+                            <div>
+                                <p class="text-sm font-medium">@anonymous</p>
+                                <p class="text-xs text-gray-500">Moderator</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            @endif
         </div>
     </div>
 </body>
