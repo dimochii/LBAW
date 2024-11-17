@@ -4,7 +4,7 @@
 <div class="min-h-screen bg-white">
     {{-- Main Profile Section with Black Border Bottom --}}
     <div class="border-b-2 border-black">
-        <div class="max-w-7xl mx-auto p-6 flex items-start gap-6">
+        <div class="max-w-7xl mx-auto p-6 flex flex-col md:flex-row items-start gap-6">
             {{-- Profile Image --}}
             <div class="flex-shrink-0">
                 @if ($user->image_id)
@@ -24,7 +24,7 @@
 
             {{-- Profile Info --}}
             <div class="flex-1">
-                <div class="flex justify-between items-start">
+                <div class="flex flex-col md:flex-row justify-between items-start">
                     <div>
                         <h1 class="text-3xl font-medium text-gray-900">{{ $user->name }}</h1>
                         <p class="text-gray-600">{{ '@' . $user->username }}</p>
@@ -32,7 +32,7 @@
                     </div>
                     
                     {{-- Stats on the right --}}
-                    <div class="flex items-start gap-4 text-sm text-gray-600">
+                    <div class="flex items-start gap-4 text-sm text-gray-600 mt-4 md:mt-0">
                         <div class="text-right">
                             <div class="font-semibold">{{ 12 }}</div> {{-- Falta esta lógica--}}
                             <div>articles</div>
@@ -53,7 +53,7 @@
                 </p>
 
                 {{-- Followers/Following buttons --}}
-                <div class="mt-6 flex gap-4">
+                <div class="mt-6 flex flex-col sm:flex-row gap-4">
                     <div class="group">
                         <a href="{{ route('user.followers', $user->id) }}" 
                         class="inline-flex items-center gap-3 px-4 py-2 bg-white border-2 border-black rounded-lg hover:bg-black hover:text-white transition-colors duration-200">
@@ -95,9 +95,9 @@
     </div>
 
     {{-- Navigation Tabs with Black Border --}}
-    <div class="border-b-2 border-black">
-        <div class="max-w-7xl mx-auto px-6">
-            <nav class="flex gap-8">
+    <div class="border-b-2 border-black w-full">
+        <div class="w-full">
+            <nav class="max-w-7xl mx-auto px-6 flex flex-wrap gap-4 md:gap-8">
                 <a href="{{ url('/users/' . $user->id . '/articles') }}" 
                    class="py-4 text-gray-900 hover:text-gray-700 border-b-2 border-black">
                     articles
@@ -109,6 +109,10 @@
                 <a href="{{ url('/users/' . $user->id . '/upvoted') }}" 
                    class="py-4 text-gray-500 hover:text-gray-900">
                     upvoted
+                </a>
+                <a href="{{ url('/users/' . $user->id . '/hubs') }}" 
+                   class="py-4 text-gray-500 hover:text-gray-900 ml-auto">
+                    hubs
                 </a>
             </nav>
         </div>

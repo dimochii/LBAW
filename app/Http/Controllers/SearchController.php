@@ -53,7 +53,7 @@ class SearchController extends Controller
                         return [
                             'name' => $user->name,
                             'image' => $user->image_id,
-                            'route' => url("/user/{$user->id}"),
+                            'route' => url("/users/{$user->id}/profile"),
                         ];
                      });
 
