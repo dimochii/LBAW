@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\FeedController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,3 +59,13 @@ Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('au
     //creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
+
+
+//Make sure that only logged in users can access these diferent pages:
+Route::middleware('auth')->group(function () {
+    Route::controller(FeedController::class)->group(function () {
+        Route::get('/home', 'getHomePosts')->name('home'); 
+        Route::get('/global', 'getGlobalPosts')->name('global');
+        Route::get('/recent', 'getRecentPosts')->name('recent');
+    });
+});

@@ -744,3 +744,25 @@ INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
 (18, 8),
 (19, 9),
 (20, 10);
+
+INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
+-- Tech community
+(3, 1), (4, 1), (5, 1), (31, 1), 
+-- Book Lovers
+(4, 2), (18, 2), (29, 2), (40, 2),
+-- Anime Fans
+(5, 3), (42, 3), (44, 3), (36, 3),
+-- Travel Enthusiasts
+(6, 4), (10, 4), (43, 4), (33, 4),
+-- Fantasy Writers
+(7, 5), (21, 5), (38, 5), (15, 5),
+-- Culinary Artists
+(13, 6), (9, 6), (26, 6), (45, 6),
+-- Movie Buffs
+(17, 7), (1, 7), (27, 7), (19, 7),
+-- Fitness Fanatics
+(8, 8), (34, 8), (30, 8), (48, 8),
+-- Game Developers
+(14, 9), (25, 9), (3, 9), (49, 9),
+-- Nature Lovers
+(6, 10), (20, 10), (33, 10), (44, 10);
