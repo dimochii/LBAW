@@ -34,6 +34,13 @@
                 <a href="{{ url('/users/' . $user->id . '/posts') }}" class="btn btn-primary">View Authored Posts</a>
                 <a href="{{ url('/users/' . $user->id . '/communities') }}" class="btn btn-secondary">View Followed Communities</a>
             </div>
+
+            <!-- Add Edit Profile button if the logged-in user is viewing their own profile -->
+            @if (Auth::check() && Auth::user()->id === $user->id)
+                <div class="mt-3">
+                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning">Edit Profile</a>
+                </div>
+            @endif
         </div>
     </div>
 </div>
