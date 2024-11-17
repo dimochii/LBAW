@@ -23,13 +23,12 @@
             <button 
                 id="mobile-menu-button"
                 class="md:hidden fixed bottom-4 right-4 z-50 bg-whatsup-blue text-white p-3 rounded-full shadow-lg"
-                onclick="toggleLeftSidebar()"
+                onclick="toggleMobileMenu()"
             >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
             </button>
-
             <!-- Search Section -->
             <div class="flex-1 bg-whatsup-red h-full flex items-center px-2 md:px-4 relative">
                 <svg class="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,7 +105,7 @@
 
 
             <!-- Right Section -->
-            <div id="right-sidebar" class="hidden md:block md:static md:w-64 flex-shrink-0 bg-gray-50 border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
+            <div class="bg-whatsup-blue h-full w-32 md:w-64 flex items-center border-l-2 border-black justify-evenly">
             @if (Auth::check())
                     <a href="{{ route('messages') }}" class="text-white hover:text-white/80 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +150,7 @@
             </button>
 
             <!-- Left Sidebar -->
-            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 bg-gray-50 border-r-2 border-black transition-transform duration-200 ease-in-out z-40">
+            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 bg-gray-50 border-r-2 border-black transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
                 <nav class="divide-y-2 divide-black">
                     <!-- Primary Links -->
                     <div class="py-4">
@@ -302,11 +301,10 @@
             @endif
         </div>
     </div>
-    <!-- Mobile Menu Overlay -->
     <div 
         id="mobile-menu-overlay"
         class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"
-        onclick="toggleMobileMenu()">
+        onclick="toggleLeftSidebar()">
     </div>
 </body>
 </html>
