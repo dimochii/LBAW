@@ -723,6 +723,10 @@ INSERT INTO reports (reason, report_date, is_open, report_type, authenticated_us
 ('Topic promotes harmful behavior', '2024-02-03 09:30:00', false, 'topic_report', 19),
 ('Topic contains personal attacks', '2024-02-04 11:45:00', true, 'topic_report', 20);
 
+INSERT INTO user_followers (follower_id, followed_id) VALUES 
+(2, 3), (3, 4), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (12, 13), (14, 15), (16, 17), (18, 19), (19, 20), (21, 22), (23, 24), (25, 26), (27, 28), (29, 30), (31, 32), (33, 34), (35, 36), (37, 38), (39, 40), (41, 42), (43, 44), (45, 46), (47, 48), (49, 50);
+
+
 
 INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
 (2, 3),

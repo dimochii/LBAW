@@ -7,7 +7,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\FeedController;
+use App\Http\Controllers\AuthenticatedUserController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,16 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+//Authenticated User
+    //profile
+Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+    //edit profile
+Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
+Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');   
+    //followers & following
+Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
+Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
+
 
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
@@ -61,6 +72,7 @@ Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
 
 
+
 //Make sure that only logged in users can access these diferent pages:
 Route::middleware('auth')->group(function () {
     Route::controller(FeedController::class)->group(function () {
@@ -68,4 +80,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/global', 'getGlobalPosts')->name('global');
         Route::get('/recent', 'getRecentPosts')->name('recent');
     });
+
+
+Route::get('/messages', [MessageController::class, 'index'])->name('messages');
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
+//Search
+Route::controller(SearchController::class)->group(function () {
+    Route::get('/search', 'search')->name('search');
+    
 });

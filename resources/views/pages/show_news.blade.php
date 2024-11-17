@@ -8,12 +8,15 @@
                 <!-- Loop through all authors -->
                 @foreach ($newsItem->post->authors as $author)
                     <div class="mr-3 mb-2 d-flex align-items-center">
-                        <!-- Display User Image -->
-                        <img src="{{ $author->image_id ?? '/images/default-profile.png' }}" alt="User Image" class="rounded-circle" width="40" height="40">
-                        <div class="ml-2">
-                            <!-- Display Username -->
-                            <strong>{{ $author->username ?? 'Unknown' }}</strong>
-                        </div>
+                        <!-- Wrap the author image and username in a link -->
+                        <a href="{{ route('user.profile', $author->id) }}" class="d-flex align-items-center">
+                            <!-- Display User Image -->
+                            <img src="{{ $author->image_id ?? '/images/default-profile.png' }}" alt="User Image" class="rounded-circle" width="40" height="40">
+                            <div class="ml-2">
+                                <!-- Display Username -->
+                                <strong>{{ $author->username ?? 'Unknown' }}</strong>
+                            </div>
+                        </a>
                     </div>
                 @endforeach
 

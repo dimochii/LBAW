@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AuthenticatedUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class AuthenticatedUserController extends Controller
@@ -46,34 +47,90 @@ class AuthenticatedUserController extends Controller
     public function show($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
-        return response()->json($user);
+
+        $followers = $user->followers;
+        $following = $user->follows;
+
+        return view('pages.profile', compact('user', 'followers', 'following'));
     }
 
+    public function getFollowers($id)
+    {
+        $user = AuthenticatedUser::findOrFail($id);
+        $followers = $user->followers;
+
+        return view('pages.followers', compact('user', 'followers'));
+    }
+
+    public function getFollows($id)
+    {
+        $user = AuthenticatedUser::findOrFail($id);
+        $following = $user->follows;
+
+        return view('pages.following', compact('user', 'following'));
+    }
     /**
      * Update the specified user in storage.
      */
-    public function update(Request $request, $id)
+    public function edit($id)
     {
+
         $user = AuthenticatedUser::findOrFail($id);
 
-        $validatedData = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'username' => 'sometimes|string|max:255|unique:authenticated_users,username,' . $user->id,
-            'email' => 'sometimes|string|email|max:255|unique:authenticated_users,email,' . $user->id,
-            'password' => 'sometimes|string|min:8',
-            'birth_date' => 'sometimes|date|before:today',
-            'description' => 'nullable|string',
-            'image_id' => 'nullable|integer|exists:images,id',
-        ]);
-
-        if (isset($validatedData['password'])) {
-            $validatedData['password'] = Hash::make($validatedData['password']);
-        }
-
-        $user->update($validatedData);
-
-        return response()->json($user);
+        return view('pages.edit_profile', compact('user'));
     }
+
+    public function update(Request $request, $id)
+{
+    $user = AuthenticatedUser::findOrFail($id);
+
+
+    // Validate the data
+    $validatedData = $request->validate([
+        'name' => 'nullable|string|max:255',
+        'username' => 'nullable|string|max:255|unique:authenticated_users,username,' . $user->id,
+        'email' => 'nullable|email|max:255|unique:authenticated_users,email,' . $user->id,
+        'birth_date' => 'nullable|date|before:today',
+        'description' => 'nullable|string',
+        'password' => 'nullable|string|min:8|confirmed',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Update only provided fields
+    if (!empty($validatedData['name'])) {
+        $user->name = $validatedData['name'];
+    }
+    if (!empty($validatedData['username'])) {
+        $user->username = $validatedData['username'];
+    }
+    if (!empty($validatedData['email'])) {
+        $user->email = $validatedData['email'];
+    }
+    if (!empty($validatedData['birth_date'])) {
+        $user->birth_date = $validatedData['birth_date'];
+    }
+    if (!empty($validatedData['description'])) {
+        $user->description = $validatedData['description'];
+    }
+
+    // Update password if provided
+    if (!empty($validatedData['password'])) {
+        $user->password = Hash::make($validatedData['password']);
+    }
+
+    // Handle file upload if provided
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('images'), $filename);
+        $user->image_id = $filename; // Save the filename as the image ID
+    }
+
+    $user->save();
+
+    // Redirect back to the profile page with success message
+    return redirect()->route('user.profile', $user->id)->with('success', 'Profile updated successfully!');
+}
 
     /**
      * Remove the specified user from storage.
@@ -108,27 +165,6 @@ class AuthenticatedUserController extends Controller
         return response()->json($posts);
     }
 
-    /**
-     * Get the user's followers.
-     */
-    public function getFollowers($id)
-    {
-        $user = AuthenticatedUser::findOrFail($id);
-        $followers = $user->followers;
-
-        return response()->json($followers);
-    }
-
-    /**
-     * Get the users that the user follows.
-     */
-    public function getFollows($id)
-    {
-        $user = AuthenticatedUser::findOrFail($id);
-        $follows = $user->follows;
-
-        return response()->json($follows);
-    }
 
     /**
      * Suspend a user.
