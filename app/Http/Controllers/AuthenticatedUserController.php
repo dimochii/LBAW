@@ -46,9 +46,28 @@ class AuthenticatedUserController extends Controller
     public function show($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
-        return response()->json($user);
+
+        $followers = $user->followers;
+        $following = $user->follows;
+
+        return view('pages.profile', compact('user', 'followers', 'following'));
     }
 
+    public function getFollowers($id)
+    {
+        $user = AuthenticatedUser::findOrFail($id);
+        $followers = $user->followers;
+
+        return view('pages.followers', compact('user', 'followers'));
+    }
+
+    public function getFollows($id)
+    {
+        $user = AuthenticatedUser::findOrFail($id);
+        $following = $user->follows;
+
+        return view('pages.following', compact('user', 'following'));
+    }
     /**
      * Update the specified user in storage.
      */
@@ -108,27 +127,6 @@ class AuthenticatedUserController extends Controller
         return response()->json($posts);
     }
 
-    /**
-     * Get the user's followers.
-     */
-    public function getFollowers($id)
-    {
-        $user = AuthenticatedUser::findOrFail($id);
-        $followers = $user->followers;
-
-        return response()->json($followers);
-    }
-
-    /**
-     * Get the users that the user follows.
-     */
-    public function getFollows($id)
-    {
-        $user = AuthenticatedUser::findOrFail($id);
-        $follows = $user->follows;
-
-        return response()->json($follows);
-    }
 
     /**
      * Suspend a user.

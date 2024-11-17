@@ -40,12 +40,12 @@ class AuthenticatedUser extends Authenticatable
 
     public function follows()
     {
-        return $this->hasMany(AuthenticatedUser::class, 'user_followers');
+        return $this->belongsToMany(AuthenticatedUser::class, 'user_followers', 'follower_id', 'followed_id');
     }
-
+    
     public function followers()
     {
-        return $this->hasMany(AuthenticatedUser::class, 'user_followers');
+        return $this->belongsToMany(AuthenticatedUser::class, 'user_followers', 'followed_id', 'follower_id');
     }
     
     public function authoredPosts()

@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\AuthenticatedUserController;
 use App\Http\Controllers\SearchController;
 
 /*
@@ -42,6 +43,13 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+//Authenticated User
+    //profile
+Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+    //followers & following
+Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
+Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
 
 
 //News
