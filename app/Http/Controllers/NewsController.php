@@ -77,19 +77,16 @@ class NewsController extends Controller
             'news_url' => 'required|url',
         ]);
 
-        // Update the post
         $newsItem->post->update([
             'title' => $request->title,
             'content' => $request->content,
         ]);
 
-        // Update the news URL
         $newsItem->update([
             'news_url' => $request->news_url,
         ]);
 
         return view('pages.show_news', compact('newsItem'));
-        //return redirect()->route('news.edit', $post_id)->with('success', 'News updated successfully');
     }
 
 
@@ -99,17 +96,15 @@ class NewsController extends Controller
         $post = Post::findOrFail($post_id);
         $user = Auth::user();
 
-        // Check if the user has already voted
         $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
 
         if ($existingVote) {
             if ($existingVote->upvote) {
                 return redirect()->back()->with('success', 'You have already upvoted this post.');
             }
-            // Change downvote to upvote
+
             $existingVote->update(['upvote' => true]);
         } else {
-            // Create a new vote and link it to the post
             $vote = Vote::create(['upvote' => true, 'authenticated_user_id' => $user->id]);
             PostVote::insert([
                 'vote_id' => $vote->id,
@@ -124,17 +119,14 @@ class NewsController extends Controller
         $post = Post::findOrFail($post_id);
         $user = Auth::user();
 
-        // Check if the user has already voted
         $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
 
         if ($existingVote) {
             if (!$existingVote->upvote) {
                 return redirect()->back()->with('success', 'You have already downvoted this post.');
             }
-            // Change upvote to downvote
             $existingVote->update(['upvote' => false]);
         } else {
-            // Create a new vote and link it to the post
             $vote = Vote::create(['upvote' => false, 'authenticated_user_id' => $user->id]);
             PostVote::insert([
                 'vote_id' => $vote->id,
