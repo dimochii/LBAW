@@ -71,7 +71,17 @@ Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('au
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
 
-// To do
+
+
+//Make sure that only logged in users can access these diferent pages:
+Route::middleware('auth')->group(function () {
+    Route::controller(FeedController::class)->group(function () {
+        Route::get('/home', 'getHomePosts')->name('home'); 
+        Route::get('/global', 'getGlobalPosts')->name('global');
+        Route::get('/recent', 'getRecentPosts')->name('recent');
+    });
+
+
 Route::get('/messages', [MessageController::class, 'index'])->name('messages');
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -79,4 +89,5 @@ Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 //Search
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
+    
 });
