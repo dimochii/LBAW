@@ -11,98 +11,122 @@ tailwind.config = {
     }
 };
 
-// Search functionality module
-document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
-    const searchElements = {
-        input: document.getElementById('search-input'),
-        results: document.getElementById('search-results'),
-        communities: document.querySelector('#communities-results .space-y-2'),
-        posts: document.querySelector('#posts-results .space-y-2'),
-        users: document.querySelector('#users-results .space-y-2')
-    };
-    
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
     let debounceTimer;
 
-    function initializeSearchListeners() {
-        searchElements.input.addEventListener('focus', () => {
-            if (searchElements.input.value.trim().length > 0) {
-                searchElements.results.classList.remove('hidden');
-            }
-        });
+    const toggleSearchResults = (show) => {
+        searchResults.style.opacity = show ? '1' : '0';
+        searchResults.style.transform = show ? 'scale(1)' : 'scale(0.95)';
+        searchResults.style.pointerEvents = show ? 'auto' : 'none';
+    };
 
-        document.addEventListener('click', (e) => {
-            if (!searchElements.input.contains(e.target) && 
-                !searchElements.results.contains(e.target)) {
-                searchElements.results.classList.add('hidden');
-            }
-        });
+    const createCommunityItem = (community) => `
+        <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer" 
+             onclick="window.location.href='${community.route}'">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                <span class="text-sm text-gray-700">${community.name}</span>
+            </div>
+            ${community.description ? `
+                <p class="text-xs text-gray-500 mt-1 ml-4">${community.description}</p>
+            ` : ''}
+        </div>
+    `;
 
-        searchElements.input.addEventListener('input', function(e) {
-            clearTimeout(debounceTimer);
-            
-            if (e.target.value.trim().length === 0) {
-                searchElements.results.classList.add('hidden');
-                return;
-            }
+    const createPostItem = (post) => `
+        <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+             onclick="window.location.href='${post.community_route}'">
+            <span class="text-sm text-gray-700">${post.name}</span>
+            <div class="text-xs text-gray-500 mt-1">in ${post.community}</div>
+            ${post.content ? `
+                <p class="text-xs text-gray-500 mt-1 line-clamp-2">${post.content}</p>
+            ` : ''}
+        </div>
+    `;
 
-            debounceTimer = setTimeout(() => {
-                performSearch(e.target.value);
-            }, 300);
-        });
-    }
+    const createUserItem = (user) => `
+        <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+             onclick="window.location.href='${user.route}'">
+            <div class="flex items-center gap-3">
+                ${user.image ? `
+                    <img src="/image/${user.image}" class="w-6 h-6 rounded-full object-cover">
+                ` : `
+                    <div class="w-6 h-6 rounded-full bg-blue-500"></div>
+                `}
+                <span class="text-sm text-gray-700">@${user.name}</span>
+            </div>
+        </div>
+    `;
 
-    async function performSearch(query) {
+    const updateSearchResults = (results) => {
+        const communitiesContainer = searchResults.querySelector('.from-red-50.to-blue-50 .space-y-2');
+        const postsContainer = searchResults.querySelector('.from-blue-50.to-green-50 .space-y-2');
+        const usersContainer = searchResults.querySelector('.from-green-50.to-red-50 .space-y-2');
+
+        // Update communities section
+        communitiesContainer.innerHTML = results.communities.length 
+            ? results.communities.map(createCommunityItem).join('')
+            : '<div class="p-3 text-sm text-gray-500">No communities found</div>';
+
+        // Update posts section
+        postsContainer.innerHTML = results.posts.length
+            ? results.posts.map(createPostItem).join('')
+            : '<div class="p-3 text-sm text-gray-500">No posts found</div>';
+
+        // Update users section
+        usersContainer.innerHTML = results.users.length
+            ? results.users.map(createUserItem).join('')
+            : '<div class="p-3 text-sm text-gray-500">No users found</div>';
+
+        toggleSearchResults(true);
+    };
+
+    const performSearch = async (searchTerm) => {
+        if (!searchTerm.trim()) {
+            toggleSearchResults(false);
+            return;
+        }
+
         try {
-            const response = await fetch(`/search?search=${encodeURIComponent(query)}`, {
+            const response = await fetch(`/search?search=${encodeURIComponent(searchTerm)}`, {
                 headers: {
                     'Accept': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             });
-            
-            const data = await response.json();
-            updateSearchResults(data);
-            
+
+            if (!response.ok) throw new Error('Search request failed');
+
+            const results = await response.json();
+            updateSearchResults(results);
         } catch (error) {
             console.error('Search error:', error);
+            // Show error state in dropdown
+            searchResults.innerHTML = `
+                <div class="p-4 text-sm text-red-500">
+                    An error occurred while searching. Please try again.
+                </div>
+            `;
+            toggleSearchResults(true);
         }
-    }
+    };
 
-    function updateSearchResults(data) {
-        searchElements.results.classList.remove('hidden');
-        
-        searchElements.communities.innerHTML = data.communities.length ? 
-            data.communities.map(community => `
-                <a href="${community.route}" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded">
-                    <div class="w-8 h-8 bg-whatsup-green rounded-full flex-shrink-0"></div>
-                    <div>
-                        <div class="font-medium text-sm">${community.name}</div>
-                        <div class="text-xs text-gray-500 truncate">${community.description}</div>
-                    </div>
-                </a>
-            `).join('') : 
-            '<div class="text-sm text-gray-500 p-2">No communities found</div>';
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => performSearch(e.target.value), 300);
+    });
 
-        searchElements.posts.innerHTML = data.posts.length ?
-            data.posts.map(post => `
-                <a href="${post.community_route}" class="block p-2 hover:bg-gray-100 rounded">
-                    <div class="font-medium text-sm">${post.name}</div>
-                    <div class="text-xs text-gray-500">in ${post.community}</div>
-                    <div class="text-xs text-gray-500 truncate">${post.content}</div>
-                </a>
-            `).join('') :
-            '<div class="text-sm text-gray-500 p-2">No posts found</div>';
+    searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim()) {
+            toggleSearchResults(true);
+        }
+    });
 
-        searchElements.users.innerHTML = data.users.length ?
-            data.users.map(user => `
-                <a href="${user.route}" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded">
-                    <div class="w-8 h-8 bg-whatsup-blue rounded-full flex-shrink-0"></div>
-                    <div class="font-medium text-sm">${user.name}</div>
-                </a>
-            `).join('') :
-            '<div class="text-sm text-gray-500 p-2">No users found</div>';
-    }
-
-    initializeSearchListeners();
+    document.addEventListener('click', (e) => {
+        if (!searchResults.contains(e.target) && e.target !== searchInput) {
+            toggleSearchResults(false);
+        }
+    });
 });
