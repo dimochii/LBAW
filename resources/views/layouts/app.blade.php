@@ -1,7 +1,3 @@
-<?php
-    @include('auth.modal')
-?>
-
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" class="h-full">
 <head>
@@ -9,19 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'whatsup-green': '#A6B37D',
-                        'whatsup-red': '#C96868',
-                        'whatsup-blue': '#7EACB5'
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="{{ asset('js/layout.js') }}"></script>
 </head>
 <body class="h-full">
     <div class="min-h-screen flex flex-col">
@@ -34,16 +18,38 @@
                 </a>
             </div>
 
-            <!-- Search Section -->
-            <div class="flex-1 bg-whatsup-red h-full flex items-center px-4 ">
+            <!-- Search Section with Dropdown -->
+            <div class="flex-1 bg-whatsup-red h-full flex items-center px-4 relative">
                 <svg class="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <input 
+                    id="search-input"
                     type="text" 
                     placeholder="search" 
                     class="w-full bg-transparent border-none text-white placeholder-white/80 px-3 py-2 focus:outline-none text-sm"
                 >
+                
+                <!-- Search Results Dropdown -->
+                <div id="search-results" class="absolute left-0 right-0 top-full mt-1 bg-white rounded-lg shadow-lg border-2 border-black hidden">
+                    <!-- Communities Section -->
+                    <div id="communities-results" class="p-2 border-b border-gray-200">
+                        <h3 class="text-xs font-semibold text-gray-500 mb-2">Communities</h3>
+                        <div class="space-y-2 max-h-48 overflow-y-auto"></div>
+                    </div>
+                    
+                    <!-- Posts Section -->
+                    <div id="posts-results" class="p-2 border-b border-gray-200">
+                        <h3 class="text-xs font-semibold text-gray-500 mb-2">Posts</h3>
+                        <div class="space-y-2 max-h-48 overflow-y-auto"></div>
+                    </div>
+                    
+                    <!-- Users Section -->
+                    <div id="users-results" class="p-2">
+                        <h3 class="text-xs font-semibold text-gray-500 mb-2">Users</h3>
+                        <div class="space-y-2 max-h-48 overflow-y-auto"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- Right Section -->
