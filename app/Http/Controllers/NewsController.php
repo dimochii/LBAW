@@ -20,6 +20,13 @@ class NewsController extends Controller
             'news' => $news
         ]);
     }
+    public function show($post_id)
+    {
+        $newsItem = News::with('post')->where('post_id', $post_id)->firstOrFail();
+        
+        return view('pages.show_news', compact('newsItem'));
+    }
+    
     public function createNews(Post $post, $newsUrl)
     {
         $news = News::create([
@@ -29,4 +36,5 @@ class NewsController extends Controller
 
         return redirect()->route('news')->with('success', 'News created successfully');
     }
+    
 }

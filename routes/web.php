@@ -41,11 +41,14 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+//News
 //Route::get('/news', [NewsController::class, 'list'])->middleware('auth')->name('news.list');
 Route::get('/news', [NewsController::class, 'list'])->name('news');
+Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
+
 
 //Posts
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth');
-// Post creation
+    // Post creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');

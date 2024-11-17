@@ -11,7 +11,7 @@ class PostController extends Controller
 {
     public function createPost()
     {
-        return view('posts.create');
+        return view('pages.create_post');
     }
     public function create(Request $request)
     {
