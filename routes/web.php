@@ -43,9 +43,12 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
-//PAuthenticated User
+//Authenticated User
     //profile
 Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+    //followers & following
+Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
+Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
 
 
 //News

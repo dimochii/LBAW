@@ -20,6 +20,16 @@
                 <p class="card-text"><strong>Profile Image:</strong> Not uploaded</p>
             @endif
 
+            <!-- Show follower and following counts -->
+            <div class="mt-3">
+                <p><strong>Followers:</strong> {{ $followers->count() }}
+                    <a href="{{ route('user.followers', $user->id) }}" class="btn btn-link btn-sm">View Followers</a>
+                </p>
+                <p><strong>Following:</strong> {{ $following->count() }}
+                    <a href="{{ route('user.following', $user->id) }}" class="btn btn-link btn-sm">View Following</a>
+                </p>
+            </div>
+
             <div class="mt-3">
                 <a href="{{ url('/users/' . $user->id . '/posts') }}" class="btn btn-primary">View Authored Posts</a>
                 <a href="{{ url('/users/' . $user->id . '/communities') }}" class="btn btn-secondary">View Followed Communities</a>
