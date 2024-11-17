@@ -155,35 +155,35 @@
                     <!-- Primary Links -->
                     <div class="py-4">
                         <div class="space-y-1">
-                            <a href="{{ url('/home') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="{{ url('/home') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white">
                                 <span class="text-sm">home</span>
                             </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white">
                                 <span class="text-sm">global</span>
                             </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white">
                                 <span class="text-sm">recent</span>
                             </a>
                         </div>
                     </div>
 
-                    <!-- Recent Section -->
+                   <!-- Recent Section -->
                     <div class="py-4">
                         <h3 class="px-4 text-xs font-medium text-gray-500 mb-2">recent</h3>
                         <div class="space-y-1">
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 <div class="w-2 h-2 rounded-full bg-green-500"></div>
                                 <span class="text-sm">/Economics</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 <div class="w-2 h-2 rounded-full bg-blue-500"></div>
                                 <span class="text-sm">/Sports</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 <div class="w-2 h-2 rounded-full bg-red-500"></div>
                                 <span class="text-sm">/Portugal</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
                                 <span class="text-sm">/Finances</span>
                             </a>
@@ -194,11 +194,11 @@
                     <div class="py-4">
                         <h3 class="px-4 text-xs font-medium text-gray-500 mb-2">hubs</h3>
                         <div class="space-y-1">
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 <div class="w-2 h-2 rounded-full bg-green-500"></div>
                                 <span class="text-sm">/Economics</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 <div class="w-2 h-2 rounded-full bg-blue-500"></div>
                                 <span class="text-sm">/Sports</span>
                             </a>
@@ -209,16 +209,16 @@
                     <div class="py-4">
                         <h3 class="px-4 text-xs font-medium text-gray-500 mb-2">info</h3>
                         <div class="space-y-1">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 about us
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 help
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 best of
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
                                 hubs
                             </a>
                         </div>
