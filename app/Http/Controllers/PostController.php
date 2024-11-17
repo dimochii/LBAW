@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\News;
 use App\Models\Topic;
@@ -27,6 +28,9 @@ class PostController extends Controller
             'content' => $request->content,
             'community_id' => $request->community_id,
         ]);
+
+        $user = Auth::user(); 
+        $post->authors()->attach($user->id, ['pinned' => false]); 
 
 
         if ($request->type === 'news') {
