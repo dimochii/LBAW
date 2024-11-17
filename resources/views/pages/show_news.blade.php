@@ -12,7 +12,7 @@
                         <img src="{{ $author->image_id ?? '/images/default-profile.png' }}" alt="User Image" class="rounded-circle" width="40" height="40">
                         <div class="ml-2">
                             <!-- Display Username -->
-                            <strong>{{ $author->username ?? 'Anonymous' }}</strong>
+                            <strong>{{ $author->username ?? 'Unknown' }}</strong>
                         </div>
                     </div>
                 @endforeach
@@ -35,6 +35,14 @@
             <p class="card-text">
                 <a href="{{ $newsItem->news_url ?? '#' }}" target="_blank" class="text-primary">{{ $newsItem->news_url ?? 'No URL available' }}</a>
             </p>
+
+            <!-- Edit Button (only if the current authenticated user is an author) -->
+            @auth
+                <!-- Check if the authenticated user is one of the authors -->
+                @if ($newsItem->post->authors->contains('id', Auth::user()->id))
+                    <a href="{{ route('post.create') }}" class="btn btn-warning mt-3">Edit Post</a>
+                @endif
+            @endauth
         </div>
     </div>
 </div>
