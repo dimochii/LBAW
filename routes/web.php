@@ -20,14 +20,19 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::get('/', function() {
+  return view('news');
+});
+
+Route::get('/news', function() {
+  return view('newsitem');
+});
 
 // Cards
 Route::controller(CardController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');
     Route::get('/cards/{id}', 'show');
 });
-
 
 // API
 Route::controller(CardController::class)->group(function () {
@@ -53,3 +58,6 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+
+
