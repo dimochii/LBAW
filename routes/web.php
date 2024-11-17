@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,3 +43,9 @@ Route::controller(RegisterController::class)->group(function () {
 });
 //Route::get('/news', [NewsController::class, 'list'])->middleware('auth')->name('news.list');
 Route::get('/news', [NewsController::class, 'list'])->name('news');
+
+//Posts
+Route::post('/posts', [PostController::class, 'create'])->middleware('auth');
+// Post creation
+Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
+Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
