@@ -31,7 +31,7 @@
             </div>
 
             <!-- Search Section -->
-            <div class="flex-1 bg-whatsup-red h-full flex items-center px-4 border-r-2 border-black">
+            <div class="flex-1 bg-whatsup-red h-full flex items-center px-4 ">
                 <svg class="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -43,7 +43,7 @@
             </div>
 
             <!-- Right Section -->
-            <div class="bg-whatsup-blue h-full px-4 flex items-center space-x-4">
+            <div class="bg-whatsup-blue h-full w-64 flex items-center border-l-2 border-black justify-evenly ">
                 @if (Auth::check())
                     <a href="{{ route('messages') }}" class="text-white hover:text-white/80 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +72,9 @@
                     </a>
                 @endif
             </div>
+
         </header>
+
 
         <!-- Main Content Area with all three columns -->
         <div class="flex flex-1">
@@ -160,34 +162,35 @@
                 </section>
             </main>
 
-            <!-- Right Sidebar - Always visible but conditionally populated -->
+            <!-- Right Sidebar -->
             @if (Request::is('hub/*') || Request::is('news'))
             <aside class="w-64 flex-shrink-0 bg-gray-50 border-l-2 border-black">
-                <!-- Hub Info Section -->
+                <!-- Hubs Section -->
                 <div class="p-4 border-b-2 border-black">
-                    <div class="flex items-start space-x-3">
+                    <div class="flex flex-wrap items-start gap-3"> 
                         <div class="w-12 h-12 bg-green-500 rounded-full flex-shrink-0"></div>
-                        <div>
-                            <h2 class="font-medium">/Economics</h2>
-                            <p class="text-sm text-gray-600">
-                                Discussing economic trends, policies, and finance. Get involved in economic discussions.
-                            </p>
-                            <div class="mt-2 flex items-center space-x-4 text-sm text-gray-600">
-                                <div class="flex items-center">
-                                    <span>123k</span>
-                                    <span class="ml-1">Reading</span>
+                            <div class="flex-1 break-words"> 
+                                <h2 class="font-medium break-all">/Economics</h2> 
+                                <p class="text-sm text-gray-600 whitespace-normal"> 
+                                    Discussing economic trends, policies, and finance. Get involved in economic discussions.
+                                </p>
+                                <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
+                                    <div class="flex items-center shrink-0"> 
+                                        <span>123k</span>
+                                        <span class="ml-1">Reading</span>
+                                    </div>
+                                    <div class="flex items-center shrink-0"> 
+                                        <span>123k</span>
+                                        <span class="ml-1">Following</span>
+                                    </div>
                                 </div>
-                                <div class="flex items-center">
-                                    <span>123k</span>
-                                    <span class="ml-1">Following</span>
-                                </div>
-                            </div>
-                            <button class="mt-2 px-4 py-1 text-sm bg-black text-white rounded-full hover:bg-black/80">
-                                follow +
-                            </button>
+                                <button class="mt-2 px-4 py-1 text-sm bg-black text-white rounded-full hover:bg-black/80">
+                                    follow +
+                                </button>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Moderators Section -->
                 <div class="p-4">
