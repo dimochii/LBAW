@@ -1,3 +1,7 @@
+<?php
+    @include('auth.modal')
+?>
+
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" class="h-full">
 <head>
@@ -75,8 +79,6 @@
 
         </header>
 
-
-        <!-- Main Content Area with all three columns -->
         <div class="flex flex-1">
             <!-- Left Sidebar -->
             <aside class="w-48 flex-shrink-0 bg-gray-50 border-r-2 border-black">

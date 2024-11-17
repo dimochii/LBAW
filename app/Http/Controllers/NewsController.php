@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -12,13 +13,20 @@ class NewsController extends Controller
      */
     public function list()
     {
-        // Get all news articles from the database
         $news = News::with('post')->orderBy('post_id', 'desc')->get();
 
-        // Return the view with the list of news
         return view('pages.news', [
             'news' => $news
         ]);
+    }
+    public function createNews(Post $post, $newsUrl)
+    {
+        $news = News::create([
+            'post_id' => $post->id,
+            'news_url' => $newsUrl,
+        ]);
+
+        return redirect()->route('news')->with('success', 'News created successfully');
     }
 }
 
