@@ -41,11 +41,20 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
-//Route::get('/news', [NewsController::class, 'list'])->middleware('auth')->name('news.list');
+
+
+//News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
+Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
+    //upvote & downvote
+Route::post('/news/{post_id}/upvote', [NewsController::class, 'upvote'])->name('news.upvote');
+Route::post('/news/{post_id}/downvote', [NewsController::class, 'downvote'])->name('news.downvote');
+    //editing
+Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware('auth')->name('news.edit');
+Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('auth')->name('news.update');
+
 
 //Posts
-Route::post('/posts', [PostController::class, 'create'])->middleware('auth');
-// Post creation
+    //creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');

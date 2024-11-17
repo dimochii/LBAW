@@ -454,6 +454,58 @@ INSERT INTO comments (content, creation_date, authenticated_user_id, post_id) VA
 ('Game dev is so much fun!', CURRENT_TIMESTAMP, 4, 8),
 ('Nature is so beautiful!', CURRENT_TIMESTAMP, 5, 9);
 
+INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
+(1, 1, FALSE),  -- Anonymous - The Rise of AI
+(2, 2, FALSE),  -- Bob Johnson - Must-Read Books of 2024
+(3, 3, FALSE),  -- Charlie Brown - Top Anime of the Season
+(4, 4, FALSE),  -- Diana Prince - Travel Tips for 2024
+(5, 5, FALSE),  -- Edward Elric - Building a Fantasy World
+(6, 6, FALSE),  -- Fiona Gallagher - Cooking Healthy Meals
+(7, 7, FALSE),  -- George Martin - Upcoming Movies in 2024
+(8, 8, FALSE),  -- Hannah Montana - Staying Fit During Winter
+(9, 9, FALSE),  -- Ian Malcolm - Game Development Basics
+(10, 10, FALSE), -- Jack Sparrow - Wildlife Photography Tips
+(11, 1, FALSE),  -- Katherine Pierce - The Rise of AI
+(12, 2, FALSE),  -- Liam Neeson - Must-Read Books of 2024
+(13, 3, FALSE),  -- Monica Geller - Top Anime of the Season
+(14, 4, FALSE),  -- Nina Williams - Travel Tips for 2024
+(15, 5, FALSE),  -- Oscar Wilde - Building a Fantasy World
+(16, 6, FALSE),  -- Penny Lane - Cooking Healthy Meals
+(17, 7, FALSE),  -- Quentin Tarantino - Upcoming Movies in 2024
+(18, 8, FALSE),  -- Rachel Green - Staying Fit During Winter
+(19, 9, FALSE),  -- Steve Rogers - Game Development Basics
+(20, 10, FALSE),  -- Tony Stark - Wildlife Photography Tips
+(21, 1, FALSE),  -- Ursula K. Le Guin - The Rise of AI
+(22, 2, FALSE),  -- Victor Frankenstein - Must-Read Books of 2024
+(23, 3, FALSE),  -- Will Turner - Top Anime of the Season
+(24, 4, FALSE),  -- Xena Warrior - Travel Tips for 2024
+(25, 5, FALSE),  -- Yoda - Building a Fantasy World
+(26, 6, FALSE),  -- Zorro - Cooking Healthy Meals
+(27, 7, FALSE),  -- Albus Dumbledore - Upcoming Movies in 2024
+(28, 8, FALSE),  -- Bella Swan - Staying Fit During Winter
+(29, 9, FALSE),  -- Clark Kent - Game Development Basics
+(30, 10, FALSE),  -- Darth Vader - Wildlife Photography Tips
+(31, 1, FALSE),  -- Elliot Alderson - The Rise of AI
+(32, 2, FALSE),  -- Frodo Baggins - Must-Read Books of 2024
+(33, 3, FALSE),  -- Gandalf the Grey - Top Anime of the Season
+(34, 4, FALSE),  -- Homer Simpson - Travel Tips for 2024
+(35, 5, FALSE),  -- Icarus - Building a Fantasy World
+(36, 6, FALSE),  -- Jules Winnfield - Cooking Healthy Meals
+(37, 7, FALSE),  -- Katniss Everdeen - Upcoming Movies in 2024
+(38, 8, FALSE),  -- Lara Croft - Staying Fit During Winter
+(39, 9, FALSE),  -- Marty McFly - Game Development Basics
+(40, 10, FALSE),  -- Nancy Drew - Wildlife Photography Tips
+(41, 1, FALSE),  -- Oliver Twist - The Rise of AI
+(42, 2, TRUE),   -- Pikachu - Must-Read Books of 2024 (Pinned)
+(43, 3, FALSE),  -- Quasimodo - Top Anime of the Season
+(44, 4, FALSE),  -- R2-D2 - Travel Tips for 2024
+(45, 5, FALSE),  -- SpongeBob SquarePants - Building a Fantasy World
+(46, 6, FALSE),  -- Thor Odinson - Cooking Healthy Meals
+(47, 7, FALSE),  -- Ultron - Upcoming Movies in 2024
+(48, 8, FALSE),  -- Violet Parr - Staying Fit During Winter
+(49, 9, FALSE),  -- Wolverine - Game Development Basics
+(50, 10, FALSE); -- X-Men - Wildlife Photography Tips
+
 -- Step 6: Insert votes
 -- Each user votes for some posts and comments
 INSERT INTO votes (upvote, authenticated_user_id) VALUES(TRUE, 1), 
@@ -580,11 +632,11 @@ INSERT INTO topics (post_id, review_date, status) VALUES(1, CURRENT_TIMESTAMP, '
 
 -- Step 10: Insert news
 INSERT INTO news (post_id, news_url) VALUES(1, 'http://example.com/news1'),
-(2, 'http://example.com/'),
+(2, 'http://example.com/news2'),
 (3, 'http://example.com/news3'),
 (4, 'http://example.com/news4'),
 (5, 'http://example.com/news5'),
-(6, 'http://exanews2mple.com/news6'),
+(6, 'http://example.com/news6'),
 (7, 'http://example.com/news7'),
 (8, 'http://example.com/news8'),
 (9, 'http://example.com/news9'),
