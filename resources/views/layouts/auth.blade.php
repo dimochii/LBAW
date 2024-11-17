@@ -5,20 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'whatsup-green': '#A6B37D',
-                        'whatsup-red': '#C96868',
-                        'whatsup-blue': '#7EACB5',
-                        'bg-fill': '#F4F2ED'
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="{{ asset('js/layout.js') }}"></script>
 </head>
 <body class="bg-bg-fill antialiased">
     <div id="app">

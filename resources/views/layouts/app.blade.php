@@ -12,14 +12,26 @@
         <!-- Top Header -->
         <header class="flex items-center justify-between h-12 border-b-2 border-black">
             <!-- Logo Section -->
-            <div class="w-48 bg-whatsup-green h-full flex items-center border-r-2 border-black">
+            <div class="w-32 md:w-48 bg-whatsup-green h-full flex items-center border-r-2 border-black">
                 <a href="{{ url('/') }}" class="px-4 text-white font-semibold text-xl">
-                    whatsUP
+                    <span class="block md:hidden">W</span>
+                    <span class="hidden md:block">whatsUP</span>
                 </a>
             </div>
 
+            <!-- Hamburger Button -->
+            <button 
+                id="mobile-menu-button"
+                class="md:hidden fixed bottom-4 right-4 z-50 bg-whatsup-blue text-white p-3 rounded-full shadow-lg"
+                onclick="toggleLeftSidebar()"
+            >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+
             <!-- Search Section -->
-            <div class="flex-1 bg-whatsup-red h-full flex items-center px-4 relative">
+            <div class="flex-1 bg-whatsup-red h-full flex items-center px-2 md:px-4 relative">
                 <svg class="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -27,11 +39,11 @@
                     id="search-input"
                     type="text" 
                     placeholder="search" 
-                    class="w-full bg-transparent border-none text-white placeholder-white/80 px-3 py-2 focus:outline-none text-sm"
+                    class="w-full bg-transparent border-none text-white placeholder-white/80 px-2 md:px-3 py-2 focus:outline-none text-sm"
                 >
                 
                 <!-- Enhanced Search Results Dropdown -->
-                <div id="search-results" class="absolute left-4 right-4 top-full mt-2 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border-2 border-black overflow-hidden transform opacity-0 scale-95 transition-all duration-200 ease-out">
+                <div id="search-results" class="absolute left-2 md:left-4 right-2 md:right-4 top-full mt-2 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border-2 border-black overflow-hidden transform opacity-0 scale-95 transition-all duration-200 ease-out z-50">
                     <!-- Communities Section -->
                     <div class="border-b border-gray-200 bg-gradient-to-r from-red-50 to-blue-50">
                         <div class="p-4">
@@ -94,14 +106,14 @@
 
 
             <!-- Right Section -->
-            <div class="bg-whatsup-blue h-full w-64 flex items-center border-l-2 border-black justify-evenly ">
-                @if (Auth::check())
+            <div id="right-sidebar" class="hidden md:block md:static md:w-64 flex-shrink-0 bg-gray-50 border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
+            @if (Auth::check())
                     <a href="{{ route('messages') }}" class="text-white hover:text-white/80 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                     </a>
-                    <a href="{{ route('notifications') }}" class="text-white hover:text-white/80 transition-colors">
+                    <a href="{{ route('notifications') }}" class="text-white hover:text-white/80 transition-colors hidden md:block">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
@@ -114,12 +126,12 @@
                 @else
                     <a 
                         href="{{ route('login') }}" 
-                        class="px-4 py-1.5 text-sm font-medium text-white bg-black/20 hover:bg-black/30 rounded-full transition-colors duration-200 flex items-center gap-2"
+                        class="px-2 md:px-4 py-1.5 text-sm font-medium text-white bg-black/20 hover:bg-black/30 rounded-full transition-colors duration-200 flex items-center gap-2"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        Login
+                        <span class="hidden md:inline">Login</span>
                     </a>
                 @endif
             </div>
@@ -127,8 +139,19 @@
         </header>
 
         <div class="flex flex-1">
+             <!-- Mobile Menu Button -->
+             <button 
+                id="mobile-menu-button"
+                class="md:hidden fixed bottom-4 right-4 z-50 bg-whatsup-blue text-white p-3 rounded-full shadow-lg"
+                onclick="toggleMobileMenu()"
+            >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+
             <!-- Left Sidebar -->
-            <aside class="w-48 flex-shrink-0 bg-gray-50 border-r-2 border-black">
+            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 bg-gray-50 border-r-2 border-black transition-transform duration-200 ease-in-out z-40">
                 <nav class="divide-y-2 divide-black">
                     <!-- Primary Links -->
                     <div class="py-4">
@@ -205,7 +228,7 @@
             </aside>
 
             <!-- Main Content -->
-            <main class="flex-1 p-6 bg-white">
+            <main class="flex-1 p-3 md:p-6 bg-white">
                 <section id="content">
                     @yield('content')
                 </section>
@@ -213,7 +236,7 @@
 
             <!-- Right Sidebar -->
             @if (Request::is('hub/*') || Request::is('news'))
-            <aside class="w-64 flex-shrink-0 bg-gray-50 border-l-2 border-black">
+            <aside id="right-sidebar" class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-gray-50 border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
                 <!-- Hubs Section -->
                 <div class="p-4 border-b-2 border-black">
                     <div class="flex flex-wrap items-start gap-3"> 
@@ -278,6 +301,12 @@
             </aside>
             @endif
         </div>
+    </div>
+    <!-- Mobile Menu Overlay -->
+    <div 
+        id="mobile-menu-overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"
+        onclick="toggleMobileMenu()">
     </div>
 </body>
 </html>

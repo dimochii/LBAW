@@ -130,3 +130,55 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// ---------- Responsive design ----------
+
+function toggleLeftSidebar() {
+    const sidebar = document.getElementById('left-sidebar');
+    const overlay = document.getElementById('mobile-menu-overlay');
+
+    const isVisible = sidebar.classList.contains('translate-x-0');
+
+    if (isVisible) {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        overlay.classList.add('hidden');
+    } else {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        overlay.classList.remove('hidden');
+    }
+}
+
+document.getElementById('mobile-menu-overlay').addEventListener('click', toggleLeftSidebar);
+
+
+function toggleMobileMenu() {
+    const leftSidebar = document.getElementById('left-sidebar');
+    const rightSidebar = document.getElementById('right-sidebar');
+    const overlay = document.getElementById('mobile-menu-overlay');
+    
+    leftSidebar.classList.toggle('-translate-x-full');
+    if (rightSidebar) {
+        rightSidebar.classList.toggle('translate-x-full');
+    }
+    overlay.classList.toggle('hidden');
+}
+
+document.addEventListener('click', function(event) {
+    const leftSidebar = document.getElementById('left-sidebar');
+    const rightSidebar = document.getElementById('right-sidebar');
+    const overlay = document.getElementById('mobile-menu-overlay');
+    const mobileMenuButton = event.target.closest('button');
+    
+    if (!leftSidebar.contains(event.target) && 
+        (!rightSidebar || !rightSidebar.contains(event.target)) && 
+        !mobileMenuButton?.hasAttribute('onclick')) {
+        
+        leftSidebar.classList.add('-translate-x-full');
+        if (rightSidebar) {
+            rightSidebar.classList.add('translate-x-full');
+        }
+        overlay.classList.add('hidden');
+    }
+});
