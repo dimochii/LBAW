@@ -57,7 +57,6 @@
         }
     });
 
-    // Initialize the form
     document.getElementById('type').dispatchEvent(new Event('change'));
 </script>
 @endsection
