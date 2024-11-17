@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,3 +59,13 @@ Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('au
     //creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
+
+// To do
+Route::get('/messages', [MessageController::class, 'index'])->name('messages');
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
+//Search
+Route::controller(SearchController::class)->group(function () {
+    Route::get('/search', 'search')->name('search');
+});

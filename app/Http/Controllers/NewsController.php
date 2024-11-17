@@ -7,7 +7,6 @@ use App\Models\Post;
 use App\Models\Vote;
 use App\Models\PostVote;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller
 {
@@ -138,3 +137,4 @@ class NewsController extends Controller
 
     
 }
+
