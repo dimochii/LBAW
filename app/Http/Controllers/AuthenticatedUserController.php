@@ -46,7 +46,7 @@ class AuthenticatedUserController extends Controller
     public function show($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
-        return response()->json($user);
+        return view('pages.profile', compact('user'));
     }
 
     /**

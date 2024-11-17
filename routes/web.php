@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\AuthenticatedUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,10 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+//PAuthenticated User
+    //profile
+Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 
 
 //News
