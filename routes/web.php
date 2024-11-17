@@ -9,6 +9,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthenticatedUserController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\FeedController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +74,6 @@ Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->na
 
 
 
-//Make sure that only logged in users can access these diferent pages:
 Route::middleware('auth')->group(function () {
     Route::controller(FeedController::class)->group(function () {
         Route::get('/home', 'getHomePosts')->name('home'); 
@@ -81,13 +81,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/recent', 'getRecentPosts')->name('recent');
     });
 
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
-Route::get('/messages', [MessageController::class, 'index'])->name('messages');
-Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-
-//Search
-Route::controller(SearchController::class)->group(function () {
-    Route::get('/search', 'search')->name('search');
-    
+    // Search
+    Route::controller(SearchController::class)->group(function () {
+        Route::get('/search', 'search')->name('search');
+    });
 });
