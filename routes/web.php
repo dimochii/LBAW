@@ -47,6 +47,9 @@ Route::controller(RegisterController::class)->group(function () {
 //Authenticated User
     //profile
 Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+    //edit profile
+Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
+Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');   
     //followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
 Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
