@@ -727,6 +727,7 @@ INSERT INTO user_followers (follower_id, followed_id) VALUES
 (2, 3), (3, 4), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (12, 13), (14, 15), (16, 17), (18, 19), (19, 20), (21, 22), (23, 24), (25, 26), (27, 28), (29, 30), (31, 32), (33, 34), (35, 36), (37, 38), (39, 40), (41, 42), (43, 44), (45, 46), (47, 48), (49, 50);
 
 
+
 INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
 (2, 3),
 (3, 4),
@@ -747,3 +748,25 @@ INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
 (18, 8),
 (19, 9),
 (20, 10);
+
+INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
+-- Tech community
+(3, 1), (4, 1), (5, 1), (31, 1), 
+-- Book Lovers
+(4, 2), (18, 2), (29, 2), (40, 2),
+-- Anime Fans
+(5, 3), (42, 3), (44, 3), (36, 3),
+-- Travel Enthusiasts
+(6, 4), (10, 4), (43, 4), (33, 4),
+-- Fantasy Writers
+(7, 5), (21, 5), (38, 5), (15, 5),
+-- Culinary Artists
+(13, 6), (9, 6), (26, 6), (45, 6),
+-- Movie Buffs
+(17, 7), (1, 7), (27, 7), (19, 7),
+-- Fitness Fanatics
+(8, 8), (34, 8), (30, 8), (48, 8),
+-- Game Developers
+(14, 9), (25, 9), (3, 9), (49, 9),
+-- Nature Lovers
+(6, 10), (20, 10), (33, 10), (44, 10);

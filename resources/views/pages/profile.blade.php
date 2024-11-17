@@ -207,6 +207,13 @@
                 </div>
                 <span class="text-gray-400">14 Oct 2024</span>
             </div>
+
+            <!-- Add Edit Profile button if the logged-in user is viewing their own profile -->
+            @if (Auth::check() && Auth::user()->id === $user->id)
+                <div class="mt-3">
+                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning">Edit Profile</a>
+                </div>
+            @endif
         </div>
     </div>
 </div>
