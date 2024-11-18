@@ -1,37 +1,121 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
-<form class="" method="POST" action="{{ route('login') }}">
-  {{ csrf_field() }}
+<div class="min-h-screen bg-bg-fill flex">
+    <!-- Left Panel -->
+    <div class="hidden lg:flex lg:w-1/2 bg-whatsup-green/10">
+        <div class="w-full p-16 flex flex-col justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-whatsup-green rounded-lg flex items-center justify-center">
+                    <span class="text-white text-xl font-bold">W</span>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">WhatsUp</h1>
+            </div>
+            
+            <div class="space-y-6">
+                <h2 class="text-4xl font-bold text-gray-800">Welcome to your creative community</h2>
+                <p class="text-lg text-gray-600">Connect, share, and grow with like-minded individuals.</p>
+            </div>
 
-  <label for="email">E-mail</label>
-  <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
-  @if ($errors->has('email'))
-    <span class="">
-      {{ $errors->first('email') }}
-    </span>
-  @endif
+            <div class="grid grid-cols-3 gap-4">
+                <div class="h-32 bg-whatsup-green/20 rounded-lg"></div>
+                <div class="h-32 bg-whatsup-blue/20 rounded-lg"></div>
+                <div class="h-32 bg-whatsup-green/30 rounded-lg"></div>
+            </div>
+        </div>
+    </div>
 
-  <label class="for="password">Password</label>
-  <input id="password" type="password" name="password" required>
-  @if ($errors->has('password'))
-    <span class="">
-      {{ $errors->first('password') }}
-    </span>
-  @endif
+    <!-- Login Form -->
+    <div class="w-full lg:w-1/2 flex flex-col">
+        <div class="p-6">
+            <a href="{{ url()->previous() }}" class="text-gray-600 hover:text-gray-900 flex items-center space-x-2">
+                <span>← Back</span>
+            </a>
+        </div>
 
-  <label>
-    <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
-  </label>
+        <div class="flex-grow flex flex-col justify-center px-8 sm:px-16 lg:px-24">
+            <div class="w-full max-w-md mx-auto space-y-8">
+                <div class="text-center space-y-2">
+                    <h2 class="text-3xl font-bold text-gray-900">Sign in</h2>
+                    <p class="text-gray-600">
+                        Don't have an account?
+                        <a href="{{ route('register') }}" class="text-whatsup-blue hover:text-whatsup-green transition-colors">
+                            Create one here
+                        </a>
+                    </p>
+                </div>
 
-  <button type="submit">
-    Login
-  </button>
-  <a class="" href="{{ route('register') }}">Register</a>
-  @if (session('success'))
-    <p class="">
-      {{ session('success') }}
-    </p>
-  @endif
-</form>
+                <div class="bg-white shadow-lg rounded-lg">
+                    <div class="p-6 space-y-6">
+                        <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                            {{ csrf_field() }}
+
+                            <div class="space-y-2">
+                                <label for="email" class="block text-sm font-medium text-gray-700">
+                                    Email address
+                                </label>
+                                <input id="email" name="email" type="email" required autofocus
+                                    value="{{ old('email') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-whatsup-blue focus:border-whatsup-blue text-sm"
+                                    placeholder="you@example.com">
+                                @if ($errors->has('email'))
+                                    <p class="mt-2 text-sm text-whatsup-red">
+                                        {{ $errors->first('email') }}
+                                    </p>
+                                @endif
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="password" class="block text-sm font-medium text-gray-700">
+                                    Password
+                                </label>
+                                <input id="password" name="password" type="password" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-whatsup-blue focus:border-whatsup-blue text-sm"
+                                    placeholder="Enter your password">
+                                @if ($errors->has('password'))
+                                    <p class="mt-2 text-sm text-whatsup-red">
+                                        {{ $errors->first('password') }}
+                                    </p>
+                                @endif
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <input id="remember" name="remember" type="checkbox"
+                                        {{ old('remember') ? 'checked' : '' }}
+                                        class="h-4 w-4 text-whatsup-green focus:ring-whatsup-blue border-gray-300 rounded">
+                                    <label for="remember" class="ml-2 block text-sm text-gray-700">
+                                        Remember me
+                                    </label>
+                                </div>
+                            </div>
+
+                            @if (session('success'))
+                                <div class="rounded-md bg-green-50 p-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-green-800">
+                                                {{ session('success') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <button type="submit"
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-whatsup-green hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-whatsup-blue transition-colors">
+                                Sign in
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

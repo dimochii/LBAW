@@ -9,6 +9,7 @@ use App\Enums\TopicStatus;
 class Topic extends Post
 {
     use HasFactory;
+    protected $primaryKey = 'post_id';
     const CREATED_AT = null;
     const UPDATED_AT = 'review_date';
     protected $casts = [

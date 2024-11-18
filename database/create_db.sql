@@ -363,58 +363,58 @@ INSERT INTO images (path) VALUES
 
 
 -- Step 2: Insert Users into authenticateduser
-INSERT INTO authenticated_users (name, username, email, password, birth_date, description, image_id)
+INSERT INTO authenticated_users (name, username, email, password, birth_date, description, is_admin, image_id)
 VALUES
-('Anonymous', 'Anonymous', 'anonymous@example.com', 'anonymous123', '1000-01-01', 'Anonymous.', 1),
-('Bob Johnson', 'bob', 'bob@example.com', 'password123', '1988-02-02', 'Loves to share news.', 2),
-('Charlie Brown', 'charlie', 'charlie@example.com', 'password123', '1992-03-03', 'Tech enthusiast.', 3),
-('Diana Prince', 'diana', 'diana@example.com', 'password123', '1985-04-04', 'Avid reader and commenter.', 4),
-('Edward Elric', 'edward', 'edward@example.com', 'password123', '1994-05-05', 'Anime and manga lover.', 5),
-('Fiona Gallagher', 'fiona', 'fiona@example.com', 'password123', '1991-06-06', 'Loves traveling and photography.', 6),
-('George Martin', 'george', 'george@example.com', 'password123', '1975-07-07', 'Fantasy writer and fan.', 7),
-('Hannah Montana', 'hannah', 'hannah@example.com', 'password123', '1998-08-08', 'Pop culture enthusiast.', 8),
-('Ian Malcolm', 'ian', 'ian@example.com', 'password123', '1980-09-09', 'Dinosaur expert and scientist.', 9),
-('Jack Sparrow', 'jack', 'jack@example.com', 'password123', '1980-10-10', 'Pirate captain and adventurer.', 10),
-('Katherine Pierce', 'katherine', 'katherine@example.com', 'password123', '1993-11-11', 'Mystery novel lover.', 11),
-('Liam Neeson', 'liam', 'liam@example.com', 'password123', '1982-12-12', 'Film and theater enthusiast.', 12),
-('Monica Geller', 'monica', 'monica@example.com', 'password123', '1980-01-13', 'Chef and cleanliness freak.', 13),
-('Nina Williams', 'nina', 'nina@example.com', 'password123', '1979-02-14', 'Martial artist and game developer.', 14),
-('Oscar Wilde', 'oscar', 'oscar@example.com', 'password123', '1854-03-15', 'Famous playwright and poet.', 15),
-('Penny Lane', 'penny', 'penny@example.com', 'password123', '1992-04-16', 'Music lover and singer.', 16),
-('Quentin Tarantino', 'quentin', 'quentin@example.com', 'password123', '1963-05-17', 'Director and screenwriter.', 17),
-('Rachel Green', 'rachel', 'rachel@example.com', 'password123', '1988-06-18', 'Fashion enthusiast.', 18),
-('Steve Rogers', 'steve', 'steve@example.com', 'password123', '1922-07-19', 'Super soldier and leader.', 19),
-('Tony Stark', 'tony', 'tony@example.com', 'password123', '1970-08-20', 'Inventor and philanthropist.', 20),
-('Ursula K. Le Guin', 'ursula', 'ursula@example.com', 'password123', '1929-09-21', 'Renowned fantasy author.', 21),
-('Victor Frankenstein', 'victor', 'victor@example.com', 'password123', '1794-10-22', 'Scientist and creator.', 22),
-('Will Turner', 'will', 'will@example.com', 'password123', '1985-11-23', 'Blacksmith and pirate.', 23),
-('Xena Warrior', 'xena', 'xena@example.com', 'password123', '1985-12-24', 'Warrior princess and leader.', 24),
-('Yoda', 'yoda', 'yoda@example.com', 'password123', '896-01-25', 'Jedi Master and wise mentor.', 25),
-('Zorro', 'zorro', 'zorro@example.com', 'password123', '1840-02-26', 'Masked hero and protector.', 26),
-('Albus Dumbledore', 'albus', 'albus@example.com', 'password123', '1881-03-27', 'Headmaster of Hogwarts.', 27),
-('Bella Swan', 'bella', 'bella@example.com', 'password123', '1987-04-28', 'Vampire and werewolf enthusiast.', 28),
-('Clark Kent', 'clark', 'clark@example.com', 'password123', '1985-05-29', 'Journalist and superhero.', 29),
-('Darth Vader', 'darth', 'darth@example.com', 'password123', '1941-06-30', 'Sith Lord and father figure.', 30),
-('Elliot Alderson', 'elliot', 'elliot@example.com', 'password123', '1992-07-31', 'Cybersecurity engineer.', 31),
-('Frodo Baggins', 'frodo', 'frodo@example.com', 'password123', '1968-08-01', 'Ring bearer and adventurer.', 32),
-('Gandalf the Grey', 'gandalf', 'gandalf@example.com', 'password123', '1000-09-02', 'Wielder of magic and wisdom.', 33),
-('Homer Simpson', 'homer', 'homer@example.com', 'password123', '1956-10-03', 'Loves donuts and family.', 34),
-('Icarus', 'icarus', 'icarus@example.com', 'password123', '2000-11-04', 'Aspiring inventor and dreamer.', 35),
-('Jules Winnfield', 'jules', 'jules@example.com', 'password123', '1971-12-05', 'Professional hitman with a passion.', 36),
-('Katniss Everdeen', 'katniss', 'katniss@example.com', 'password123', '1990-01-06', 'Revolutionary and survivor.', 37),
-('Lara Croft', 'lara', 'lara@example.com', 'password123', '1975-02-07', 'Adventurer and archaeologist.', 38),
-('Marty McFly', 'marty', 'marty@example.com', 'password123', '1968-03-08', 'Time traveler and teenager.', 39),
-('Nancy Drew', 'nancy', 'nancy@example.com', 'password123', '1980-04-09', 'Famous detective and sleuth.', 40),
-('Oliver Twist', 'oliver', 'oliver@example.com', 'password123', '1837-05-10', 'Orphan and survivor.', 41),
-('Pikachu', 'pikachu', 'pikachu@example.com', 'password123', '1996-06-11', 'Electric mouse and companion.', 42),
-('Quasimodo', 'quasimodo', 'quasimodo@example.com', 'password123', '1460-07-12', 'Bell-ringer and misunderstood.', 43),
-('R2-D2', 'r2d2', 'r2d2@example.com', 'password123', '1932-08-13', 'Astromech droid and hero.', 44),
-('SpongeBob SquarePants', 'spongebob', 'spongebob@example.com', 'password123', '1986-09-14', 'Underwater fry cook and optimist.', 45),
-('Thor Odinson', 'thor', 'thor@example.com', 'password123', '1965-10-15', 'God of thunder and hero.', 46),
-('Ultron', 'ultron', 'ultron@example.com', 'password123', '2015-11-16', 'A.I. villain with a complex.', 47),
-('Violet Parr', 'violet', 'violet@example.com', 'password123', '2000-12-17', 'Superhero with force fields.', 48),
-('Wolverine', 'wolverine', 'wolverine@example.com', 'password123', '1882-01-18', 'Mutant and fighter.', 49),
-('X-Men', 'xmen', 'xmen@example.com', 'password123', '1963-02-19', 'Superhero team with various powers.', 50);
+('Anonymous', 'Anonymous', 'anonymous@example.com', '$2y$10$FLtQvBMa8TZpNeHMG1EnTu8QbbEZe8e2GJbzqfSdnQyht4ozH1zRa', '1000-01-01', 'Anonymous.', FALSE, 1),
+('Bob Johnson', 'bob', 'bob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1988-02-02', 'Loves to share news.', FALSE, 2),
+('Charlie Brown', 'charlie', 'charlie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1992-03-03', 'Tech enthusiast.', FALSE, 3),
+('Diana Prince', 'diana', 'diana@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1985-04-04', 'Avid reader and commenter.',TRUE, 4),
+('Edward Elric', 'edward', 'edward@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1994-05-05', 'Anime and manga lover.', FALSE, 5),
+('Fiona Gallagher', 'fiona', 'fiona@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1991-06-06', 'Loves traveling and photography.', FALSE, 6),
+('George Martin', 'george', 'george@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1975-07-07', 'Fantasy writer and fan.', FALSE, 7),
+('Hannah Montana', 'hannah', 'hannah@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1998-08-08', 'Pop culture enthusiast.', FALSE, 8),
+('Ian Malcolm', 'ian', 'ian@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1980-09-09', 'Dinosaur expert and scientist.', FALSE, 9),
+('Jack Sparrow', 'jack', 'jack@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1980-10-10', 'Pirate captain and adventurer.', FALSE, 10),
+('Katherine Pierce', 'katherine', 'katherine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1993-11-11', 'Mystery novel lover.', FALSE, 11),
+('Liam Neeson', 'liam', 'liam@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1982-12-12', 'Film and theater enthusiast.', FALSE, 12),
+('Monica Geller', 'monica', 'monica@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1980-01-13', 'Chef and cleanliness freak.', FALSE, 13),
+('Nina Williams', 'nina', 'nina@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1979-02-14', 'Martial artist and game developer.', FALSE, 14),
+('Oscar Wilde', 'oscar', 'oscar@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1854-03-15', 'Famous playwright and poet.', FALSE, 15),
+('Penny Lane', 'penny', 'penny@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1992-04-16', 'Music lover and singer.', FALSE, 16),
+('Quentin Tarantino', 'quentin', 'quentin@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1963-05-17', 'Director and screenwriter.', FALSE, 17),
+('Rachel Green', 'rachel', 'rachel@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1988-06-18', 'Fashion enthusiast.', FALSE, 18),
+('Steve Rogers', 'steve', 'steve@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1922-07-19', 'Super soldier and leader.', FALSE, 19),
+('Tony Stark', 'tony', 'tony@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1970-08-20', 'Inventor and philanthropist.', FALSE, 20),
+('Ursula K. Le Guin', 'ursula', 'ursula@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1929-09-21', 'Renowned fantasy author.', FALSE, 21),
+('Victor Frankenstein', 'victor', 'victor@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1794-10-22', 'Scientist and creator.', FALSE, 22),
+('Will Turner', 'will', 'will@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1985-11-23', 'Blacksmith and pirate.', FALSE, 23),
+('Xena Warrior', 'xena', 'xena@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1985-12-24', 'Warrior princess and leader.', FALSE, 24),
+('Yoda', 'yoda', 'yoda@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '896-01-25', 'Jedi Master and wise mentor.', FALSE, 25),
+('Zorro', 'zorro', 'zorro@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1840-02-26', 'Masked hero and protector.', FALSE, 26),
+('Albus Dumbledore', 'albus', 'albus@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1881-03-27', 'Headmaster of Hogwarts.', FALSE, 27),
+('Bella Swan', 'bella', 'bella@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1987-04-28', 'Vampire and werewolf enthusiast.', FALSE, 28),
+('Clark Kent', 'clark', 'clark@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1985-05-29', 'Journalist and superhero.', FALSE, 29),
+('Darth Vader', 'darth', 'darth@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1941-06-30', 'Sith Lord and father figure.', FALSE, 30),
+('Elliot Alderson', 'elliot', 'elliot@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1992-07-31', 'Cybersecurity engineer.', FALSE, 31),
+('Frodo Baggins', 'frodo', 'frodo@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1968-08-01', 'Ring bearer and adventurer.', FALSE, 32),
+('Gandalf the Grey', 'gandalf', 'gandalf@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1000-09-02', 'Wielder of magic and wisdom.', FALSE, 33),
+('Homer Simpson', 'homer', 'homer@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1956-10-03', 'Loves donuts and family.', FALSE, 34),
+('Icarus', 'icarus', 'icarus@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '2000-11-04', 'Aspiring inventor and dreamer.', FALSE, 35),
+('Jules Winnfield', 'jules', 'jules@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1971-12-05', 'Professional hitman with a passion.', FALSE, 36),
+('Katniss Everdeen', 'katniss', 'katniss@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1990-01-06', 'Revolutionary and survivor.', FALSE, 37),
+('Lara Croft', 'lara', 'lara@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1975-02-07', 'Adventurer and archaeologist.', FALSE, 38),
+('Marty McFly', 'marty', 'marty@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1968-03-08', 'Time traveler and teenager.', FALSE, 39),
+('Nancy Drew', 'nancy', 'nancy@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1980-04-09', 'Famous detective and sleuth.', FALSE, 40),
+('Oliver Twist', 'oliver', 'oliver@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1837-05-10', 'Orphan and survivor.', FALSE, 41),
+('Pikachu', 'pikachu', 'pikachu@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1996-06-11', 'Electric mouse and companion.', TRUE, 42),
+('Quasimodo', 'quasimodo', 'quasimodo@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1460-07-12', 'Bell-ringer and misunderstood.', FALSE, 43),
+('R2-D2', 'r2d2', 'r2d2@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1932-08-13', 'Astromech droid and hero.', FALSE, 44),
+('SpongeBob SquarePants', 'spongebob', 'spongebob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1986-09-14', 'Underwater fry cook and optimist.', FALSE, 45),
+('Thor Odinson', 'thor', 'thor@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1965-10-15', 'God of thunder and hero.', FALSE, 46),
+('Ultron', 'ultron', 'ultron@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '2015-11-16', 'A.I. villain with a complex.', FALSE, 47),
+('Violet Parr', 'violet', 'violet@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '2000-12-17', 'Superhero with force fields.', FALSE, 48),
+('Wolverine', 'wolverine', 'wolverine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1882-01-18', 'Mutant and fighter.', FALSE, 49),
+('X-Men', 'xmen', 'xmen@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1963-02-19', 'Superhero team with various powers.', FALSE, 50);
 
 -- Step 3: Insert Communities
 INSERT INTO communities (name, description, privacy, image_id) VALUES
@@ -453,6 +453,58 @@ INSERT INTO comments (content, creation_date, authenticated_user_id, post_id) VA
 ('Let’s keep each other motivated!', CURRENT_TIMESTAMP, 3, 7),
 ('Game dev is so much fun!', CURRENT_TIMESTAMP, 4, 8),
 ('Nature is so beautiful!', CURRENT_TIMESTAMP, 5, 9);
+
+INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
+(1, 1, FALSE),  -- Anonymous - The Rise of AI
+(2, 2, FALSE),  -- Bob Johnson - Must-Read Books of 2024
+(3, 3, FALSE),  -- Charlie Brown - Top Anime of the Season
+(4, 4, FALSE),  -- Diana Prince - Travel Tips for 2024
+(5, 5, FALSE),  -- Edward Elric - Building a Fantasy World
+(6, 6, FALSE),  -- Fiona Gallagher - Cooking Healthy Meals
+(7, 7, FALSE),  -- George Martin - Upcoming Movies in 2024
+(8, 8, FALSE),  -- Hannah Montana - Staying Fit During Winter
+(9, 9, FALSE),  -- Ian Malcolm - Game Development Basics
+(10, 10, FALSE), -- Jack Sparrow - Wildlife Photography Tips
+(11, 1, FALSE),  -- Katherine Pierce - The Rise of AI
+(12, 2, FALSE),  -- Liam Neeson - Must-Read Books of 2024
+(13, 3, FALSE),  -- Monica Geller - Top Anime of the Season
+(14, 4, FALSE),  -- Nina Williams - Travel Tips for 2024
+(15, 5, FALSE),  -- Oscar Wilde - Building a Fantasy World
+(16, 6, FALSE),  -- Penny Lane - Cooking Healthy Meals
+(17, 7, FALSE),  -- Quentin Tarantino - Upcoming Movies in 2024
+(18, 8, FALSE),  -- Rachel Green - Staying Fit During Winter
+(19, 9, FALSE),  -- Steve Rogers - Game Development Basics
+(20, 10, FALSE),  -- Tony Stark - Wildlife Photography Tips
+(21, 1, FALSE),  -- Ursula K. Le Guin - The Rise of AI
+(22, 2, FALSE),  -- Victor Frankenstein - Must-Read Books of 2024
+(23, 3, FALSE),  -- Will Turner - Top Anime of the Season
+(24, 4, FALSE),  -- Xena Warrior - Travel Tips for 2024
+(25, 5, FALSE),  -- Yoda - Building a Fantasy World
+(26, 6, FALSE),  -- Zorro - Cooking Healthy Meals
+(27, 7, FALSE),  -- Albus Dumbledore - Upcoming Movies in 2024
+(28, 8, FALSE),  -- Bella Swan - Staying Fit During Winter
+(29, 9, FALSE),  -- Clark Kent - Game Development Basics
+(30, 10, FALSE),  -- Darth Vader - Wildlife Photography Tips
+(31, 1, FALSE),  -- Elliot Alderson - The Rise of AI
+(32, 2, FALSE),  -- Frodo Baggins - Must-Read Books of 2024
+(33, 3, FALSE),  -- Gandalf the Grey - Top Anime of the Season
+(34, 4, FALSE),  -- Homer Simpson - Travel Tips for 2024
+(35, 5, FALSE),  -- Icarus - Building a Fantasy World
+(36, 6, FALSE),  -- Jules Winnfield - Cooking Healthy Meals
+(37, 7, FALSE),  -- Katniss Everdeen - Upcoming Movies in 2024
+(38, 8, FALSE),  -- Lara Croft - Staying Fit During Winter
+(39, 9, FALSE),  -- Marty McFly - Game Development Basics
+(40, 10, FALSE),  -- Nancy Drew - Wildlife Photography Tips
+(41, 1, FALSE),  -- Oliver Twist - The Rise of AI
+(42, 2, TRUE),   -- Pikachu - Must-Read Books of 2024 (Pinned)
+(43, 3, FALSE),  -- Quasimodo - Top Anime of the Season
+(44, 4, FALSE),  -- R2-D2 - Travel Tips for 2024
+(45, 5, FALSE),  -- SpongeBob SquarePants - Building a Fantasy World
+(46, 6, FALSE),  -- Thor Odinson - Cooking Healthy Meals
+(47, 7, FALSE),  -- Ultron - Upcoming Movies in 2024
+(48, 8, FALSE),  -- Violet Parr - Staying Fit During Winter
+(49, 9, FALSE),  -- Wolverine - Game Development Basics
+(50, 10, FALSE); -- X-Men - Wildlife Photography Tips
 
 -- Step 6: Insert votes
 -- Each user votes for some posts and comments
@@ -671,6 +723,10 @@ INSERT INTO reports (reason, report_date, is_open, report_type, authenticated_us
 ('Topic promotes harmful behavior', '2024-02-03 09:30:00', false, 'topic_report', 19),
 ('Topic contains personal attacks', '2024-02-04 11:45:00', true, 'topic_report', 20);
 
+INSERT INTO user_followers (follower_id, followed_id) VALUES 
+(2, 3), (3, 4), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (12, 13), (14, 15), (16, 17), (18, 19), (19, 20), (21, 22), (23, 24), (25, 26), (27, 28), (29, 30), (31, 32), (33, 34), (35, 36), (37, 38), (39, 40), (41, 42), (43, 44), (45, 46), (47, 48), (49, 50);
+
+
 
 INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
 (2, 3),
@@ -692,3 +748,25 @@ INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
 (18, 8),
 (19, 9),
 (20, 10);
+
+INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
+-- Tech community
+(3, 1), (4, 1), (5, 1), (31, 1), 
+-- Book Lovers
+(4, 2), (18, 2), (29, 2), (40, 2),
+-- Anime Fans
+(5, 3), (42, 3), (44, 3), (36, 3),
+-- Travel Enthusiasts
+(6, 4), (10, 4), (43, 4), (33, 4),
+-- Fantasy Writers
+(7, 5), (21, 5), (38, 5), (15, 5),
+-- Culinary Artists
+(13, 6), (9, 6), (26, 6), (45, 6),
+-- Movie Buffs
+(17, 7), (1, 7), (27, 7), (19, 7),
+-- Fitness Fanatics
+(8, 8), (34, 8), (30, 8), (48, 8),
+-- Game Developers
+(14, 9), (25, 9), (3, 9), (49, 9),
+-- Nature Lovers
+(6, 10), (20, 10), (33, 10), (44, 10);

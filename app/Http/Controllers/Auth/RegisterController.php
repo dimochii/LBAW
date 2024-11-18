@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\View\View;
 
-use App\Models\User;
+use App\Models\AuthenticatedUser;
 
 class RegisterController extends Controller
 {
@@ -29,20 +29,23 @@ class RegisterController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:250',
-            'email' => 'required|email|max:250|unique:users',
+            'username' => 'required|string|max:250|unique:authenticated_users', 
+            'email' => 'required|email|max:250|unique:authenticated_users',   
             'password' => 'required|min:8|confirmed'
         ]);
 
-        User::create([
+        AuthenticatedUser::create([
             'name' => $request->name,
+            'username' => $request->username, 
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'birth_date' => now()->subYears(18), 
         ]);
 
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
-        return redirect()->route('cards')
+        return redirect()->route('news') 
             ->withSuccess('You have successfully registered & logged in!');
     }
 }
