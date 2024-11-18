@@ -14,6 +14,11 @@ class Comment extends Model
         'authenticated_user_id', 'post_id', 'parent_comment_id'
     ];
 
+    public function userId()
+    {
+        return $this->authenticated_user_id;
+    }
+
     public function user()
     {
         return $this->belongsTo(AuthenticatedUser::class);

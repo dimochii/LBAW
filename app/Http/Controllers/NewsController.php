@@ -54,6 +54,7 @@ class NewsController extends Controller
     ->where('post_id', $newsItem->post->id)
     ->orderBy('creation_date', 'asc') // Optionally order comments
     ->get();
+    
 
     // Pass the comments to the view
     return view('pages.newsitem', compact('newsItem', 'comments'));

@@ -200,7 +200,7 @@
             {{-- comment header --}}
             <summary class="list-none">
               <div class="text-sm mb-5">
-                <a href="#" class="underline-effect">@anonymous</a>
+                <a href="#" class="underline-effect">{{ $comment->user}}</a>
                 <span>•</span>
                 <span>7 hours ago</span>
                 <span>•</span>
@@ -211,13 +211,7 @@
             {{-- comment body --}}
             <article
               class="font-vollkorn max-w-full prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50]">
-              <p>Succedere deus inplet <a href="http://estsedes.org/ubi">deum</a> infamia satam expellitur
-                cadunt animoque cognoscenda quam adhibete; inmania. Legit si fratri sceptro,
-                mihi <em>eu quiero despacito</em>, ripam. <em>Nares leves</em> torvo pervia pigneror
-                perterrita cogente pastor licebit luctus. Iuvenis positosque indignanda ausim
-                tenebant digna concubiturus imbres, Danaen, ante iuvencae licet optavit arvo!
-                <em>Pompa</em> qui: eadem modulatur mores, <strong>proque</strong>, Tartessia cupidine potior saevam
-                medicamine bos Prima volucres sistere?
+              <p>{{ $comment->content }}
               </p>
               <blockquote>
                 <p>Cadunt animoque cognoscenda quam adhibete;
