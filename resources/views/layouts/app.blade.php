@@ -6,6 +6,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ asset('js/layout.js') }}"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
@@ -231,7 +233,7 @@
             </aside>
 
             <!-- Main Content -->
-            <main class="flex-1 p-3 md:p-6 bg-white">
+            <main class="flex-1  bg-white">
                 <section id="content">
                     @yield('content')
                 </section>

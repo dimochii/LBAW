@@ -34,7 +34,7 @@ Route::get('/', function() {
   return view('news');
 });
 
-Route::get('/news', function() {
+Route::get('/newsitem', function() {
   return view('newsitem');
 });
 
