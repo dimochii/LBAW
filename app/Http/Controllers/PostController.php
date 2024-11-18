@@ -42,4 +42,30 @@ class PostController extends Controller
 
         return response()->json(['message' => 'Invalid type'], 400);
     }
+
+    //Gets a post, checks if the user who's trying to delete is the owner and erases it, if it has no comments or votes
+    public function delete(Request $request, $id)
+    {
+        $post = Post::find($id); 
+
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        $user = Auth::user();
+
+        if (!$post->authors->contains($user->id)) { 
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        if ($post->votes()->exists() || $post->comments()->exists()) {
+            return response()->json(['message' => 'Post cannot be deleted as it has votes or comments'], 400);
+        }
+
+        $post->authors()->detach(); 
+        $post->delete(); 
+
+        return response()->json(['message' => 'Post deleted successfully'], 200);
+    }
+
 }

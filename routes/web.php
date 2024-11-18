@@ -10,6 +10,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthenticatedUserController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FeedController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,20 +24,10 @@ use App\Http\Controllers\FeedController;
 */
 
 // Home
-Route::get('/', function() {
-  return view('news');
-});
 
-Route::get('/news', function() {
-  return view('newsitem');
-});
-Route::get('/', function() {
-  return view('news');
-});
+Route::redirect('/', '/login');
 
-Route::get('/newsitem', function() {
-  return view('newsitem');
-});
+
 
 // Cards
 
@@ -71,6 +62,11 @@ Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFol
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
+Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments'])->middleware('auth')->name('post.comments');
+
+    //upvote & downvote
+Route::get('/news', [NewsController::class, 'list'])->name('news');
+Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
     //upvote & downvote
 Route::post('/news/{post_id}/upvote', [NewsController::class, 'upvote'])->name('news.upvote');
 Route::post('/news/{post_id}/downvote', [NewsController::class, 'downvote'])->name('news.downvote');
@@ -83,7 +79,7 @@ Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('au
     //creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
-
+Route::delete('/posts/delete/{id}', [PostController::class, 'delete'])->middleware('auth')->name('post.delete');
 
 
 Route::middleware('auth')->group(function () {
@@ -102,3 +98,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/search', 'search')->name('search');
     });
 });
+
+//Comment
+

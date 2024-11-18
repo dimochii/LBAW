@@ -24,4 +24,6 @@ class Vote extends Model
     {
         return $this->hasOne(PostVote::class, 'vote_id');
     }
+
+    
 }

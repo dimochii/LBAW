@@ -9,7 +9,7 @@
         <a class="flex items-center" href="">
           <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
             class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
-          <span class="text-2xl font-light underline-effect">h/hub</span>
+          <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown Community' }}</span>
         </a>
         <svg class="ml-auto h-6 w-6 fill-[#3C3D37] cursor-pointer" xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16">
@@ -17,10 +17,8 @@
             d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
         </svg>
       </div>
-      <a href="#">
-        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">Rússia lança “ataque
-          maciço”
-          ao sistema eléctrico ucraniano. Polónia mobiliza caças.</p>
+      <a href="{{ $newsItem->news_url ?? 'No URL available' }}">
+        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{ $newsItem->post->title ?? 'No title available' }}</p>
       </a>
 
 

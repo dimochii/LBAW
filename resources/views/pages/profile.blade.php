@@ -175,3 +175,5 @@
         <p class="text-gray-500">This user has not authored any posts yet.</p>
     @endif
     </div>
+    </div>
+@endsection
