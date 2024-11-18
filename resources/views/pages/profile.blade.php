@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-white">
+<div class="min-h-screen">
     {{-- Main Profile Section with Black Border Bottom --}}
     <div class="border-b-2 border-black">
         <div class="max-w-7xl mx-auto p-6 flex flex-col md:flex-row items-start gap-6">
@@ -122,7 +122,7 @@
         </div>
     </div>
 
-        <div class="max-w-7xl mx-auto px-6 py-6">
+    <div class="max-w-7xl mx-auto px-6 py-6">
         @if ($posts->count() > 0)
             @foreach ($posts as $post)
                 <div class="border-b border-gray-200 pb-6 mb-6">
@@ -130,12 +130,16 @@
                     <div class="flex items-center gap-2 mb-2">
                         @if ($post->community)
                             <div class="flex items-center gap-2">
+                                @php
+                                    $colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500'];
+                                    $randomColor = $colors[array_rand($colors)];
+                                @endphp
+                                
                                 @if ($post->community->image_id)
                                     <img src="{{ asset('images/' . $post->community->image_id . '.jpg') }}"
-                                        alt="{{ $post->community->name }}"
                                         class="w-5 h-5 rounded">
                                 @else
-                                    <div class="w-5 h-5 rounded-full bg-gray-300"></div>
+                                    <div class="w-5 h-5 rounded-full {{ $randomColor }}"></div>
                                 @endif
                                 <span class="text-gray-600">{{ '/' . $post->community->name }}</span>
                             </div>
@@ -144,17 +148,17 @@
                         @endif
                     </div>
 
+                    {{-- Rest of the post content remains the same --}}
                     {{-- Post Title --}}
                     <h2 class="text-2xl font-semibold mb-4">
-                        <a href="{{ route('news.show', $post->id) }}" class="text-blue-500 hover:underline">
+                        <a href="{{ route('news.show', $post->id) }}" class="text-black hover:underline">
                             {{ $post->title }}
                         </a>
                     </h2>
 
                     {{-- Interaction Stats --}}
                     <div class="flex items-center gap-4 text-gray-500">
-                        {{-- Voting System --}}
-                        <div class="flex items-center">
+                        <div class="flex items-center gap-2">
                             <div>
                                 <input id="upvote_{{ $post->id }}" type="checkbox" class="hidden peer/upvote">
                                 <label for="upvote_{{ $post->id }}"
@@ -164,14 +168,12 @@
                                     </svg>
                                 </label>
                             </div>
-                            
-                            <span class="mx-2">
+                            <span class="mr-2">
                                 @php
-                                    $score = $post->upvotesCount->count() - $post->downvotesCount->count();
-                                    echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
+                                    $likesCount = $post->likes_count ?? 0;
+                                    echo $likesCount >= 1000 ? number_format($likesCount / 1000, 1) . 'k' : $likesCount;
                                 @endphp
                             </span>
-
                             <div>
                                 <input id="downvote_{{ $post->id }}" type="checkbox" class="hidden peer/downvote">
                                 <label for="downvote_{{ $post->id }}"
@@ -182,15 +184,12 @@
                                 </label>
                             </div>
                         </div>
-
-                        {{-- Comments Count --}}
                         <div class="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
                             </svg>
-                            <span>{{ $post->comments_count }}</span>
+                            <span>{{ $post->comments_count ?? 0 }}</span>
                         </div>
-
                         <span class="text-gray-400">{{ $post->creation_date->format('F j, Y') ?? 'Unknown date' }}</span>
                     </div>
                 </div>
@@ -204,4 +203,5 @@
             <p class="text-gray-500">This user has not authored any posts yet.</p>
         @endif
     </div>
+</div>
 @endsection
