@@ -50,8 +50,9 @@ class AuthenticatedUserController extends Controller
 
         $followers = $user->followers;
         $following = $user->follows;
+        $posts = $user->authoredPosts()->paginate(10);
 
-        return view('pages.profile', compact('user', 'followers', 'following'));
+        return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
     }
 
     public function getFollowers($id)
@@ -155,15 +156,20 @@ class AuthenticatedUserController extends Controller
     }
 
     /**
-     * Get the posts authored by the user.
+     * Get the posts authored by the user and display them on the profile page.
      */
     public function getAuthoredPosts($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
-        $posts = $user->authoredPosts;
+        $followers = $user->followers;
+        $following = $user->follows;
 
-        return response()->json($posts);
+        // Fetch authored posts with pagination
+        $posts = $user->authoredPosts()->paginate(10);
+
+        return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
     }
+
 
 
     /**

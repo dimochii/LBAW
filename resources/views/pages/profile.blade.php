@@ -34,7 +34,7 @@
                     {{-- Stats on the right --}}
                     <div class="flex items-start gap-4 text-sm text-gray-600 mt-4 md:mt-0">
                         <div class="text-right">
-                            <div class="font-semibold">{{ 12 }}</div> {{-- Falta esta lógica--}}
+                            <div class="font-semibold">{{ 15 }}</div> {{-- Falta esta lógica--}}
                             <div>articles</div>
                         </div>
                         <div class="text-right">
@@ -120,101 +120,53 @@
 
     {{-- Content Area matching mockup --}}
     <div class="max-w-7xl mx-auto px-6 py-6">
-        {{-- Article Item --}}
-        <div class="border-b border-gray-200 pb-6 mb-6">
-            {{-- Hub/Category with Pin Indicator --}}
-            <div class="flex items-center gap-2 mb-2">
-                <div class="flex items-center gap-2">
-                    @if (file_exists(public_path('hub-icon.jpg')))
-                        <img src="{{ asset('hub-icon.jpg') }}" alt="Hub Icon" class="w-5 h-5 rounded">
-                    @else
-                        <div class="w-5 h-5 rounded-full bg-green-500"></div>
-                    @endif
-                    <span class="text-gray-600">/Economics</span>
+    @if ($posts->count() > 0)
+        @foreach ($posts as $post)
+            <div class="border-b border-gray-200 pb-6 mb-6">
+                {{-- Hub/Category --}}
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="flex items-center gap-2">
+                        @if ($post->hub_icon_path)
+                            <img src="{{ asset($post->hub_icon_path) }}" alt="Hub Icon" class="w-5 h-5 rounded">
+                        @else
+                            <div class="w-5 h-5 rounded-full bg-green-500"></div>
+                        @endif
+                        <span class="text-gray-600">{{ '/' . $post->category }}</span>
+                    </div>
                 </div>
-                @if($pinned ?? false)
-                    <span class="text-gray-500 text-sm">📌 pinned</span>
-                @endif
-                <button class="ml-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                    </svg>
-                </button>
-            </div>
 
-            {{-- Article Title --}}
-            <h2 class="text-2xl font-semibold mb-4">
-                <a href="#" class="hover:text-gray-700">Biden's Gift to China's Solar Industry</a>
-            </h2>
+                {{-- Post Title --}}
+                <h2 class="text-2xl font-semibold mb-4">
+                    {{ $post->title }}
+                </h2>
 
-            {{-- Interaction Stats --}}
-            <div class="flex items-center gap-4 text-gray-500">
-                <div class="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                    </svg>
-                    <span>1.2k</span>
+                {{-- Interaction Stats --}}
+                <div class="flex items-center gap-4 text-gray-500">
+                    <div class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                        </svg>
+                        <span>{{ $post->likes_count }}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+                        </svg>
+                        <span>{{ $post->comments_count }}</span>
+                    </div>
+                    <span class="text-gray-400">{{ $post->creation_date->format('F j, Y') ?? 'Unknown date' }}</span>
                 </div>
-                <div class="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
-                    </svg>
-                    <span>120</span>
-                </div>
-                <span class="text-gray-400">12 Sep 2024</span>
             </div>
+        @endforeach
+
+        {{-- Pagination Links --}}
+        <div class="mt-6">
+            {{ $posts->links() }}
         </div>
+    @else
+        <p class="text-gray-500">This user has not authored any posts yet.</p>
+    @endif
+</div>
 
-        {{-- Post/Comment Item --}}
-        <div class="border-b border-gray-200 pb-6">
-            {{-- Context Header --}}
-            <div class="flex items-center gap-2 mb-4">
-                <div class="flex items-center gap-2">
-                    @if (file_exists(public_path('hub-icon.jpg')))
-                        <img src="{{ asset('hub-icon.jpg') }}" alt="Hub Icon" class="w-5 h-5 rounded">
-                    @else
-                        <div class="w-5 h-5 rounded-full bg-green-500"></div>
-                    @endif
-                    <span class="text-gray-600">/Economics</span>
-                </div>
-                <span class="text-gray-400">•</span>
-                <a href="#" class="text-gray-600 hover:text-gray-900">Biden's Gift to China's Solar Industry</a>
-                <button class="ml-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                    </svg>
-                </button>
-            </div>
-
-            {{-- Comment Context --}}
-            <div class="mb-4">
-                <p class="text-gray-600">in response to <a href="#" class="text-gray-900">@anonymous</a></p>
-            </div>
-
-            {{-- Interaction Stats --}}
-            <div class="flex items-center gap-4 text-gray-500">
-                <div class="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                    </svg>
-                    <span>1.2k</span>
-                </div>
-                <div class="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
-                    </svg>
-                    <span>120</span>
-                </div>
-                <span class="text-gray-400">14 Oct 2024</span>
-            </div>
-
-            <!-- Add Edit Profile button if the logged-in user is viewing their own profile -->
-            @if (Auth::check() && Auth::user()->id === $user->id)
-                <div class="mt-3">
-                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning">Edit Profile</a>
-                </div>
-            @endif
-        </div>
-    </div>
 </div>
 @endsection

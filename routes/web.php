@@ -54,8 +54,8 @@ Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name
     //followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
 Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
-
-
+    //articles
+    
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
