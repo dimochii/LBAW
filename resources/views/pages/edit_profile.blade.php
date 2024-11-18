@@ -160,7 +160,7 @@
             {{-- Submit Button --}}
             <div class="md:col-span-2 flex justify-end">
                 <button type="submit" 
-                        class="group inline-flex items-center gap-3 px-6 py-3 bg-white border-2 border-black rounded-xl hover:bg-[#3C3D37] hover:text-white transition-all duration-200 shadow-md hover:shadow-lg">
+                        class="group inline-flex items-center gap-3 px-6 py-3 bg-white border-2 border-black rounded-xl hover:bg-whatsup-green hover:text-white transition-all duration-200 shadow-md hover:shadow-lg">
                     <span class="text-lg font-medium">Save Changes</span>
                     <svg xmlns="http://www.w3.org/2000/svg" 
                          class="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" 
@@ -177,20 +177,6 @@
 </div>
 
 @push('scripts')
-<script>
-function updateImagePreview(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.querySelector('.preview-image');
-            if (preview) {
-                preview.src = e.target.result;
-            }
-        }
-        reader.readAsDataURL(file);
-    }
-}
-</script>
+<script src="{{ asset('js/user.js') }}" defer ></script>
 @endpush
 @endsection
