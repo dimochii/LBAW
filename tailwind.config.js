@@ -21,5 +21,11 @@ export default {
   plugins: [
     require('@tailwindcss/typography'),
   ],
+
+  safelist: [
+    {
+      pattern: /bg-+/,
+    },
+  ],
 }
 

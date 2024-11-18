@@ -11,18 +11,26 @@
             class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
           <span class="text-2xl font-light underline-effect">h/hub</span>
         </a>
-        <x-bi-three-dots class="ml-auto h-6 w-6" />
+        <svg class="ml-auto h-6 w-6 fill-[#3C3D37] cursor-pointer"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+          <path class="cls-1"
+            d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
+        </svg> 
       </div>
       <a href="#">
-        <p class="my-4 text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight line-clamp-4">Rússia lança “ataque maciço”
+        <p class="my-4 text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight line-clamp-4">Rússia lança “ataque
+          maciço”
           ao sistema eléctrico ucraniano. Polónia mobiliza caças</p>
       </a>
-      
+
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         <div>
           <input id="upvote" type="checkbox" class="hidden peer/upvote">
-          <label for="upvote" class="cursor-pointer peer-checked/upvote:text-blue-400">
-            <x-ionicon-triangle-sharp class="cursor-pointer h-6 hover:text-blue-400 transition-all ease-out" />
+          <label for="upvote"
+            class=" peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out">
+            <svg class="h-7" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21,21H3L12,3Z" />
+            </svg>
           </label>
         </div>
 
@@ -31,13 +39,28 @@
         <div class="">
           <input id="downvote" type="checkbox" class="hidden peer/downvote">
           <!-- Default icon (unchecked) -->
-          <label for="downvote" class="cursor-pointer peer-checked/downvote:text-red-400">
-            <x-ionicon-triangle-sharp
-              class="cursor-pointer h-6 rotate-180 hover:text-red-400 transition-all ease-out" />
+          <label for="downvote"
+            class="cursor-pointer peer-checked/downvote:text-red-400 hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
+            <svg class="h-7 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21,21H3L12,3Z" />
+            </svg>
           </label>
         </div>
 
-        <x-bxs-comment class="cursor-pointer ml-4 h-6 min-w-6 hover:text-blue-400 transition-all ease-out" />
+        <svg class="cursor-pointer ml-4 h-6 min-w-6 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"
+          viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <g id="Layer_2" data-name="Layer 2">
+            <g id="invisible_box" data-name="invisible box">
+              <rect width="48" height="48" fill="none" />
+              <rect width="48" height="48" fill="none" />
+            </g>
+            <g id="icons_Q2" data-name="icons Q2">
+              <path
+                d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
+            </g>
+          </g>
+        </svg>
+
         <span>105</span>
 
         <div class="ml-auto hidden text-sm lg:text-base sm:block text-right">
@@ -53,7 +76,7 @@
     </a>
   </div>
 
-  {{--  comment editor --}}
+  {{-- comment editor --}}
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
       <a class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]" href="">
@@ -129,7 +152,7 @@
         </div>
       </div>
     </div>
-  
+
     {{-- comments wrapper --}}
     <div class="w-11/12 min-w-72">
       {{-- comment thread --}}
@@ -140,7 +163,7 @@
               <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
                 class="max-w-full rounded-3xl">
             </a>
-  
+
             <a href="#c-1"
               class="absolute top-[32px] bg-[#A6A6A6] hover:bg-[#4793AF] w-px hover:w-0.5 h-[calc(100%-32px)] cursor-pointer">
             </a>
@@ -180,33 +203,96 @@
               <div>
                 <input id="upvote" type="checkbox" class="hidden peer/upvote">
                 <!-- Default icon (unchecked) -->
-                <label for="upvote" class="cursor-pointer peer-checked/upvote:text-blue-400">
-                  <x-ionicon-triangle-sharp class="cursor-pointer h-4 hover:text-blue-400" />
+                <label for="upvote"
+                  class=" peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 transition-all ease-out">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21,21H3L12,3Z" />
+                  </svg>
                 </label>
               </div>
-  
+
               <span class="mr-2">1.2k</span>
-  
+
               <div class="">
                 <input id="downvote" type="checkbox" class="hidden peer/downvote">
                 <!-- Default icon (unchecked) -->
-                <label for="downvote" class="cursor-pointer peer-checked/downvote:text-red-400">
-                  <x-ionicon-triangle-sharp class="cursor-pointer h-4 rotate-180 hover:text-red-400" />
+                <label for="downvote"
+                  class="cursor-pointer peer-checked/downvote:fill-red-400 hover:fill-red-400 transition-all ease-out">
+                  <svg class="w-5 h-5 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21,21H3L12,3Z" />
+                  </svg>
                 </label>
               </div>
-  
-              <x-bxs-comment class="ml-4 h-4" />
+
+              <svg class="ml-2 h-[18px] w-[18px] hover:fill-blue-400 cursor-pointer transition-all ease-out"
+                viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <g id="Layer_2" data-name="Layer 2">
+                  <g id="invisible_box" data-name="invisible box">
+                    <rect width="48" height="48" fill="none" />
+                    <rect width="48" height="48" fill="none" />
+                  </g>
+                  <g id="icons_Q2" data-name="icons Q2">
+                    <path
+                      d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
+                  </g>
+                </g>
+              </svg>
+
               <span>105</span>
-  
-              <x-eva-flag class="ml-auto h-5 hover:text-red-400 cursor-pointer" />
+
+              <svg class="h-5 cursor-pointer hover:fill-red-400 ml-auto transition-all ease-out" viewBox="0 0 17 17"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M2.83325 10.625C2.83325 10.625 3.54159 9.91669 5.66659 9.91669C7.79159 9.91669 9.20825 11.3334 11.3333 11.3334C13.4583 11.3334 14.1666 10.625 14.1666 10.625V2.12502C14.1666 2.12502 13.4583 2.83335 11.3333 2.83335C9.20825 2.83335 7.79159 1.41669 5.66659 1.41669C3.54159 1.41669 2.83325 2.12502 2.83325 2.12502V10.625Z"
+                  fill="#1D1B20" />
+                <path
+                  d="M2.83325 10.625C2.83325 10.625 3.54159 9.91669 5.66659 9.91669C7.79159 9.91669 9.20825 11.3334 11.3333 11.3334C13.4583 11.3334 14.1666 10.625 14.1666 10.625V2.12502C14.1666 2.12502 13.4583 2.83335 11.3333 2.83335C9.20825 2.83335 7.79159 1.41669 5.66659 1.41669C3.54159 1.41669 2.83325 2.12502 2.83325 2.12502V10.625ZM2.83325 10.625V15.5834"
+                  stroke="#1D1B20" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
             </footer>
+
+            <div>
+              <hr class="my-4">
+              <div name="tabs" class="flex flex-row gap-4">
+                <input type="radio" name="toggle" id="markdown-write-toggle" class="hidden peer/write" checked />
+                <label for="markdown-write-toggle"
+                  class="underline-effect cursor-pointe  peer-checked:aria-selected peer-checked/write:font-bold">
+                  write
+                </label>
+
+                <input type="radio" name="toggle" id="markdown-preview-toggle" class="hidden peer/preview" />
+                <label for="markdown-preview-toggle"
+                  class="underline-effect cursor-pointer peer-checked:aria-selected peer-checked/preview:font-bold">
+                  preview
+                </label>
+              </div>
+
+              <div class="flex flex-col h-full mt-2">
+                <!-- Textarea for Markdown Input -->
+                <textarea rows="6"
+                  class="w-full p-4 bg-inherit focus:outline-none resize-none font-mono text-sm border border-1 rounded-lg border-[#3C3D37]  hover:resize-y"></textarea>
+
+                <!-- Markdown Preview -->
+                <div
+                  class="hidden p-4 break-words max-h-80 h-full font-vollkorn overflow-y-auto prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] border border-1 rounded-lg border-[#3C3D37]">
+                </div>
+              </div>
+              <div class="justify-end flex gap-4 mt-4">
+                <button class="px-2 py-1 rounded-md bg-[#4793AF]/[.50] hover:bg-[#4793AF]/[.80] text-white font-bold">
+                  Cancel
+                </button>
+                <button class="px-2 rounded-md bg-[#4793AF]/[.50] hover:bg-[#4793AF]/[.80] text-white font-bold">
+                  Submit
+                </button>
+              </div>
+            </div>
           </details>
         </div>
         {{-- replies --}}
         <div class="replies pl-96">
-  
+
         </div>
-  
+
       </div>
     </div>
   </div>
