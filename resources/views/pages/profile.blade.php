@@ -125,19 +125,27 @@
             <div class="border-b border-gray-200 pb-6 mb-6">
                 {{-- Hub/Category --}}
                 <div class="flex items-center gap-2 mb-2">
-                    <div class="flex items-center gap-2">
-                        @if ($post->hub_icon_path)
-                            <img src="{{ asset($post->hub_icon_path) }}" alt="Hub Icon" class="w-5 h-5 rounded">
-                        @else
-                            <div class="w-5 h-5 rounded-full bg-green-500"></div>
-                        @endif
-                        <span class="text-gray-600">{{ '/' . $post->category }}</span>
-                    </div>
+                    @if ($post->community)
+                        <div class="flex items-center gap-2">
+                            @if ($post->community->image_id)
+                                <img src="{{ asset('images/' . $post->community->image_id . '.jpg') }}" 
+                                    alt="{{ $post->community->name }}" 
+                                    class="w-5 h-5 rounded">
+                            @else
+                                <div class="w-5 h-5 rounded-full bg-gray-300"></div>
+                            @endif
+                            <span class="text-gray-600">{{ '/' . $post->community->name }}</span>
+                        </div>
+                    @else
+                        <div class="text-gray-500">Community Unavailable</div>
+                    @endif
                 </div>
 
                 {{-- Post Title --}}
                 <h2 class="text-2xl font-semibold mb-4">
-                    {{ $post->title }}
+                    <a href="{{ route('news.show', $post->id) }}" class="text-blue-500 hover:underline">
+                        {{ $post->title }}
+                    </a>
                 </h2>
 
                 {{-- Interaction Stats --}}
@@ -166,7 +174,4 @@
     @else
         <p class="text-gray-500">This user has not authored any posts yet.</p>
     @endif
-</div>
-
-</div>
-@endsection
+    </div>
