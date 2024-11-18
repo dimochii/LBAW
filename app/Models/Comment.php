@@ -9,14 +9,19 @@ class Comment extends Model
 {
     use HasFactory;
     public $timestamps = true;
+ 
+
     protected $fillable = [
         'content', 'creation_date', 'updated', 
         'authenticated_user_id', 'post_id', 'parent_comment_id'
     ];
 
+
+    
+
     public function user()
     {
-        return $this->belongsTo(AuthenticatedUser::class);
+        return $this->belongsTo(AuthenticatedUser::class, 'authenticated_user_id');
     }
 
     public function post()
