@@ -23,10 +23,15 @@ use App\Http\Controllers\FeedController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::get('/', function() {
+  return view('news');
+});
+
+Route::get('/news', function() {
+  return view('newsitem');
+});
 
 // Cards
-
 
 
 // API

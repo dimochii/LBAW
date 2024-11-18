@@ -6,8 +6,12 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ asset('js/layout.js') }}"></script>
+    <link
+    href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  @vite('resources/css/app.css')
 </head>
-<body class="h-full">
+<body class="bg-[#F4F2ED] text-[#3C3D37]">
     <div class="min-h-screen flex flex-col">
         <!-- Top Header -->
         <header class="flex items-center justify-between h-12 border-b-2 border-black">
