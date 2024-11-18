@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="font-grotesk divide-y-4 divide-[black]">
+<div class="font-grotesk divide-y-2 divide-[black]">
   {{-- news post --}}
   <div class="px-8 py-4 flex flex-row gap-8" id="post-header">
     <div class="w-1/2 flex flex-col grow">
