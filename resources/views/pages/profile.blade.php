@@ -56,7 +56,7 @@
                 <div class="mt-6 flex flex-col sm:flex-row gap-4">
                     <div class="group">
                         <a href="{{ route('user.followers', $user->id) }}" 
-                        class="inline-flex items-center gap-3 px-4 py-2 bg-white border-2 border-black rounded-lg hover:bg-black hover:text-white transition-colors duration-200">
+                        class="inline-flex items-center gap-3 px-4 py-2 bg-white border-2 border-black rounded-xl hover:bg-[#3C3D37] hover:text-white transition-all duration-200 shadow-md hover:shadow-lg">
                             <div class="flex flex-col items-start">
                                 <span class="text-sm font-medium">Followers</span>
                                 <span class="text-2xl font-bold">{{ $followers->count() }}</span>
@@ -74,7 +74,7 @@
 
                     <div class="group">
                         <a href="{{ route('user.following', $user->id) }}" 
-                        class="inline-flex items-center gap-3 px-4 py-2 bg-white border-2 border-black rounded-lg hover:bg-black hover:text-white transition-colors duration-200">
+                        class="inline-flex items-center gap-3 px-4 py-2 bg-white border-2 border-black rounded-xl hover:bg-[#3C3D37] hover:text-white transition-all duration-200 shadow-md hover:shadow-lg">
                             <div class="flex flex-col items-start">
                                 <span class="text-sm font-medium">Following</span>
                                 <span class="text-2xl font-bold">{{ $following->count() }}</span>
@@ -94,86 +94,114 @@
         </div>
     </div>
 
-    {{-- Navigation Tabs with Black Border --}}
-    <div class="border-b-2 border-black w-full">
+        {{-- Navigation Tabs with Black Border --}}
+        <div class="border-b-2 border-black w-full">
         <div class="w-full">
             <nav class="max-w-7xl mx-auto px-6 flex flex-wrap gap-4 md:gap-8">
                 <a href="{{ url('/users/' . $user->id . '/articles') }}" 
-                   class="py-4 text-gray-900 hover:text-gray-700 border-b-2 border-black">
+                class="underline-effect py-4 text-gray-900 hover:text-gray-700 relative group">
                     articles
+                    <span class="absolute bottom-1 left-0 w-full h-0.5 bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </a>
                 <a href="{{ url('/users/' . $user->id . '/discussions') }}" 
-                   class="py-4 text-gray-500 hover:text-gray-900">
+                class="underline-effect py-4 text-gray-500 hover:text-gray-900 relative group">
                     discussions
+                    <span class="absolute bottom-1 left-0 w-full h-0.5 bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </a>
                 <a href="{{ url('/users/' . $user->id . '/upvoted') }}" 
-                   class="py-4 text-gray-500 hover:text-gray-900">
+                class="underline-effect py-4 text-gray-500 hover:text-gray-900 relative group">
                     upvoted
+                    <span class="absolute bottom-1 left-0 w-full h-0.5 bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </a>
                 <a href="{{ url('/users/' . $user->id . '/hubs') }}" 
-                   class="py-4 text-gray-500 hover:text-gray-900 ml-auto">
+                class="underline-effect py-4 text-gray-500 hover:text-gray-900 ml-auto relative group">
                     hubs
+                    <span class="absolute bottom-1 left-0 w-full h-0.5 bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </a>
             </nav>
         </div>
     </div>
 
-    {{-- Content Area matching mockup --}}
-    <div class="max-w-7xl mx-auto px-6 py-6">
-    @if ($posts->count() > 0)
-        @foreach ($posts as $post)
-            <div class="border-b border-gray-200 pb-6 mb-6">
-                {{-- Hub/Category --}}
-                <div class="flex items-center gap-2 mb-2">
-                    @if ($post->community)
-                        <div class="flex items-center gap-2">
-                            @if ($post->community->image_id)
-                                <img src="{{ asset('images/' . $post->community->image_id . '.jpg') }}" 
-                                    alt="{{ $post->community->name }}" 
-                                    class="w-5 h-5 rounded">
-                            @else
-                                <div class="w-5 h-5 rounded-full bg-gray-300"></div>
-                            @endif
-                            <span class="text-gray-600">{{ '/' . $post->community->name }}</span>
+        <div class="max-w-7xl mx-auto px-6 py-6">
+        @if ($posts->count() > 0)
+            @foreach ($posts as $post)
+                <div class="border-b border-gray-200 pb-6 mb-6">
+                    {{-- Hub/Category --}}
+                    <div class="flex items-center gap-2 mb-2">
+                        @if ($post->community)
+                            <div class="flex items-center gap-2">
+                                @if ($post->community->image_id)
+                                    <img src="{{ asset('images/' . $post->community->image_id . '.jpg') }}"
+                                        alt="{{ $post->community->name }}"
+                                        class="w-5 h-5 rounded">
+                                @else
+                                    <div class="w-5 h-5 rounded-full bg-gray-300"></div>
+                                @endif
+                                <span class="text-gray-600">{{ '/' . $post->community->name }}</span>
+                            </div>
+                        @else
+                            <div class="text-gray-500">Community Unavailable</div>
+                        @endif
+                    </div>
+
+                    {{-- Post Title --}}
+                    <h2 class="text-2xl font-semibold mb-4">
+                        <a href="{{ route('news.show', $post->id) }}" class="text-blue-500 hover:underline">
+                            {{ $post->title }}
+                        </a>
+                    </h2>
+
+                    {{-- Interaction Stats --}}
+                    <div class="flex items-center gap-4 text-gray-500">
+                        {{-- Voting System --}}
+                        <div class="flex items-center">
+                            <div>
+                                <input id="upvote_{{ $post->id }}" type="checkbox" class="hidden peer/upvote">
+                                <label for="upvote_{{ $post->id }}"
+                                    class="peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 transition-all ease-out">
+                                    <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21,21H3L12,3Z" />
+                                    </svg>
+                                </label>
+                            </div>
+                            
+                            <span class="mx-2">
+                                @php
+                                    $score = $post->upvotesCount->count() - $post->downvotesCount->count();
+                                    echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
+                                @endphp
+                            </span>
+
+                            <div>
+                                <input id="downvote_{{ $post->id }}" type="checkbox" class="hidden peer/downvote">
+                                <label for="downvote_{{ $post->id }}"
+                                    class="cursor-pointer peer-checked/downvote:fill-red-400 hover:fill-red-400 transition-all ease-out">
+                                    <svg class="w-5 h-5 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21,21H3L12,3Z" />
+                                    </svg>
+                                </label>
+                            </div>
                         </div>
-                    @else
-                        <div class="text-gray-500">Community Unavailable</div>
-                    @endif
-                </div>
 
-                {{-- Post Title --}}
-                <h2 class="text-2xl font-semibold mb-4">
-                    <a href="{{ route('news.show', $post->id) }}" class="text-blue-500 hover:underline">
-                        {{ $post->title }}
-                    </a>
-                </h2>
+                        {{-- Comments Count --}}
+                        <div class="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+                            </svg>
+                            <span>{{ $post->comments_count }}</span>
+                        </div>
 
-                {{-- Interaction Stats --}}
-                <div class="flex items-center gap-4 text-gray-500">
-                    <div class="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                        </svg>
-                        <span>{{ $post->likes_count }}</span>
+                        <span class="text-gray-400">{{ $post->creation_date->format('F j, Y') ?? 'Unknown date' }}</span>
                     </div>
-                    <div class="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
-                        </svg>
-                        <span>{{ $post->comments_count }}</span>
-                    </div>
-                    <span class="text-gray-400">{{ $post->creation_date->format('F j, Y') ?? 'Unknown date' }}</span>
                 </div>
+            @endforeach
+
+            {{-- Pagination Links --}}
+            <div class="mt-6">
+                {{ $posts->links() }}
             </div>
-        @endforeach
-
-        {{-- Pagination Links --}}
-        <div class="mt-6">
-            {{ $posts->links() }}
-        </div>
-    @else
-        <p class="text-gray-500">This user has not authored any posts yet.</p>
-    @endif
-    </div>
+        @else
+            <p class="text-gray-500">This user has not authored any posts yet.</p>
+        @endif
     </div>
 @endsection
