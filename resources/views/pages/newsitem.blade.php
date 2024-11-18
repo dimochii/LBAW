@@ -200,7 +200,7 @@
             {{-- comment header --}}
             <summary class="list-none">
               <div class="text-sm mb-5">
-                <a href="#" class="underline-effect">{{ $comment->user}}</a>
+                <a href="#" class="underline-effect">{{ $comment->user->username}}</a>
                 <span>•</span>
                 <span>7 hours ago</span>
                 <span>•</span>
@@ -214,11 +214,11 @@
               <p>{{ $comment->content }}
               </p>
               <blockquote>
-                <p>Cadunt animoque cognoscenda quam adhibete;
-                  Anónimo, 2003
+                <p>
+                {{ $comment->content }}
                 </p>
               </blockquote>
-              <p>Lorem Ipsum again</p>
+              <p>{{ $comment->content }}</p>
             </article>
             {{-- comment buttons row --}}
             <footer class="flex gap-x-1 items-center mt-4">
