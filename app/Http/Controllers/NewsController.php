@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\Post;
 use App\Models\Vote;
 use App\Models\PostVote;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -35,9 +36,27 @@ class NewsController extends Controller
     
     public function show($post_id)
     {
-        $newsItem = News::with('post')->where('post_id', $post_id)->firstOrFail();
-        
-        return view('pages.show_news', compact('newsItem'));
+        $newsItem = News::with('post.community') 
+        ->where('post_id', $post_id)
+        ->firstOrFail();
+
+    $newsItem->upvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
+        $query->where('post_id', $newsItem->post_id);
+    })->where('upvote', true)->count();
+
+    $newsItem->downvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
+        $query->where('post_id', $newsItem->post_id);
+    })->where('upvote', false)->count();
+    
+    $newsItem->comments_count = Comment::where('post_id', $newsItem->post->id)->count();
+    
+    $comments = Comment::with('user') // Eager load the user who made the comment
+    ->where('post_id', $newsItem->post->id)
+    ->orderBy('creation_date', 'asc') // Optionally order comments
+    ->get();
+
+    // Pass the comments to the view
+    return view('pages.newsitem', compact('newsItem', 'comments'));
     }
     
     public function createNews(Post $post, $newsUrl)
@@ -86,7 +105,7 @@ class NewsController extends Controller
             'news_url' => $request->news_url,
         ]);
 
-        return view('pages.show_news', compact('newsItem'));
+        return view('pages.newsitem', compact('newsItem'));
     }
 
 

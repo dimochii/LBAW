@@ -27,6 +27,11 @@ class AuthenticatedUser extends Authenticatable
     {
         return $this->password;
     }
+    public function username()
+    {
+        return $this->username;
+    }
+
 
     public function image()
     {
