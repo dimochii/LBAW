@@ -200,9 +200,9 @@
             {{-- comment header --}}
             <summary class="list-none">
               <div class="text-sm mb-5">
-                <a href="#" class="underline-effect">{{ $comment->user->username}}</a>
+                <a href="#" class="underline-effect">{{ $comment->user->username}}</a><!-- username do bro que criou o comentario-->
                 <span>•</span>
-                <span>7 hours ago</span>
+                <span>{{ $comment->creation_date ?  $comment->creation_date->diffForHumans() : 'Unknown date' }}</span><!-- Tempo comentario-->
                 <span>•</span>
                 <span class="underline-effect cursor-pointer group-open/details:before:content-['hide']">
                 </span>
@@ -233,7 +233,12 @@
                 </label>
               </div>
 
-              <span class="mr-2">1.2k</span>
+              <span class="mr-2">
+              @php
+                $score = $comment->upvotesCount->count() - $comment->downvotesCount->count();
+                echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
+            @endphp
+              </span>
 
               <div class="">
                 <input id="downvote" type="checkbox" class="hidden peer/downvote">
@@ -260,7 +265,7 @@
                 </g>
               </svg>
 
-              <span>105</span>
+              <span>{{ $comment->children->count() }}</span>
 
               <svg class="h-5 cursor-pointer hover:fill-red-400 ml-auto transition-all ease-out" viewBox="0 0 17 17"
                 xmlns="http://www.w3.org/2000/svg">

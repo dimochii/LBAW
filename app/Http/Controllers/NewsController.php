@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Vote;
 use App\Models\PostVote;
 use App\Models\Comment;
+use App\Models\CommentVote;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -49,12 +50,12 @@ class NewsController extends Controller
     })->where('upvote', false)->count();
     
     $newsItem->comments_count = Comment::where('post_id', $newsItem->post->id)->count();
-    
+
     $comments = Comment::with('user') // Eager load the user who made the comment
     ->where('post_id', $newsItem->post->id)
-    ->orderBy('creation_date', 'asc') // Optionally order comments
+    ->orderBy('creation_date', 'asc')
     ->get();
-    
+        
 
     // Pass the comments to the view
     return view('pages.newsitem', compact('newsItem', 'comments'));
