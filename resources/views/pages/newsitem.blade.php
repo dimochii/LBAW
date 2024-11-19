@@ -9,8 +9,18 @@
         <a class="flex items-center" href="">
           <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
             class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
-          <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown Community' }}</span>
+          <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown
+            Community' }}</span>
         </a>
+        <!-- Edit Button (only if the current authenticated user is an author) -->
+        @auth
+        <!-- Check if the authenticated user is one of the authors -->
+        @if ($newsItem->post->authors->contains('id', Auth::user()->id))
+        <a href="{{ route('news.edit', ['post_id' => $newsItem->post->id]) }}" class="btn btn-warning mt-3">Edit
+          Post</a>
+        @endif
+        @endauth
+
         <svg class="ml-auto h-6 w-6 fill-[#3C3D37] cursor-pointer" xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16">
           <path class="cls-1"
@@ -18,9 +28,9 @@
         </svg>
       </div>
       <a href="{{ $newsItem->news_url ?? 'No URL available' }}">
-        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{ $newsItem->post->title ?? 'No title available' }}</p>
+        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">{{
+          $newsItem->post->title ?? 'No title available' }}</p>
       </a>
-
 
 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
@@ -34,7 +44,12 @@
           </label>
         </div>
 
-        <span class="mr-2">1.2k</span>
+        <span class="mr-2">
+          @php
+          $score = $newsItem->upvotes_count - $newsItem->downvotes_count;
+          echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
+          @endphp
+        </span>
 
         <div class="">
           <input id="downvote" type="checkbox" class="hidden peer/downvote">
@@ -60,11 +75,21 @@
           </g>
         </svg>
 
-        <span>105</span>
+        <span>{{ $newsItem->comments_count }}</span>
 
         <div class="ml-auto hidden text-sm lg:text-base sm:block text-right">
-          <span>7 hours ago by</span>
-          <a href="#" class="underline-effect">@anonymous</a>
+          <span>{{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown date' }}
+            by</span>
+          @foreach ($newsItem->post->authors as $author)
+          <a href="{{ route('user.profile', $author->id) }}" class="flex items-center gap-4">
+            <!-- Display Author Image -->
+            {{-- <img src="{{ $author->image_id ?? '/images/default-profile.png' }}" alt="Author Image"
+              class="w-8 h-8 rounded-full object-cover"> --}}
+            <!-- Display Author Username -->
+            <span class="underline-effect p-4">{{ $author->username ?? 'Unknown'
+              }}</span>
+          </a>
+          @endforeach
 
         </div>
       </div>
@@ -76,33 +101,21 @@
     </a>
   </div>
 
+  @isset($newsItem->post->content)
   <div id="post-content" class="py-4 px-8 flex flex-col gap-4">
-    <div>
+    {{-- <div>
       <a class="flex items-center" href="">
         <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
           class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
         <span class="underline-effect">@anonymous</span>
       </a>
-
-    </div>
-    <div
-      class="mx-auto break-words font-vollkorn max-w-[95%] prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded prose-code:text-[#4793AF]">
-      <p>Succedere deus inplet <a href="http://estsedes.org/ubi">deum</a> infamia satam expellitur
-        cadunt animoque cognoscenda quam adhibete inmania. Legit si fratri sceptro,
-        mihi <em>eu quiero despacito</em>, ripam. <em>Nares leves</em> torvo pervia pigneror
-        perterrita cogente pastor licebit luctus. Iuvenis positosque indignanda ausim
-        tenebant digna concubiturus imbres, Danaen, ante iuvencae licet optavit arvo!
-        <em>Pompa</em> qui: eadem modulatur mores, <strong>proque</strong>, Tartessia cupidine potior saevam
-        medicamine bos Prima volucres sistere?
-      </p>
-      <blockquote>
-        Lorem Ipsum
-      </blockquote>
-      <code>
-          Lorem Ipsum
-        </code>
+    </div> --}}
+    <div data-text="markdown"
+      class="break-words font-vollkorn max-w-[95%] prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded prose-code:text-[#4793AF]">
+      {{ $newsItem->post->content }}
     </div>
   </div>
+  @endisset
 
 
   {{-- comment editor --}}
@@ -189,113 +202,14 @@
     {{-- comments wrapper --}}
     <div class="w-11/12 min-w-72">
       {{-- comment thread --}}
-      <div class="comment relative mb-3 min-w-72 max-w-full" id="c-1">
-        <div class=" flex flex-row mt-5">
-          <div class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]">
-            <a href="">
-              <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-                class="max-w-full rounded-3xl">
-            </a>
-
-            <a href="#c-1"
-              class="absolute top-[32px] bg-[#A6A6A6] hover:bg-[#4793AF] w-px hover:w-0.5 h-[calc(100%-32px)] cursor-pointer">
-            </a>
-          </div>
-          <details open class="group/details mt-2 grow">
-            {{-- comment header --}}
-            <summary class="list-none">
-              <div class="text-sm mb-5">
-                <a href="#" class="underline-effect">@anonymous</a>
-                <span>•</span>
-                <span>7 hours ago</span>
-                <span>•</span>
-                <span class="underline-effect cursor-pointer group-open/details:before:content-['hide']">
-                </span>
-              </div>
-            </summary>
-            {{-- comment body --}}
-            <article
-              class="font-vollkorn max-w-full prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50]">
-              <p>Succedere deus inplet <a href="http://estsedes.org/ubi">deum</a> infamia satam expellitur
-                cadunt animoque cognoscenda quam adhibete inmania. Legit si fratri sceptro,
-                mihi <em>eu quiero despacito</em>, ripam. <em>Nares leves</em> torvo pervia pigneror
-                perterrita cogente pastor licebit luctus. Iuvenis positosque indignanda ausim
-                tenebant digna concubiturus imbres, Danaen, ante iuvencae licet optavit arvo!
-                <em>Pompa</em> qui: eadem modulatur mores, <strong>proque</strong>, Tartessia cupidine potior saevam
-                medicamine bos Prima volucres sistere?
-              </p>
-              <blockquote>
-                <p>Cadunt animoque cognoscenda quam adhibete
-                  Anónimo, 2003
-                </p>
-              </blockquote>
-              <p>Lorem Ipsum again</p>
-            </article>
-            {{-- comment buttons row --}}
-            <footer class="flex gap-x-1 items-center mt-4">
-              <div>
-                <input id="upvote" type="checkbox" class="hidden peer/upvote">
-                <label for="upvote"
-                  class=" peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 transition-all ease-out">
-                  <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21,21H3L12,3Z" />
-                  </svg>
-                </label>
-              </div>
-
-              <span class="mr-2">1.2k</span>
-
-              <div class="">
-                <input id="downvote" type="checkbox" class="hidden peer/downvote">
-                <!-- Default icon (unchecked) -->
-                <label for="downvote"
-                  class="cursor-pointer peer-checked/downvote:fill-red-400 hover:fill-red-400 transition-all ease-out">
-                  <svg class="w-5 h-5 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21,21H3L12,3Z" />
-                  </svg>
-                </label>
-              </div>
-
-              <button data-toggle="reply-form" data-target="reply-1-editor">
-                <svg class="ml-2 h-[18px] w-[18px] hover:fill-blue-400 transition-all ease-out" viewBox="0 0 48 48"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <g id="Layer_2" data-name="Layer 2">
-                    <g id="invisible_box" data-name="invisible box">
-                      <rect width="48" height="48" fill="none" />
-                      <rect width="48" height="48" fill="none" />
-                    </g>
-                    <g id="icons_Q2" data-name="icons Q2">
-                      <path
-                        d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
-                    </g>
-                  </g>
-                </svg>
-              </button>
-
-              <span>105</span>
-
-              <svg class="h-5 cursor-pointer hover:fill-red-400 ml-auto transition-all ease-out" viewBox="0 0 17 17"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M2.83325 10.625C2.83325 10.625 3.54159 9.91669 5.66659 9.91669C7.79159 9.91669 9.20825 11.3334 11.3333 11.3334C13.4583 11.3334 14.1666 10.625 14.1666 10.625V2.12502C14.1666 2.12502 13.4583 2.83335 11.3333 2.83335C9.20825 2.83335 7.79159 1.41669 5.66659 1.41669C3.54159 1.41669 2.83325 2.12502 2.83325 2.12502V10.625Z"
-                  fill="#1D1B20" />
-                <path
-                  d="M2.83325 10.625C2.83325 10.625 3.54159 9.91669 5.66659 9.91669C7.79159 9.91669 9.20825 11.3334 11.3333 11.3334C13.4583 11.3334 14.1666 10.625 14.1666 10.625V2.12502C14.1666 2.12502 13.4583 2.83335 11.3333 2.83335C9.20825 2.83335 7.79159 1.41669 5.66659 1.41669C3.54159 1.41669 2.83325 2.12502 2.83325 2.12502V10.625ZM2.83325 10.625V15.5834"
-                  stroke="#1D1B20" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </footer>
-
-            @include('partials.text_editor_md', [
-            'id' => 'reply-1'
-            ])
-
-            {{-- replies --}}
-            <div class="replies pl-96">
-
-            </div>
-
-        </div>
-      </div>
+      @foreach ($comments as $comment)
+        @if (is_null($comment->parent_comment_id))
+        @include('partials.comments', ['comment' => $comment])
+        @endif
+      @endforeach
+      {{-- @include('partials.text_editor_md', [
+      'id' => 'reply-1'
+      ]) --}}
     </div>
 
   </div>

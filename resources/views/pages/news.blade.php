@@ -20,9 +20,9 @@
   @if($news->isEmpty())
   <p>No news available.</p>
   @else
-  <ul class="list-group">
+  <div class="divide-y-2 divide-black">
     @foreach($news as $newsItem)
-    <li class="list-group-item d-flex justify-content-between align-items-center">
+    {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
       <div>
         <a href="{{ url('/news/'.$newsItem->post_id) }}">
           <strong>{{ $newsItem->post->title }}</strong>
@@ -46,9 +46,14 @@
           </button>
         </form>
       </div>
-    </li>
+    </li> --}}
+
+    @include('partials.post', [
+      'news' => 'true',
+      'post' => $newsItem
+    ])
     @endforeach
-  </ul>
+  </div>
   @endif
 </div>
 @endsection

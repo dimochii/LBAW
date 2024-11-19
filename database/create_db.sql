@@ -443,7 +443,8 @@ INSERT INTO posts (title, content, community_id) VALUES
 ('Wildlife Photography Tips', 'Capture nature beautifully.', 10);
 
 -- Step 5: Insert comments
-INSERT INTO comments (content, creation_date, authenticated_user_id, post_id) VALUES('Great insights! I totally agree with you.', CURRENT_TIMESTAMP, 1, 1),
+INSERT INTO comments (content, creation_date, authenticated_user_id, post_id) VALUES
+('Great insights! I totally agree with you.', CURRENT_TIMESTAMP, 1, 1),
 ('I can’t wait to read these books!', CURRENT_TIMESTAMP, 2, 2),
 ('Anime has really evolved over the years.', CURRENT_TIMESTAMP, 3, 3),
 ('Looking forward to discussing more on this!', CURRENT_TIMESTAMP, 1, 3),
@@ -453,6 +454,18 @@ INSERT INTO comments (content, creation_date, authenticated_user_id, post_id) VA
 ('Let’s keep each other motivated!', CURRENT_TIMESTAMP, 3, 7),
 ('Game dev is so much fun!', CURRENT_TIMESTAMP, 4, 8),
 ('Nature is so beautiful!', CURRENT_TIMESTAMP, 5, 9);
+
+-- Child Comment 1
+INSERT INTO comments (content, creation_date, authenticated_user_id, post_id, parent_comment_id)
+VALUES ('I agree with your point about sustainable practices!', CURRENT_TIMESTAMP, 2, 1, 1);
+
+-- Child Comment 2
+INSERT INTO comments (content, creation_date, authenticated_user_id, post_id, parent_comment_id)
+VALUES ('This is a great discussion, I have some thoughts too.', CURRENT_TIMESTAMP, 3, 1, 1);
+
+-- Child Comment 3 (nested reply to Child Comment 1)
+INSERT INTO comments (content, creation_date, authenticated_user_id, post_id, parent_comment_id)
+VALUES ('I think we need more focus on local community efforts.', CURRENT_TIMESTAMP, 4, 1, 11);
 
 INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (1, 1, FALSE),  -- Anonymous - The Rise of AI

@@ -62,7 +62,7 @@ Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFol
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
-Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments'])->middleware('auth')->name('post.comments');
+Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments'])->name('post.comments');
 
     //upvote & downvote
 Route::get('/news', [NewsController::class, 'list'])->name('news');
