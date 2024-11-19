@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-
+use App\Models\Comment;
 
 class CommentController extends Controller
 {
@@ -18,6 +18,11 @@ class CommentController extends Controller
 
     $comments = $post->comments()->with('user')->get();
     $commentTree = $this->buildCommentTree($comments);
+    // $commentTree = Comment::whereNull('parent_comment_id')
+    //     ->where('post_id', $id)
+    //     ->with('children')
+    //     ->get();
+      
     return response()->json($commentTree, 200);
 }
 

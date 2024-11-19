@@ -13,7 +13,7 @@
     rel="stylesheet">
   @vite('resources/css/app.css')
 </head>
-<body class="bg-[#F4F2ED] text-[#3C3D37]">
+<body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">
     <div class="min-h-screen flex flex-col">
         <!-- Top Header -->
         <header class="flex items-center justify-between h-12 border-b-2 border-black">
