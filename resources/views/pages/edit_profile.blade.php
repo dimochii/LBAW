@@ -155,8 +155,7 @@
             {{-- Submit Button --}}
             <div class="md:col-span-2 flex justify-end">
                 <button type="submit" 
-                        onclick="event.preventDefault(); submitAndRedirect(this.form, '{{ route('user.profile', ['id' => Auth::user()->getKey()]) }}')"
-                        class="group inline-flex items-center gap-4 px-8 py-4 border-2 border-black text-xl font-medium transition-all duration-300 hover:bg-black hover:text-white">
+                        class="group inline-flex items-center gap-4 px-8 py-4 border-2 border-black text-xl font-medium transition-all duration-300 hover:bg-black hover:text-white btn btn-primary">
                     <span>Save Changes</span>
                     <svg xmlns="http://www.w3.org/2000/svg" 
                          class="h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2" 

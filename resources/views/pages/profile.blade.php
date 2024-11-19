@@ -62,42 +62,36 @@
             </p>
 
             {{-- Followers/Following buttons --}}
-            <div class="mt-6 flex flex-col sm:flex-row gap-4">
+            <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-end">
                 <div class="group">
-                    <a href="{{ route('user.followers', $user->id) }}" 
-                        class="inline-flex items-center gap-3 px-4 py-2 bg-white border-2 border-black rounded-xl 
-                            hover:bg-whatsup-green hover:text-white transition-all duration-200 shadow-md hover:shadow-lg">
-                        
+                    <a href="{{ route('user.followers', $user->id) }}"
+                    class="group inline-flex items-center gap-4 px-8 py-4 border-2 border-black text-xl font-medium transition-all duration-300 hover:bg-[#3C3D37] hover:text-white">
                         <div class="flex flex-col items-start">
                             <span class="text-sm font-medium">Followers</span>
                             <span class="text-2xl font-bold">{{ $followers->count() ?? 0 }}</span>
                         </div>
-
-                        <svg xmlns="http://www.w3.org/2000/svg" 
-                            class="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" 
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2"
                             viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" 
-                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
+                            <path fill-rule="evenodd"
+                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
                                 clip-rule="evenodd" />
                         </svg>
                     </a>
                 </div>
 
                 <div class="group">
-                    <a href="{{ route('user.following', $user->id) }}" 
-                        class="inline-flex items-center gap-3 px-4 py-2 bg-white border-2 border-black rounded-xl 
-                            hover:bg-whatsup-green hover:text-white transition-all duration-200 shadow-md hover:shadow-lg">
-                        
+                    <a href="{{ route('user.following', $user->id) }}"
+                    class="group inline-flex items-center gap-4 px-8 py-4 border-2 border-black text-xl font-medium transition-all duration-300 hover:bg-[#3C3D37] hover:text-white">
                         <div class="flex flex-col items-start">
                             <span class="text-sm font-medium">Following</span>
                             <span class="text-2xl font-bold">{{ $following->count() ?? 0 }}</span>
                         </div>
-
-                        <svg xmlns="http://www.w3.org/2000/svg" 
-                            class="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" 
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2"
                             viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" 
-                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
+                            <path fill-rule="evenodd"
+                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
                                 clip-rule="evenodd" />
                         </svg>
                     </a>
@@ -164,7 +158,7 @@
                     {{-- Rest of the post content remains the same --}}
                     {{-- Post Title --}}
                     <h2 class="text-2xl font-semibold mb-4">
-                        <a href="{{ route('news.show', $post->id) }}" class="text-black hover:underline">
+                        <a href="{{ route('news.show', $post->id) }}" class="text-black underline-effect">
                             {{ $post->title }}
                         </a>
                     </h2>
