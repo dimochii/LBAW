@@ -7,7 +7,7 @@ news = Bool
 
 --}}
 
-<div class="p-4">
+<div class="p-4 hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper">
   <header class="flex items-center">
     <a class="flex  items-center h-8" href="">
       <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
@@ -16,7 +16,7 @@ news = Bool
         Community' }}</span>
     </a>
     <button class="ml-auto">
-      <svg class="ml-auto h-6 w-6 fill-[#3C3D37]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+      <svg class="ml-auto h-6 w-6 fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
         <path class="cls-1"
           d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
       </svg>
@@ -41,7 +41,7 @@ news = Bool
     <div>
       <input id="upvote" type="checkbox" class="hidden peer/upvote">
       <label for="upvote"
-        class=" peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out">
+        class=" peer-checked/upvote:fill-blue-400 cursor-pointer group-hover/wrapper:hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
         <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M21,21H3L12,3Z" />
         </svg>
@@ -58,14 +58,14 @@ news = Bool
     <div class="">
       <input id="downvote" type="checkbox" class="hidden peer/downvote">
       <label for="downvote"
-        class="cursor-pointer peer-checked/downvote:text-red-400 hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
+        class="cursor-pointer peer-checked/downvote:text-red-400  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
         <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M21,21H3L12,3Z" />
         </svg>
       </label>
     </div>
 
-    <svg class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"
+    <svg class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
       viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
       <g id="Layer_2" data-name="Layer 2">
         <g id="invisible_box" data-name="invisible box">
@@ -91,7 +91,7 @@ news = Bool
       </a>
       @else
       <div class="inline cursor-pointer underline-effect group italic"> contributors
-        <div class="absolute right-0 hidden group-hover:block bg-white border rounded shadow-lg p-2">
+        <div class="absolute right-0 hidden group-hover:block bg-[#F4F2ED] text-[#3C3D37] border border-[#3C3D37] rounded shadow-lg p-2">
           <ul>
             @foreach ($post->post->authors as $author)
             <li class="mb-1">
