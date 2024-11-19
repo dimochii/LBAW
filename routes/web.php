@@ -24,20 +24,10 @@ use App\Http\Controllers\CommentController;
 */
 
 // Home
-Route::get('/', function() {
-  return view('news');
-});
 
-Route::get('/news', function() {
-  return view('newsitem');
-});
-Route::get('/', function() {
-  return view('news');
-});
+Route::redirect('/', '/login');
 
-Route::get('/newsitem', function() {
-  return view('newsitem');
-});
+
 
 // Cards
 

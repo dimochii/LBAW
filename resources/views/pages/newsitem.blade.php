@@ -9,7 +9,7 @@
         <a class="flex items-center" href="">
           <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
             class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
-          <span class="text-2xl font-light underline-effect">h/hub</span>
+          <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown Community' }}</span> <!--community name-->
         </a>
         <svg class="ml-auto h-6 w-6 fill-[#3C3D37] cursor-pointer"
           xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -18,10 +18,17 @@
         </svg> 
       </div>
       <a href="#">
-        <p class="my-4 text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight line-clamp-4">Rússia lança “ataque
-          maciço”
-          ao sistema eléctrico ucraniano. Polónia mobiliza caças</p>
+        <p class="my-4 text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight line-clamp-4">{{ $newsItem->post->title ?? 'No title available' }}</p> <!--Título-->
+        <p class="my-4 text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight line-clamp-4">{{ $newsItem->post->content ?? 'No description available' }}</p><!--Descriçao-->
+        <p class="my-4 text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight line-clamp-4">{{ $newsItem->news_url ?? 'No URL available' }}</p><!--Link-->
       </a>
+      <!-- Edit Button (only if the current authenticated user is an author) -->
+      @auth
+        <!-- Check if the authenticated user is one of the authors -->
+        @if ($newsItem->post->authors->contains('id', Auth::user()->id))
+          <a href="{{ route('news.edit', ['post_id' => $newsItem->post->id]) }}" class="btn btn-warning mt-3">Edit Post</a>
+        @endif
+      @endauth
 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         <div>
@@ -34,7 +41,12 @@
           </label>
         </div>
 
-        <span class="mr-2">1.2k</span>
+        <span class="mr-2"><!--Upvote - downvote, para ver logica de dar upvote/downvote ir a pages/news.blade.php linhas 34-47, onde tem os routes é onde faz o upvote e downvote-->
+            @php
+                $score = $newsItem->upvotes_count - $newsItem->downvotes_count;
+                echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
+            @endphp
+        </span> <!----------->
 
         <div class="">
           <input id="downvote" type="checkbox" class="hidden peer/downvote">
@@ -61,18 +73,33 @@
           </g>
         </svg>
 
-        <span>105</span>
+        <span>{{ $newsItem->comments_count }}</span><!--numero de comentarios-->
 
         <div class="ml-auto hidden text-sm lg:text-base sm:block text-right">
-          <span>7 hours ago by</span>
-          <a href="#" class="underline-effect">@anonymous</a>
+        <span>{{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown date' }}</span><!-- Tempo com cena ficholas que faz a diferença par algo "human readable" tipo 5 hours ago-->
+        <div class="mr-2 flex items-center"><!--------Autores do post (lembras te que temos varios autores para o mesmo post)----------->
+          <span class="text-sm text-gray-500">by</span>
+          <div class="flex items-center space-x-3 ml-2">
+            @foreach ($newsItem->post->authors as $author)
+              <a href="{{ route('user.profile', $author->id) }}" class="flex items-center space-x-2">
+                <!-- Display Author Image -->
+                <img src="{{ $author->image_id ?? '/images/default-profile.png' }}" alt="Author Image" class="w-8 h-8 rounded-full object-cover">
+                <!-- Display Author Username -->
+                <span class="text-sm font-medium text-gray-800 hover:text-[#4793AF]">{{ $author->username ?? 'Unknown' }}</span>
+              </a>
+              @if (!$loop->last)
+                <span class="text-sm text-gray-500">,</span> 
+              @endif
+            @endforeach
+          </div>
+        </div><!-------------------------->
         </div>
       </div>
     </div>
     <a href="#" class="w-1/2 md:block hidden">
       <img class="object-cover aspect-[4/3] object-left w-full h-full"
-        src="https://imagens.publico.pt/imagens.aspx/1955774?tp=UH&db=IMAGENS&type=JPG&share=1&o=BarraFacebook_Publico.png"
-        alt="">
+        src="https://imagens.publico.pt/imagens.aspx/1955774?tp=UH&db=IMAGENS&type=JPG&share=1&o=BarraFacebook_Publico.png" 
+        alt=""><!---------temos de ir buscar as imagens das noticias---------------->
     </a>
   </div>
 
@@ -156,6 +183,7 @@
     {{-- comments wrapper --}}
     <div class="w-11/12 min-w-72">
       {{-- comment thread --}}
+      @foreach ($comments as $comment) 
       <div class="comment relative mb-3 min-w-72 max-w-full" id="c-1">
         <div class=" flex flex-row mt-5">
           <div class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]">
@@ -172,9 +200,9 @@
             {{-- comment header --}}
             <summary class="list-none">
               <div class="text-sm mb-5">
-                <a href="#" class="underline-effect">@anonymous</a>
+                <a href="#" class="underline-effect">{{ $comment->user->username}}</a><!-- username do bro que criou o comentario-->
                 <span>•</span>
-                <span>7 hours ago</span>
+                <span>{{ $comment->creation_date ?  $comment->creation_date->diffForHumans() : 'Unknown date' }}</span><!-- Tempo comentario-->
                 <span>•</span>
                 <span class="underline-effect cursor-pointer group-open/details:before:content-['hide']">
                 </span>
@@ -183,20 +211,14 @@
             {{-- comment body --}}
             <article
               class="font-vollkorn max-w-full prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50]">
-              <p>Succedere deus inplet <a href="http://estsedes.org/ubi">deum</a> infamia satam expellitur
-                cadunt animoque cognoscenda quam adhibete; inmania. Legit si fratri sceptro,
-                mihi <em>eu quiero despacito</em>, ripam. <em>Nares leves</em> torvo pervia pigneror
-                perterrita cogente pastor licebit luctus. Iuvenis positosque indignanda ausim
-                tenebant digna concubiturus imbres, Danaen, ante iuvencae licet optavit arvo!
-                <em>Pompa</em> qui: eadem modulatur mores, <strong>proque</strong>, Tartessia cupidine potior saevam
-                medicamine bos Prima volucres sistere?
+              <p>{{ $comment->content }}
               </p>
               <blockquote>
-                <p>Cadunt animoque cognoscenda quam adhibete;
-                  Anónimo, 2003
+                <p>
+                {{ $comment->content }}
                 </p>
               </blockquote>
-              <p>Lorem Ipsum again</p>
+              <p>{{ $comment->content }}</p>
             </article>
             {{-- comment buttons row --}}
             <footer class="flex gap-x-1 items-center mt-4">
@@ -211,7 +233,12 @@
                 </label>
               </div>
 
-              <span class="mr-2">1.2k</span>
+              <span class="mr-2">
+              @php
+                $score = $comment->upvotesCount->count() - $comment->downvotesCount->count();
+                echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
+            @endphp
+              </span>
 
               <div class="">
                 <input id="downvote" type="checkbox" class="hidden peer/downvote">
@@ -238,7 +265,7 @@
                 </g>
               </svg>
 
-              <span>105</span>
+              <span>{{ $comment->children->count() }}</span>
 
               <svg class="h-5 cursor-pointer hover:fill-red-400 ml-auto transition-all ease-out" viewBox="0 0 17 17"
                 xmlns="http://www.w3.org/2000/svg">
@@ -294,6 +321,7 @@
         </div>
 
       </div>
+      @endforeach
     </div>
   </div>
 
