@@ -65,7 +65,7 @@
             <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-end">
                 <div class="group">
                     <a href="{{ route('user.followers', $user->id) }}"
-                    class="group inline-flex items-center gap-4 px-8 py-4 border-2 border-black text-xl font-medium transition-all duration-300 hover:bg-[#3C3D37] hover:text-white">
+                    class="group inline-flex items-center gap-4 px-8 py-4  text-xl font-medium transition-all duration-300 hover:bg-[#3C3D37] hover:text-white">
                         <div class="flex flex-col items-start">
                             <span class="text-sm font-medium">Followers</span>
                             <span class="text-2xl font-bold">{{ $followers->count() ?? 0 }}</span>
@@ -82,7 +82,7 @@
 
                 <div class="group">
                     <a href="{{ route('user.following', $user->id) }}"
-                    class="group inline-flex items-center gap-4 px-8 py-4 border-2 border-black text-xl font-medium transition-all duration-300 hover:bg-[#3C3D37] hover:text-white">
+                    class="group inline-flex items-center gap-4 px-8 py-4  text-xl font-medium transition-all duration-300 hover:bg-[#3C3D37] hover:text-white">
                         <div class="flex flex-col items-start">
                             <span class="text-sm font-medium">Following</span>
                             <span class="text-2xl font-bold">{{ $following->count() ?? 0 }}</span>
@@ -132,7 +132,7 @@
     <div class="max-w-7xl mx-auto px-6 py-6">
         @if ($posts->count() > 0)
             @foreach ($posts as $post)
-                <div class="border-b border-gray-200 pb-6 mb-6">
+                <div class="border-b-2 border-black pb-6 mb-6">
                     {{-- Hub/Category --}}
                     <div class="flex items-center gap-2 mb-2">
                         @if ($post->community)
