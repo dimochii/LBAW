@@ -18,7 +18,7 @@
         <!-- Top Header -->
         <header class="flex items-center justify-between h-12 border-b-2 border-black">
             <!-- Logo Section -->
-            <div class="w-32 md:w-48 bg-whatsup-green h-full flex items-center border-r-2 border-black">
+            <div class="w-32 md:w-48 bg-whatsup-green h-full flex items-center font-grotesk  border-r-2 border-black">
                 <a href="{{ url('/') }}" class="px-4 text-white font-semibold text-xl">
                     <span class="block md:hidden">W</span>
                     <span class="hidden md:block">whatsUP</span>
@@ -156,7 +156,7 @@
             </button>
 
             <!-- Left Sidebar -->
-            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 border-r-2 border-black bg-[#F4F2ED] transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
+            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform font-light -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 border-r-2 border-black bg-[#F4F2ED] transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
                 <nav class="divide-y-2 divide-black">
                     <!-- Primary Links -->
                     <div class="py-4">
@@ -241,7 +241,7 @@
 
             <!-- Right Sidebar -->
             @if (Request::is('hub/*') || Request::is('news'))
-            <aside id="right-sidebar" class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
+            <aside id="right-sidebar" class="fixed inset-y-0 right-0 font-light transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
                 <!-- Hubs Section -->
                 <div class="p-4 border-b-2 border-black">
                     <div class="flex flex-wrap items-start gap-3"> 

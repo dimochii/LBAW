@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<script src="{{ asset('js/user.js') }}" defer></script>
 <div class="font-grotesk min-h-screen ">
     {{-- Header Section --}}
     <div class="border-b-2 border-black transition-all duration-300 hover:bg-whatsup-blue hover:text-[#F4F2ED]">
@@ -170,8 +171,4 @@
         </form>
     </div>
 </div>
-
-@push('scripts')
-<script src="{{ asset('js/user.js') }}" defer></script>
-@endpush
 @endsection
