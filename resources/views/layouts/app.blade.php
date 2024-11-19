@@ -156,7 +156,7 @@
             </button>
 
             <!-- Left Sidebar -->
-            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 border-r-2 border-black transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
+            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 border-r-2 border-black bg-[#F4F2ED] transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
                 <nav class="divide-y-2 divide-black">
                     <!-- Primary Links -->
                     <div class="py-4">
