@@ -12,11 +12,11 @@
     @apply content-[''] absolute w-full h-0.5 left-0 bottom-[-2px] bg-[#3C3D37] origin-bottom-right hover:origin-bottom-left scale-x-0 hover:scale-x-100 transition-transform duration-300;
   }
 
-  .dropdown-menu-expand {
-    @apply transition ease-out duration-100 transform opacity-100 scale-100
+  .underline-effect-light {
+    @apply relative p-0;
   }
 
-  .dropdown-menu-expanded {
-    @apply transition ease-in duration-75 transform opacity-0 scale-95
+  .underline-effect-light::after {
+    @apply content-[''] absolute w-full h-0.5 left-0 bottom-[-2px] bg-[#F4F2ED] origin-bottom-right hover:origin-bottom-left scale-x-0 hover:scale-x-100 transition-transform duration-300;
   }
 }

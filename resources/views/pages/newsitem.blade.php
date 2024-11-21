@@ -12,6 +12,8 @@
           <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown
             Community' }}</span>
         </a>
+
+        {{--
         <!-- Edit Button (only if the current authenticated user is an author) -->
         @auth
         <!-- Check if the authenticated user is one of the authors -->
@@ -19,7 +21,7 @@
         <a href="{{ route('news.edit', ['post_id' => $newsItem->post->id]) }}" class="btn btn-warning mt-3">Edit
           Post</a>
         @endif
-        @endauth
+        @endauth --}}
 
         <svg class="ml-auto h-6 w-6 fill-[#3C3D37] cursor-pointer" xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16">
@@ -27,7 +29,7 @@
             d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
         </svg>
       </div>
-      <a href="{{ $newsItem->news_url ?? 'No URL available' }}">
+      <a href="{{ $newsItem->news_url ?? '#' }}">
         <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">{{
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
@@ -77,24 +79,25 @@
 
         <span>{{ $newsItem->comments_count }}</span>
 
-        <div class="ml-auto hidden text-sm lg:text-base sm:block text-right">
-          <span>{{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown date' }}
-            by</span>
-          @foreach ($newsItem->post->authors as $author)
-          <a href="{{ route('user.profile', $author->id) }}" class="flex items-center gap-4">
-            <!-- Display Author Image -->
-            {{-- <img src="{{ $author->image_id ?? '/images/default-profile.png' }}" alt="Author Image"
-              class="w-8 h-8 rounded-full object-cover"> --}}
-            <!-- Display Author Username -->
-            <span class="underline-effect p-4">{{ $author->username ?? 'Unknown'
-              }}</span>
-          </a>
-          @endforeach
 
+
+        <div class="ml-auto hidden text-sm lg:text-base sm:block relative transition-all transform">
+          <span>
+            {{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown date' }} by
+          </span>
+          @if (count($newsItem->post->authors) === 1)
+          <a data-name="authors" class="underline-effect">
+            {{ $author->username ?? 'Unknown' }}
+          </a>
+          @else
+          @include('partials.authors_dropdown', [
+          'post' => $newsItem
+          ])
+          @endif
         </div>
       </div>
     </div>
-    <a href="#" class="w-1/2 md:block hidden">
+    <a href="{{ $newsItem->news_url ?? '#' }}" class="w-1/2 md:block hidden">
       <img class=" object-cover  object-left w-full h-full"
         src="https://imagens.publico.pt/imagens.aspx/1955774?tp=UH&db=IMAGENS&type=JPG&share=1&o=BarraFacebook_Publico.png"
         alt="">
@@ -102,7 +105,7 @@
   </div>
 
   @isset($newsItem->post->content)
-  <div id="post-content" class="py-4 px-8 flex flex-col gap-4">
+  <div id="post-content" class="py-4 px-8 flex flex-col gap-4  flex-none">
     {{-- <div>
       <a class="flex items-center" href="">
         <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
@@ -110,6 +113,22 @@
         <span class="underline-effect">@anonymous</span>
       </a>
     </div> --}}
+    {{-- ml-[{{ $index * 18 }}px] --}}
+
+    <div class="grid cursor-pointer group mr-auto gap-4 items-center">
+      @foreach($newsItem->post->authors as $index => $author)
+      <a href="{{ route('user.profile', $author->id) }}"
+        class="transition-all transform col-start-1 row-start-1 ml-[{{ $index * 14 }}px] group-hover:ml-[{{$index * 36}}px]">
+        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
+          class="max-w-full rounded-3xl min-w-[32px] w-[32px]">
+      </a>
+      @endforeach
+      <div class="col-start-2 row-start-1">
+        contributors • {{$newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown
+        date'}}
+      </div>
+    </div>
+
     <div data-text="markdown"
       class="break-words font-vollkorn max-w-[95%] prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded prose-code:text-[#4793AF]">
       {{ $newsItem->post->content }}
@@ -203,9 +222,9 @@
     <div class="w-11/12 min-w-72">
       {{-- comment thread --}}
       @foreach ($comments as $comment)
-        @if (is_null($comment->parent_comment_id))
-        @include('partials.comments', ['comment' => $comment])
-        @endif
+      @if (is_null($comment->parent_comment_id))
+      @include('partials.comments', ['comment' => $comment, 'margin' => '12'])
+      @endif
       @endforeach
       {{-- @include('partials.text_editor_md', [
       'id' => 'reply-1'
@@ -238,9 +257,8 @@
       .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>') // Bold
       .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>') // Italics
       .replace(/`(.*?)`/g, '<code class="bg-gray-200 p-1 rounded text-[#4793AF]">$1</code>') // Inline Code
-      .replace()
-      .replace(/^(?!<(h[1-6]|blockquote|hr)[^>]*>).+/gm, '$&<br>')  // Add <br> for plain text lines
-
+      .replace(/^(?!<(h[1-6]|blockquote|hr)[^>]*>).+/gm, '$&<br>')
+      .replace(/(<br>\s*){2,}/g, '<br>') // Add <br> for plain text lines
   }
   
   const bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'] 
@@ -333,6 +351,12 @@
     const id = editor.id.replace('-editor', '')  // Extract the unique id (e.g., "comment-1")
     setupEditor(id)  // Setup the editor for this specific instance
   }) 
+
+  const markdownText = document.querySelectorAll('[data-text="markdown"]')
+  markdownText.forEach(element => {
+    element.innerHTML = markdownToHTML(element.textContent)
+  })
+
   </script>
 
   @endsection

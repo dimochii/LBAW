@@ -19,8 +19,8 @@
         <header class="flex items-center justify-between h-12 border-b-2 border-black">
             <!-- Logo Section -->
             <div class="w-32 md:w-48 bg-whatsup-green h-full flex items-center border-r-2 border-black">
-                <a href="{{ url('/') }}" class="px-4 text-white font-semibold text-xl">
-                    <span class="block md:hidden">W</span>
+                <a href="{{ url('/') }}" class="m-auto text-[#F4F2ED] font-bold text-4xl tracking-tight">
+                    <span class="block md:hidden">w.UP</span>
                     <span class="hidden md:block">whatsUP</span>
                 </a>
             </div>
@@ -28,7 +28,7 @@
             <!-- Hamburger Button -->
             <button 
                 id="mobile-menu-button"
-                class="md:hidden fixed bottom-4 right-4 z-50 bg-whatsup-blue text-white p-3 rounded-full shadow-lg"
+                class="md:hidden fixed bottom-4 right-4 z-50 bg-whatsup-blue text-[#F4F2ED] p-3 rounded-full shadow-lg"
                 onclick="toggleMobileMenu()"
             >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,18 +37,18 @@
             </button>
             <!-- Search Section -->
             <div class="flex-1 bg-whatsup-red h-full flex items-center px-2 md:px-4 relative">
-                <svg class="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <input 
                     id="search-input"
                     type="text" 
                     placeholder="search" 
-                    class="w-full bg-transparent border-none text-white placeholder-white/80 px-2 md:px-3 py-2 focus:outline-none text-sm"
+                    class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none "
                 >
                 
                 <!-- Enhanced Search Results Dropdown -->
-                <div id="search-results" class="absolute left-2 md:left-4 right-2 md:right-4 top-full mt-2 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border-2 border-black overflow-hidden transform opacity-0 scale-95 transition-all duration-200 ease-out z-50">
+                <div id="search-results" class="absolute left-2 md:left-4 right-2 md:right-4 top-full mt-2 bg-[#F4F2ED] backdrop-blur-sm rounded-xl shadow-2xl border-2 border-black overflow-hidden transform opacity-0 scale-95 transition-all duration-200 ease-out z-50">
                     <!-- Communities Section -->
                     <div class="border-b border-gray-200 bg-gradient-to-r from-red-50 to-blue-50">
                         <div class="p-4">
@@ -113,17 +113,17 @@
             <!-- Right Section -->
             <div class="bg-whatsup-blue h-full w-32 md:w-64 flex items-center border-l-2 border-black justify-evenly">
             @if (Auth::check())
-                    <a href="{{ route('messages') }}" class="text-white hover:text-white/80 transition-colors">
+                    <a href="{{ route('messages') }}" class="text-[#F4F2ED] hover:text-[#F4F2ED]/80 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                     </a>
-                    <a href="{{ route('notifications') }}" class="text-white hover:text-white/80 transition-colors hidden md:block">
+                    <a href="{{ route('notifications') }}" class="text-[#F4F2ED] hover:text-[#F4F2ED]/80 transition-colors hidden md:block">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
                     </a>
-                    <a href="{{ route('profile') }}" class="text-white hover:text-white/80 transition-colors">
+                    <a href="{{ route('profile') }}" class="text-[#F4F2ED] hover:text-[#F4F2ED]/80 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
@@ -131,7 +131,7 @@
                 @else
                     <a 
                         href="{{ route('login') }}" 
-                        class="px-2 md:px-4 py-1.5 text-sm font-medium text-white bg-black/20 hover:bg-black/30 rounded-full transition-colors duration-200 flex items-center gap-2"
+                        class="px-2 md:px-4 py-1.5 text-sm font-medium text-[#F4F2ED] bg-black/20 hover:bg-black/30 rounded-full transition-colors duration-200 flex items-center gap-2"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -147,7 +147,7 @@
              <!-- Mobile Menu Button -->
              <button 
                 id="mobile-menu-button"
-                class="md:hidden fixed bottom-4 right-4 z-50 bg-whatsup-blue text-white p-3 rounded-full shadow-lg"
+                class="md:hidden fixed bottom-4 right-4 z-50 bg-whatsup-blue text-[#F4F2ED] p-3 rounded-full shadow-lg"
                 onclick="toggleMobileMenu()"
             >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,75 +156,75 @@
             </button>
 
             <!-- Left Sidebar -->
-            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 bg-gray-50 border-r-2 border-black transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
+            <aside id="left-sidebar" class="text-[#3C3D37] text-lg fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 bg-[#F4F2ED] border-r-2 border-black transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
                 <nav class="divide-y-2 divide-black">
                     <!-- Primary Links -->
                     <div class="py-4">
-                        <div class="space-y-1">
-                            <a href="{{ url('/home') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white">
-                                <span class="text-sm">home</span>
+                        <div class="*:*:underline-effect *:px-4 *:py-1 *:flex items-center text-xl">
+                            <a href="{{ url('/home') }}" class=" ">
+                                <span class="">home</span>
                             </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white">
-                                <span class="text-sm">global</span>
+                            <a href="#" class="">
+                                <span class="">global</span>
                             </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white">
-                                <span class="text-sm">recent</span>
+                            <a href="#" class="">
+                                <span class="">recent</span>
                             </a>
                         </div>
                     </div>
 
                    <!-- Recent Section -->
                     <div class="py-4">
-                        <h3 class="px-4 text-xs font-medium text-gray-500 mb-2">recent</h3>
-                        <div class="space-y-1">
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                        <h3 class="px-4 font-light text-gray-600 ">recent</h3>
+                        <div class="space-y-1 *:transition-colors">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
                                 <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                                <span class="text-sm">/Economics</span>
+                                <span class="">/Economics</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
                                 <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                                <span class="text-sm">/Sports</span>
+                                <span class="">/Sports</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                                 <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                                <span class="text-sm">/Portugal</span>
+                                <span class="">/Portugal</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                                 <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-                                <span class="text-sm">/Finances</span>
+                                <span class="">/Finances</span>
                             </a>
                         </div>
                     </div>
 
                     <!-- Hubs Section -->
                     <div class="py-4">
-                        <h3 class="px-4 text-xs font-medium text-gray-500 mb-2">hubs</h3>
-                        <div class="space-y-1">
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                        <h3 class="px-4 font-light text-gray-600 ">hubs</h3>
+                        <div class="space-y-1 *:transition-colors">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                                 <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                                <span class="text-sm">/Economics</span>
+                                <span class="">/Economics</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2  hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                                 <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                                <span class="text-sm">/Sports</span>
+                                <span class="">/Sports</span>
                             </a>
                         </div>
                     </div>
 
                     <!-- Info Section -->
                     <div class="py-4">
-                        <h3 class="px-4 text-xs font-medium text-gray-500 mb-2">info</h3>
-                        <div class="space-y-1">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                        <h3 class="px-4 font-light text-gray-600 ">info</h3>
+                        <div class="space-y-1 *:transition-colors">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                                 about us
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                                 help
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                                 best of
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
+                            <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                                 hubs
                             </a>
                         </div>
@@ -233,7 +233,7 @@
             </aside>
 
             <!-- Main Content -->
-            <main class="flex-1  bg-white">
+            <main class="flex-1">
                 <section id="content">
                     @yield('content')
                 </section>
@@ -241,7 +241,7 @@
 
             <!-- Right Sidebar -->
             @if (Request::is('hub/*') || Request::is('news'))
-            <aside id="right-sidebar" class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-gray-50 border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
+            <aside id="right-sidebar" class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
                 <!-- Hubs Section -->
                 <div class="p-4 border-b-2 border-black">
                     <div class="flex flex-wrap items-start gap-3"> 
@@ -261,7 +261,7 @@
                                         <span class="ml-1">Following</span>
                                     </div>
                                 </div>
-                                <button class="mt-2 px-4 py-1 text-sm bg-black text-white rounded-full hover:bg-black/80">
+                                <button class="mt-2 px-4 py-1 text-sm bg-black text-[#F4F2ED] rounded-full hover:bg-black/80">
                                     follow +
                                 </button>
                         </div>

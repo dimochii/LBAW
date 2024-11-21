@@ -20,6 +20,7 @@
   @if($news->isEmpty())
   <p>No news available.</p>
   @else
+  @include('partials.news_grid', ['posts' => $news])
   <div class="divide-y-2 divide-black">
     @foreach($news as $newsItem)
     {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
