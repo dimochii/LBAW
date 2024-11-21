@@ -37,14 +37,17 @@
 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         <div>
-          <input id="upvote" type="checkbox" class="hidden peer/upvote">
-          <label for="upvote"
-            class=" peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out">
-            <svg class="h-7" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21,21H3L12,3Z" />
-            </svg>
-          </label>
+          <form action="{{ route('news.upvote',  $newsItem-> post_id) }}" method="POST" class="inline-block">
+            @csrf
+            <button type="submit" class="group peer/upvote">
+              <svg class="h-7 fill-[#3C3D37] transition-all ease-out hover:fill-blue-400 peer-checked:fill-blue-400"
+                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21,21H3L12,3Z" />
+              </svg>
+            </button>
+          </form>
         </div>
+
 
         <span class="mr-2">
           @php
@@ -53,14 +56,16 @@
           @endphp
         </span>
 
-        <div class="">
-          <input id="downvote" type="checkbox" class="hidden peer/downvote">
-          <label for="downvote"
-            class="cursor-pointer peer-checked/downvote:text-red-400 hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
-            <svg class="h-7 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21,21H3L12,3Z" />
-            </svg>
-          </label>
+        <div>
+          <form action="{{ route('news.downvote', $newsItem->post_id) }}" method="POST" class="inline-block">
+            @csrf
+            <button type="submit" class="group peer/downvote">
+              <svg class="h-7 rotate-180 fill-[#3C3D37] transition-all ease-out hover:fill-red-400 peer-checked:fill-red-400"
+                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21,21H3L12,3Z" />
+              </svg>
+            </button>
+          </form>
         </div>
 
         <svg class="cursor-pointer ml-4 h-6 min-w-6 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"

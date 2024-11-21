@@ -50,11 +50,20 @@ class AuthenticatedUserController extends Controller
 
         $followers = $user->followers;
         $following = $user->follows;
+
         $posts = $user->authoredPosts()->paginate(10);
+
+        foreach ($posts as $post) {
+            $post->upvotes_count = $post->upvoteCount();  
+            $post->downvotes_count = $post->downvoteCount();
+
+            $post->score = $post->upvotes_count - $post->downvotes_count;
+        }
 
         return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
     }
 
+    
     public function getFollowers($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
