@@ -18,10 +18,10 @@
         <!-- Top Header -->
         <header class="flex items-center justify-between h-12 border-b-2 border-black">
             <!-- Logo Section -->
-            <div class="w-32 md:w-48 bg-whatsup-green h-full flex items-center font-grotesk  border-r-2 border-black">
-                <a href="{{ url('/') }}" class="px-4 text-white font-semibold text-xl">
+            <div class="w-32 md:w-48 bg-whatsup-green h-full flex items-center font-grotesk font-semibold text-white no-underline leading-none  border-r-2 border-black">
+                <a href="{{ url('/') }}" class="px-4 text-white font-semibold justify-center text-xl">
                     <span class="block md:hidden">W</span>
-                    <span class="hidden md:block">whatsUP</span>
+                    <span class="hidden md:block transform hover:scale-105 transition-transform">whatsUP</span>
                 </a>
             </div>
 
@@ -156,10 +156,10 @@
             </button>
 
             <!-- Left Sidebar -->
-            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform font-light -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 border-r-2 border-black bg-[#F4F2ED] transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
+            <aside id="left-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 border-r-2 border-black bg-[#F4F2ED] transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
                 <nav class="divide-y-2 divide-black">
                     <!-- Primary Links -->
-                    <div class="py-4">
+                    <div class="py-4 font-grotesk-semibold">
                         <div class="space-y-1">
                             <a href="{{ url('/home') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white">
                                 <span class="text-sm">home</span>
@@ -174,7 +174,7 @@
                     </div>
 
                    <!-- Recent Section -->
-                    <div class="py-4">
+                    <div class="py-4 font-grotesk-regular">
                         <h3 class="px-4 text-xs font-medium text-gray-500 mb-2">recent</h3>
                         <div class="space-y-1">
                             <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
@@ -197,7 +197,7 @@
                     </div>
 
                     <!-- Hubs Section -->
-                    <div class="py-4">
+                    <div class="py-4 font-grotesk-regular">
                         <h3 class="px-4 text-xs font-medium text-gray-500 mb-2">hubs</h3>
                         <div class="space-y-1">
                             <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
@@ -212,7 +212,7 @@
                     </div>
 
                     <!-- Info Section -->
-                    <div class="py-4">
+                    <div class="py-4 font-grotesk-semibold">
                         <h3 class="px-4 text-xs font-medium text-gray-500 mb-2">info</h3>
                         <div class="space-y-1">
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#3C3D37] hover:text-white transition-colors duration-200">
