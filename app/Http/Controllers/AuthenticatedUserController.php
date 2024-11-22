@@ -47,13 +47,46 @@ class AuthenticatedUserController extends Controller
     public function show($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
-
+    
         $followers = $user->followers;
         $following = $user->follows;
+    
+        // Get posts authored by the user
         $posts = $user->authoredPosts()->paginate(10);
-
+    
+        // Get the currently authenticated user
+        $authUser = Auth::user();
+    
+        foreach ($posts as $post) {
+            // Get upvote and downvote counts
+            $post->upvotes_count = $post->upvoteCount();
+            $post->downvotes_count = $post->downvoteCount();
+            $post->score = $post->upvotes_count - $post->downvotes_count;
+    
+            // Check if the authenticated user has voted on this post
+            $userVote = $authUser->votes()
+                ->whereHas('postVote', function ($query) use ($post) {
+                    $query->where('post_id', $post->id);
+                })
+                ->first();
+    
+            // Determine if the user has upvoted or downvoted the post
+            if ($userVote) {
+                $post->user_upvoted = $userVote->upvote;
+                $post->user_downvoted = !$userVote->upvote;  // If it's not an upvote, it's a downvote
+            } else {
+                // User has not voted on this post
+                $post->user_upvoted = false;
+                $post->user_downvoted = false;
+            }
+        }
+    
+        // Return the profile view with the user, followers, following, and posts
         return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
     }
+    
+    
+
 
     public function getFollowers($id)
     {

@@ -167,29 +167,38 @@
                     <div class="flex items-center gap-4 text-gray-500">
                         <div class="flex items-center gap-2">
                             <div>
-                                <input id="upvote_{{ $post->id }}" type="checkbox" class="hidden peer/upvote">
-                                <label for="upvote_{{ $post->id }}"
-                                    class="peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 transition-all ease-out">
-                                    <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <form action="{{ route('news.upvote', $post->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    <button type="submit" class="group peer/upvote">
+                                    <svg class="h-7 fill-[#3C3D37] transition-all ease-out hover:fill-blue-400 peer-checked:fill-blue-400
+                                                {{ $post->user_upvoted ? 'fill-green-400' : '' }}" 
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M21,21H3L12,3Z" />
                                     </svg>
-                                </label>
+                                </button>
+                                </form>
                             </div>
+
                             <span class="mr-2">
                                 @php
-                                    $likesCount = $post->likes_count ?? 0;
-                                    echo $likesCount >= 1000 ? number_format($likesCount / 1000, 1) . 'k' : $likesCount;
+                                $score = $post->upvotes_count - $post->downvotes_count;
+                                echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
                                 @endphp
                             </span>
                             <div>
-                                <input id="downvote_{{ $post->id }}" type="checkbox" class="hidden peer/downvote">
-                                <label for="downvote_{{ $post->id }}"
-                                    class="cursor-pointer peer-checked/downvote:fill-red-400 hover:fill-red-400 transition-all ease-out">
-                                    <svg class="w-5 h-5 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M21,21H3L12,3Z" />
-                                    </svg>
-                                </label>
+                                <form action="{{ route('news.downvote', $post->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    <button type="submit" class="group peer/downvote">
+                                        <svg class="w-5 h-5 fill-[#3C3D37] transition-all ease-out hover:fill-red-400 peer-checked:fill-red-400
+                                        {{ $post->user_downvoted ? 'fill-red-400' : '' }}"
+                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                            style="transform: rotate(180deg);"> <!-- Apply 180-degree rotation here -->
+                                            <path d="M21,21H3L12,3Z" />
+                                        </svg>
+                                    </button>
+                                </form>
                             </div>
+
                         </div>
                         <div class="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

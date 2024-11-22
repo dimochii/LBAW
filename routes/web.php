@@ -64,9 +64,7 @@ Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments'])->name('post.comments');
 
-    //upvote & downvote
-Route::get('/news', [NewsController::class, 'list'])->name('news');
-Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
+
     //upvote & downvote
 Route::post('/news/{post_id}/upvote', [NewsController::class, 'upvote'])->name('news.upvote');
 Route::post('/news/{post_id}/downvote', [NewsController::class, 'downvote'])->name('news.downvote');
@@ -91,7 +89,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/messages', [MessageController::class, 'index'])->name('messages');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
     // Search
     Route::controller(SearchController::class)->group(function () {

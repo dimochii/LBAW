@@ -26,7 +26,7 @@ news = Bool
   <div class="grow">
     @if ($news)
     {{-- route(news.show, $post->id) --}}
-    <a href="{{ '#' }}">
+    <a href="{{ route('news.show',['post_id' => ($post->post->id)]) ?? '#' }}">
       <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">
         {{ $post->post->title ?? 'No title available' }}</p>
     </a>
@@ -43,13 +43,17 @@ news = Bool
 
   <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
     <div>
-      <input id="upvote" type="checkbox" class="hidden peer/upvote">
-      <label for="upvote"
-        class=" peer-checked/upvote:fill-blue-400 cursor-pointer group-hover/wrapper:hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
-        <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <form action="{{ route('news.upvote', ['post_id' => $post->post->id]) }}" method="POST" class="inline-block">
+      @csrf
+      <button type="submit" class="group peer/upvote">
+        <svg 
+          class="h-6 transition-all ease-out 
+          @if($post->user_upvoted) fill-green-500 @else fill-[#3C3D37] group-hover:fill-blue-400 @endif" 
+          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M21,21H3L12,3Z" />
         </svg>
-      </label>
+      </button>
+    </form>
     </div>
 
     <span class="mr-2">
@@ -59,15 +63,18 @@ news = Bool
       @endphp
     </span>
 
-    <div class="">
-      <input id="downvote" type="checkbox" class="hidden peer/downvote">
-      <label for="downvote"
-        class="cursor-pointer peer-checked/downvote:text-red-400  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
-        <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <div>
+    <form action="{{ route('news.downvote', ['post_id' => $post->post->id]) }}" method="POST" class="inline-block">
+      @csrf
+      <button type="submit" class="group peer/downvote">
+        <svg class="h-6 rotate-180 fill-[#3C3D37] transition-all ease-out
+          @if($post->user_downvoted) fill-red-500 @else fill-[#3C3D37] group-hover:fill-blue-400 @endif" 
+          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M21,21H3L12,3Z" />
         </svg>
-      </label>
-    </div>
+      </button>
+    </form>
+  </div>
 
     <svg
       class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
