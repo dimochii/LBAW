@@ -3,7 +3,6 @@
 @section('content')
 <div class="min-h-screen font-grotesk">
     <div class="max-w-4xl mx-auto px-8 py-12">
-        <!-- Header with animation -->
         <div class="mb-16 group">
             <h1 class="text-6xl font-medium tracking-tight mb-4 transition-all duration-500 group-hover:tracking-widest">
                 Create Post
@@ -14,7 +13,6 @@
         <form method="POST" action="{{ route('post.store') }}" class="space-y-12">
             @csrf
             
-            <!-- Title Input with floating animation -->
             <div class="relative">
                 <label for="title" 
                        class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
@@ -51,7 +49,6 @@
                         <span class="text-xl group-hover:text-whatsup-green transition-colors duration-300">News</span>
                     </label>
 
-                    <!-- Topic Radio -->
                     <label class="relative group flex items-center gap-3 cursor-pointer">
                         <input type="radio" 
                                name="type" 
@@ -67,7 +64,6 @@
                 </div>
             </div>
 
-            <!-- News URL Input (conditionally shown) -->
             <div id="newsUrlContainer" 
                  class="space-y-4 transform transition-all duration-500 origin-top">
                 <label for="news_url" class="block text-2xl font-medium">News URL</label>
@@ -79,11 +75,9 @@
                        placeholder="https://">
             </div>
 
-            <!-- Content Editor with tabs -->
             <div class="space-y-4">
                 <label class="block text-2xl font-medium">Content</label>
                 <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
-                    <!-- Editor Tabs -->
                     <div class="flex gap-4 px-6 py-3 border-b border-black/10">
                         <input type="radio" name="editor-toggle" id="write-toggle" class="hidden peer/write" checked>
                         <label for="write-toggle" class="underline-effect cursor-pointer peer-checked/write:font-bold">
@@ -117,11 +111,17 @@
             <!-- Submit Button with hover effect -->
             <div class="flex justify-end">
                 <button type="submit" 
-                        class="group relative overflow-hidden bg-black text-white px-8 py-4 text-xl 
-                               font-medium transition-transform duration-300 hover:-translate-y-1">
-                    <span class="relative z-10">Publish Post</span>
-                    <div class="absolute inset-0 bg-whatsup-green transform translate-y-full 
-                               transition-transform duration-300 group-hover:translate-y-0"></div>
+                        class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-black text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1">
+                    <span class="relative z-10">Save Changes</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                        class="relative z-10 h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2" 
+                        viewBox="0 0 20 20" 
+                        fill="currentColor">
+                        <path fill-rule="evenodd" 
+                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
+                            clip-rule="evenodd" />
+                    </svg>
+                    <div class="absolute inset-0 bg-whatsup-green transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
                 </button>
             </div>
         </form>
