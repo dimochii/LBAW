@@ -19,7 +19,7 @@ class NewsController extends Controller
     public function list()
     {
         $news = News::with('post')->get();
-    
+        $authUser = Auth::user(); 
         foreach ($news as $item) {
             $item->upvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
                 $query->where('post_id', $item->post_id);
@@ -28,6 +28,19 @@ class NewsController extends Controller
             $item->downvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
                 $query->where('post_id', $item->post_id);
             })->where('upvote', false)->count();
+    
+            $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
+                $query->where('post_id', $item->post_id);
+            })->first();
+    
+            if ($userVote) {
+                $item->user_upvoted = $userVote->upvote;
+                $item->user_downvoted = !$userVote->upvote; 
+            } else {
+                // User hasn't voted on this post
+                $item->user_upvoted = false;
+                $item->user_downvoted = false;
+            }
         }
     
         return view('pages.news', [
@@ -35,31 +48,57 @@ class NewsController extends Controller
         ]);
     }
     
+    
     public function show($post_id)
     {
-        $newsItem = News::with('post.community') 
-        ->where('post_id', $post_id)
-        ->firstOrFail();
+        $newsItem = News::with('post.community')
+            ->where('post_id', $post_id)
+            ->firstOrFail();
 
-    $newsItem->upvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
-        $query->where('post_id', $newsItem->post_id);
-    })->where('upvote', true)->count();
+        // Get upvote and downvote counts
+        $newsItem->upvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
+            $query->where('post_id', $newsItem->post_id);
+        })->where('upvote', true)->count();
 
-    $newsItem->downvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
-        $query->where('post_id', $newsItem->post_id);
-    })->where('upvote', false)->count();
-    
-    $newsItem->comments_count = Comment::where('post_id', $newsItem->post->id)->count();
-
-    $comments = Comment::with('user') // Eager load the user who made the comment
-    ->where('post_id', $newsItem->post->id)
-    ->orderBy('creation_date', 'asc')
-    ->get();
+        $newsItem->downvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
+            $query->where('post_id', $newsItem->post_id);
+        })->where('upvote', false)->count();
         
+        // Calculate the score
+        $newsItem->score = $newsItem->upvotes_count - $newsItem->downvotes_count;
 
-    // Pass the comments to the view
-    return view('pages.newsitem', compact('newsItem', 'comments'));
+        // Get the currently authenticated user
+        $authUser = Auth::user();
+
+        // Check if the authenticated user has voted on this post
+        $userVote = $authUser->votes()
+            ->whereHas('postVote', function ($query) use ($newsItem) {
+                $query->where('post_id', $newsItem->post_id);
+            })
+            ->first();
+
+        // Determine if the user has upvoted or downvoted the post
+        if ($userVote) {
+            $newsItem->user_upvoted = $userVote->upvote;
+            $newsItem->user_downvoted = !$userVote->upvote;  // If it's not an upvote, it's a downvote
+        } else {
+            // User has not voted on this post
+            $newsItem->user_upvoted = false;
+            $newsItem->user_downvoted = false;
+        }
+
+        // Get comments for the post
+        $newsItem->comments_count = Comment::where('post_id', $newsItem->post->id)->count();
+
+        $comments = Comment::with('user') // Eager load the user who made the comment
+            ->where('post_id', $newsItem->post->id)
+            ->orderBy('creation_date', 'asc')
+            ->get();
+
+        // Pass the comments and news item to the view
+        return view('pages.newsitem', compact('newsItem', 'comments'));
     }
+
     
     public function createNews(Post $post, $newsUrl)
     {

@@ -93,4 +93,5 @@ class AuthenticatedUser extends Authenticatable
         return $this->hasOne(FollowNotification::class);
     }
     
+    
 }

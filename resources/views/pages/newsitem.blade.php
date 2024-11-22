@@ -37,16 +37,19 @@
 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         <div>
-          <form action="{{ route('news.upvote',  $newsItem-> post_id) }}" method="POST" class="inline-block">
-            @csrf
-            <button type="submit" class="group peer/upvote">
-              <svg class="h-7 fill-[#3C3D37] transition-all ease-out hover:fill-blue-400 peer-checked:fill-blue-400"
-                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21,21H3L12,3Z" />
-              </svg>
-            </button>
-          </form>
+            <form action="{{ route('news.upvote', $newsItem->post_id) }}" method="POST" class="inline-block">
+                @csrf
+                <button type="submit" class="group peer/upvote">
+                    <svg class="h-7 transition-all ease-out 
+                        @if($newsItem->user_upvoted) fill-green-500 @else fill-[#3C3D37] hover:fill-blue-400 @endif"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21,21H3L12,3Z" />
+                    </svg>
+                </button>
+            </form>
         </div>
+
+
 
 
         <span class="mr-2">
@@ -60,7 +63,8 @@
           <form action="{{ route('news.downvote', $newsItem->post_id) }}" method="POST" class="inline-block">
             @csrf
             <button type="submit" class="group peer/downvote">
-              <svg class="h-7 rotate-180 fill-[#3C3D37] transition-all ease-out hover:fill-red-400 peer-checked:fill-red-400"
+              <svg class="h-7 rotate-180 fill-[#3C3D37] transition-all ease-out
+                @if($newsItem->user_downvoted) fill-red-500 @else fill-[#3C3D37] hover:fill-blue-400 @endif"
                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M21,21H3L12,3Z" />
               </svg>

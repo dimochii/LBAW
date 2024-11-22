@@ -170,11 +170,12 @@
                                 <form action="{{ route('news.upvote', $post->id) }}" method="POST" class="inline-block">
                                     @csrf
                                     <button type="submit" class="group peer/upvote">
-                                    <svg class="w-5 h-5 fill-[#3C3D37] transition-all ease-out hover:fill-blue-400 peer-checked:fill-blue-400"
+                                    <svg class="h-7 fill-[#3C3D37] transition-all ease-out hover:fill-blue-400 peer-checked:fill-blue-400
+                                                {{ $post->user_upvoted ? 'fill-green-400' : '' }}" 
                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M21,21H3L12,3Z" />
                                     </svg>
-                                    </button>
+                                </button>
                                 </form>
                             </div>
 
@@ -188,7 +189,8 @@
                                 <form action="{{ route('news.downvote', $post->id) }}" method="POST" class="inline-block">
                                     @csrf
                                     <button type="submit" class="group peer/downvote">
-                                        <svg class="w-5 h-5 fill-[#3C3D37] transition-all ease-out hover:fill-red-400 peer-checked:fill-red-400"
+                                        <svg class="w-5 h-5 fill-[#3C3D37] transition-all ease-out hover:fill-red-400 peer-checked:fill-red-400
+                                        {{ $post->user_downvoted ? 'fill-red-400' : '' }}"
                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                                             style="transform: rotate(180deg);"> <!-- Apply 180-degree rotation here -->
                                             <path d="M21,21H3L12,3Z" />
