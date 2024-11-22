@@ -28,12 +28,12 @@
 
     @include('partials.button', [
     'name' => 'cancel-btn',
-    'slot' => 'Cancel'
+    'slot' => 'cancel'
     ])
 
     @include('partials.button', [
     'name' => 'submit-btn',
-    'slot' => 'Submit'
+    'slot' => 'submit'
     ])
     
   </div>

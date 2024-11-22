@@ -117,12 +117,13 @@
       <!-- Right Section -->
       <div class="bg-whatsup-blue h-full w-32 md:w-64 flex items-center border-l-2 border-black justify-evenly">
         @if (Auth::check())
-        <a href="{{ route('messages') }}" class="text-[#F4F2ED] hover:text-[#F4F2ED]/80 transition-colors">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        <a href="{{ route('post.create') }}">
+          <svg class="w-5 h-6" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.82927 0.829254V14.4878M1 7.65852H14.6585" stroke="#F4F2ED" stroke-width="1.19512"
+              stroke-linecap="square"/>
           </svg>
         </a>
+
         <a href="{{ route('notifications') }}"
           class="text-[#F4F2ED] hover:text-[#F4F2ED]/80 transition-colors hidden md:block">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,7 +167,7 @@
         <nav class="divide-y-2 divide-black">
           <!-- Primary Links -->
           <div class="py-4">
-            <div class="*:*:underline-effect *:px-4 *:py-1 flex flex-col text-xl ml-2" >
+            <div class="*:*:underline-effect *:px-4 *:py-1 flex flex-col text-xl ml-2">
               <a href="{{ url('/') }}" class=" mr-auto">
                 <span class="">home</span>
               </a>
@@ -246,7 +247,7 @@
       </main>
 
       <!-- Right Sidebar -->
-      @if (Request::is('hub/*') || Request::is('news'))
+      @if (Request::is('hub/*') || Request::is('news/*'))
       <aside id="right-sidebar"
         class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
         <!-- Hubs Section -->
