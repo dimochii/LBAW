@@ -10,7 +10,7 @@ class Post extends Model
     use HasFactory;
     const CREATED_AT = 'creation_date';
     const UPDATED_AT = null;
-    protected $fillable = ['title', 'creation_date', 'content', 'community_id'];
+    protected $fillable = ['title', 'content', 'community_id'];
 
     public function community()
     {
@@ -67,5 +67,9 @@ class Post extends Model
     public function postNotification()
     {
         return $this->hasOne(PostNotification::class);
+    }
+    public function getCreatedAtAttribute()
+    {
+    return $this->attributes['creation_date'];
     }
 }
