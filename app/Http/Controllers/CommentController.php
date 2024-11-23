@@ -43,26 +43,28 @@ class CommentController extends Controller
         })->values();
     }
 
-    public function store(Request $request)
-    {
-        //validation
-        $request->validate([
-            'content' => 'required|string|max:1000',
+    public function store(Request $request) {
+        $validatedData = $request->validate([
+            'content' => 'required|string',
             'post_id' => 'required|exists:posts,id',
-            'parent_comment_id' => 'nullable|exists:comments,id', 
+            'parent_comment_id' => 'nullable|exists:comments,id'
         ]);
-        //comment as text. a post, a user, and might have a parent comment if it is a reply, otherwise NULL
-        $comment = Comment::create([
-            'content' => $request->content,
-            'post_id' => $request->post_id,
-            'parent_comment_id' => $request->parent_comment_id, 
-            'authenticated_user_id' => Auth::id(), 
-        ]);
-        
+
+        $comment = new Comment();
+        $comment->content = $validatedData['content'];
+        $comment->post_id = $validatedData['post_id'];
+        $comment->user_id = auth()->id(); // Assuming user is logged in
+        $comment->parent_comment_id = $validatedData['parent_comment_id'] ?? null;
+        $comment->save();
+
         return response()->json([
-            'message' => 'Comment created successfully!',
-            'comment' => $comment,
-        ], 201);
+            'comment' => [
+                'id' => $comment->id,
+                'user' => auth()->user()->name,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at
+            ]
+        ]);
     }
 
 
