@@ -6,8 +6,7 @@ img_left = true -> left, false -> right
 news = Bool
 
 --}}
-
-<div
+<div data-post="{{$post->post_id}}"
   class="p-4 hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper h-full w-full flex {{ isset($img_left) && $img_left ? 'flex-row' : 'flex-row-reverse' }}">
   <div class="h-full w-full flex-col flex">
     <header class="flex items-center relative">
@@ -51,13 +50,14 @@ news = Bool
     </div>
 
     {{-- action="{{ route('news.upvote', ['post_id' => $post->post->id]) }}"
-    @if($post->user_upvoted) fill-green-500 @else fill-[#3C3D37] group-hover:fill-blue-400 @endif" 
-     --}}
+    @if($post->user_upvoted) fill-green-500 @else fill-[#3C3D37] group-hover:fill-blue-400 @endif"
+    --}}
 
     <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
       <div>
-        <input id="upvote" type="checkbox" class="hidden peer/upvote">
-        <label for="upvote"
+        <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{ $post->user_upvoted ?
+        'checked' : '' }} name="vote">
+        <label for="{{$post->post_id}}-upvote"
           class=" peer-checked/upvote:fill-blue-400 cursor-pointer group-hover/wrapper:hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
           <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M21,21H3L12,3Z" />
@@ -65,7 +65,7 @@ news = Bool
         </label>
       </div>
 
-      <span class="mr-2">
+      <span class="mr-2" id="{{ $post->post_id}}-score">
         @php
         $score = $post->upvotes_count - $post->downvotes_count;
         echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
@@ -73,9 +73,10 @@ news = Bool
       </span>
 
       <div class="">
-        <input id="downvote" type="checkbox" class="hidden peer/downvote">
-        <label for="downvote"
-          class="cursor-pointer peer-checked/downvote:text-red-400  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
+        <input id="{{$post->post_id}}-downvote" type="checkbox" class="hidden peer/downvote" {{ $post->user_downvoted ?
+        'checked' : '' }} name="vote">
+        <label for="{{$post->post_id}}-downvote"
+          class="cursor-pointer peer-checked/downvote:fill-red-400  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
           <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M21,21H3L12,3Z" />
           </svg>
