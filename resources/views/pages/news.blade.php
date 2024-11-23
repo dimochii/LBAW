@@ -49,7 +49,7 @@
 
     @include('partials.post', [
       'news' => 'true',
-      'post' => $newsItem
+      'post' => $newsItem,
     ])
     @endforeach
   </div>

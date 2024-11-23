@@ -49,9 +49,6 @@
             </form>
         </div>
 
-
-
-
         <span class="mr-2">
           @php
           $score = $newsItem->upvotes_count - $newsItem->downvotes_count;
@@ -205,9 +202,11 @@
       <label for="sort-options" class="flex  font-light justify-center gap-x-1.5">
         sort by
       </label>
+      @if (Auth::check() && $newsItem->post->authors->contains(Auth::user()->id))
       @include('partials.options_dropdown', [
-      "options" => ["ola", "adeus"]
+      "options" => ['edit post' => route('news.edit',['post_id' => ($newsItem->post_id)]), "adeus" => '#']
       ])
+      @endif
     </div>
 
     {{-- comments wrapper --}}

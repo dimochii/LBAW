@@ -26,18 +26,15 @@ news = Bool
               d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
           </svg>
         </label>
-
         @include('partials.options_dropdown', [
-        'options' => ['ola', 'adeus'],
+        'options' => ['adeus' => '#'],
         ])
-
       </div>
 
 
     </header>
     <div class="grow">
       @if ($news)
-      {{-- route(news.show, $post->id) --}}
       <a href="{{ route('news.show',['post_id' => ($post->post->id)]) ?? '#' }}">
         <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">
           {{ $post->post->title ?? 'No title available' }}</p>
