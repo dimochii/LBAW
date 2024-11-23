@@ -63,6 +63,10 @@ Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFol
 Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments'])->name('post.comments');
+// Exemplo de definição de rota
+Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware('auth')->name('comments.update');
+
 
 
     //upvote & downvote

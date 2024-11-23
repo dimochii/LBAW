@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ config('app.name', 'Laravel') }}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="{{ asset('js/layout.js') }}"></script>
@@ -36,7 +37,7 @@
         </svg>
       </button>
       <!-- Search Section -->
-      <div class="flex-1 bg-whatsup-red h-full flex items-center px-2 md:px-4 relative">
+      <div class="flex-1 bg-whatsup-red h-full flex items-center pl-2 md:pl-4 relative">
         <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -46,25 +47,25 @@
 
         <!-- Enhanced Search Results Dropdown -->
         <div id="search-results"
-          class="absolute left-2 md:left-4 right-2 md:right-4 top-full mt-2 bg-[#F4F2ED] backdrop-blur-sm rounded-xl shadow-2xl border-2 border-black overflow-hidden transform opacity-0 scale-95 transition-all duration-200 ease-out z-50">
+        class="absolute left-2 md:left-4 right-2 md:right-4 top-full mt-2 bg-[#F4F2ED] backdrop-blur-sm rounded-xl shadow-2xl border-2 border-black overflow-hidden transform opacity-0 scale-95 transition-all duration-200 ease-out pointer-events-none z-50 max-w-full md:max-w-[calc(100%-16rem)]">
           <!-- Communities Section -->
           <div class="border-b border-gray-200 bg-gradient-to-r from-red-50 to-blue-50">
             <div class="p-4">
               <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-                </svg>
-                Communities
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+          </svg>
+          Communities
               </h3>
               <div
-                class="space-y-2 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                    <span class="text-sm text-gray-700"></span>
-                  </div>
-                </div>
+          class="space-y-2 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+          <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-green-500"></div>
+              <span class="text-sm text-gray-700"></span>
+            </div>
+          </div>
               </div>
             </div>
           </div>
@@ -73,18 +74,18 @@
           <div class="border-b border-gray-200 bg-gradient-to-r from-blue-50 to-green-50">
             <div class="p-4">
               <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-                Posts
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          Posts
               </h3>
               <div
-                class="space-y-2 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                <!-- Example post result item -->
-                <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
-                  <span class="text-sm text-gray-700"></span>
-                </div>
+          class="space-y-2 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+          <!-- Example post result item -->
+          <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
+            <span class="text-sm text-gray-700"></span>
+          </div>
               </div>
             </div>
           </div>
@@ -93,25 +94,24 @@
           <div class="bg-gradient-to-r from-green-50 to-red-50">
             <div class="p-4">
               <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                Users
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Users
               </h3>
               <div
-                class="space-y-2 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
-                  <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-blue-500"></div>
-                    <span class="text-sm text-gray-700"></span>
-                  </div>
-                </div>
+          class="space-y-2 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+          <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
+            <div class="flex items-center gap-3">
+              <div class="w-6 h-6 rounded-full bg-blue-500"></div>
+              <span class="text-sm text-gray-700"></span>
+            </div>
+          </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
 
       <!-- Right Section -->
