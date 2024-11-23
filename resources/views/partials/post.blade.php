@@ -38,7 +38,7 @@ news = Bool
     <div class="grow">
       @if ($news)
       {{-- route(news.show, $post->id) --}}
-      <a href="{{ '#' }}">
+      <a href="{{ route('news.show',['post_id' => ($post->post->id)]) ?? '#' }}">
         <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">
           {{ $post->post->title ?? 'No title available' }}</p>
       </a>
@@ -52,6 +52,10 @@ news = Bool
       @endif
 
     </div>
+
+    {{-- action="{{ route('news.upvote', ['post_id' => $post->post->id]) }}"
+    @if($post->user_upvoted) fill-green-500 @else fill-[#3C3D37] group-hover:fill-blue-400 @endif" 
+     --}}
 
     <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
       <div>
