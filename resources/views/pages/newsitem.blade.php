@@ -5,7 +5,7 @@
   {{-- news post --}}
   <div class=" flex flex-row" id="post-header">
     <div class="px-8 py-4 w-1/2 flex flex-col grow">
-      <div class="flex items-center h-8">
+      <div class="flex items-center h-8 relative">
         <a class="flex items-center" href="">
           <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
             class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
@@ -22,12 +22,22 @@
           Post</a>
         @endif
         @endauth --}}
+        <div class="ml-auto">
+          <input type="checkbox" class="peer hidden" id="{{$newsItem->post_id}}-options">
+          <label for="{{$newsItem->post_id}}-options">
+            <svg class="ml-auto h-4 w-4 fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] z-0"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+              <path class="cls-1"
+                d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
+            </svg>
+          </label>
+          @if (Auth::check() && $newsItem->post->authors->contains(Auth::user()->id))
+          @include('partials.options_dropdown', [
+          "options" => ['edit post' => route('news.edit',['post_id' => ($newsItem->post_id)])]
+          ])
+          @endif
+        </div>
 
-        <svg class="ml-auto h-6 w-6 fill-[#3C3D37] cursor-pointer" xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 16 16">
-          <path class="cls-1"
-            d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
-        </svg>
       </div>
       <a href="{{ $newsItem->news_url ?? '#' }}">
         <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">{{
@@ -37,39 +47,38 @@
 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         <div>
-            <form action="{{ route('news.upvote', $newsItem->post_id) }}" method="POST" class="inline-block">
-                @csrf
-                <button type="submit" class="group peer/upvote">
-                    <svg class="h-7 transition-all ease-out 
-                        @if($newsItem->user_upvoted) fill-green-500 @else fill-[#3C3D37] hover:fill-blue-400 @endif"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21,21H3L12,3Z" />
-                    </svg>
-                </button>
-            </form>
+          <input id="{{$newsItem->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{
+            $newsItem->user_upvoted ?
+          'checked' : '' }} name="vote">
+          <label for="{{$newsItem->post_id}}-upvote"
+            class=" peer-checked/upvote:fill-blue-400 cursor-pointer group-hover/wrapper:hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
+            <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21,21H3L12,3Z" />
+            </svg>
+          </label>
         </div>
 
-        <span class="mr-2">
+        <span class="mr-2" id="{{ $newsItem->post_id}}-score">
           @php
           $score = $newsItem->upvotes_count - $newsItem->downvotes_count;
           echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
           @endphp
         </span>
 
-        <div>
-          <form action="{{ route('news.downvote', $newsItem->post_id) }}" method="POST" class="inline-block">
-            @csrf
-            <button type="submit" class="group peer/downvote">
-              <svg class="h-7 rotate-180 fill-[#3C3D37] transition-all ease-out
-                @if($newsItem->user_downvoted) fill-red-500 @else fill-[#3C3D37] hover:fill-blue-400 @endif"
-                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21,21H3L12,3Z" />
-              </svg>
-            </button>
-          </form>
+        <div class="">
+          <input id="{{$newsItem->post_id}}-downvote" type="checkbox" class="hidden peer/downvote" {{
+            $newsItem->user_downvoted
+          ?
+          'checked' : '' }} name="vote">
+          <label for="{{$newsItem->post_id}}-downvote"
+            class="cursor-pointer peer-checked/downvote:fill-red-400  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
+            <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21,21H3L12,3Z" />
+            </svg>
+          </label>
         </div>
 
-        <svg class="cursor-pointer ml-4 h-6 min-w-6 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"
+        <svg class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"
           viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
           <g id="Layer_2" data-name="Layer 2">
             <g id="invisible_box" data-name="invisible box">
@@ -199,14 +208,10 @@
 
     <div class="relative ml-auto">
       <input type="checkbox" class="peer hidden" id="sort-options">
-      <label for="sort-options" class="flex  font-light justify-center gap-x-1.5">
+      <label for="sort-options" class="flex font-light justify-center gap-x-1.5">
         sort by
       </label>
-      @if (Auth::check() && $newsItem->post->authors->contains(Auth::user()->id))
-      @include('partials.options_dropdown', [
-      "options" => ['edit post' => route('news.edit',['post_id' => ($newsItem->post_id)]), "adeus" => '#']
-      ])
-      @endif
+
     </div>
 
     {{-- comments wrapper --}}
@@ -345,6 +350,64 @@
       element.innerHTML = markdownToHTML(element.textContent)
     })
 
+  </script>
+
+  <script>
+    const voteButtons = document.querySelectorAll("input[type='checkbox']");
+
+voteButtons.forEach((button) => {
+  
+  button.addEventListener("change", async function () {
+    const postId = this.id.split("-")[0]; // Extract the post_id from the input's ID
+    const voteType = this.id.includes("upvote") ? "upvote" : "downvote";
+    const isChecked = this.checked;
+
+    try {
+      // Make an asynchronous request to update the vote
+      const response = await fetch(`/news/${postId}/voteupdate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+        },
+        body: JSON.stringify({
+          vote_type: voteType,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        console.log(data.vote === voteType)
+
+        // Update the score of the specific post
+        const scoreElement = document.getElementById(`${postId}-score`);
+        if (scoreElement) {
+          let newScore = data.newScore;
+
+          // If the score already contains a "k", don't modify it
+          if (!scoreElement.textContent.includes("k")) {
+            // If the current score doesn't have a "k", add the new score to it
+            let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, '')); // Get the current numerical score
+            newScore = currentScore + newScore; // Add the new score to the existing score
+            scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
+          }
+        }
+
+        if (data.vote === voteType) {          
+          this.checked = true
+        } else {
+          this.checked = false
+        }
+
+      } else {
+        console.error("Failed to update the vote:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error while updating the vote:", error);
+    }
+  });
+});
   </script>
 
   @endsection
