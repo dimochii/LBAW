@@ -16,12 +16,12 @@
 
   <div class="flex flex-col h-full mt-2">
     <!-- Textarea for Markdown Input -->
-    <textarea id="editor-{{$id}}-input" rows="6"
-      class=" w-full p-4 bg-inherit focus:outline-none resize-none font-mono text-sm border border-1 rounded-lg border-[#3C3D37]  hover:resize-y"></textarea>
+    <textarea id="editor-{{$id}}-input"
+      class="min-h-32 w-full p-4 bg-inherit focus:outline-none resize-y font-mono text-sm border border-1 rounded-lg border-[#3C3D37]"></textarea>
 
     <!-- Markdown Preview -->
     <div id="editor-{{$id}}-preview"
-      class="resize-y hidden p-4 break-words max-h-80 h-full font-vollkorn overflow-y-auto prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] border border-1 rounded-lg border-[#3C3D37] prose-blockquote:my-2 prose-code:my-4 prose-headings:my-4 prose-hr:my-4">
+      class="min-h-32 resize-y hidden p-4 break-words max-h-80 h-full font-vollkorn overflow-y-auto prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] border border-1 rounded-lg border-[#3C3D37] prose-blockquote:my-2 prose-code:my-4 prose-headings:my-4 prose-hr:my-4">
     </div>
   </div>
   <div class="justify-end flex gap-4 mt-4">

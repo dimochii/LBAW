@@ -191,31 +191,14 @@
   {{-- comments --}}
   <div class="flex flex-col px-12 py-4 font-grotesk">
 
-    <div class="relative">
-      <div>
-        <button type="button" class="flex ml-auto font-light justify-center gap-x-1.5 underline-effect" id="menu-button"
-          aria-expanded="true" aria-haspopup="true">
-          sort by
-        </button>
-      </div>
-      <div
-        class="absolute right-0 z-10 mt-2 w-32 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none transform transition"
-        role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-        <div class="py-1" role="none">
-          <a href="#"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:outline-none"
-            role="menuitem" tabindex="-1" id="menu-item-0">
-            recent
-          </a>
-        </div>
-        <div class="py-1" role="none">
-          <a href="#"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:outline-none"
-            role="menuitem" tabindex="-1" id="menu-item-5">
-            top
-          </a>
-        </div>
-      </div>
+    <div class="relative ml-auto">
+      <input type="checkbox" class="peer hidden" id="sort-options">
+      <label for="sort-options" class="flex  font-light justify-center gap-x-1.5">
+        sort by
+      </label>
+      @include('partials.options_dropdown', [
+      "options" => ["ola", "adeus"]
+      ])
     </div>
 
     {{-- comments wrapper --}}
@@ -226,9 +209,6 @@
       @include('partials.comments', ['comment' => $comment, 'margin' => '12'])
       @endif
       @endforeach
-      {{-- @include('partials.text_editor_md', [
-      'id' => 'reply-1'
-      ]) --}}
     </div>
 
   </div>

@@ -17,12 +17,23 @@ news = Bool
         <span class="text-xl font-light underline-effect-light">h/{{ $post->post->community->name ?? 'Unknown
           Community' }}</span>
       </a>
-      
-      @include('partials.options_dropdown', [
+      <div class="inline cursor-pointer pb-4 group ml-auto z-0">
+        <input type="checkbox" class="peer hidden" id="{{$post->post_id}}-options">
+        <label for="{{$post->post_id}}-options">
+          <svg class="ml-auto h-4 w-4 fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] z-0"
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+            <path class="cls-1"
+              d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
+          </svg>
+        </label>
+
+        @include('partials.options_dropdown', [
         'options' => ['ola', 'adeus'],
-        'post_id' => $post->post->id
-      ])
-      
+        ])
+
+      </div>
+
+
     </header>
     <div class="grow">
       @if ($news)
@@ -103,7 +114,8 @@ news = Bool
     </footer>
   </div>
   @if(isset($img) && isset($img_left))
-  <a href="{{ $post->news_url ?? '#' }}" class="md:block hidden min-w-[50%] max-w-[50%] {{ $img_left ? 'ml-4' : 'mr-4' }}">
+  <a href="{{ $post->news_url ?? '#' }}"
+    class="md:block hidden min-w-[50%] max-w-[50%] {{ $img_left ? 'ml-4' : 'mr-4' }}">
     <img class="object-cover object-left w-full h-full"
       src="https://imagens.publico.pt/imagens.aspx/1955774?tp=UH&db=IMAGENS&type=JPG&share=1&o=BarraFacebook_Publico.png"
       alt="">
