@@ -47,46 +47,13 @@ class AuthenticatedUserController extends Controller
     public function show($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
-    
+
         $followers = $user->followers;
         $following = $user->follows;
-    
-        // Get posts authored by the user
         $posts = $user->authoredPosts()->paginate(10);
-    
-        // Get the currently authenticated user
-        $authUser = Auth::user();
-    
-        foreach ($posts as $post) {
-            // Get upvote and downvote counts
-            $post->upvotes_count = $post->upvoteCount();
-            $post->downvotes_count = $post->downvoteCount();
-            $post->score = $post->upvotes_count - $post->downvotes_count;
-    
-            // Check if the authenticated user has voted on this post
-            $userVote = $authUser->votes()
-                ->whereHas('postVote', function ($query) use ($post) {
-                    $query->where('post_id', $post->id);
-                })
-                ->first();
-    
-            // Determine if the user has upvoted or downvoted the post
-            if ($userVote) {
-                $post->user_upvoted = $userVote->upvote;
-                $post->user_downvoted = !$userVote->upvote;  // If it's not an upvote, it's a downvote
-            } else {
-                // User has not voted on this post
-                $post->user_upvoted = false;
-                $post->user_downvoted = false;
-            }
-        }
-    
-        // Return the profile view with the user, followers, following, and posts
+
         return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
     }
-    
-    
-
 
     public function getFollowers($id)
     {
@@ -108,14 +75,25 @@ class AuthenticatedUserController extends Controller
      */
     public function edit($id)
     {
+        // Check if the logged-in user is trying to edit their own profile
+        if (Auth::user()->id != $id) {
+            // If not, deny access by returning a 403 error or redirecting them
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
-        $user = AuthenticatedUser::findOrFail($id);
+        // If the logged-in user is editing their own profile, fetch the user
+        $user = Auth::user();
 
         return view('pages.edit_profile', compact('user'));
     }
 
     public function update(Request $request, $id)
 {
+
+    if (Auth::user()->id != $id) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
     $user = AuthenticatedUser::findOrFail($id);
 
 
@@ -171,6 +149,10 @@ class AuthenticatedUserController extends Controller
      */
     public function destroy($id)
     {
+        if (Auth::user()->id != $id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $user = AuthenticatedUser::findOrFail($id);
         $user->delete();
 
@@ -203,29 +185,37 @@ class AuthenticatedUserController extends Controller
         return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
     }
 
-
-
-    /**
-     * Suspend a user.
-     */
     public function suspend($id)
-    {
-        $user = AuthenticatedUser::findOrFail($id);
-        $user->is_suspended = true;
-        $user->save();
-
-        return response()->json(['message' => 'User suspended successfully']);
+{
+    // Check if the current user is an admin
+    if (!Auth::user()->is_admin) {
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
 
-    /**
-     * Unsuspend a user.
-     */
-    public function unsuspend($id)
-    {
-        $user = AuthenticatedUser::findOrFail($id);
-        $user->is_suspended = false;
-        $user->save();
+    $user = AuthenticatedUser::findOrFail($id);
+    $user->is_suspended = true;
+    $user->save();
 
-        return response()->json(['message' => 'User unsuspended successfully']);
+    return response()->json(['message' => 'User suspended successfully']);
+}
+
+/**
+ * Unsuspend a user.
+ */
+public function unsuspend($id)
+{
+    // Check if the current user is an admin
+    if (!Auth::user()->is_admin) {
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
+
+    $user = AuthenticatedUser::findOrFail($id);
+    $user->is_suspended = false;
+    $user->save();
+
+    return response()->json(['message' => 'User unsuspended successfully']);
+}
+
+
+
 }
