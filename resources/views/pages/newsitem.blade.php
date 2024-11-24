@@ -355,59 +355,148 @@
   <script>
     const voteButtons = document.querySelectorAll("input[type='checkbox']");
 
-voteButtons.forEach((button) => {
-  
-  button.addEventListener("change", async function () {
-    const postId = this.id.split("-")[0]; // Extract the post_id from the input's ID
-    const voteType = this.id.includes("upvote") ? "upvote" : "downvote";
-    const isChecked = this.checked;
+  voteButtons.forEach((button) => {
+    button.addEventListener("change", async function () {
+      const postId = this.id.split("-")[0]; // Extract the post_id from the input's ID
+      const voteType = this.id.includes("upvote") ? "upvote" : "downvote";
+      const isChecked = this.checked;
 
-    try {
-      // Make an asynchronous request to update the vote
-      const response = await fetch(`/news/${postId}/voteupdate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-        },
-        body: JSON.stringify({
-          vote_type: voteType,
-        }),
-      });
+      try {
+        // Make an asynchronous request to update the vote
+        const response = await fetch(`/news/${postId}/voteupdate`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+          },
+          body: JSON.stringify({
+            vote_type: voteType,
+          }),
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        console.log(data.vote === voteType)
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          console.log(data.vote === voteType);
 
-        // Update the score of the specific post
-        const scoreElement = document.getElementById(`${postId}-score`);
-        if (scoreElement) {
-          let newScore = data.newScore;
+          // Update the score of the specific post
+          const scoreElement = document.getElementById(`${postId}-score`);
+          if (scoreElement) {
+            let newScore = data.newScore;
 
-          // If the score already contains a "k", don't modify it
-          if (!scoreElement.textContent.includes("k")) {
-            // If the current score doesn't have a "k", add the new score to it
-            let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, '')); // Get the current numerical score
-            newScore = currentScore + newScore; // Add the new score to the existing score
-            scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
+            // If the score already contains a "k", don't modify it
+            if (!scoreElement.textContent.includes("k")) {
+              // If the current score doesn't have a "k", add the new score to it
+              let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, '')); // Get the current numerical score
+              newScore = currentScore + newScore; // Add the new score to the existing score
+              scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
+            }
           }
-        }
 
-        if (data.vote === voteType) {          
-          this.checked = true
+          if (data.vote === voteType) {          
+            this.checked = true;
+          } else {
+            this.checked = false;
+          }
         } else {
-          this.checked = false
+          console.error("Failed to update the vote:", await response.text());
         }
-
-      } else {
-        console.error("Failed to update the vote:", await response.text());
+      } catch (error) {
+        console.error("Error while updating the vote:", error);
       }
-    } catch (error) {
-      console.error("Error while updating the vote:", error);
-    }
+    });
   });
-});
+
+  const postId = {{ $newsItem->post_id }};
+
+  // reply comments submit
+  const nodes = document.querySelectorAll('div[data-parent-id]');
+
+  nodes.forEach(node => {
+    const id = node.getAttribute('data-id');
+    const parentId = node.getAttribute('data-parent-id');
+    const commentContent = document.getElementById(`editor-${id}-input`);
+    const commentHtml = document.getElementById(`editor-${id}-preview`)
+
+    const submitBtn = document.getElementById(`${id}-editor`).querySelector("[name='submit-btn']");
+
+    // Make the event handler async
+    submitBtn.addEventListener('click', async () => {  // Use async here
+      // Prepare the data to send in the body of the request
+      const data = {
+        content: commentContent.value,
+        parent_comment_id: id,  // If parentId is "null", set it to null
+      };
+
+      try {
+        // Perform the AJAX call using fetch
+        const response = await fetch(`/news/${postId}/comment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // Add CSRF token if needed
+          },
+          body: JSON.stringify(data), // Send the data in JSON format
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('Comment successfully posted:', result);
+          
+          // Assuming the response contains the ID of the newly created comment
+          const commentId = result.comment.id;  // Adjust based on actual response structure
+          
+          // Reload the page and append the new comment's ID to the URL
+          window.location.href = `${window.location.href.split('#')[0]}#c-${commentId}`;
+          location.reload(true)
+          
+        } else {
+          console.error('Failed to post comment:', await response.text());
+        }
+      } catch (error) {
+        console.error('Error while posting comment:', error);
+      }
+    })
+  })
+
+  const submitNewComment = threadEditor.querySelector('[name="submit-btn"]')
+  const newCommentContent = document.getElementById('editor-thread-input')
+
+  submitNewComment.addEventListener('click', async () => {
+      const data = {
+        content: newCommentContent.value,
+        parent_comment_id: null,  
+      };
+
+      try {
+        const response = await fetch(`/news/${postId}/comment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // Add CSRF token if needed
+          },
+          body: JSON.stringify(data), // Send the data in JSON format
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('Comment successfully posted:', result);
+          
+          const commentId = result.comment.id;
+          
+          window.location.href = `${window.location.href.split('#')[0]}#c-${commentId}`;
+          location.reload(true)
+          
+        } else {
+          console.error('Failed to post comment:', await response.text());
+        }
+      } catch (error) {
+        console.error('Error while posting comment:', error);
+      }
+  })
+
   </script>
+
+
 
   @endsection
