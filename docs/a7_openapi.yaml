@@ -1449,67 +1449,67 @@ paths:
               type: string
               description: The HTML content of the post creation page.
 
-/posts:
-  post:
-    summary: Create a new post
-    tags:
-      - "M04: News and Topics"
-    security:
-      - bearerAuth: []  # Requires authentication
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - title
-              - content
-              - type
-            properties:
-              title:
-                type: string
-                maxLength: 255
-                description: The title of the post.
-              content:
-                type: string
-                description: The content of the post.
-              community_id:
-                type: integer
-                nullable: true
-                description: The ID of the community the post belongs to (optional).
-              type:
-                type: string
-                enum:
-                  - news
-                  - topic
-                description: The type of the post.
-              news_url:
-                type: string
-                format: uri
-                nullable: true
-                description: URL associated with the news post (required if type is `news`).
-    responses:
-      "201":
-        description: Post created successfully.
+  /posts:
+    post:
+      summary: Create a new post
+      tags:
+        - "M04: News and Topics"
+      security:
+        - bearerAuth: []  # Requires authentication
+      requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - title
+                - content
+                - type
               properties:
-                message:
+                title:
                   type: string
-                  example: Post created successfully.
-      "400":
-        description: Validation errors or invalid type.
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
+                  maxLength: 255
+                  description: The title of the post.
+                content:
                   type: string
-                  example: Validation error or invalid type.
+                  description: The content of the post.
+                community_id:
+                  type: integer
+                  nullable: true
+                  description: The ID of the community the post belongs to (optional).
+                type:
+                  type: string
+                  enum:
+                    - news
+                    - topic
+                  description: The type of the post.
+                news_url:
+                  type: string
+                  format: uri
+                  nullable: true
+                  description: URL associated with the news post (required if type is `news`).
+      responses:
+        "201":
+          description: Post created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post created successfully.
+        "400":
+          description: Validation errors or invalid type.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Validation error or invalid type.
 
   /posts/delete/{id}:
     delete:
