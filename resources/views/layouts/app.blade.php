@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ config('app.name', 'Laravel') }}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <script src="{{ asset('js/layout.js') }}"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +13,7 @@
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
   @vite('resources/css/app.css')
+
 </head>
 
 <body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">
@@ -21,7 +21,7 @@
     <!-- Top Header -->
     <header class="flex items-center justify-between h-12 border-b-2 border-black">
       <!-- Logo Section -->
-      <div class="w-32 md:w-48 bg-whatsup-green h-full flex items-center border-r-2 border-black">
+      <div class="w-32 md:w-48 bg-pastelGreen h-full flex items-center border-r-2 border-black">
         <a href="{{ url('/') }}" class="m-auto text-[#F4F2ED] font-bold text-4xl tracking-tight">
           <span class="block md:hidden">w.UP</span>
           <span class="hidden md:block">whatsUP</span>
@@ -30,14 +30,14 @@
 
       <!-- Hamburger Button -->
       <button id="mobile-menu-button"
-        class="md:hidden fixed bottom-4 right-4 z-50 bg-whatsup-blue text-[#F4F2ED] p-3 rounded-full shadow-lg"
+        class="md:hidden fixed bottom-4 right-4 z-50 bg-pastelBlue text-[#F4F2ED] p-3 rounded-full shadow-lg"
         onclick="toggleMobileMenu()">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
       </button>
       <!-- Search Section -->
-      <div class="flex-1 bg-whatsup-red h-full flex items-center pl-2 md:pl-4 relative">
+      <div class="flex-1 bg-pastelRed h-full flex items-center pl-2 md:pl-4 relative">
         <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -115,7 +115,7 @@
 
 
       <!-- Right Section -->
-      <div class="bg-whatsup-blue h-full w-32 md:w-64 flex items-center border-l-2 border-black justify-evenly">
+      <div class="bg-pastelBlue h-full w-32 md:w-64 flex items-center border-l-2 border-black justify-evenly">
         @if (Auth::check())
         <a href="{{ route('post.create') }}">
           <svg class="w-5 h-5 fill-[#3C3D37] hover:fill-[#3C3D37]/80 hover:rotate-180 transition-all "
@@ -159,7 +159,7 @@
     <div class="flex flex-1">
       <!-- Mobile Menu Button -->
       <button id="mobile-menu-button"
-        class="md:hidden fixed bottom-4 right-4 z-50 bg-whatsup-blue text-[#F4F2ED] p-3 rounded-full shadow-lg"
+        class="md:hidden fixed bottom-4 right-4 z-50 bg-pastelBlue text-[#F4F2ED] p-3 rounded-full shadow-lg"
         onclick="toggleMobileMenu()">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />

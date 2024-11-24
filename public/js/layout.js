@@ -1,15 +1,4 @@
-// Tailwind Configuration
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                'whatsup-green': '#A6B37D',
-                'whatsup-red': '#C96868',
-                'whatsup-blue': '#7EACB5'
-            }
-        }
-    }
-};
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
