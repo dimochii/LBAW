@@ -1048,14 +1048,23 @@ paths:
                   type: string
                 email:
                   type: string
-                birth_date:
-                  type: string
-                  format: date
-                description:
-                  type: string
                 password:
                   type: string
                   minLength: 8
+                reputation:
+                  type: integer
+                is_suspended:
+                  type: boolean
+                creation_date:
+                  type: string
+                  format: date
+                birth_date:
+                  type: string
+                  format: date
+                is_admin:
+                  type: boolean
+                description:
+                  type: string
                 image:
                   type: string
                   format: binary  
@@ -1231,199 +1240,199 @@ paths:
       responses:
         "200":
           description: Notification marked as read.
-/search:
-  get:
-    summary: Search for communities, posts, and users
-    tags:
-      - "M07: Search"
-    parameters:
-      - name: search
-        in: query
-        required: true
-        description: The search term to look for in communities, posts, or users.
-        schema:
-          type: string
-          maxLength: 255
-    responses:
-      "200":
-        description: Search results retrieved successfully.
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                communities:
-                  type: array
-                  description: List of communities matching the search query.
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: The name of the community.
-                      description:
-                        type: string
-                        description: A brief description of the community.
-                      image:
-                        type: integer
-                        description: The ID of the community's image.
-                      route:
-                        type: string
-                        description: URL route to the community.
-                posts:
-                  type: array
-                  description: List of posts matching the search query.
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: The title of the post.
-                      content:
-                        type: string
-                        description: The content of the post.
-                      community:
-                        type: string
-                        description: The name of the community the post belongs to.
-                      community_route:
-                        type: string
-                        description: URL route to the community the post belongs to.
-                users:
-                  type: array
-                  description: List of users matching the search query.
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: The name of the user.
-                      image:
-                        type: integer
-                        description: The ID of the user's profile image.
-                      route:
-                        type: string
-                        description: URL route to the user's profile.
-      "400":
-        description: Invalid input. Search term is required and must be a string of max 255 characters.
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                error:
-                  type: string
-                  description: Error message explaining why the request failed.
-components:
-  schemas:
-    SignupRequest:
-      type: object
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-        username:
-          type: string
+  /search:
+    get:
+      summary: Search for communities, posts, and users
+      tags:
+        - "M07: Search"
+      parameters:
+        - name: search
+          in: query
+          required: true
+          description: The search term to look for in communities, posts, or users.
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        "200":
+          description: Search results retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  communities:
+                    type: array
+                    description: List of communities matching the search query.
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the community.
+                        description:
+                          type: string
+                          description: A brief description of the community.
+                        image:
+                          type: integer
+                          description: The ID of the community's image.
+                        route:
+                          type: string
+                          description: URL route to the community.
+                  posts:
+                    type: array
+                    description: List of posts matching the search query.
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The title of the post.
+                        content:
+                          type: string
+                          description: The content of the post.
+                        community:
+                          type: string
+                          description: The name of the community the post belongs to.
+                        community_route:
+                          type: string
+                          description: URL route to the community the post belongs to.
+                  users:
+                    type: array
+                    description: List of users matching the search query.
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the user.
+                        image:
+                          type: integer
+                          description: The ID of the user's profile image.
+                        route:
+                          type: string
+                          description: URL route to the user's profile.
+        "400":
+          description: Invalid input. Search term is required and must be a string of max 255 characters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message explaining why the request failed.
+  components:
+    schemas:
+      SignupRequest:
+        type: object
+        properties:
+          email:
+            type: string
+          password:
+            type: string
+          username:
+            type: string
 
-    LoginRequest:
-      type: object
-      properties:
-        email:
-          type: string
-        password:
-          type: string
+      LoginRequest:
+        type: object
+        properties:
+          email:
+            type: string
+          password:
+            type: string
 
-    CreateNewsRequest:
-      type: object
-      properties:
-        title:
-          type: string
-        content:
-          type: string
-        communityId:
-          type: string
+      CreateNewsRequest:
+        type: object
+        properties:
+          title:
+            type: string
+          content:
+            type: string
+          communityId:
+            type: string
 
-    CreateCommunityRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-    
-    Comment:
-      type: object
-      properties:
-        commentID:
-          type: string
-        parentCommentID:
-          type: string          
-        content:
-          type: string
-        userID:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-        vote:
-          type: string
-          enum: [upvote, downvote, null]
-        
-    Notification:
-      type: object
-      properties:
-        notificationID:
-          type: integer
-        type:
-          type: string
-        content:
-          type: string
-        read:
-          type: boolean
-        timestamp:
-          type: string
-          format: date-time
-    
-    NewsPost:
-      type: object
-      properties:
-        newsID: 
-          type: integer
-        date:
-          type: string
-          format: date-time
-        title: 
-          type: string
-        content: 
-          type: string
-        newsURL:
-          type: string
+      CreateCommunityRequest:
+        type: object
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+      
+      Comment:
+        type: object
+        properties:
+          commentID:
+            type: string
+          parentCommentID:
+            type: string          
+          content:
+            type: string
+          userID:
+            type: string
+          timestamp:
+            type: string
+            format: date-time
+          vote:
+            type: string
+            enum: [upvote, downvote, null]
+          
+      Notification:
+        type: object
+        properties:
+          notificationID:
+            type: integer
+          type:
+            type: string
+          content:
+            type: string
+          read:
+            type: boolean
+          timestamp:
+            type: string
+            format: date-time
+      
+      NewsPost:
+        type: object
+        properties:
+          newsID: 
+            type: integer
+          date:
+            type: string
+            format: date-time
+          title: 
+            type: string
+          content: 
+            type: string
+          newsURL:
+            type: string
 
-    NewsWithComments:
-      type: object
-      properties:
-        news:
-          $ref: '#/components/schemas/NewsPost'
-        comments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Comment'
-        vote:
-          type: string
-          enum: [upvote, downvote, null]
+      NewsWithComments:
+        type: object
+        properties:
+          news:
+            $ref: '#/components/schemas/NewsPost'
+          comments:
+            type: array
+            items:
+              $ref: '#/components/schemas/Comment'
+          vote:
+            type: string
+            enum: [upvote, downvote, null]
 
-    Topic:
-      type: object
-      properties:
-        topicID: 
-          type: integer
-        date:
-          type: string
-          format: date-time
-        title: 
-          type: string
-        content: 
-          type: string
+      Topic:
+        type: object
+        properties:
+          topicID: 
+            type: integer
+          date:
+            type: string
+            format: date-time
+          title: 
+            type: string
+          content: 
+            type: string
   /posts/create:
   get:
     summary: Display the post creation page
@@ -1502,58 +1511,58 @@ components:
                   type: string
                   example: Validation error or invalid type.
 
-/posts/delete/{id}:
-  delete:
-    summary: Delete a specific post
-    tags:
-      - "M03: Posts"
-    security:
-      - bearerAuth: []  # Requires authentication
-    parameters:
-      - name: id
-        in: path
-        required: true
-        description: The ID of the post to delete.
-        schema:
-          type: integer
-    responses:
-      "200":
-        description: Post deleted successfully.
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Post deleted successfully.
-      "403":
-        description: Unauthorized to delete the post.
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Unauthorized.
-      "404":
-        description: Post not found.
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Post not found.
-      "400":
-        description: Post cannot be deleted due to existing comments or votes.
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Post cannot be deleted as it has votes or comments.
+  /posts/delete/{id}:
+    delete:
+      summary: Delete a specific post
+      tags:
+        - "M03: Posts"
+      security:
+        - bearerAuth: []  # Requires authentication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the post to delete.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Post deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post deleted successfully.
+        "403":
+          description: Unauthorized to delete the post.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized.
+        "404":
+          description: Post not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post not found.
+        "400":
+          description: Post cannot be deleted due to existing comments or votes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post cannot be deleted as it has votes or comments.
