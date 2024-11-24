@@ -6,6 +6,12 @@ img_left = true -> left, false -> right
 news = Bool
 
 --}}
+@if ($news)
+@php
+$post = $post->news
+@endphp
+@endif
+
 <div data-post="{{$post->post_id}}"
   class="p-4 hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper h-full w-full flex {{ isset($img_left) && $img_left ? 'flex-row' : 'flex-row-reverse' }}">
   <div class="h-full w-full flex-col flex">
@@ -40,7 +46,7 @@ news = Bool
       </a>
 
       @else
-      <a href="{{ route(topic.show, $post->id) ?? '#' }}">
+      <a href="{{ route(topic.show, $post->post_id) ?? '#' }}">
         <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
           $post->post->title ?? 'No title available' }}</p>
       </a>
