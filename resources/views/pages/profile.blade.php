@@ -79,12 +79,12 @@
     </div>
   </div>
 
-  <div class="divide-y-2 border-b-2 border-black">
+  <div class="divide-y-2 divide-black border-b-2 border-black">
     @if ($posts->count() > 0)
-    @foreach ($posts as $post)
+    @foreach ($posts as $item)
     @include('partials.post', [
     'news' => 'true',
-    'post' => $post->news,
+    'post' => $item->news,
     ])
     @endforeach
     @else
