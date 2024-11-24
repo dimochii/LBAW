@@ -1437,7 +1437,7 @@ paths:
   get:
     summary: Display the post creation page
     tags:
-      - "M03: Posts"
+      - "M04: News and Topics"
     security:
       - bearerAuth: []  # Example of requiring authentication
     responses:
@@ -1453,7 +1453,7 @@ paths:
   post:
     summary: Create a new post
     tags:
-      - "M03: Posts"
+      - "M04: News and Topics"
     security:
       - bearerAuth: []  # Requires authentication
     requestBody:
@@ -1515,7 +1515,7 @@ paths:
     delete:
       summary: Delete a specific post
       tags:
-        - "M03: Posts"
+        - "M04: News and Topics"
       security:
         - bearerAuth: []  # Requires authentication
       parameters:
