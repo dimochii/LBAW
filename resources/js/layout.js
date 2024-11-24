@@ -171,3 +171,47 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+
+
+// Following Community
+
+document.addEventListener('DOMContentLoaded', () => {
+    const followBtn = document.getElementById('follow-btn');
+    const followersCount = document.getElementById('followers-count');
+
+    if (followBtn) {
+        followBtn.addEventListener('click', () => {
+            const communityId = followBtn.getAttribute('data-community-id');
+            const isFollowing = followBtn.getAttribute('data-is-following') === 'true';
+            
+            // Get CSRF token
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            // Create form and submit it
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/hub/${communityId}/${isFollowing ? 'unfollow' : 'follow'}`;
+            
+            // Add CSRF token
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = token;
+            form.appendChild(csrfInput);
+            
+            // Add method override if needed
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'POST';
+            form.appendChild(methodInput);
+            
+            // Submit form
+            document.body.appendChild(form);
+            form.submit();
+        });
+    } else {
+        console.error('Follow button not found');
+    }
+});
+

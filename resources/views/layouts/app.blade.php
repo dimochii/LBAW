@@ -284,8 +284,11 @@
                               <span class="ml-1">Following</span>
                           </div>
                       </div>
-                      <button class="mt-2 px-4 py-1 text-sm bg-black text-[#F4F2ED] rounded-full hover:bg-black/80">
-                          follow +
+                      <button id="follow-btn" 
+                          class="mt-2 px-4 py-1 text-sm bg-black text-[#F4F2ED] rounded-full hover:bg-black/80"
+                          data-community-id="{{ $community->id }}"
+                          data-is-following="{{ $community->isFollowedBy(Auth::user()) ? 'true' : 'false' }}">
+                              {{ $community->isFollowedBy(Auth::user()) ? 'following' : 'follow +' }}
                       </button>
                   </div>
               </div>

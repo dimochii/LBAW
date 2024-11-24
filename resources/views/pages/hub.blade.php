@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div>
     <!-- Hub Header -->
     @if($community)
-    <div class="py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:px-8">
         <div class="flex items-center gap-6">
              <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" alt="Profile Image"
             class="rounded-full ring-2 ring-black h-32 w-32">
@@ -56,7 +56,7 @@
     <!-- Posts Section -->
     <div>
         <!-- Sort Controls -->
-        <div class="flex justify-between items-center mb-6 font-light">
+        <div class="flex justify-between pl-4 items-center mb-6 font-light">
             <div class="flex items-center gap-4">
                 <span class="text-sm text-gray-600">sort by</span>
                 <select name="sort" class="bg-transparent text-sm text-gray-900 font-medium focus:outline-none">
@@ -109,20 +109,22 @@
 
     <!-- Moderators Section -->
     <div class="mt-8 bg-white rounded-xl shadow-sm p-6">
-        <h2 class="text-lg font-semibold mb-4">moderators</h2>
+        <h2 class="text-lg font-semibold mb-4">Moderators</h2>
         <div class="space-y-3">
             @foreach($moderators as $moderator)
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden">
-                    <img src="{{ $moderator['avatar'] ?? '/images/default-avatar.png' }}" 
-                         alt="{{ $moderator['username'] }}"
-                         class="w-full h-full object-cover">
+                    <img src="{{ $moderator->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
+                        alt="{{ $moderator->username }}"
+                        class="w-full h-full object-cover">
                 </div>
-                <span class="text-sm text-gray-700">@{{ $moderator['username'] }}</span>
+                <span class="text-sm text-gray-700">@{{ $moderator->name }}</span> 
             </div>
             @endforeach
         </div>
     </div>
+
+
 
     @else
     <div class="py-12 text-center">

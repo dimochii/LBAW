@@ -103,4 +103,5 @@ class CommunityController extends Controller
 
         return response()->json(['message' => 'You have successfully joined the community']);
     }
+    
 }
