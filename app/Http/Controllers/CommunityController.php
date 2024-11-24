@@ -82,7 +82,7 @@ class CommunityController extends Controller
 
 
     public function join(Request $request, $id)
-{
+    {
     $community = Community::find($id);
 
     if (!$community) {
@@ -103,7 +103,7 @@ class CommunityController extends Controller
     $community->followers()->attach($authUser->id);
 
     return response()->json(['message' => 'You have successfully joined the community']);
-}
+    }
 
     /*
     public function apply(Request $request, $id)
@@ -130,4 +130,24 @@ class CommunityController extends Controller
 
         return response()->json(['message' => 'Your application to join the community has been submitted']);
     }*/
+
+    public function leave($id)
+    {
+        
+        $community = Community::find($id);
+
+        
+        if (!$community) {
+            return response()->json(['message' => 'Community not found'], 404);
+        }
+
+        $user = auth()->user();
+        if (!$community->followers()->where('id', $user->id)->exists()) {
+            return response()->json(['message' => 'You are not a member of this community'], 403);
+        }
+
+        $community->followers()->detach($user->id);
+
+        return response()->json(['message' => 'You have successfully left the community']);
+    }
 }
