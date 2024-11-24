@@ -28,22 +28,20 @@ class CommunityController extends Controller
                 'id' => $post->id,
                 'title' => $post->title,
                 'content' => $post->content,
-                'authors_list' => $post->authors->pluck('name')->join(', '), // Coleta nomes dos autores
+                'authors_list' => $post->authors->pluck('name')->join(', '), 
                 'created_at' => $post->created_at,
-                'score' => $upvotes - $downvotes, // Soma de upvotes menos downvotes
-                'comments_count' => $post->comments->count(), // Contagem de comentários
+                'score' => $upvotes - $downvotes, 
+                'comments_count' => $post->comments->count(), 
             ];
         });
 
-        // Carregar os moderadores da comunidade
         $moderators = $community->moderators()->get(['id', 'username']);
 
         $user = Auth::user();
         $isFollowing = $community->followers()
-            ->where('authenticated_user_id', $user->id) // Corrigido o nome da chave no relacionamento
+            ->where('authenticated_user_id', $user->id) 
             ->exists();
 
-        // Retornar a visão com os dados da comunidade
         return view('pages.hub', [
             'community' => $community,
             'posts' => $posts,
