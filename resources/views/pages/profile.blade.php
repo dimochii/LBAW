@@ -84,7 +84,7 @@
     @foreach ($posts as $post)
     @include('partials.post', [
     'news' => 'true',
-    'post' => $post,
+    'post' => $post->news,
     ])
     @endforeach
     @else

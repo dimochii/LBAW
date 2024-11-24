@@ -18,9 +18,9 @@
   @if($news->isEmpty())
   <p>No news available.</p>
   @else
-  @include('partials.news_grid', ['posts' => $news->take(6)->map(fn($newsItem) => $newsItem->post)])
+  @include('partials.news_grid', ['posts' => $news->take(6)])
   <div class="divide-y-2 divide-black">
-    @foreach($news->slice(6)->map(fn($newsItem) => $newsItem->post) as $post)
+    @foreach($news->slice(6) as $post)
     @include('partials.post', [
     'news' => 'true',
     'post' => $post,
