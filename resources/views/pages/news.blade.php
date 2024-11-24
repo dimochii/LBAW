@@ -23,7 +23,7 @@
     @foreach($news as $newsItem)
     @include('partials.post', [
     'news' => 'true',
-    'post' => $newsItem,
+    'post' => $newsItem->post,
     ])
     @endforeach
   </div>
