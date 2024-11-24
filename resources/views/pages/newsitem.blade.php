@@ -51,7 +51,7 @@
             $newsItem->user_upvoted ?
           'checked' : '' }} name="vote">
           <label for="{{$newsItem->post_id}}-upvote"
-            class=" peer-checked/upvote:fill-blue-400 cursor-pointer group-hover/wrapper:hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
+            class=" peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out ">
             <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21,21H3L12,3Z" />
             </svg>
@@ -61,6 +61,7 @@
         <span class="mr-2" id="{{ $newsItem->post_id}}-score">
           @php
           $score = $newsItem->upvotes_count - $newsItem->downvotes_count;
+          
           echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
           @endphp
         </span>
@@ -71,7 +72,7 @@
           ?
           'checked' : '' }} name="vote">
           <label for="{{$newsItem->post_id}}-downvote"
-            class="cursor-pointer peer-checked/downvote:fill-red-400  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
+            class="cursor-pointer peer-checked/downvote:fill-red-400   hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
             <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21,21H3L12,3Z" />
             </svg>

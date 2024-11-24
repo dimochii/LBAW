@@ -20,10 +20,11 @@
   @else
   @include('partials.news_grid', ['posts' => $news->take(6)])
   <div class="divide-y-2 divide-black border-b-2 border-black">
-    @foreach($news->slice(6) as $item)
+    @foreach($news->slice(6) as $post)
     @include('partials.post', [
     'news' => 'true',
-    'post' => $item,
+    'post' => $post,
+    'item' => $post->post
     ])
     @endforeach
   </div>

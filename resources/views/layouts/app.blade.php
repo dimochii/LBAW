@@ -12,8 +12,9 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href={{ asset('css/build.css') }}>
+  <link rel="stylesheet" href={{ asset('build/assets/app-5554225b.css') }}>
   {{-- @vite('resources/css/app.css') --}}
+  
 </head>
 
 <body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">

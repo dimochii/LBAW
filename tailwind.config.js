@@ -1,9 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 import typography from '@tailwindcss/typography';
 
-export default {
+module.exports = {
   content: [
     "./resources/**/*.blade.php",
+    "./resources/**/*.js",
+    "./resources/**/*.css",
   ],
   theme: {
     extend: {
@@ -23,11 +25,13 @@ export default {
   plugins: [
     typography,
   ],
-
+  
   safelist: [
     {
       pattern: /bg-+/,
     },
+    'underline-effect',
+    'underline-effect-light',
   ],
 }
 
