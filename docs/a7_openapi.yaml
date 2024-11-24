@@ -923,6 +923,7 @@ paths:
         "404":
           description: Comment not found.
 
+
   /users/{userId}:
     get:
       summary: View user profile
@@ -1001,6 +1002,126 @@ paths:
       responses:
         "200":
           description: Suspension lifted.
+        "404":
+          description: User not found.
+
+  /users/{id}/edit:
+    get:
+      summary: Get user edit form
+      tags:
+        - "M02: User Management"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to edit
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User edit form fetched successfully.
+        "404":
+          description: User not found.
+
+  /users/{id}:
+    post:
+      summary: Update user details
+      tags:
+        - "M02: User Management"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                birth_date:
+                  type: string
+                  format: date
+                description:
+                  type: string
+                password:
+                  type: string
+                  minLength: 8
+                image:
+                  type: string
+                  format: binary  
+      responses:
+        "200":
+          description: User details updated successfully.
+        "400":
+          description: Invalid input data.
+        "404":
+          description: User not found.
+  
+  /users/{id}/followers:
+    get:
+      summary: Get a list of followers for a user
+      tags:
+        - "M02: User Management"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user whose followers are to be fetched
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of followers retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+        "404":
+          description: User not found.
+
+  /users/{id}/following:
+    get:
+      summary: Get a list of users that a user is following
+      tags:
+        - "M02: User Management"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user whose following list is to be fetched
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of users being followed retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
         "404":
           description: User not found.
 
@@ -1110,7 +1231,88 @@ paths:
       responses:
         "200":
           description: Notification marked as read.
-
+/search:
+  get:
+    summary: Search for communities, posts, and users
+    tags:
+      - "M07: Search"
+    parameters:
+      - name: search
+        in: query
+        required: true
+        description: The search term to look for in communities, posts, or users.
+        schema:
+          type: string
+          maxLength: 255
+    responses:
+      "200":
+        description: Search results retrieved successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                communities:
+                  type: array
+                  description: List of communities matching the search query.
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: The name of the community.
+                      description:
+                        type: string
+                        description: A brief description of the community.
+                      image:
+                        type: integer
+                        description: The ID of the community's image.
+                      route:
+                        type: string
+                        description: URL route to the community.
+                posts:
+                  type: array
+                  description: List of posts matching the search query.
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: The title of the post.
+                      content:
+                        type: string
+                        description: The content of the post.
+                      community:
+                        type: string
+                        description: The name of the community the post belongs to.
+                      community_route:
+                        type: string
+                        description: URL route to the community the post belongs to.
+                users:
+                  type: array
+                  description: List of users matching the search query.
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: The name of the user.
+                      image:
+                        type: integer
+                        description: The ID of the user's profile image.
+                      route:
+                        type: string
+                        description: URL route to the user's profile.
+      "400":
+        description: Invalid input. Search term is required and must be a string of max 255 characters.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: Error message explaining why the request failed.
 components:
   schemas:
     SignupRequest:
@@ -1222,3 +1424,136 @@ components:
           type: string
         content: 
           type: string
+  /posts/create:
+  get:
+    summary: Display the post creation page
+    tags:
+      - "M03: Posts"
+    security:
+      - bearerAuth: []  # Example of requiring authentication
+    responses:
+      "200":
+        description: Post creation page loaded successfully.
+        content:
+          text/html:
+            schema:
+              type: string
+              description: The HTML content of the post creation page.
+
+/posts:
+  post:
+    summary: Create a new post
+    tags:
+      - "M03: Posts"
+    security:
+      - bearerAuth: []  # Requires authentication
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - title
+              - content
+              - type
+            properties:
+              title:
+                type: string
+                maxLength: 255
+                description: The title of the post.
+              content:
+                type: string
+                description: The content of the post.
+              community_id:
+                type: integer
+                nullable: true
+                description: The ID of the community the post belongs to (optional).
+              type:
+                type: string
+                enum:
+                  - news
+                  - topic
+                description: The type of the post.
+              news_url:
+                type: string
+                format: uri
+                nullable: true
+                description: URL associated with the news post (required if type is `news`).
+    responses:
+      "201":
+        description: Post created successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Post created successfully.
+      "400":
+        description: Validation errors or invalid type.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Validation error or invalid type.
+
+/posts/delete/{id}:
+  delete:
+    summary: Delete a specific post
+    tags:
+      - "M03: Posts"
+    security:
+      - bearerAuth: []  # Requires authentication
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the post to delete.
+        schema:
+          type: integer
+    responses:
+      "200":
+        description: Post deleted successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Post deleted successfully.
+      "403":
+        description: Unauthorized to delete the post.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Unauthorized.
+      "404":
+        description: Post not found.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Post not found.
+      "400":
+        description: Post cannot be deleted due to existing comments or votes.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Post cannot be deleted as it has votes or comments.
