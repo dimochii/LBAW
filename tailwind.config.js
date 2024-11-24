@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import typography from '@tailwindcss/typography';
 
-module.exports = {
+export default{
   content: [
     "./resources/**/*.blade.php",
     "./resources/**/*.js",

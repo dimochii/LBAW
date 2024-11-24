@@ -54,9 +54,9 @@
     </div>
 
     <!-- Posts Section -->
-    <div class="mt-6">
+    <div>
         <!-- Sort Controls -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center mb-6 font-light">
             <div class="flex items-center gap-4">
                 <span class="text-sm text-gray-600">sort by</span>
                 <select name="sort" class="bg-transparent text-sm text-gray-900 font-medium focus:outline-none">
@@ -79,7 +79,7 @@
         <div class="divide-y-2 border-b-2 border-black">
             @if ($community->posts->count() > 0)
                 @foreach ($community->posts as $post)
-                    @include('partials.post', [
+                    @include('partials.post_hub', [
                         'news' => 'true',
                         'post' => $post->news,
                     ])

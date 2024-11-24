@@ -113,29 +113,29 @@
             </div>
           </div>
         </div>
+      </div>
 
 
         <!-- Right Section -->
         <div class="bg-pastelBlue h-full w-32 md:w-64 flex items-center border-l-2 border-black justify-evenly">
-          @if (Auth::check())
-          <a href="{{ route('post.create') }}">
-            <svg class="w-5 h-5 fill-[#3C3D37] hover:fill-[#3C3D37]/80 hover:rotate-180 transition-all "
-              xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 455 455"
-              xml:space="preserve">
-              <polygon points="455,212.5 242.5,212.5 242.5,0 212.5,0 212.5,212.5 0,212.5 0,242.5 212.5,242.5 212.5,455 242.5,455 242.5,242.5 
-	455,242.5 " />
+            @if (Auth::check())
+            <a href="{{ route('post.create') }}">
+              <svg class="w-5 h-5 fill-[#3C3D37] hover:fill-[#3C3D37]/80 hover:rotate-180 transition-all "
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 455 455"
+                xml:space="preserve">
+                <polygon points="455,212.5 242.5,212.5 242.5,0 212.5,0 212.5,212.5 0,212.5 0,242.5 212.5,242.5 212.5,455 242.5,455 242.5,242.5 455,242.5 " />
+              </svg>
+            </a>
+
+          <a href="{{ route('notifications') }}"
+            class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
+            <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
+            <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
+            <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
           </a>
-
-        <a href="{{ route('notifications') }}"
-          class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
-          <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
-          <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
-          <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-          </svg>
-        </a>
 
         <div class="relative group">
             <a href="{{ route('user.profile',  Auth::user()->id) }}" class="relative fill-transparent text-[#3C3D37] hover:text-[#3C3D37]/80 transition-colors">
@@ -150,7 +150,6 @@
                       Logout
                   </a>
               </div>
-          </div>
         </div>
         @else
         <a href="{{ route('login') }}"
@@ -264,69 +263,80 @@
       <!-- Right Sidebar -->
       @if (Request::is('hub/*') || Request::is('news/*'))
       <aside id="right-sidebar"
-        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
-        <!-- Hubs Section -->
-        <div class="p-4 border-b-2 border-black">
-          <div class="flex flex-wrap items-start gap-3">
-            <div class="w-12 h-12 bg-green-500 rounded-full flex-shrink-0"></div>
-            <div class="flex-1 break-words">
-              <h2 class="font-medium break-all">/Economics</h2>
-              <p class="text-sm text-gray-600 whitespace-normal">
-                Discussing economic trends, policies, and finance. Get involved in economic discussions.
-              </p>
-              <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
-                <div class="flex items-center shrink-0">
-                  <span>123k</span>
-                  <span class="ml-1">Reading</span>
-                </div>
-                <div class="flex items-center shrink-0">
-                  <span>123k</span>
-                  <span class="ml-1">Following</span>
-                </div>
+          class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
+          
+          <!-- Hubs Section -->
+          <div class="p-4 border-b-2 border-black">
+              <div class="flex flex-wrap items-start gap-3">
+                  <div class="w-12 h-12 bg-green-500 rounded-full flex-shrink-0"></div>
+                  <div class="flex-1 break-words">
+                      <h2 class="font-medium break-all">/{{ $community->name }}</h2>
+                      <p class="text-sm text-gray-600 whitespace-normal">
+                          {{ $community->description }}
+                      </p>
+                      <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
+                          <div class="flex items-center shrink-0">
+                              <span>{{ $community->read_count }}</span>
+                              <span class="ml-1">Reading</span>
+                          </div>
+                          <div class="flex items-center shrink-0">
+                              <span>{{ $community->followers_count }}</span>
+                              <span class="ml-1">Following</span>
+                          </div>
+                      </div>
+                      <button class="mt-2 px-4 py-1 text-sm bg-black text-[#F4F2ED] rounded-full hover:bg-black/80">
+                          follow +
+                      </button>
+                  </div>
               </div>
-              <button class="mt-2 px-4 py-1 text-sm bg-black text-[#F4F2ED] rounded-full hover:bg-black/80">
-                follow +
-              </button>
+          </div>
+
+          <!-- Moderators Section -->
+          <div class="p-4">
+            <h3 class="text-sm font-medium text-gray-500 mb-3">moderators</h3>
+            <div class="space-y-3">
+              @php
+                  // Busca moderadores do hub (simulação de chamada a um controlador ou modelo)
+                  $moderators = $hub->moderators ?? []; // Exemplo de busca
+                  $defaultModerators = [
+                      ['username' => '@admin', 'role' => 'Administrator', 'color' => 'bg-blue-500'],
+                      ['username' => '@friends', 'role' => 'Moderator', 'color' => 'bg-green-500'],
+                      ['username' => '@walkPro123', 'role' => 'Moderator', 'color' => 'bg-yellow-500'],
+                  ];
+
+                  $colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500', 'bg-orange-500'];
+              @endphp
+
+              @if (count($moderators) > 0)
+                @foreach ($moderators as $moderator)
+                  @php
+                    $moderatorColor = $moderator['color'] ?? $colors[array_rand($colors)];
+                  @endphp
+                  <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 {{ $moderatorColor }} rounded-full flex-shrink-0"></div>
+                    <div>
+                      <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
+                      <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
+                    </div>
+                  </div>
+                @endforeach
+              @else
+                <!-- Default Moderators -->
+                @foreach ($defaultModerators as $moderator)
+                  <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 {{ $moderator['color'] }} rounded-full flex-shrink-0"></div>
+                    <div>
+                      <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
+                      <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
+                    </div>
+                  </div>
+                @endforeach
+              @endif
             </div>
           </div>
-        </div>
 
-
-        <!-- Moderators Section -->
-        <div class="p-4">
-          <h3 class="text-sm font-medium text-gray-500 mb-3">moderators</h3>
-          <div class="space-y-3">
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-blue-500 rounded-full flex-shrink-0"></div>
-              <div>
-                <p class="text-sm font-medium">@admin</p>
-                <p class="text-xs text-gray-500">Administrator</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-green-500 rounded-full flex-shrink-0"></div>
-              <div>
-                <p class="text-sm font-medium">@friends</p>
-                <p class="text-xs text-gray-500">Moderator</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-yellow-500 rounded-full flex-shrink-0"></div>
-              <div>
-                <p class="text-sm font-medium">@walkPro123</p>
-                <p class="text-xs text-gray-500">Moderator</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-red-500 rounded-full flex-shrink-0"></div>
-              <div>
-                <p class="text-sm font-medium">@anonymous</p>
-                <p class="text-xs text-gray-500">Moderator</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </aside>
+
       @endif
     </div>
   </div>
