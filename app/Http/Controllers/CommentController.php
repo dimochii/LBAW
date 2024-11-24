@@ -81,12 +81,12 @@ class CommentController extends Controller
             return response()->json(['message' => 'Comment not found'], 404);
         }
 
-        // Check if person who wants to edit is the actual owner 
+        
         if ($comment->authenticated_user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // Update the content
+        
         $comment->content = $request->content;
         $comment->updated = true;
         $comment->save();
