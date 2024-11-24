@@ -37,25 +37,26 @@ class CommentController extends Controller
                 'user_id' => $comment->user->id,
                 'user' => $comment->user->name,
                 'created_at' => $comment->creation_date,
-                'updated_at' => $comment->updated,
+                'updated' => $comment->updated,
                 'children' => $this->buildCommentTree($comments, $comment->id), 
             ];
         })->values();
     }
 
-    public function store(Request $request) {
+    public function store(Request $request, $post_id) {
         $validatedData = $request->validate([
             'content' => 'required|string',
-            'post_id' => 'required|exists:posts,id',
             'parent_comment_id' => 'nullable|exists:comments,id'
         ]);
 
-        $comment = new Comment();
-        $comment->content = $validatedData['content'];
-        $comment->post_id = $validatedData['post_id'];
-        $comment->user_id = auth()->id(); // Assuming user is logged in
-        $comment->parent_comment_id = $validatedData['parent_comment_id'] ?? null;
-        $comment->save();
+        $comment = Comment::create([
+          'content' => $validatedData['content'], 
+          'post_id' => $post_id, // The ID of the post this comment belongs to
+          'authenticated_user_id' => auth()->user()->id, // The authenticated user's ID
+          'parent_comment_id' => $validatedData['parent_comment_id'], // If it's a reply, provide the parent comment ID
+          'creation_date' => now(), // Current timestamp
+          'updated' => false, // Current timestamp (if you're using `updated_at`, replace with that)
+      ]);
 
         return response()->json([
             'comment' => [
