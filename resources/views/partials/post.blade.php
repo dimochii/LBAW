@@ -6,11 +6,11 @@ img_left = true -> left, false -> right
 news = Bool
 
 --}}
-@if ($news)
+{{-- @if ($news)
 @php
 $post = $post->news
 @endphp
-@endif
+@endif --}}
 
 <div data-post="{{$post->post_id}}"
   class="p-4 hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper h-full w-full flex {{ isset($img_left) && $img_left ? 'flex-row' : 'flex-row-reverse' }}">

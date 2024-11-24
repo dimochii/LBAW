@@ -2,7 +2,7 @@
 
 @section('content')
 <script src="{{ asset('js/user.js') }}" defer></script>
-<div class="font-grotesk min-h-screen ">
+<div class="font-grotesk min-h-screen lowercase">
     {{-- Header Section --}}
     <div class="border-b-2 border-black transition-all duration-300 hover:bg-whatsup-blue hover:text-[#F4F2ED]">
         <div class="max-w-7xl mx-auto p-8">
