@@ -88,9 +88,9 @@ Route::delete('/posts/delete/{id}', [PostController::class, 'delete'])->middlewa
 
 Route::middleware('auth')->group(function () {
     Route::controller(FeedController::class)->group(function () {
-        Route::get('/home', 'getHomePosts')->name('home'); 
-        Route::get('/global', 'getGlobalPosts')->name('global');
-        Route::get('/recent', 'getRecentPosts')->name('recent');
+        Route::get('/home', 'home')->name('home'); 
+        Route::get('/global', 'global')->name('global');
+        Route::get('/recent', 'recent')->name('recent');
     });
 
     Route::get('/messages', [MessageController::class, 'index'])->name('messages');

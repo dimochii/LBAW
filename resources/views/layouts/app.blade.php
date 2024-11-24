@@ -173,13 +173,13 @@
           <!-- Primary Links -->
           <div class="py-4">
             <div class="*:*:underline-effect *:px-4 *:py-1 flex flex-col text-xl ml-2">
-              <a href="{{ url('/') }}" class=" mr-auto">
+              <a href="{{ url('/home') }}" class=" mr-auto">
                 <span class="">home</span>
               </a>
-              <a href="#" class="">
+              <a href="{{ url('/global') }}" class="">
                 <span class="">global</span>
               </a>
-              <a href="#" class="">
+              <a href="{{ url('/recent') }}" class="">
                 <span class="">recent</span>
               </a>
             </div>
