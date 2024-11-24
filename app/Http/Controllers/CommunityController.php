@@ -78,8 +78,30 @@ class CommunityController extends Controller
         ], 201);
     }
 
-    // Entrar em uma comunidade pública
-    public function join(Request $request, $id)
+    public function join($id)
+    {
+        $community = Community::findOrFail($id);
+        if (!auth()->user()->communities()->where('community_id', $id)->exists()) {
+            auth()->user()->communities()->attach($id);
+            return redirect()->back()->with('success', 'Successfully joined the community!');
+        }
+        
+        return redirect()->back()->with('error', 'You are already following this community.');
+    }
+
+    public function leave($id)
+    {
+        $community = Community::findOrFail($id);
+        if (auth()->user()->communities()->where('community_id', $id)->exists()) {
+            auth()->user()->communities()->detach($id);
+            return redirect()->back()->with('success', 'Successfully left the community!');
+        }
+        
+        return redirect()->back()->with('error', 'You are not following this community.');
+    }
+
+    /*
+    public function apply(Request $request, $id)
     {
         $community = Community::find($id);
 
@@ -101,7 +123,7 @@ class CommunityController extends Controller
         // Adicionar o usuário à lista de seguidores da comunidade
         $community->followers()->attach($authUser->id);
 
-        return response()->json(['message' => 'You have successfully joined the community']);
-    }
-    
+        return response()->json(['message' => 'Your application to join the community has been submitted']);
+    }*/
+
 }

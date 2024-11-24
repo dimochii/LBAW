@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ config('app.name', 'Laravel') }}</title>
-  <script src="{{ asset('js/layout.js') }}"></script>
+  <script defer src="{{ asset('js/layout.js') }}" ></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -284,12 +284,36 @@
                               <span class="ml-1">Following</span>
                           </div>
                       </div>
-                      <button id="follow-btn" 
-                          class="mt-2 px-4 py-1 text-sm bg-black text-[#F4F2ED] rounded-full hover:bg-black/80"
-                          data-community-id="{{ $community->id }}"
-                          data-is-following="{{ $community->isFollowedBy(Auth::user()) ? 'true' : 'false' }}">
-                              {{ $community->isFollowedBy(Auth::user()) ? 'following' : 'follow +' }}
-                      </button>
+                      <div>
+                        @auth
+                            @if($isFollowing)
+                                <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                                  bg-[#F4F2ED] text-black border-2 border-black">
+                                        unfollow -
+                                    </button>
+                                </form>
+                            @else
+                                <form action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" 
+                                            class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                                  bg-black text-[#F4F2ED]">
+                                        follow +
+                                    </button>
+                                </form>
+                            @endif
+                        @else
+                            <a href="{{ route('login') }}" 
+                              class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                      bg-black text-[#F4F2ED]">
+                                follow +
+                            </a>
+                        @endauth
+                    </div>
                   </div>
               </div>
           </div>
@@ -347,5 +371,4 @@
     onclick="toggleLeftSidebar()">
   </div>
 </body>
-
 </html>
