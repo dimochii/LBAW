@@ -15,19 +15,31 @@
   </div> --}}
 
   <!-- Check if there are any news items -->
-  @if($news->isEmpty())
-  <p>No news available.</p>
-  @else
-  @include('partials.news_grid', ['posts' => $news->take(6)])
+  @if(count($posts) === 0)
+  <p>No posts available.</p>
+  @elseif(count($posts) >= 6)
+  @include('partials.news_grid', ['posts' => $posts->take(6)])
   <div class="divide-y-2 divide-black border-b-2 border-black">
-    @foreach($news->slice(6) as $item)
+    @foreach($posts->slice(6) as $item)
+    
     @include('partials.post', [
     'news' => 'true',
-    'post' => $item,
+    'post' => $post->news,
+    ])
+    @endforeach
+  </div>
+  @else 
+  <div class="divide-y-2 divide-black border-b-2 border-black">
+    @foreach($posts as $item)
+    
+    @include('partials.post', [
+    'news' => 'true',
+    'post' => $item->news,
     ])
     @endforeach
   </div>
   @endif
+
   <script>
     const voteButtons = document.querySelectorAll("input[type='checkbox']");
 

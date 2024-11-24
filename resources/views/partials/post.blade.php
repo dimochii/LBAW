@@ -6,11 +6,6 @@ img_left = true -> left, false -> right
 news = Bool
 
 --}}
-{{-- @if ($news)
-@php
-$post = $post->news
-@endphp
-@endif --}}
 
 <div data-post="{{$post->post_id}}"
   class="p-4 hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper h-full w-full flex {{ isset($img_left) && $img_left ? 'flex-row' : 'flex-row-reverse' }}">
@@ -61,7 +56,7 @@ $post = $post->news
 
     <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
       <div>
-        <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{ $post->user_upvoted ?
+        <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{ $item->user_upvoted ?
         'checked' : '' }} name="vote">
         <label for="{{$post->post_id}}-upvote"
           class=" peer-checked/upvote:fill-blue-400 cursor-pointer group-hover/wrapper:hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
@@ -73,13 +68,14 @@ $post = $post->news
 
       <span class="mr-2" id="{{ $post->post_id}}-score">
         @php
-        $score = $post->upvotes_count - $post->downvotes_count;
+        
+        $score = $item->upvotes_count - $item->downvotes_count;
         echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
         @endphp
       </span>
 
       <div class="">
-        <input id="{{$post->post_id}}-downvote" type="checkbox" class="hidden peer/downvote" {{ $post->user_downvoted ?
+        <input id="{{$post->post_id}}-downvote" type="checkbox" class="hidden peer/downvote" {{ $item->user_downvoted ?
         'checked' : '' }} name="vote">
         <label for="{{$post->post_id}}-downvote"
           class="cursor-pointer peer-checked/downvote:fill-red-400  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
