@@ -5,5 +5,5 @@ cd /var/www
 env >> /var/www/.env
 php artisan clear-compiled
 php artisan config:clear
-php-fpm8.1 -D
+php-fpm8.3 -D
 nginx -g "daemon off;"
