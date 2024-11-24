@@ -18,8 +18,6 @@ class Comment extends Model
     ];
 
 
-    
-
     public function user()
     {
         return $this->belongsTo(AuthenticatedUser::class, 'authenticated_user_id');

@@ -30,13 +30,22 @@ class CommunityController extends Controller
             ];
         });
 
+        $moderators = $community->moderators->map(function ($moderator) {
+            return [
+                'id' => $moderator->id,
+                'username' => $moderator->name
+            ];
+        });
+
     $result = [
         'id' => $community->id,
         'name' => $community->name,
         'description' => $community->description,
+        'followers' => $community->followers->count(),
         'privacy' => $community->privacy,
         'creation_date' => $community->creation_date,
         'image' => $community->image_id,
+        'moderators' => $moderators,
         'posts' => $posts,
     ];
 

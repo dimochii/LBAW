@@ -783,3 +783,9 @@ INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
 (14, 9), (25, 9), (3, 9), (49, 9),
 -- Nature Lovers
 (6, 10), (20, 10), (33, 10), (44, 10);
+
+
+INSERT INTO community_moderators (authenticated_user_id, community_id) 
+VALUES 
+(1, 1),  -- User 1 is a moderator of community 1
+(2, 1);  -- User 2 is also a moderator of community 1

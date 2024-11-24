@@ -37,7 +37,7 @@ class CommentController extends Controller
                 'user_id' => $comment->user->id,
                 'user' => $comment->user->name,
                 'created_at' => $comment->creation_date,
-                'updated_at' => $comment->updated,
+                'updated' => $comment->updated,
                 'children' => $this->buildCommentTree($comments, $comment->id), 
             ];
         })->values();
@@ -53,7 +53,7 @@ class CommentController extends Controller
         $comment = new Comment();
         $comment->content = $validatedData['content'];
         $comment->post_id = $validatedData['post_id'];
-        $comment->user_id = auth()->id(); // Assuming user is logged in
+        $comment->user_id = Auth::user()->id; // Assuming user is logged in
         $comment->parent_comment_id = $validatedData['parent_comment_id'] ?? null;
         $comment->save();
 
