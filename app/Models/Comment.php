@@ -10,13 +10,13 @@ class Comment extends Model
     use HasFactory;
     public $timestamps = true;
     const CREATED_AT = 'creation_date';
+    const UPDATED_AT = null;
  
 
     protected $fillable = [
         'content', 'creation_date', 'updated', 
         'authenticated_user_id', 'post_id', 'parent_comment_id'
     ];
-
 
     public function user()
     {

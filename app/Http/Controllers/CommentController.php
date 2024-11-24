@@ -43,19 +43,20 @@ class CommentController extends Controller
         })->values();
     }
 
-    public function store(Request $request) {
+    public function store(Request $request, $post_id) {
         $validatedData = $request->validate([
             'content' => 'required|string',
-            'post_id' => 'required|exists:posts,id',
             'parent_comment_id' => 'nullable|exists:comments,id'
         ]);
 
-        $comment = new Comment();
-        $comment->content = $validatedData['content'];
-        $comment->post_id = $validatedData['post_id'];
-        $comment->user_id = Auth::user()->id; // Assuming user is logged in
-        $comment->parent_comment_id = $validatedData['parent_comment_id'] ?? null;
-        $comment->save();
+        $comment = Comment::create([
+          'content' => $validatedData['content'], 
+          'post_id' => $post_id, // The ID of the post this comment belongs to
+          'authenticated_user_id' => auth()->user()->id, // The authenticated user's ID
+          'parent_comment_id' => $validatedData['parent_comment_id'], // If it's a reply, provide the parent comment ID
+          'creation_date' => now(), // Current timestamp
+          'updated' => false, // Current timestamp (if you're using `updated_at`, replace with that)
+      ]);
 
         return response()->json([
             'comment' => [
@@ -80,12 +81,12 @@ class CommentController extends Controller
             return response()->json(['message' => 'Comment not found'], 404);
         }
 
-        // Check if person who wants to edit is the actual owner 
+        
         if ($comment->authenticated_user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // Update the content
+        
         $comment->content = $request->content;
         $comment->updated = true;
         $comment->save();

@@ -1,4 +1,4 @@
-<div class="comment relative mb-3 min-w-72 max-w-full" id="c-{{ $comment->id }}" data-id="{{ $comment->id }}" data-parent-id="{{ $comment->parent_comment_id}}">
+<div class="relative mb-3 min-w-72 max-w-full" id="c-{{ $comment->id }}" data-id="{{ $comment->id }}" data-parent-id="{{ is_null($comment->parent_comment_id) ? 'null' : $comment->parent_comment_id}}">
   <div class="flex flex-row mt-5">
     <div class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]">
       <a href="">
@@ -83,7 +83,7 @@
       ])
 
       {{-- Nested Replies --}}
-      <div class="replies ml-{{$margin}}">
+      <div class="ml-{{$margin}}" name="replies">
         @foreach ($comment->children as $childComment)
         @include('partials.comments', ['comment' => $childComment, 'margin' => ($margin / 2) + 1])
         @endforeach

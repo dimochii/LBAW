@@ -8,43 +8,51 @@ use Illuminate\Support\Facades\Auth;
 
 class CommunityController extends Controller
 {
-
-
     public function show($id)
     {
-        $community = Community::with('posts')->find($id);
+        // Carregar comunidade com posts e autores (com o relacionamento correto)
+        $community = Community::with(['posts.authors', 'posts.votes', 'posts.comments'])->find($id);
 
+        // Verificar se a comunidade existe
         if (!$community) {
-            return response()->json(['message' => 'Community not found'], 404);
+            abort(404, 'Community not found');
         }
 
-        // Transform the posts data to return relevant fields
+        // Mapeando os posts da comunidade
         $posts = $community->posts->map(function ($post) {
+            // Contagem de upvotes e downvotes diretamente da tabela de votos
+            $upvotes = $post->votes->where('upvote', true)->count();
+            $downvotes = $post->votes->where('upvote', false)->count();
+
             return [
                 'id' => $post->id,
                 'title' => $post->title,
                 'content' => $post->content,
-                'author' => $post->authors->map(fn ($author) => $author->name)->join(', '), // Assuming many authors
+                'authors_list' => $post->authors->pluck('name')->join(', '), // Coleta nomes dos autores
                 'created_at' => $post->created_at,
-                'route' => $post->id
+                'score' => $upvotes - $downvotes, // Soma de upvotes menos downvotes
+                'comments_count' => $post->comments->count(), // Contagem de comentários
             ];
         });
 
-    $result = [
-        'id' => $community->id,
-        'name' => $community->name,
-        'description' => $community->description,
-        'privacy' => $community->privacy,
-        'creation_date' => $community->creation_date,
-        'image' => $community->image_id,
-        'posts' => $posts,
-    ];
+        // Carregar os moderadores da comunidade
+        $moderators = $community->moderators()->get(['id', 'username']);
 
-    return response()->json($result);
-}
+        $user = Auth::user();
+        $isFollowing = $community->followers()
+            ->where('authenticated_user_id', $user->id) // Corrigido o nome da chave no relacionamento
+            ->exists();
 
+        // Retornar a visão com os dados da comunidade
+        return view('pages.hub', [
+            'community' => $community,
+            'posts' => $posts,
+            'moderators' => $moderators,
+            'isFollowing' => $isFollowing,
+        ]);
+    }
 
-
+    // Armazenar uma nova comunidade
     public function store(Request $request)
     {
         $request->validate([
@@ -62,6 +70,7 @@ class CommunityController extends Controller
             'creation_date' => now(),
         ]);
 
+        // Associar o usuário autenticado como moderador
         $authUser = Auth::user();
         $community->moderators()->attach($authUser->id);
 
@@ -71,33 +80,8 @@ class CommunityController extends Controller
         ], 201);
     }
 
-
+    // Entrar em uma comunidade pública
     public function join(Request $request, $id)
-{
-    $community = Community::find($id);
-
-    if (!$community) {
-        return response()->json(['message' => 'Community not found'], 404);
-    }
-
-    if ($community->privacy === 'private') {
-        return response()->json(['message' => 'You cannot directly join a private community'], 403);
-    }
-
-    $authUser = Auth::user();
-    $alreadyJoined = $community->followers()->where('user_id', $authUser->id)->exists();
-
-    if ($alreadyJoined) {
-        return response()->json(['message' => 'You are already a member of this community'], 400);
-    }
-
-    $community->followers()->attach($authUser->id);
-
-    return response()->json(['message' => 'You have successfully joined the community']);
-}
-
-    /*
-    public function apply(Request $request, $id)
     {
         $community = Community::find($id);
 
@@ -105,20 +89,20 @@ class CommunityController extends Controller
             return response()->json(['message' => 'Community not found'], 404);
         }
 
-        if ($community->privacy !== 'private') {
-            return response()->json(['message' => 'You cannot apply to a public community'], 400);
+        if ($community->privacy === 'private') {
+            return response()->json(['message' => 'You cannot directly join a private community'], 403);
         }
 
         $authUser = Auth::user();
-        $alreadyApplied = $community->followers()->where('user_id', $authUser->id)->exists();
+        $alreadyJoined = $community->followers()->where('authenticated_user_id', $authUser->id)->exists();
 
-        if ($alreadyApplied) {
-            return response()->json(['message' => 'You have already applied or joined this community'], 400);
+        if ($alreadyJoined) {
+            return response()->json(['message' => 'You are already a member of this community'], 400);
         }
 
-        // Assuming there is a `pending_requests` table to handle applications
-        $community->followers()->attach($authUser->id, ['status' => 'pending']);
+        // Adicionar o usuário à lista de seguidores da comunidade
+        $community->followers()->attach($authUser->id);
 
-        return response()->json(['message' => 'Your application to join the community has been submitted']);
-    }*/
+        return response()->json(['message' => 'You have successfully joined the community']);
+    }
 }
