@@ -56,7 +56,7 @@ news = Bool
 
     <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
       <div>
-      <input id="{{ $post->post_id }}-upvote" type="checkbox" class="hidden peer/upvote" {{ $post->user_upvoted ? 'checked' : '' }} name="vote"
+      <input id="{{ $post->post_id }}-upvote" type="checkbox" class="hidden peer/upvote" {{ $post->user_upvoted ? 'checked' : '' }} name="vote">
         <label for="{{$post->post_id}}-upvote"
           class=" peer-checked/upvote:fill-blue-400 cursor-pointer group-hover/wrapper:hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
           <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
