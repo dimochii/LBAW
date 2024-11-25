@@ -3,7 +3,7 @@
 # Stop execution if a step fails
 set -e
 
-IMAGE_NAME=git.fe.up.pt:5050/lbaw/lbaw2425/lbaw24 # Replace with your group's image name
+IMAGE_NAME=git.fe.up.pt:5050/lbaw/lbaw2425/lbaw2454 # Replace with your group's image name
 
 # Ensure that dependencies are available
 composer install
