@@ -12,10 +12,8 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
-  {{--
   <link rel="stylesheet" href={{ asset('css/app.css') }}>
-  @vite('resources/css/app.css') --}}
-  {{-- @vite('resources/css/app.css') --}}
+  @vite('resources/css/app.css')
   <link rel="stylesheet" href="{{ asset('css/build.css' )}}">
 
 </head>
@@ -239,7 +237,7 @@
           <div class="py-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">info</h3>
             <div class="*:*:underline-effect *:px-4 *:py-1 flex flex-col text-xl ml-2">
-              <a href="{{ url('/home') }}" class="">
+              <a href="{{ url('/about-us') }}" class="">
                 <span class="">about us</span>
               </a>
               <a href="#" class="">

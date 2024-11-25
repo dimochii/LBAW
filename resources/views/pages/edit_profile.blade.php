@@ -4,7 +4,7 @@
 <script src="{{ asset('js/user.js') }}" defer></script>
 <div class="font-grotesk min-h-screen lowercase">
     {{-- Header Section --}}
-    <div class="border-b-2 border-black transition-all duration-300 hover:bg-whatsup-blue hover:text-[#F4F2ED]">
+    <div class="border-b-2 border-black transition-all duration-300 hover:bg-pastelBlue hover:text-[#F4F2ED]">
         <div class="max-w-7xl mx-auto p-8">
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight">Edit Profile</h1>
             <p class="text-xl font-light mt-4">Update your personal information and profile settings</p>

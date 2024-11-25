@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/home', 'home')->name('home'); 
         Route::get('/global', 'global')->name('global');
         Route::get('/recent', 'recent')->name('recent');
+        Route::get('/about-us', 'aboutUs')->name('about-us');
     });
 
     Route::get('/messages', [MessageController::class, 'index'])->name('messages');
@@ -111,3 +112,6 @@ Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')-
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
+
+// Info
+
