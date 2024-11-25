@@ -12,9 +12,12 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href={{ asset('build/assets/app-5554225b.css') }}>
+  {{--
+  <link rel="stylesheet" href={{ asset('css/app.css') }}>
+  @vite('resources/css/app.css') --}}
   {{-- @vite('resources/css/app.css') --}}
-  
+  <link rel="stylesheet" href="{{ asset('css/build.css' )}}">
+
 </head>
 
 <body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">
@@ -155,8 +158,8 @@
         <a href="{{ route('login') }}"
           class="px-2 md:px-4 py-1.5 text-sm font-medium text-[#F4F2ED] bg-black/20 hover:bg-black/30 rounded-full transition-colors duration-200 flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
           <span class="hidden md:inline">Login</span>
         </a>

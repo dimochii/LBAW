@@ -6,8 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ config('app.name', 'Laravel') }}</title>
   <script src="{{ asset('js/layout.js') }}"></script>
-  <link rel="stylesheet" href={{ asset('build/assets/app-5554225b.css') }}>
-  
+  {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-5554225.css') }}"> --}}
+  {{-- <link rel="stylesheet" href={{ asset('css/app.css') }} --}}
+  <link rel="stylesheet" href="{{ asset('css/build.css' )}}">
+
+
 </head>
 
 <body class="bg-bg-fill antialiased">
