@@ -111,6 +111,7 @@ Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('
 Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
+Route::get('/hubs', [CommunityController::class, 'index'])->name('communities.index');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
 // Info

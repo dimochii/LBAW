@@ -2,7 +2,7 @@
 @section('content')
     <div class="font-grotesk flex items-center bg-pastelGreen px-8 py-4 divide-y-2 divide-black border-b-2 border-black">
         <div class="text-center py-6 mr-8 animate-fadeIn">
-            <h1 class="tracking-tighter font-medium text-6xl py-6 text-white mb-4">Welcome to whatsUp!</h1>
+            <h1 class="tracking-tighter font-medium text-6xl py-6 text-white mb-4">Welcome to <span class = "font-bold">whatsUp</span>!</h1>
             <p class= "text-zinc-50 font-light">This is a <strong>collaborative</strong> platform where we share <em>interesting</em> stories.</p>
             <p class= "text-zinc-50 font-light">Our platform is designed to bring you the most engaging and diverse stories from around the world. We believe in the power of community-driven content to connect people and foster meaningful discussions.</p>
         </div>
@@ -25,7 +25,7 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-10">
-                <div class=" backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-[#C8E6C9] transform hover:scale-105 hover:rotate-3 transition-all duration-300 group">
+                <div class=" backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-black transform hover:scale-105 hover:rotate-3 transition-all duration-300 group">
                     <div class="bg-gradient-to-br from-pastelGreen to-[#4CAF50] rounded-full w-20 h-20 flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:animate-spin-slow">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" viewBox="0 0 24 24" fill="currentColor">
                             <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM9.763 9.51a2.25 2.25 0 013.828-1.351.75.75 0 001.06-1.06 3.75 3.75 0 00-6.38 2.25c0 1.626 1.067 3 2.572 3.572l.096.034a.75.75 0 00.496-1.415l-.096-.034a1.5 1.5 0 01-.572-1.207c0-.603.333-1.168.876-1.454zm4.474 2.736a.75.75 0 00-1.06-1.06 3.75 3.75 0 10.176 5.585.75.75 0 10-1.258-.813 2.25 2.25 0 11-.176-3.512.75.75 0 001.06 0z" clip-rule="evenodd" />
@@ -37,7 +37,7 @@
                     </p>
                 </div>
 
-                <div class=" backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-[#BBDEFB] transform hover:scale-105 hover:-rotate-3 transition-all duration-300 group">
+                <div class=" backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-black transform hover:scale-105 hover:-rotate-3 transition-all duration-300 group">
                     <div class="bg-gradient-to-br from-pastelBlue to-[#1E88E5] rounded-full w-20 h-20 flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:animate-pulse">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M6 12a.75.75 0 01-.75-.75v-7.5a.75.75 0 111.5 0v7.5A.75.75 0 016 12zM12 12a.75.75 0 01-.75-.75v-4.5a.75.75 0 011.5 0v4.5A.75.75 0 0112 12zM18 12a.75.75 0 01-.75-.75v-1.5a.75.75 0 111.5 0v1.5A.75.75 0 0118 12zM9 12a.75.75 0 01-.75-.75v-10.5a.75.75 0 011.5 0v10.5A.75.75 0 019 12zM15 12a.75.75 0 01-.75-.75V3.75a.75.75 0 111.5 0v7.5A.75.75 0 0115 12zM3 12a.75.75 0 01-.75-.75v-4.5a.75.75 0 011.5 0v4.5A.75.75 0 013 12zM21 12a.75.75 0 01-.75-.75v-7.5a.75.75 0 111.5 0v7.5A.75.75 0 0121 12z" />
@@ -49,7 +49,7 @@
                     </p>
                 </div>
 
-                <div class=" backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-[#FFE0B2] transform hover:scale-105 hover:rotate-3 transition-all duration-300 group">
+                <div class=" backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-black transform hover:scale-105 hover:rotate-3 transition-all duration-300 group">
                     <div class="bg-gradient-to-br from-pastelRed to-[#FF9800] rounded-full w-20 h-20 flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:animate-bounce">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" viewBox="0 0 24 24" fill="currentColor">
                             <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.565 1.659.92 2.417 1.13V18c-1.682-.387-3-1.419-3-2.5a2.5 2.5 0 011.844-2.425l1.223-.463a6 6 0 00-1.181-2.107A4.98 4.98 0 0012 6.5a4.98 4.98 0 00-3.117 1.145A6 6 0 007.7 9.965l-1.222-.463A2.5 2.5 0 016 11.5c0 1.08-1.318 2.113-3 2.5v2.25c.767-.21 1.652-.565 2.417-1.13A6.721 6.721 0 009 21.75c.734 0 1.606-.211 2.25-.64V20.25a2.25 2.25 0 012.25-2.25h1.5a2.25 2.25 0 012.25 2.25v.86a6.707 6.707 0 002.25.64 6.721 6.721 0 003.583-1.029c.774.565 1.659.92 2.417 1.13V18c-1.682-.387-3-1.419-3-2.5a2.5 2.5 0 011.844-2.425l1.223-.463a6 6 0 00-1.181-2.107A4.98 4.98 0 0012 6.5a4.98 4.98 0 00-3.117 1.145A6 6 0 007.7 9.965l-1.222-.463A2.5 2.5 0 016 11.5c0 1.08-1.318 2.113-3 2.5v2.25c.767-.21 1.652-.565 2.417-1.13z" clip-rule="evenodd" />

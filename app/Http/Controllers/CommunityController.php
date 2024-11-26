@@ -100,6 +100,14 @@ class CommunityController extends Controller
         return redirect()->back()->with('error', 'You are not following this community.');
     }
 
+    public function index() {
+        $communities = Community::all();
+
+        return view('pages.hubs', [
+            'communities' => $communities
+        ]);
+    }
+
     /*
     public function apply(Request $request, $id)
     {

@@ -243,11 +243,8 @@
               <a href="#" class="">
                 <span class="">best of</span>
               </a>
-              <a href="#" class="">
+              <a href="{{ url('/hubs') }}" class="">
                 <span class="">hubs</span>
-              </a>
-              <a href="#" class="">
-                <span class="">help</span>
               </a>
             </div>
           </div>
