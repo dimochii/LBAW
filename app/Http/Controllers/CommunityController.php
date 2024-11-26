@@ -35,18 +35,20 @@ class CommunityController extends Controller
             ];
         });
 
-        $moderators = $community->moderators()->get(['id', 'username']);
+        $posts_count = $posts ->count();
+        $followers_count = $community->followers()->count();
 
         $user = Auth::user();
-        $isFollowing = $community->followers()
+        $is_following = $community->followers()
             ->where('authenticated_user_id', $user->id) 
             ->exists();
 
         return view('pages.hub', [
             'community' => $community,
             'posts' => $posts,
-            'moderators' => $moderators,
-            'isFollowing' => $isFollowing,
+            'is_following' => $is_following,
+            'posts_count' => $posts_count,
+            'followers_count' => $followers_count
         ]);
     }
 

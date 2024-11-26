@@ -31,12 +31,12 @@
                 <p class="text-gray-600 mt-2 text-sm">{{ $community->description }}</p>
                 <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
                     <div class="flex items-center gap-2">
-                        <span>{{ number_format($community->followers_count ?? 0, 0) }}k</span>
+                        <span>{{ number_format($followers_count ?? 0, 0) }}</span>
                         <span>Readers</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span>{{ number_format($community->posts_count ?? 0, 0) }}k</span>
-                        <span>Something</span>
+                        <span>{{ number_format($posts_count ?? 0, 0) }}</span>
+                        <span>Posts</span>
                     </div>
                 </div>
 
@@ -51,7 +51,7 @@
                         </select>
                     </div>
                     @auth
-                    @if($isFollowing)
+                    @if($is_following)
                     <a href="{{ route('post.create') }}"
                        class="px-4 text-gray-600 text-sm font-medium underline-effect">
                         + post
@@ -78,7 +78,7 @@
             <div class="text-center py-12 bg-white rounded-xl shadow-sm">
                 <p class="text-gray-500">No posts available in this hub yet.</p>
                 @auth
-                @if($isFollowing)
+                @if($is_following)
                 <a href="{{ route('posts.create', ['community_id' => $community->id]) }}" 
                    class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white text-sm font-medium rounded-full hover:bg-blue-600 transition-colors duration-200">
                     Create the first post
