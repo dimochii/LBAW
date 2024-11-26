@@ -101,14 +101,14 @@
     <div class="mt-8 bg-white rounded-xl shadow-sm p-6">
         <h2 class="text-lg font-semibold mb-4">Moderators</h2>
         <div class="space-y-3">
-            @foreach($moderators as $moderator)
+            @foreach($community->moderators as $moderator)
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden">
                     <img src="{{ $moderator->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
                          alt="{{ $moderator->username }}"
                          class="w-full h-full object-cover">
                 </div>
-                <span class="text-sm text-gray-700">@{{ $moderator['username'] }}</span> 
+                <span class="text-sm text-gray-700">{{ $moderator['username'] }}</span> 
             </div>
             @endforeach
         </div>
