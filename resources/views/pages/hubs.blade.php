@@ -1,33 +1,57 @@
 @extends('layouts.app')
 @section('content')
-<div class=" text-gray-900 py-12">
-    <div class="container mx-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="tracking-tighter font-medium text-6xl px-4">Hubs</h1>
-            <a href="{{ route('communities.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md">Create Hub</a>
-        </div>
+<div class="text-gray-900 py-12 bg-[#F5F5F0] min-h-screen">
+    <div class="container mx-auto px-4">
+        <h1 class="text-5xl text-gray-800 tracking-tighter font-medium py-4">Hubs</h1>
         @if ($communities->isEmpty())
-        <div class="bg-gray-200 p-4 rounded-md">
-            <p class="text-gray-600">You haven't created any hubs yet.</p>
-        </div>
-        @else
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            @foreach ($communities as $community)
-            <div class="bg-gray-200 rounded-lg shadow-md">
-                <div class="p-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-lg font-medium">{{ $community->name }}</h2>
-                        <a href="{{ route('communities.show', $community->id) }}" class="bg-gray-300 hover:bg-gray-400 text-gray-600 font-medium py-2 px-4 rounded-md">View Hub</a>
-                    </div>
-                    <p class="text-gray-600 font-light mb-4">{{ $community->description }}</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-500">{{ $community->created_at }}</span>
-                        <span class="bg-{{ $community->privacy === 'public' ? 'green' : 'red' }}-500 text-white font-medium py-1 px-2 rounded-full">{{ ucfirst($community->privacy) }}</span>
-                    </div>
-                </div>
+            <div class="bg-white p-8 rounded-lg shadow-md text-center border border-gray-200">
+                <p class="text-gray-600 text-xl font-light">You haven't created any hubs yet.</p>
             </div>
-            @endforeach
-        </div>
+        @else
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                @foreach ($communities as $community)
+                    <div class="bg-white border border-2 border-black overflow-hidden transform transition-all duration-300 hover:shadow-xl">
+                        <div class="relative">
+                            <div class="h-48 bg-[#E6E6DC] flex items-center justify-center relative overflow-hidden">
+                                <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2080%2080%22%20width=%2280%22%20height=%2280%3E%3Crect%20width=%2280%22%20height=%2280%22%20fill=%22%23f0f0f0%22/%3E%3Cpath%20d=%22M0%200L80%2080ZM80%200L0%2080Z%22%20stroke-width=%221%22%20stroke=%22%23cccccc%22/%3E%3C/svg%3E')]"></div>
+                                <span class="text-4xl tracking-tighter text-gray-700 opacity-70 z-10">{{ strtoupper(substr($community->name, 0, 1)) }}</span>
+                            </div>
+                            
+                            <div class="absolute top-4 right-4 bg-pastelGreen text-[#F5F5F0] rounded-full px-3 py-1 text-sm font-medium shadow-md">
+                                {{ $community->followers()->count() }} Followers
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h2 class="text-xl text-gray-800 mb-1">{{ $community->name }}</h2>
+                                    @if ($community->privacy)
+                                        <span class="text-sm border border-red-600 text-red-600 bg-red-100 rounded-full px-3 py-1 font-light">
+                                            private
+                                        </span>
+                                    @else
+                                        <span class="text-sm border border-green-600 text-green-600 bg-green-100 rounded-full px-3 py-1 font-light">
+                                            public
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <p class="text-gray-700 mb-4 font-light line-clamp-3">{{ $community->description }}</p>
+
+                            <div class="flex justify-between items-center border-t border-gray-200 pt-4">
+                                <span class="text-sm text-gray-500 font-light">
+                                    created {{ $community->creation_date->diffForHumans() }}
+                                </span>
+                                <a href="{{ route('communities.show', $community->id) }}" class="text-pastelBlue hover:text-sky-600 font-medium transition-colors">
+                                    view hub
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         @endif
     </div>
 </div>
