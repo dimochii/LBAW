@@ -19,7 +19,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'community_id' => 'nullable|exists:communities,id',
+            'community_id' => 'required|exists:communities,id',
             'type' => 'required|in:news,topic',
         ]);
 
