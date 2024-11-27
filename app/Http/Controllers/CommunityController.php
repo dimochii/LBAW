@@ -52,6 +52,25 @@ class CommunityController extends Controller
         ]);
     }
 
+    public function updatePrivacy(Request $request, $id)
+    {
+        $community = Community::findOrFail($id);
+
+        $this->authorize('updatePrivacy', $community);
+
+        $privacy = $request->input('privacy');
+
+        if ($privacy === 'private') {
+            $community->privacy = true; 
+        } elseif ($privacy === 'public') {
+            $community->privacy = false; 
+        }
+
+        $community->save();
+
+        return redirect()->back();
+    }
+
     // Armazenar uma nova comunidade
     public function store(Request $request)
     {
