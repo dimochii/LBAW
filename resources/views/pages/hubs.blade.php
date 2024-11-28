@@ -28,9 +28,9 @@
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach ($communities as $community)
-                    <div class="bg-white border border-pastelGreen rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl">
+                    <div class="bg-white border border-black rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl">
                         <div class="relative">
-                            <div class="h-48 bg-[#E6E6DC] flex items-center justify-center relative overflow-hidden">
+                            <div class="h-48 bg-lime-200 flex items-center justify-center relative overflow-hidden">
                                 <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2080%2080%22%20width=%2280%22%20height=%2280%3E%3Crect%20width=%2280%22%20height=%2280%22%20fill=%22%23f0f0f0%22/%3E%3Cpath%20d=%22M0%200L80%2080ZM80%200L0%2080Z%22%20stroke-width=%221%22%20stroke=%22%23cccccc%22/%3E%3C/svg%3E')]"></div>
                                 <span class="text-4xl tracking-tighter text-gray-700 opacity-70 z-10">{{ strtoupper(substr($community->name, 0, 1)) }}</span>
                             </div>
@@ -45,11 +45,11 @@
                                 <div>
                                     <h2 class="text-xl text-gray-800 mb-1">{{ $community->name }}</h2>
                                     @if ($community->privacy)
-                                        <span class="text-sm border font-bold border-red-600 text-pastelRed bg-red-100 rounded-full px-3 py-1 font-light">
+                                        <span class="text-sm border font-bold border-red-600 text-red-600 bg-red-100 rounded-full px-3 py-1 font-light">
                                             private
                                         </span>
                                     @else
-                                        <span class="text-sm border font-bold border-green-600 text-pastelGreen bg-green-100 rounded-full px-3 py-1 font-light">
+                                        <span class="text-sm border font-bold border-green-600 text-green-600 bg-green-100 rounded-full px-3 py-1 font-light">
                                             public
                                         </span>
                                     @endif
@@ -71,7 +71,7 @@
                 @endforeach
             </div>
             <div class="mt-6 py-6 flex justify-center">
-                {{ $communities->appends(request()->query())->links('pagination::tailwind') }}
+                {{ $communities->appends(request()->query())->links('pagination::custom-pagination') }}
             </div>
         @endif
     </div>
