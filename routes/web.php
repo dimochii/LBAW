@@ -12,6 +12,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,3 +112,7 @@ Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')-
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
+
+Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
+Route::post('/report/{id}',[ReportController::class,'report'])->middleware('auth');
+Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
