@@ -9,27 +9,27 @@ use Illuminate\Support\Facades\Log;
 class SideController extends Controller
 {
     public function show()
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    $userHubs = $user->communities->take(5)->map(function ($community) {
-            return [
-                'id' => $community->id,
-                'name' => $community->name,
-            ];
-        });
-    
-    $recentHubs = Cache::get("recent_hubs:{$user->id}", []);
-    Log::info('Recent Hubs Cache:', ['cache' => Cache::get("recent_hubs:{$user->id}")]);
+        $userHubs = $user->communities->take(5)->map(function ($community) {
+                return [
+                    'id' => $community->id,
+                    'name' => $community->name,
+                ];
+            });
+        
+        $recentHubs = Cache::get("recent_hubs:{$user->id}", []);
+        Log::info('Recent Hubs Cache:', ['cache' => Cache::get("recent_hubs:{$user->id}")]);
 
-    if (!$recentHubs) {
-        $recentHubs = [];
+        if (!$recentHubs) {
+            $recentHubs = [];
+        }
+        
+        return view('partials.leftside_bar', [
+            'userHubs' => $userHubs,
+            'recentHubs' => $recentHubs,
+        ]);
     }
-    
-    return response()->json([
-        'userHubs' => $userHubs,
-        'recentHubs' => $recentHubs,
-    ]);
-}
 
 }
