@@ -140,7 +140,7 @@ class AuthenticatedUserController extends Controller
 
     $user->save();
 
-    // Redirect back to the profile page with success message
+    // Redirect back to the A page with success message
     return redirect()->route('user.profile', $user->id)->with('success', 'Profile updated successfully!');
 }
 
