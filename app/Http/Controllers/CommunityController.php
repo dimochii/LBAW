@@ -121,12 +121,15 @@ class CommunityController extends Controller
         return redirect()->back()->with('error', 'You are not following this community.');
     }
 
-    public function index() {
-        $communities = Community::all();
+    public function index(Request $request) {
+        $sortBy = $request->get('sort_by', 'name'); 
+        $order = $request->get('order', 'asc'); 
 
-        return view('pages.hubs', [
-            'communities' => $communities
-        ]);
+        $communities = Community::withCount('followers')
+            ->orderBy($sortBy, $order)
+            ->paginate(6);
+
+        return view('pages.hubs', compact('communities', 'sortBy', 'order'));
     }
 
     /*
