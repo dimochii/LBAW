@@ -16,48 +16,49 @@
     </div>
     <div class="ml-auto">
       <div class="mt-6 flex flex-col sm:flex-row gap-4">
-        <div class="group">
-          <a href="{{ route('user.followers', $user->id) }}"
-            class="group inline-flex items-center gap-4 px-8 py-4  text-xl font-medium transition-all duration-300 hover:bg-[#3C3D37] hover:text-white">
-            <div class="flex flex-col items-start">
-              <span class="text-sm font-medium">Followers</span>
-              <span class="text-2xl font-bold">{{ $followers->count() ?? 0 }}</span>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2 text-[#F4F2ED]"
-              viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd"
-                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                clip-rule="evenodd" />
-            </svg>
-          </a>
+        <div>
+            <p>
+              <a href="{{ route('user.followers', $user->id) }}" 
+                class="text-blue-600 underline hover:text-blue-800">
+                Followers: {{ $followers->count() ?? 0 }}
+              </a>
+            </p>
+            <p>
+              <a href="{{ route('user.following', $user->id) }}" 
+                class="text-blue-600 underline hover:text-blue-800">
+                Following: {{ $following->count() ?? 0 }}
+              </a>
+            </p>
+          </div>
         </div>
 
-        <div class="group">
-          <a href="{{ route('user.following', $user->id) }}"
-            class="group inline-flex items-center gap-4 px-8 py-4  text-xl font-medium transition-all duration-300 hover:bg-[#3C3D37] hover:text-white">
-            <div class="flex flex-col items-start">
-              <span class="text-sm font-medium">Following</span>
-              <span class="text-2xl font-bold">{{ $following->count() ?? 0 }}</span>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2 text-[#F4F2ED]"
-              viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd"
-                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                clip-rule="evenodd" />
-            </svg>
-          </a>
-        </div>
-      </div>
+        {{-- Follow/Unfollow Button --}}
+      @if (Auth::check() && Auth::user()->id !== $user->id)
+        @if ($followers->contains(Auth::id()))
+          <form action="{{ route('user.unfollow', $user->id) }}" method="POST" class="mt-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+              Unfollow
+            </button>
+          </form>
+        @else
+          <form action="{{ route('user.follow', $user->id) }}" method="POST" class="mt-4">
+            @csrf
+            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+              Follow
+            </button>
+          </form>
+        @endif
+      @endif
 
+      {{-- Edit Profile Button --}}
       @if (Auth::check() && Auth::user()->can('editProfile', $user))
       <a href="{{ route('user.edit', $user->id) }}" class="font-light tracking-tighter text-xl absolute top-4 right-8 underline-effect cursor-pointer">
         edit profile
       </a>
       @endif
     </div>
-
   </div>
 
   {{-- Navigation Tabs with Black Border --}}

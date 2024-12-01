@@ -213,16 +213,41 @@ class AuthenticatedUserController extends Controller
     }
     
     public function getVotedTopics($user)
-{
-    $posts = Post::whereHas('topic') 
-        ->whereHas('votes', function ($query) use ($user) {
-            $query->where('authenticated_user_id', $user->id)
-                  ->where('upvote', true); 
-        })
-        ->paginate(10);
+    {
+        $posts = Post::whereHas('topic') 
+            ->whereHas('votes', function ($query) use ($user) {
+                $query->where('authenticated_user_id', $user->id)
+                    ->where('upvote', true); 
+            })
+            ->paginate(10);
 
-    return $posts;
-}
+        return $posts;
+    }
+
+    public function follow($id)
+    {
+        $userToFollow = AuthenticatedUser::findOrFail($id); // Find the user to follow
+        
+        if (Auth::check()) {
+            $authenticatedUser = Auth::user(); // Get the currently authenticated user
+    
+            // Check if the authenticated user is already following the target user
+            if ($authenticatedUser->follows()->where('followed_id', $userToFollow->id)->exists()) {
+                // If already following, detach (unfollow)
+                $authenticatedUser->follows()->detach($userToFollow->id);
+    
+                return redirect()->back()->with('success', 'You have unfollowed ' . $userToFollow->name);
+            } else {
+                // If not following, attach (follow)
+                $authenticatedUser->follows()->attach($userToFollow->id);
+    
+                return redirect()->back()->with('success', 'You are now following ' . $userToFollow->name);
+            }
+        }
+    
+        return redirect()->back()->with('error', 'Something went wrong.');
+    }
+    
 
     
 

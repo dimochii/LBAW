@@ -61,6 +61,7 @@ Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('u
     //followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
 Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
+Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])->name('user.follow');
     //articles
     
 //News
