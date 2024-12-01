@@ -60,36 +60,63 @@
   </div>
 
   {{-- Navigation Tabs with Black Border --}}
-  <div class="border-b-2 border-black w-full font-light text-xl tracking-tighter">
-    <div class="w-full">
-      <nav class="max-w-7xl mx-auto px-6 flex flex-wrap gap-4 md:gap-8">
-        <a href="{{ url('/users/' . $user->id . '/articles') }}"
-          class=" py-4 text-gray-900 hover:text-gray-700 relative group">
-          articles
-        </a>
-        <a href="{{ url('/users/' . $user->id . '/discussions') }}"
-          class="py-4 text-gray-500 hover:text-gray-900 relative group">
-          discussions
-        </a>
-        <a href="{{ url('/users/' . $user->id . '/upvoted') }}"
-          class="py-4 text-gray-500 hover:text-gray-900 relative group">
-          upvoted
-        </a>
-      </nav>
-    </div>
-  </div>
-
-  <div class="divide-y-2 divide-black border-b-2 border-black">
-    @if ($posts->count() > 0)
-    @foreach ($posts as $item)
-    @include('partials.post', [
-    'news' => 'true',
-    'post' => $item->news,
-    ])
-    @endforeach
-    @else
-    <p class="text-gray-500">This user has not authored any posts yet.</p>
-    @endif
+<div class="border-b-2 border-black w-full font-light text-xl tracking-tighter">
+  <div class="w-full">
+    @php
+      $activeTab = request()->query('tab', 'articles'); // Default to 'articles'
+    @endphp
+    <nav class="max-w-7xl mx-auto px-6 flex flex-wrap gap-4 md:gap-8">
+      <a href="{{ url('/users/' . $user->id . '/profile?tab=articles') }}"
+         class="py-4 relative group {{ $activeTab === 'articles' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+        articles
+      </a>
+      <a href="{{ url('/users/' . $user->id . '/profile?tab=discussions') }}"
+         class="py-4 relative group {{ $activeTab === 'discussions' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+        discussions
+      </a>
+      <a href="{{ url('/users/' . $user->id . '/profile?tab=upvoted') }}"
+         class="py-4 relative group {{ $activeTab === 'upvoted' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+        upvoted
+      </a>
+    </nav>
   </div>
 </div>
+
+
+  <div class="divide-y-2 divide-black border-b-2 border-black">
+    @if ($activeTab === 'articles')
+      @if ($authored_posts->count() > 0)
+        @foreach ($authored_posts as $item)
+          @include('partials.post', [
+            'news' => true,
+            'post' => $item->news,
+          ])
+        @endforeach
+      @else
+        <p class="text-gray-500">This user has not authored any posts yet.</p>
+      @endif
+    @elseif ($activeTab === 'discussions')
+      @if ($voted_posts->count() > 0)
+        @foreach ($voted_posts as $item)
+          @include('partials.post', [
+            'news' => false,
+            'post' => $item,
+          ])
+        @endforeach
+      @else
+        <p class="text-gray-500">This user has not participated in any discussions yet.</p>
+      @endif
+    @elseif ($activeTab === 'upvoted')
+    @if ($authored_posts->count() > 0)
+        @foreach ($authored_posts as $item)
+          @include('partials.post', [
+            'news' => true,
+            'post' => $item->news,
+          ])
+        @endforeach
+      @else
+        <p class="text-gray-500">This user has not upvoted any posts yet.</p>
+      @endif
+    @endif
+  </div>
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuthenticatedUser;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -50,9 +51,11 @@ class AuthenticatedUserController extends Controller
 
         $followers = $user->followers;
         $following = $user->follows;
-        $posts = $user->authoredPosts()->paginate(10);
+        $authored_posts =  $this-> getAuthoredPosts($user);
+        $voted_posts =  $this-> getVotedPosts($user);
 
-        return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
+
+        return view('pages.profile', compact('user', 'followers', 'following', 'authored_posts', 'voted_posts'));
     }
 
     public function getFollowers($id)
@@ -173,16 +176,20 @@ class AuthenticatedUserController extends Controller
     /**
      * Get the posts authored by the user and display them on the profile page.
      */
-    public function getAuthoredPosts($id)
+    public function getAuthoredPosts($user)
     {
-        $user = AuthenticatedUser::findOrFail($id);
-        $followers = $user->followers;
-        $following = $user->follows;
-
-        // Fetch authored posts with pagination
         $posts = $user->authoredPosts()->paginate(10);
 
-        return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
+        return $posts;
+    }
+
+    public function getVotedPosts($user)
+    {
+        $posts = Post::whereHas('votes', function ($query) use ($user) {
+            $query->where('authenticated_user_id', $user->id);
+        })->paginate(10);
+    
+        return $posts;
     }
 
     public function suspend($id)
