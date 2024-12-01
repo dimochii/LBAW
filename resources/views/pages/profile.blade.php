@@ -86,8 +86,8 @@
 
   <div class="divide-y-2 divide-black border-b-2 border-black">
     @if ($activeTab === 'articles')
-      @if ($authored_posts->count() > 0)
-        @foreach ($authored_posts as $item)
+      @if ($authored_news->count() > 0)
+        @foreach ($authored_news as $item)
           @include('partials.post', [
             'news' => true,
             'post' => $item->news,
@@ -97,8 +97,8 @@
         <p class="text-gray-500">This user has not authored any posts yet.</p>
       @endif
     @elseif ($activeTab === 'discussions')
-      @if ($voted_posts->count() > 0)
-        @foreach ($voted_posts as $item)
+      @if ($authored_topics->count() > 0)
+        @foreach ($authored_topics as $item)
           @include('partials.post', [
             'news' => false,
             'post' => $item->topic,
@@ -108,11 +108,18 @@
         <p class="text-gray-500">This user has not participated in any discussions yet.</p>
       @endif
     @elseif ($activeTab === 'upvoted')
-    @if ($voted_posts->count() > 0)
-        @foreach ($voted_posts as $item)
+    @if ($voted_news->count() > 0)
+        @foreach ($voted_news as $item)
+          @include('partials.post', [
+            'news' => true,
+            'post' => $item->news,
+          ])
+        @endforeach
+        @elseif ($voted_topics->count() > 0)
+        @foreach ($voted_topics as $item)
           @include('partials.post', [
             'news' => false,
-            'post' => $item,
+            'post' => $item->topic,
           ])
         @endforeach
       @else

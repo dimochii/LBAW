@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AuthenticatedUser;
 use App\Models\Post;
+use App\Models\News;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -51,11 +53,13 @@ class AuthenticatedUserController extends Controller
 
         $followers = $user->followers;
         $following = $user->follows;
-        $authored_posts =  $this-> getAuthoredPosts($user);
-        $voted_posts =  $this-> getVotedPosts($user);
+        $authored_news =  $this-> getAuthoredNews($user);
+        $authored_topics =  $this-> getAuthoredTopics($user);
+        $voted_news =  $this-> getVotedNews($user);
+        $voted_topics = $this -> getVotedTopics($user);
 
 
-        return view('pages.profile', compact('user', 'followers', 'following', 'authored_posts', 'voted_posts'));
+        return view('pages.profile', compact('user', 'followers', 'following', 'authored_news','authored_topics', 'voted_news', 'voted_topics'));
     }
 
     public function getFollowers($id)
@@ -178,21 +182,46 @@ class AuthenticatedUserController extends Controller
     /**
      * Get the posts authored by the user and display them on the profile page.
      */
-    public function getAuthoredPosts($user)
+    public function getAuthoredNews($user)
     {
-        $posts = $user->authoredPosts()->paginate(10);
-
-        return $posts;
+        $news = $user->authoredPosts()
+            ->whereHas('news') 
+            ->paginate(10);
+    
+        return $news;
     }
 
-    public function getVotedPosts($user)
+    public function getAuthoredTopics($user)
     {
-        $posts = Post::whereHas('votes', function ($query) use ($user) {
-            $query->where('authenticated_user_id', $user->id);
-        })->paginate(10);
+        $topics = $user->authoredPosts()
+            ->whereHas('topic')
+            ->paginate(10);
+    
+        return $topics;
+    }    
+
+    public function getVotedNews($user)
+    {
+        $posts = Post::whereHas('news') // Ensure the post is associated with a News instance
+            ->whereHas('votes', function ($query) use ($user) {
+                $query->where('authenticated_user_id', $user->id);
+            })
+            ->paginate(10);
     
         return $posts;
     }
+    
+    public function getVotedTopics($user)
+    {
+        $posts = Post::whereHas('topic') // Ensure the post is associated with a Topic instance
+            ->whereHas('votes', function ($query) use ($user) {
+                $query->where('authenticated_user_id', $user->id);
+            })
+            ->paginate(10);
+    
+        return $posts;
+    }
+    
 
     public function suspend($id)
 {
