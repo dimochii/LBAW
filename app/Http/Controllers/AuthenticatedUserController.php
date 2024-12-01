@@ -202,25 +202,28 @@ class AuthenticatedUserController extends Controller
 
     public function getVotedNews($user)
     {
-        $posts = Post::whereHas('news') // Ensure the post is associated with a News instance
+        $posts = Post::whereHas('news') 
             ->whereHas('votes', function ($query) use ($user) {
-                $query->where('authenticated_user_id', $user->id);
+                $query->where('authenticated_user_id', $user->id)
+                    ->where('upvote', true); 
             })
             ->paginate(10);
-    
+
         return $posts;
     }
     
     public function getVotedTopics($user)
-    {
-        $posts = Post::whereHas('topic') // Ensure the post is associated with a Topic instance
-            ->whereHas('votes', function ($query) use ($user) {
-                $query->where('authenticated_user_id', $user->id);
-            })
-            ->paginate(10);
-    
-        return $posts;
-    }
+{
+    $posts = Post::whereHas('topic') 
+        ->whereHas('votes', function ($query) use ($user) {
+            $query->where('authenticated_user_id', $user->id)
+                  ->where('upvote', true); 
+        })
+        ->paginate(10);
+
+    return $posts;
+}
+
     
 
     public function suspend($id)
