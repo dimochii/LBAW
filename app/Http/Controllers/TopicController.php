@@ -45,14 +45,15 @@ class TopicController extends Controller
         $topicItem->score = $topicItem->upvotes_count - $topicItem->downvotes_count;
 
         // Get the currently authenticated user
+        if(Auth::check()){
         $authUser = Auth::user();
-
-        // Check if the authenticated user has voted on this post (Topic)
         $userVote = $authUser->votes()
             ->whereHas('postVote', function ($query) use ($topicItem) {
                 $query->where('post_id', $topicItem->post_id);
             })
             ->first();
+        }
+        else{$userVote = NULL;}
 
         // Determine if the user has upvoted or downvoted the post
         if ($userVote) {
