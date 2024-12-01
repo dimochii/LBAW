@@ -51,10 +51,11 @@
         </div>
       </div>
 
-
+      @if (Auth::check() && Auth::user()->can('editProfile', $user))
       <a href="{{ route('user.edit', $user->id) }}" class="font-light tracking-tighter text-xl absolute top-4 right-8 underline-effect cursor-pointer">
         edit profile
       </a>
+      @endif
     </div>
 
   </div>
