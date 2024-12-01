@@ -27,7 +27,7 @@ use App\Http\Controllers\CommunityController;
 
 // Home
 
-Route::redirect('/', '/login');
+Route::redirect('/', '/news');
 
 
 

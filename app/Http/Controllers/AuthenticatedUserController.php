@@ -78,7 +78,9 @@ class AuthenticatedUserController extends Controller
      */
     public function edit($id)
     {
+        $user = AuthenticatedUser::findOrFail($id);
         // Check if the logged-in user is trying to edit their own profile
+        $this->authorize('editProfile', $user);
         if (Auth::user()->id != $id) {
             // If not, deny access by returning a 403 error or redirecting them
             return response()->json(['message' => 'Unauthorized'], 403);
