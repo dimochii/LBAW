@@ -100,18 +100,18 @@
         @foreach ($voted_posts as $item)
           @include('partials.post', [
             'news' => false,
-            'post' => $item,
+            'post' => $item->topic,
           ])
         @endforeach
       @else
         <p class="text-gray-500">This user has not participated in any discussions yet.</p>
       @endif
     @elseif ($activeTab === 'upvoted')
-    @if ($authored_posts->count() > 0)
-        @foreach ($authored_posts as $item)
+    @if ($voted_posts->count() > 0)
+        @foreach ($voted_posts as $item)
           @include('partials.post', [
-            'news' => true,
-            'post' => $item->news,
+            'news' => false,
+            'post' => $item,
           ])
         @endforeach
       @else

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\TopicController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthenticatedUserController;
 use App\Http\Controllers\SearchController;
@@ -70,6 +71,8 @@ Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments']
 Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->name('comments.store');
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware('auth')->name('comments.update');
 
+//Topic
+Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
 
 
     //upvote & downvote
