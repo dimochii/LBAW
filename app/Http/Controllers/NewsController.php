@@ -113,12 +113,11 @@ class NewsController extends Controller
 
   public function edit($post_id)
   {
+    $post = Post::findOrFail($post_id);
     $newsItem = News::with('post')->where('post_id', $post_id)->firstOrFail();
 
     // Ensure the current user is an author of the post
-    if (!$newsItem->post->authors->contains('id', Auth::user()->id)) {
-      abort(403, 'Unauthorized');
-    }
+    $this->authorize('isAuthor', $post);
 
     return view('pages.edit_news', compact('newsItem'));
   }
