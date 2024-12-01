@@ -20,7 +20,6 @@ class NewsController extends Controller
   public function list()
   {
     $news = News::with('post')->get();
-    $authUser = Auth::user();
     foreach ($news as $item) {
       $item->upvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
         $query->where('post_id', $item->post_id);
@@ -29,10 +28,15 @@ class NewsController extends Controller
       $item->downvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
         $query->where('post_id', $item->post_id);
       })->where('upvote', false)->count();
-
-      $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->post_id);
-      })->first();
+      //user is logged in
+      if(Auth::check()){
+        $authUser = Auth::user();
+        $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
+          $query->where('post_id', $item->post_id);
+        })->first();
+      }
+      //user is a visitor
+      else {$userVote = NULL;}
 
       if ($userVote) {
         $item->user_upvoted = $userVote->upvote;
@@ -68,15 +72,17 @@ class NewsController extends Controller
     // Calculate the score
     $newsItem->score = $newsItem->upvotes_count - $newsItem->downvotes_count;
 
-    // Get the currently authenticated user
-    $authUser = Auth::user();
-
-    // Check if the authenticated user has voted on this post
-    $userVote = $authUser->votes()
-      ->whereHas('postVote', function ($query) use ($newsItem) {
-        $query->where('post_id', $newsItem->post_id);
-      })
-      ->first();
+    //user is logged in
+    if(Auth::check()) {
+      $authUser = Auth::user();
+      $userVote = $authUser->votes()
+        ->whereHas('postVote', function ($query) use ($newsItem) {
+          $query->where('post_id', $newsItem->post_id);
+        })
+        ->first();
+    }
+    //user is a visitor
+    else{$userVote = NULL;}
 
     // Determine if the user has upvoted or downvoted the post
     if ($userVote) {
