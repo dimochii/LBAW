@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\News;
 use App\Models\Topic;
+use App\Models\Vote;
+use App\Models\PostVote;
+use App\Models\Comment;
+use App\Models\CommentVote;
 
 class PostController extends Controller
 {
@@ -43,7 +47,6 @@ class PostController extends Controller
         return response()->json(['message' => 'Invalid type'], 400);
     }
 
-    //Gets a post, checks if the user who's trying to delete is the owner and erases it, if it has no comments or votes
     public function delete(Request $request, $id)
     {
         $post = Post::find($id); 
@@ -67,5 +70,127 @@ class PostController extends Controller
 
         return response()->json(['message' => 'Post deleted successfully'], 200);
     }
+    
+  public function upvote($post_id)
+  {
+    $post = Post::findOrFail($post_id);
+    $user = Auth::user();
+
+    $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
+
+    if ($existingVote) {
+      if ($existingVote->upvote) {
+        return redirect()->back()->with('success', 'You have already upvoted this post.');
+      }
+
+      $existingVote->update(['upvote' => true]);
+    } else {
+      $vote = Vote::create(['upvote' => true, 'authenticated_user_id' => $user->id]);
+      PostVote::insert([
+        'vote_id' => $vote->id,
+        'post_id' => $post->id,
+      ]);
+    }
+
+    return redirect()->back()->with('success', 'Post upvoted successfully.');
+  }
+
+  public function downvote($post_id)
+  {
+    $post = Post::findOrFail($post_id);
+    $user = Auth::user();
+
+    $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
+
+    if ($existingVote) {
+      if (!$existingVote->upvote) {
+        return redirect()->back()->with('success', 'You have already downvoted this post.');
+      }
+      $existingVote->update(['upvote' => false]);
+    } else {
+      $vote = Vote::create(['upvote' => false, 'authenticated_user_id' => $user->id]);
+      PostVote::insert([
+        'vote_id' => $vote->id,
+        'post_id' => $post->id,
+      ]);
+    }
+
+    return redirect()->back()->with('success', 'Post downvoted successfully.');
+  }
+
+
+  public function voteUpdate(Request $request, $post_id)
+  {
+    $post = Post::findOrFail($post_id);
+    $user = Auth::user();
+    $voteType = $request->input('vote_type'); 
+
+    $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
+
+    $newScore = 0;
+
+    if ($existingVote) {
+      if (($voteType === 'upvote' && $existingVote->upvote) || ($voteType === 'downvote' && !$existingVote->upvote)) {
+        $existingVote->postVote()->delete();
+        $existingVote->voteNotification()->delete();
+        $existingVote->delete();
+
+        if (!$existingVote->upvote) $newScore++;
+        else $newScore--;
+
+        return response()->json([
+          'status' => 'removed',
+          'message' => 'Upvote removed',
+          'vote' => null,
+          'newScore' => $newScore
+        ]);
+      } else if (($voteType === 'upvote' && !$existingVote->upvote) || ($voteType === 'downvote' && $existingVote->upvote)) {
+        $existingVote->postVote()->delete();
+        $existingVote->voteNotification()->delete();
+        $existingVote->delete();
+        
+        if (!$existingVote->upvote) $newScore++;
+        else $newScore--;
+      }
+    }
+
+    if ($voteType === 'upvote') {
+      $vote = Vote::create(['upvote' => true, 'authenticated_user_id' => $user->id]);
+      PostVote::insert([
+        'vote_id' => $vote->id,
+        'post_id' => $post->id,
+      ]);
+
+      $newScore++;
+
+      return response()->json([
+        'status' => 'created',
+        'message' => 'Post upvoted successfully.',
+        'vote' => 'upvote', 
+        'newScore' => $newScore
+      ]);
+    } else if ($voteType === 'downvote') {
+      $vote = Vote::create(['upvote' => false, 'authenticated_user_id' => $user->id]);
+      PostVote::insert([
+        'vote_id' => $vote->id,
+        'post_id' => $post->id,
+      ]);
+
+      $newScore--;
+
+      return response()->json([
+        'status' => 'created',
+        'message' => 'Post downvoted successfully.',
+        'vote' => 'downvote',
+        'newScore' => $newScore
+      ]);
+    }
+
+    return response()->json([
+      'status' => 'error',
+      'message' => 'Invalid action.',
+      'vote' => null,
+    ], 400); 
+  }
 
 }

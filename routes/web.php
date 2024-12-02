@@ -73,9 +73,9 @@ Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->nam
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware('auth')->name('comments.update');
 
     //upvote & downvote
-Route::post('/news/{post_id}/upvote', [NewsController::class, 'upvote'])->name('news.upvote');
-Route::post('/news/{post_id}/downvote', [NewsController::class, 'downvote'])->name('news.downvote');
-Route::post('/news/{post_id}/voteupdate', [NewsController::class, 'voteUpdate'])->name('news.voteupdate');
+Route::post('/news/{post_id}/upvote', [PostController::class, 'upvote'])->name('news.upvote');
+Route::post('/news/{post_id}/downvote', [PostController::class, 'downvote'])->name('news.downvote');
+Route::post('/news/{post_id}/voteupdate', [PostController::class, 'voteUpdate'])->name('news.voteupdate');
 
     //editing
 Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware('auth')->name('news.edit');
