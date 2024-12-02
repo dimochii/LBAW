@@ -66,9 +66,6 @@ Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFol
 Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])->name('user.follow');
     //articles
 
-Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
-Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
-Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
 
     
 //News
