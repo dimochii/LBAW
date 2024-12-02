@@ -8,6 +8,42 @@ use Illuminate\Support\Facades\Auth;
 
 class CommunityController extends Controller
 {
+    public function createHub()
+    {
+        return view('pages.create_hub');
+    }
+
+    public function create(Request $request) {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:communities',
+            'description' => 'required|string|max:1000',
+            'privacy' => 'required|in:public,private',
+            'type' => 'required|in:interest,support',
+            'image_id' => 'nullable|integer|exists:images,id',
+        ]);
+
+        $community = Community::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'privacy' => $request->privacy === 'private',
+            'type' => $request->type,
+            'image_id' => $request->image_id,
+            'creation_date' => now(),
+        ]);
+
+        $authUser = Auth::user();
+        $community->moderators()->attach($authUser->id);
+
+        if ($request->type === 'interest') {
+            return app(InterestCommunityController::class)->handleInterestCommunity($community);
+        } elseif ($request->type === 'support') {
+            return app(SupportCommunityController::class)->handleSupportCommunity($community);
+        }
+
+        return response()->json(['message' => 'Invalid community type'], 400);
+    }
+
+
     public function show($id)
     {
         // Carregar comunidade com posts e autores (com o relacionamento correto)
