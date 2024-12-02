@@ -61,7 +61,7 @@ class Post extends Model
 
     public function favourites()
     {
-        return $this->belongsToMany(AuthenticatedUser::class,'favourite_post');
+        return $this->belongsToMany(AuthenticatedUser::class,'favorite_posts');
     }
 
     public function postNotification()

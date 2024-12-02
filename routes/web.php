@@ -58,7 +58,13 @@ Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name
     //followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
 Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
-    //articles
+
+Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
+Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
+Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
+
+
+//articles
     
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
