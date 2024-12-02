@@ -115,20 +115,21 @@ Route::middleware('auth')->group(function () {
 
 //Hub
 Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities.show');
-Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('auth')->name('communities.create');//mudar isto??? oops my bad
-Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
+Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('auth')->name('communities.create');
+Route::middleware('auth')->group(function () {
+    Route::get('/hubs/create', [CommunityController::class, 'createHub']);
+});
+
+Route::get('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
-Route::get('/hubs', [CommunityController::class, 'index'])->name('communities.index');
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
-<<<<<<< HEAD
-// Info
-
-=======
 Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
 Route::post('/report/{id}',[ReportController::class,'report'])->middleware('auth');
 Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
->>>>>>> 4b99c174af9a6a71890e03112cad59908551adc7
+
+
+

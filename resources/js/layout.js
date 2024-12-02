@@ -3,7 +3,7 @@ tailwind.config = {
     theme: {
         extend: {
             colors: {
-                'whatsup-green': '#A6B37D',
+                'pastelGreen ': '#A6B37D',
                 'whatsup-red': '#C96868',
                 'whatsup-blue': '#7EACB5'
             }
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         searchElements.communities.innerHTML = data.communities.length ? 
             data.communities.map(community => `
                 <a href="${community.route}" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded">
-                    <div class="w-8 h-8 bg-whatsup-green rounded-full flex-shrink-0"></div>
+                    <div class="w-8 h-8 bg-pastelGreen  rounded-full flex-shrink-0"></div>
                     <div>
                         <div class="font-medium text-sm">${community.name}</div>
                         <div class="text-xs text-gray-500 truncate">${community.description}</div>

@@ -10,7 +10,7 @@
             <div class="h-1 w-24 bg-black transition-all duration-500 ease-out group-hover:w-full"></div>
         </div>
 
-        <form method="POST" action="{{ route('community.store') }}" class="space-y-12">
+        <form method="POST" action="{{ route('communities.store') }}" class="space-y-12">
             @csrf
             
             <div class="relative">
@@ -56,11 +56,11 @@
                                class="peer hidden" 
                                checked>
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-whatsup-green transition-colors duration-300">
+                                  group-hover:border-pastelGreen  transition-colors duration-300">
                             <div class="absolute inset-1 rounded-full bg-black transform scale-0 
                                       peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-whatsup-green transition-colors duration-300">Public</span>
+                        <span class="text-xl group-hover:text-pastelGreen  transition-colors duration-300">Public</span>
                     </label>
 
                     <label class="relative group flex items-center gap-3 cursor-pointer">
@@ -69,11 +69,11 @@
                                value="private" 
                                class="peer hidden">
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-whatsup-green transition-colors duration-300">
+                                  group-hover:border-pastelGreen transition-colors duration-300">
                             <div class="absolute inset-1 rounded-full bg-black transform scale-0 
                                       peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-whatsup-green transition-colors duration-300">Private</span>
+                        <span class="text-xl group-hover:text-pastelGreen  transition-colors duration-300">Private</span>
                     </label>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                               d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
                               clip-rule="evenodd" />
                     </svg>
-                    <div class="absolute inset-0 bg-whatsup-green transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
+                    <div class="absolute inset-0 bg-wpastelGreen transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
                 </button>
             </div>
         </form>

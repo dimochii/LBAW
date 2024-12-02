@@ -52,35 +52,35 @@
 
 
             <!-- Post Type Selection with slide effect -->
-            <div class="space-y-6">
+            <div class="space-y-6 border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
                 <label class="block text-2xl font-medium">Post Type</label>
                 <div class="flex gap-8">
                     <!-- News Radio -->
                     <label class="relative group flex items-center gap-3 cursor-pointer">
                         <input type="radio" 
-                               name="type" 
-                               value="news"
-                               class="peer hidden" 
-                               checked>
+                            name="type" 
+                            value="news"
+                            class="peer hidden" 
+                            checked>
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-whatsup-green transition-colors duration-300">
-                            <div class="absolute inset-1 rounded-full bg-black transform scale-0 
-                                      peer-checked:scale-100 transition-transform duration-300"></div>
+                                group-hover:border-green-200 transition-colors duration-300">
+                            <div class="absolute inset-1 rounded-full bg-green-200 transform scale-0 
+                                    peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-whatsup-green transition-colors duration-300">News</span>
+                        <span class="text-xl group-hover:text-green-200 transition-colors duration-300">News</span>
                     </label>
 
                     <label class="relative group flex items-center gap-3 cursor-pointer">
                         <input type="radio" 
-                               name="type" 
-                               value="topic"
-                               class="peer hidden">
+                            name="type" 
+                            value="topic"
+                            class="peer hidden">
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-whatsup-green transition-colors duration-300">
-                            <div class="absolute inset-1 rounded-full bg-black transform scale-0 
-                                      peer-checked:scale-100 transition-transform duration-300"></div>
+                                group-hover:border-green-200  transition-colors duration-300">
+                            <div class="absolute inset-1 rounded-full bg-green-200 transform scale-0 
+                                    peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-whatsup-green transition-colors duration-300">Topic</span>
+                        <span class="text-xl group-hover:text-green-200  transition-colors duration-300">Topic</span>
                     </label>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                        id="news_url" 
                        name="news_url" 
                        class="w-full text-xl border-b-2 border-black/10 focus:border-black 
-                              focus:outline-none pb-2 transition-colors duration-300"
+                              focus:outline-none pb-2 transition-colors duration-300 rounded-lg"
                        placeholder="https://">
             </div>
 
@@ -142,7 +142,7 @@
                             d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
                             clip-rule="evenodd" />
                     </svg>
-                    <div class="absolute inset-0 bg-whatsup-green transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
+                    <div class="absolute inset-0 bg-pastelGreen  transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
                 </button>
             </div>
         </form>
