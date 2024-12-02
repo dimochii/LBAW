@@ -12,6 +12,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\SideController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,9 +113,11 @@ Route::middleware('auth')->group(function () {
 
 //Hub
 Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities.show');
-Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('auth')->name('communities.create');
+Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('auth')->name('communities.create');//mudar isto??? oops my bad
 Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
+
+Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
