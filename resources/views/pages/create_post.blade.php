@@ -31,23 +31,25 @@
             </div>
             <!-- Community Dropdown -->
             <div class="relative">
-                <label for="community" 
-                       class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
-                              transition-all duration-300 peer-placeholder-shown:text-3xl 
-                              peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
-                    Select Community
+                <label for="community"
+                class="absolute left-0 -top-6 text-2xl font-medium text-black/60
+                transition-all duration-300 peer-placeholder-shown:text-3xl
+                peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
+                Select Community
                 </label>
-                <select name="community_id" 
-                        id="community" 
-                        class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10 
-                               focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
-                               transition-all duration-300"
-                        required>
+                <div class="relative group">
+                    <select name="community_id"
+                    id="community"
+                    class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10
+                    focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
+                    transition-all duration-300"
+                    required>
                     <option value="" disabled selected>Select a Community</option>
                     @foreach(Auth::user()->communities as $community)
-                        <option value="{{ $community->id }}">{{ $community->name }}</option>
+                    <option value="{{ $community->id }}">/{{ $community->name }}</option>
                     @endforeach
-                </select>
+                    </select>
+                </div>
             </div>
 
 
@@ -200,61 +202,5 @@ function markdownToHTML(markdown) {
         .replace(/(<br>\s*){2,}/g, '<br>') // Add <br> for plain text lines
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Type selection handling
-    const typeInputs = document.querySelectorAll('input[name="type"]');
-    const newsUrlContainer = document.getElementById('newsUrlContainer');
-    
-    function toggleNewsUrl() {
-        const isNews = document.querySelector('input[name="type"]:checked').value === 'news';
-        newsUrlContainer.classList.toggle('scale-y-0', !isNews);
-        newsUrlContainer.classList.toggle('opacity-0', !isNews);
-        newsUrlContainer.classList.toggle('hidden', !isNews);
-    }
-    
-    typeInputs.forEach(input => {
-        input.addEventListener('change', toggleNewsUrl);
-    });
-
-    // Editor tabs and preview handling
-    const writeToggle = document.getElementById('write-toggle');
-    const previewToggle = document.getElementById('preview-toggle');
-    const editorContent = document.getElementById('editor-content');
-    const previewContent = document.getElementById('preview-content');
-
-    // Tab key behavior for indentation
-    editorContent.addEventListener("keydown", (e) => {
-        if (e.key === "Tab") {
-            e.preventDefault();
-            const start = editorContent.selectionStart;
-            const end = editorContent.selectionEnd;
-            editorContent.value = editorContent.value.substring(0, start) + "  " + 
-                                editorContent.value.substring(end);
-            editorContent.selectionStart = editorContent.selectionEnd = start + 2;
-        }
-    });
-
-    // Live preview updates
-    editorContent.addEventListener('input', (e) => {
-        const markdownText = e.target.value;
-        previewContent.innerHTML = markdownToHTML(markdownText);
-    });
-
-    // Toggle preview visibility
-    writeToggle.addEventListener('change', () => {
-        editorContent.classList.remove('hidden');
-        previewContent.classList.add('hidden');
-    });
-
-    previewToggle.addEventListener('change', () => {
-        editorContent.classList.add('hidden');
-        previewContent.classList.remove('hidden');
-        // Update preview content
-        previewContent.innerHTML = markdownToHTML(editorContent.value);
-    });
-
-    // Initialize state
-    toggleNewsUrl();
-});
 </script>
 @endsection
