@@ -27,7 +27,7 @@ use App\Http\Controllers\SideController;
 
 // Home
 
-Route::redirect('/', '/login');
+Route::redirect('/', '/news');
 
 
 
@@ -59,7 +59,13 @@ Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name
     //followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
 Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
-    //articles
+
+Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
+Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
+Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
+
+
+//articles
     
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
@@ -111,6 +117,7 @@ Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('
 Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
+Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
