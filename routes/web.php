@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/home', 'home')->name('home'); 
         Route::get('/global', 'global')->name('global');
         Route::get('/recent', 'recent')->name('recent');
+        Route::get('/about-us', 'aboutUs')->name('about-us');
     });
 
     Route::get('/messages', [MessageController::class, 'index'])->name('messages');
@@ -110,4 +111,9 @@ Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('
 Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
+Route::get('/hubs', [CommunityController::class, 'index'])->name('communities.index');
+Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
+
+// Info
+

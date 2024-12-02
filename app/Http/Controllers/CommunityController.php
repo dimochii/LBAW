@@ -35,19 +35,40 @@ class CommunityController extends Controller
             ];
         });
 
-        $moderators = $community->moderators()->get(['id', 'username']);
+        $posts_count = $posts ->count();
+        $followers_count = $community->followers()->count();
 
         $user = Auth::user();
-        $isFollowing = $community->followers()
+        $is_following = $community->followers()
             ->where('authenticated_user_id', $user->id) 
             ->exists();
 
         return view('pages.hub', [
             'community' => $community,
             'posts' => $posts,
-            'moderators' => $moderators,
-            'isFollowing' => $isFollowing,
+            'is_following' => $is_following,
+            'posts_count' => $posts_count,
+            'followers_count' => $followers_count
         ]);
+    }
+
+    public function updatePrivacy(Request $request, $id)
+    {
+        $community = Community::findOrFail($id);
+
+        $this->authorize('updatePrivacy', $community);
+
+        $privacy = $request->input('privacy');
+
+        if ($privacy === 'private') {
+            $community->privacy = true; 
+        } elseif ($privacy === 'public') {
+            $community->privacy = false; 
+        }
+
+        $community->save();
+
+        return redirect()->back();
     }
 
     // Armazenar uma nova comunidade
@@ -98,6 +119,17 @@ class CommunityController extends Controller
         }
         
         return redirect()->back()->with('error', 'You are not following this community.');
+    }
+
+    public function index(Request $request) {
+        $sortBy = $request->get('sort_by', 'name'); 
+        $order = $request->get('order', 'asc'); 
+
+        $communities = Community::withCount('followers')
+            ->orderBy($sortBy, $order)
+            ->paginate(6);
+
+        return view('pages.hubs', compact('communities', 'sortBy', 'order'));
     }
 
     /*
