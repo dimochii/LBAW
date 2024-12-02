@@ -109,8 +109,6 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Add any JS specific to the hub creation page here if needed
-});
+
 </script>
 @endsection

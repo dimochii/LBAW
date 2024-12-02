@@ -199,7 +199,7 @@
           <div class="py-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
             <div class="space-y-1 *:transition-colors *:pl-6">
-              <a href="#"  class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
+              <a href="{{ route('communities.create') }}"  class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
                 <span class="">+ Create Hub</span>
               </a>
               <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
