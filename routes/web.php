@@ -12,6 +12,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SideController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +60,13 @@ Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name
     //followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
 Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
-    //articles
+
+Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
+Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
+Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
+
+
+//articles
     
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
@@ -107,7 +115,7 @@ Route::middleware('auth')->group(function () {
 
 //Hub
 Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities.show');
-Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('auth')->name('communities.create');
+Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('auth')->name('communities.create');//mudar isto??? oops my bad
 Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
@@ -115,5 +123,12 @@ Route::get('/hubs', [CommunityController::class, 'index'])->name('communities.in
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
+<<<<<<< HEAD
 // Info
 
+=======
+Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
+Route::post('/report/{id}',[ReportController::class,'report'])->middleware('auth');
+Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
+Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
+>>>>>>> 4b99c174af9a6a71890e03112cad59908551adc7
