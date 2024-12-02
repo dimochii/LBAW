@@ -29,6 +29,27 @@
                        placeholder="Enter title"
                        required>
             </div>
+            <!-- Community Dropdown -->
+            <div class="relative">
+                <label for="community" 
+                       class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
+                              transition-all duration-300 peer-placeholder-shown:text-3xl 
+                              peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
+                    Select Community
+                </label>
+                <select name="community_id" 
+                        id="community" 
+                        class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10 
+                               focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
+                               transition-all duration-300"
+                        required>
+                    <option value="" disabled selected>Select a Community</option>
+                    @foreach(Auth::user()->communities as $community)
+                        <option value="{{ $community->id }}">{{ $community->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
 
             <!-- Post Type Selection with slide effect -->
             <div class="space-y-6">

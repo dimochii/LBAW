@@ -288,7 +288,7 @@
                       </div>
                       <div>
                         @auth
-                            @if($isFollowing)
+                            @if($is_following)
                                 <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')

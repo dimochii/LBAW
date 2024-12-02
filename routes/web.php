@@ -26,7 +26,7 @@ use App\Http\Controllers\CommunityController;
 
 // Home
 
-Route::redirect('/', '/login');
+Route::redirect('/', '/news');
 
 
 
@@ -110,4 +110,5 @@ Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('
 Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
+Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
