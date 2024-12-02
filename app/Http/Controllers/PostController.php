@@ -14,6 +14,7 @@ use App\Models\CommentVote;
 
 class PostController extends Controller
 {
+    
     public function createPost()
     {
         return view('pages.create_post');

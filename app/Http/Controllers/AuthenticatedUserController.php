@@ -182,54 +182,54 @@ class AuthenticatedUserController extends Controller
     /**
      * Get the posts authored by the user and display them on the profile page.
      */
+    private function fetchPostData($query)
+    {
+        $posts = $query->withCount([
+            'votes as upvotes_count' => fn($q) => $q->where('upvote', true),
+            'votes as downvotes_count' => fn($q) => $q->where('upvote', false),
+            'comments as comments_count'
+        ])->get();
+    
+        foreach ($posts as $post) {
+            $post->user_upvoted = Auth::check() ? $post->userVote(Auth::user()->id)?->upvote ?? false : false;
+            $post->user_downvoted = Auth::check() ? !$post->userVote(Auth::user()->id)?->upvote ?? false : false;
+        }
+    
+        return $posts;
+    }
+
     public function getAuthoredNews($user)
     {
-        $news = $user->authoredPosts()
-            ->whereHas('news') 
-            ->paginate(10);
-    
-        return $news;
+        return $this->fetchPostData($user->authoredPosts()->whereHas('news'));
     }
 
-    public function getAuthoredTopics($user)
-    {
-        $topics = $user->authoredPosts()
-            ->whereHas('topic')
-            ->paginate(10);
+
+public function getAuthoredTopics($user)
+{
+    return $this->fetchPostData($user->authoredPosts()->whereHas('topic'));
+}  
+
+public function getVotedNews($user)
+{
+    return $this->fetchPostData(Post::whereHas('news')->whereHas('votes', function ($query) use ($user) {
+        $query->where('authenticated_user_id', $user->id)->where('upvote', true);
+    }));
+}
+
     
-        return $topics;
-    }    
-
-    public function getVotedNews($user)
-    {
-        $posts = Post::whereHas('news') 
-            ->whereHas('votes', function ($query) use ($user) {
-                $query->where('authenticated_user_id', $user->id)
-                    ->where('upvote', true); 
-            })
-            ->paginate(10);
-
-        return $posts;
-    }
-    
-    public function getVotedTopics($user)
-    {
-        $posts = Post::whereHas('topic') 
-            ->whereHas('votes', function ($query) use ($user) {
-                $query->where('authenticated_user_id', $user->id)
-                    ->where('upvote', true); 
-            })
-            ->paginate(10);
-
-        return $posts;
-    }
+public function getVotedTopics($user)
+{
+    return $this->fetchPostData(Post::whereHas('topic')->whereHas('votes', function ($query) use ($user) {
+        $query->where('authenticated_user_id', $user->id)->where('upvote', true);
+    }));
+}
 
     public function follow($id)
     {
-        $userToFollow = AuthenticatedUser::findOrFail($id); // Find the user to follow
+        $userToFollow = AuthenticatedUser::findOrFail($id);
         
         if (Auth::check()) {
-            $authenticatedUser = Auth::user(); // Get the currently authenticated user
+            $authenticatedUser = Auth::user(); 
     
             // Check if the authenticated user is already following the target user
             if ($authenticatedUser->follows()->where('followed_id', $userToFollow->id)->exists()) {
