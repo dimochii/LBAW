@@ -1,0 +1,16 @@
+[90m= [39m[34;4mApp\Models\AuthenticatedUser[39;24m {#6702
+    [34mid[39m: [35m1[39m,
+    [34mname[39m: "[32mAnonymous[39m",
+    [34musername[39m: "[32mAnonymous[39m",
+    [34memail[39m: "[32manonymous@example.com[39m",
+    [34mpassword[39m: "[32m$2y$10$FLtQvBMa8TZpNeHMG1EnTu8QbbEZe8e2GJbzqfSdnQyht4ozH1zRa[39m",
+    [34mreputation[39m: [35m0[39m,
+    [34mis_suspended[39m: [36mfalse[39m,
+    [34mcreation_date[39m: "[32m2024-12-01 20:08:26.693089[39m",
+    [34mbirth_date[39m: "[32m1000-01-01 00:00:00[39m",
+    [34mdescription[39m: "[32mAnonymous.[39m",
+    [34mis_admin[39m: [36mfalse[39m,
+    [34mimage_id[39m: [35m1[39m,
+    [34mtsvector_name[39m: "[32m'anonym':1C[39m",
+  }
+
