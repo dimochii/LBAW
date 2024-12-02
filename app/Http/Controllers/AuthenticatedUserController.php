@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use App\Models\Post;
 
 class AuthenticatedUserController extends Controller
 {
@@ -75,7 +76,9 @@ class AuthenticatedUserController extends Controller
      */
     public function edit($id)
     {
+        $user = AuthenticatedUser::findOrFail($id);
         // Check if the logged-in user is trying to edit their own profile
+        $this->authorize('editProfile', $user);
         if (Auth::user()->id != $id) {
             // If not, deny access by returning a 403 error or redirecting them
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -140,7 +143,7 @@ class AuthenticatedUserController extends Controller
 
     $user->save();
 
-    // Redirect back to the profile page with success message
+    // Redirect back to the A page with success message
     return redirect()->route('user.profile', $user->id)->with('success', 'Profile updated successfully!');
 }
 
@@ -186,36 +189,90 @@ class AuthenticatedUserController extends Controller
     }
 
     public function suspend($id)
-{
-    // Check if the current user is an admin
-    if (!Auth::user()->is_admin) {
-        return response()->json(['message' => 'Unauthorized'], 403);
+    {
+        // Check if the current user is an admin
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $user = AuthenticatedUser::findOrFail($id);
+        $user->is_suspended = true;
+        $user->save();
+
+        return response()->json(['message' => 'User suspended successfully']);
     }
 
-    $user = AuthenticatedUser::findOrFail($id);
-    $user->is_suspended = true;
-    $user->save();
+    /**
+     * Unsuspend a user.
+     */
+    public function unsuspend($id)
+    {
+        // Check if the current user is an admin
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
-    return response()->json(['message' => 'User suspended successfully']);
-}
+        $user = AuthenticatedUser::findOrFail($id);
+        $user->is_suspended = false;
+        $user->save();
 
-/**
- * Unsuspend a user.
- */
-public function unsuspend($id)
-{
-    // Check if the current user is an admin
-    if (!Auth::user()->is_admin) {
-        return response()->json(['message' => 'Unauthorized'], 403);
+        return response()->json(['message' => 'User unsuspended successfully']);
     }
 
-    $user = AuthenticatedUser::findOrFail($id);
-    $user->is_suspended = false;
-    $user->save();
+    public function favorites() {
 
-    return response()->json(['message' => 'User unsuspended successfully']);
-}
+        if (!Auth::check()) {
+            return response()->json(['message' => 'You are not logged in'], 403);
+        }
+    
+        $favorites = Auth::user()->favouritePosts;
+        return view('partials.favorites',compact('favorites'));
+    }
 
+    public function addfavorite(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'You are not logged in'], 403);
+        }
 
+        $post = Post::find($id);
 
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        $user = Auth::user();
+
+        if ($user->favouritePosts()->where('post_id', $id)->exists()) {
+            return response()->json(['message' => 'Post is already in your favorites'], 400);
+        }
+
+        $user->favouritePosts()->attach($id);
+
+        return response()->json(['message' => 'Post added to favorites successfully'], 201);
+    }
+
+    public function remfavorite(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'You are not logged in'], 403);
+        }
+    
+        $post = Post::find($id);
+    
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+    
+        $user = Auth::user();
+    
+        if (!$user->favouritePosts()->where('post_id', $id)->exists()) {
+            return response()->json(['message' => 'Post is not in your favorites'], 400);
+        }
+    
+        $user->favouritePosts()->detach($id);
+    
+        return response()->json(['message' => 'Post removed from favorites successfully'], 200);
+    }
+    
 }

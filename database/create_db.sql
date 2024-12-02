@@ -789,3 +789,5 @@ INSERT INTO community_moderators (authenticated_user_id, community_id)
 VALUES 
 (1, 1),  -- User 1 is a moderator of community 1
 (2, 1);  -- User 2 is also a moderator of community 1
+
+INSERT INTO favorite_posts(authenticated_user_id, post_id) VALUES (1,5);

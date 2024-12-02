@@ -60,7 +60,7 @@ class AuthenticatedUser extends Authenticatable
 
     public function favouritePosts()
     {
-        return $this->belongsToMany(Post::class, 'favourite_posts');
+        return $this->belongsToMany(Post::class, 'favorite_posts');
     }
 
     public function votes()
