@@ -12,6 +12,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
 
 /*
@@ -120,4 +121,7 @@ Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middlew
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
+Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
+Route::post('/report/{id}',[ReportController::class,'report'])->middleware('auth');
+Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
