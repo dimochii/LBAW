@@ -11,9 +11,32 @@ use App\Models\Vote;
 use App\Models\PostVote;
 use App\Models\Comment;
 use App\Models\CommentVote;
+use App\Models\Notification;
 
 class PostController extends Controller
 {
+    private function notifyCommunityFollowers($communityId, $post)
+    {
+        $community = Community::find($communityId);
+
+        // Retrieve followers of the community
+        $followers = $community->followers;
+
+        foreach ($followers as $follower) {
+            // Create a notification for each follower
+            $notification = Notification::create([
+                'is_read' => false,
+                'notification_date' => now(),
+                'authenticated_user_id' => $follower->id,
+            ]);
+
+            // Link the notification to the post
+            PostNotification::create([
+                'notification_id' => $notification->id,
+                'post_id' => $post->id,
+            ]);
+        }
+    }
     
     public function createPost()
     {
@@ -37,6 +60,7 @@ class PostController extends Controller
         $user = Auth::user(); 
         $post->authors()->attach($user->id, ['pinned' => false]); 
 
+        $this->notifyCommunityFollowers($request->community_id, $post);
 
         if ($request->type === 'news') {
             return app(NewsController::class)->createNews($post, $request->news_url);

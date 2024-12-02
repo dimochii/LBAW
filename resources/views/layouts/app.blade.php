@@ -130,7 +130,7 @@
               </svg>
             </a>
 
-          <a href="{{ route('notifications') }}"
+          <a href="{{ route('notifications.show', Auth::user()->id) }}"
             class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
             <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
             <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
