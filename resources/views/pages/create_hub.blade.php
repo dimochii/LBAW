@@ -10,7 +10,7 @@
             <div class="h-1 w-24 bg-black transition-all duration-500 ease-out group-hover:w-full"></div>
         </div>
 
-        <form method="POST" action="{{ route('communities.store') }}" class="space-y-12">
+        <form method="POST" action="{{ route('communities.store') }}" class="space-y-12" enctype="multipart/form-data">
             @csrf
             
             <div class="relative">
@@ -79,13 +79,24 @@
             </div>
 
             <div class="space-y-6">
-                <label for="image_id" class="block text-2xl font-medium">Hub Image (Optional)</label>
-                <input type="number" 
-                       id="image_id" 
-                       name="image_id" 
-                       class="w-full text-xl border-b-2 border-black/10 focus:border-black 
-                              focus:outline-none pb-2 transition-colors duration-300"
-                       placeholder="Enter image ID">
+                <label for="image" class="block text-2xl font-medium">Hub Image</label>
+                <input type="file" id="image" name="image" class="w-full text-xl border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-colors duration-300">
+            </div>
+
+            <div class="preview-section mt-8 ">
+                <h2 class="text-2xl font-medium mb-4">Preview</h2>
+                <div class="preview-container border border-black/10 p-6">
+                    <div class="flex items-center mb-4 rounded-lg" >
+                        <img src="/api/placeholder/80/80" alt="Community Image" class="w-20 h-20 mr-4" id="preview-image">
+                        <h3 class="text-3xl font-medium" id="preview-name">Community Name</h3>
+                    </div>
+                    <p class="text-xl" id="preview-description">Community Description</p>
+                    <div class="mt-4 text-xl">
+                        <span id="preview-members">1 Member</span>
+                        <span class="mx-2">•</span>
+                        <span id="preview-online">1 online</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Submit Button -->
@@ -109,6 +120,29 @@
 </div>
 
 <script>
+const nameInput = document.getElementById('name');
+const descriptionInput = document.getElementById('description');
+const previewName = document.getElementById('preview-name');
+const previewDescription = document.getElementById('preview-description');
+const previewImage = document.getElementById('preview-image');
+const previewMembers = document.getElementById('preview-members');
+const previewOnline = document.getElementById('preview-online');
 
+nameInput.addEventListener('input', () => {
+    previewName.textContent = nameInput.value;
+});
+
+descriptionInput.addEventListener('input', () => {
+    previewDescription.textContent = descriptionInput.value;
+});
+
+const imageInput = document.getElementById('image');
+imageInput.addEventListener('change', () => {
+    const file = imageInput.files[0];
+    previewImage.src = URL.createObjectURL(file);
+});
+
+previewMembers.textContent = '1 Member';
+previewOnline.textContent = '1 online';
 </script>
 @endsection
