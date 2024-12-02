@@ -84,8 +84,8 @@ Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('au
 //Topic
 Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
     //editing
-Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topic.edit');
-Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('auth')->name('topic.update');
+Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topics.edit');
+Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('auth')->name('topics.update');
 
 
 

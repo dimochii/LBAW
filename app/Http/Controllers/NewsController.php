@@ -131,7 +131,7 @@ class NewsController extends Controller
       'news_url' => $request->news_url,
     ]);
 
-    return view('pages.newsitem', compact('newsItem'));
+    return redirect()->route('news')->with('success', 'News updated successfully');
   }
 
 
