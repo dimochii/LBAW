@@ -6,12 +6,12 @@
   <div class=" flex flex-row" id="post-header">
     <div class="px-8 py-4 w-1/2 flex flex-col grow">
       <div class="flex items-center h-8 relative">
-        <a class="flex items-center" href="">
-          <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-            class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
-          <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown
-            Community' }}</span>
-        </a>
+      <a class="flex items-center" href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
+        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
+          class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+        <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown Community' }}</span>
+      </a>
+
 
         {{--
         <!-- Edit Button (only if the current authenticated user is an author) -->
