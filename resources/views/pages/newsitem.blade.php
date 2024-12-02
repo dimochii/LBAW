@@ -17,7 +17,7 @@
         <!-- Edit Button (only if the current authenticated user is an author) -->
         @auth
         <!-- Check if the authenticated user is one of the authors -->
-        @if ($newsItem->post->authors->contains('id', Auth::user()->id))
+        @can('isAuthor', $newsItem->post)
         <a href="{{ route('news.edit', ['post_id' => $newsItem->post->id]) }}" class="btn btn-warning mt-3">Edit
           Post</a>
         @endif
@@ -31,7 +31,7 @@
                 d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
             </svg>
           </label>
-          @if (Auth::check() && $newsItem->post->authors->contains(Auth::user()->id))
+          @if (Auth::check() && Auth::user()->can('isAuthor', $newsItem->post))
           @include('partials.options_dropdown', [
           "options" => ['edit post' => route('news.edit',['post_id' => ($newsItem->post_id)])]
           ])

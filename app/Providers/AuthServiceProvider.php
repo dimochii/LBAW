@@ -14,6 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Community::class => CommunityPolicy::class,
+        Post::class => PostPolicy::class,
     ];
 
     /**
