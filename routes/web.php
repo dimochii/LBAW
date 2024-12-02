@@ -68,13 +68,9 @@ Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])
 Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments'])->name('post.comments');
-// Exemplo de definição de rota
+
 Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->name('comments.store');
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware('auth')->name('comments.update');
-
-//Topic
-Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
-
 
     //upvote & downvote
 Route::post('/news/{post_id}/upvote', [NewsController::class, 'upvote'])->name('news.upvote');
@@ -84,6 +80,15 @@ Route::post('/news/{post_id}/voteupdate', [NewsController::class, 'voteUpdate'])
     //editing
 Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware('auth')->name('news.edit');
 Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('auth')->name('news.update');
+
+//Topic
+Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
+    //editing
+Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topic.edit');
+Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('auth')->name('topic.update');
+
+
+
 
 
 //Posts
