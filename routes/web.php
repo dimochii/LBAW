@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\TopicController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthenticatedUserController;
 use App\Http\Controllers\SearchController;
@@ -56,10 +57,14 @@ Route::controller(RegisterController::class)->group(function () {
 Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
     //edit profile
 Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
-Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');   
+Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update'); 
+Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile'); 
+
     //followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
 Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
+Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])->name('user.follow');
+    //articles
 
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
 Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
@@ -72,20 +77,27 @@ Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavo
 Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments'])->name('post.comments');
-// Exemplo de definição de rota
+
 Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->name('comments.store');
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware('auth')->name('comments.update');
 
-
-
     //upvote & downvote
-Route::post('/news/{post_id}/upvote', [NewsController::class, 'upvote'])->name('news.upvote');
-Route::post('/news/{post_id}/downvote', [NewsController::class, 'downvote'])->name('news.downvote');
-Route::post('/news/{post_id}/voteupdate', [NewsController::class, 'voteUpdate'])->name('news.voteupdate');
+Route::post('/news/{post_id}/upvote', [PostController::class, 'upvote'])->name('news.upvote');
+Route::post('/news/{post_id}/downvote', [PostController::class, 'downvote'])->name('news.downvote');
+Route::post('/news/{post_id}/voteupdate', [PostController::class, 'voteUpdate'])->name('news.voteupdate');
 
     //editing
 Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware('auth')->name('news.edit');
 Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('auth')->name('news.update');
+
+//Topic
+Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
+    //editing
+Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topics.edit');
+Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('auth')->name('topics.update');
+
+
+
 
 
 //Posts

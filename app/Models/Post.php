@@ -27,20 +27,24 @@ class Post extends Model
         return $this->hasManyThrough(Vote::class, PostVote::class, 'post_id', 'id', 'id', 'vote_id');
     }
 
-    public function upvoteCount()
+    public function getUpvoteCountAttribute()
     {
-        return $this->hasMany(PostVote::class)
-            ->whereHas('vote', function ($query) {
-                $query->where('upvote', true);  
-            })->count();
+        return $this->votes()->where('upvote', true)->count();
     }
 
-    public function downvoteCount()
+    public function getDownvoteCountAttribute()
     {
-        return $this->hasMany(PostVote::class)
-            ->whereHas('vote', function ($query) {
-                $query->where('upvote', false);  
-            })->count();
+        return $this->votes()->where('upvote', false)->count();
+    }
+
+    public function getScoreAttribute()
+    {
+        return $this->upvote_count - $this->downvote_count;
+    }
+
+    public function userVote($userId)
+    {
+        return $this->votes()->where('authenticated_user_id', $userId)->first();
     }
 
     public function news()
