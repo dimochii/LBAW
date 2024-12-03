@@ -19,39 +19,26 @@ class NewsController extends Controller
    */
   public function list()
   {
-    $news = News::with('post')->get();
-    foreach ($news as $item) {
-      $item->upvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->post_id);
-      })->where('upvote', true)->count();
-
-      $item->downvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->post_id);
-      })->where('upvote', false)->count();
-      //user is logged in
-      if(Auth::check()){
-        $authUser = Auth::user();
-        $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
-          $query->where('post_id', $item->post_id);
-        })->first();
+      $news = News::with('post')->get();
+  
+      foreach ($news as $item) {
+          $post = $item->post;
+          $item->upvotes_count = $post->upvote_count;
+          $item->downvotes_count = $post->downvote_count;
+  
+          if (Auth::check()) {
+              $userVote = $post->userVote(Auth::user()->id);
+              $item->user_upvoted = $userVote?->upvote ?? false;
+              $item->user_downvoted = $userVote ? !$userVote->upvote : false;
+          } else {
+              $item->user_upvoted = false;
+              $item->user_downvoted = false;
+          }
       }
-      //user is a visitor
-      else {$userVote = NULL;}
-
-      if ($userVote) {
-        $item->user_upvoted = $userVote->upvote;
-        $item->user_downvoted = !$userVote->upvote;
-      } else {
-        // User hasn't voted on this post
-        $item->user_upvoted = false;
-        $item->user_downvoted = false;
-      }
-    }
-
-    return view('pages.news', [
-      'news' => $news
-    ]);
+  
+      return view('pages.news', compact('news'));
   }
+  
 
 
   public function show($post_id)
@@ -60,7 +47,6 @@ class NewsController extends Controller
       ->where('post_id', $post_id)
       ->firstOrFail();
 
-    // Get upvote and downvote counts
     $newsItem->upvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
       $query->where('post_id', $newsItem->post_id);
     })->where('upvote', true)->count();
@@ -69,7 +55,6 @@ class NewsController extends Controller
       $query->where('post_id', $newsItem->post_id);
     })->where('upvote', false)->count();
 
-    // Calculate the score
     $newsItem->score = $newsItem->upvotes_count - $newsItem->downvotes_count;
 
     //user is logged in
@@ -84,25 +69,21 @@ class NewsController extends Controller
     //user is a visitor
     else{$userVote = NULL;}
 
-    // Determine if the user has upvoted or downvoted the post
     if ($userVote) {
       $newsItem->user_upvoted = $userVote->upvote;
-      $newsItem->user_downvoted = !$userVote->upvote;  // If it's not an upvote, it's a downvote
+      $newsItem->user_downvoted = !$userVote->upvote;  
     } else {
-      // User has not voted on this post
       $newsItem->user_upvoted = false;
       $newsItem->user_downvoted = false;
     }
 
-    // Get comments for the post
     $newsItem->comments_count = Comment::where('post_id', $newsItem->post->id)->count();
 
-    $comments = Comment::with('user') // Eager load the user who made the comment
+    $comments = Comment::with('user') 
       ->where('post_id', $newsItem->post->id)
       ->orderBy('creation_date', 'asc')
       ->get();
 
-    // Pass the comments and news item to the view
     return view('pages.newsitem', compact('newsItem', 'comments'));
   }
 
@@ -122,7 +103,6 @@ class NewsController extends Controller
     $post = Post::findOrFail($post_id);
     $newsItem = News::with('post')->where('post_id', $post_id)->firstOrFail();
 
-    // Ensure the current user is an author of the post
     $this->authorize('isAuthor', $post);
 
     return view('pages.edit_news', compact('newsItem'));
@@ -132,7 +112,6 @@ class NewsController extends Controller
   {
     $newsItem = News::with('post')->where('post_id', $post_id)->firstOrFail();
 
-    // Ensure the current user is an author of the post
     if (!$newsItem->post->authors->contains('id', Auth::user()->id)) {
       abort(403, 'Unauthorized');
     }
@@ -152,133 +131,8 @@ class NewsController extends Controller
       'news_url' => $request->news_url,
     ]);
 
-    return view('pages.newsitem', compact('newsItem'));
+    return redirect()->route('news')->with('success', 'News updated successfully');
   }
 
 
-
-  public function upvote($post_id)
-  {
-    $post = Post::findOrFail($post_id);
-    $user = Auth::user();
-
-    $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
-
-    if ($existingVote) {
-      if ($existingVote->upvote) {
-        return redirect()->back()->with('success', 'You have already upvoted this post.');
-      }
-
-      $existingVote->update(['upvote' => true]);
-    } else {
-      $vote = Vote::create(['upvote' => true, 'authenticated_user_id' => $user->id]);
-      PostVote::insert([
-        'vote_id' => $vote->id,
-        'post_id' => $post->id,
-      ]);
-    }
-
-    return redirect()->back()->with('success', 'Post upvoted successfully.');
-  }
-
-  public function downvote($post_id)
-  {
-    $post = Post::findOrFail($post_id);
-    $user = Auth::user();
-
-    $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
-
-    if ($existingVote) {
-      if (!$existingVote->upvote) {
-        return redirect()->back()->with('success', 'You have already downvoted this post.');
-      }
-      $existingVote->update(['upvote' => false]);
-    } else {
-      $vote = Vote::create(['upvote' => false, 'authenticated_user_id' => $user->id]);
-      PostVote::insert([
-        'vote_id' => $vote->id,
-        'post_id' => $post->id,
-      ]);
-    }
-
-    return redirect()->back()->with('success', 'Post downvoted successfully.');
-  }
-
-
-  public function voteUpdate(Request $request, $post_id)
-  {
-    $post = Post::findOrFail($post_id);
-    $user = Auth::user();
-    $voteType = $request->input('vote_type'); // 'upvote', 'downvote'
-
-    // Retrieve existing vote if it exists
-    $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
-
-    $newScore = 0;
-
-    if ($existingVote) {
-      if (($voteType === 'upvote' && $existingVote->upvote) || ($voteType === 'downvote' && !$existingVote->upvote)) {
-        $existingVote->postVote()->delete();
-        $existingVote->voteNotification()->delete();
-        $existingVote->delete();
-
-        if (!$existingVote->upvote) $newScore++;
-        else $newScore--;
-
-        return response()->json([
-          'status' => 'removed',
-          'message' => 'Upvote removed',
-          'vote' => null,
-          'newScore' => $newScore
-        ]);
-      } else if (($voteType === 'upvote' && !$existingVote->upvote) || ($voteType === 'downvote' && $existingVote->upvote)) {
-        $existingVote->postVote()->delete();
-        $existingVote->voteNotification()->delete();
-        $existingVote->delete();
-        
-        if (!$existingVote->upvote) $newScore++;
-        else $newScore--;
-      }
-    }
-
-    if ($voteType === 'upvote') {
-      // create upvote
-      $vote = Vote::create(['upvote' => true, 'authenticated_user_id' => $user->id]);
-      PostVote::insert([
-        'vote_id' => $vote->id,
-        'post_id' => $post->id,
-      ]);
-
-      $newScore++;
-
-      return response()->json([
-        'status' => 'created',
-        'message' => 'Post upvoted successfully.',
-        'vote' => 'upvote', 
-        'newScore' => $newScore
-      ]);
-    } else if ($voteType === 'downvote') {
-      // create downvote
-      $vote = Vote::create(['upvote' => false, 'authenticated_user_id' => $user->id]);
-      PostVote::insert([
-        'vote_id' => $vote->id,
-        'post_id' => $post->id,
-      ]);
-
-      $newScore--;
-
-      return response()->json([
-        'status' => 'created',
-        'message' => 'Post downvoted successfully.',
-        'vote' => 'downvote',
-        'newScore' => $newScore
-      ]);
-    }
-
-    return response()->json([
-      'status' => 'error',
-      'message' => 'Invalid action.',
-      'vote' => null,
-    ], 400); // Bad request
-  }
 }

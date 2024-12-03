@@ -5,7 +5,7 @@
     <div class="max-w-4xl mx-auto px-8 py-12">
         <div class="mb-16 group">
             <h1 class="text-6xl font-medium tracking-tight mb-4 transition-all duration-500 group-hover:tracking-widest">
-                Edit Post
+                Edit Topic
             </h1>
             <div class="h-1 w-24 bg-black transition-all duration-500 ease-out group-hover:w-full"></div>
         </div>
@@ -16,7 +16,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('news.update', $newsItem->post->id) }}" class="space-y-12">
+        <form method="POST" action="{{ route('topics.update', $topicItem->post->id) }}" class="space-y-12">
             @csrf
             @method('PUT')
             
@@ -30,7 +30,7 @@
                 <input type="text" 
                        id="title" 
                        name="title" 
-                       value="{{ old('title', $newsItem->post->title) }}"
+                       value="{{ old('title', $topicItem->post->title) }}"
                        class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 
                               focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
                               transition-all duration-300"
@@ -38,18 +38,6 @@
                        required>
             </div>
 
-            <div id="newsUrlContainer" 
-                 class="space-y-4 transform transition-all duration-500 origin-top">
-                <label for="news_url" class="block text-2xl font-medium">News URL</label>
-                <input type="url" 
-                       id="news_url" 
-                       name="news_url" 
-                       value="{{ old('news_url', $newsItem->news_url) }}"
-                       class="w-full text-xl border-b-2 border-black/10 focus:border-black 
-                              focus:outline-none pb-2 transition-colors duration-300"
-                       placeholder="https://"
-                       required>
-            </div>
 
             <div class="space-y-4">
                 <label class="block text-2xl font-medium">Content</label>
@@ -71,7 +59,7 @@
                                 name="content" 
                                 class="w-full h-64 p-6 text-lg font-vollkorn focus:outline-none resize-none
                                        peer-checked/preview:hidden"
-                                placeholder="Write your post content here...">{{ old('content', $newsItem->post->content) }}</textarea>
+                                placeholder="Write your topic content here...">{{ old('content', $topicItem->post->content) }}</textarea>
                         <div id="preview-content" 
                              class="hidden w-full h-64 p-6 text-lg font-vollkorn overflow-y-auto
                                     prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] 
@@ -95,7 +83,7 @@
                             d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
                             clip-rule="evenodd" />
                     </svg>
-                    <div class="absolute inset-0 bg-pastelGreen  transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
+                    <div class="absolute inset-0 bg-whatsup-green transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
                 </button>
             </div>
         </form>

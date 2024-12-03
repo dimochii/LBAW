@@ -161,4 +161,12 @@ class FeedController extends Controller
       'posts' => $posts,
     ]);
   }
+
+  public function aboutUs() {
+    return view('pages.about_us');
+  }
+
+  public function admin() {
+    return view('pages.admin');
+  }
 }

@@ -5,11 +5,45 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Community;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class CommunityController extends Controller
 {
+    public function createHub()
+    {
+        return view('pages.create_hub');
+    }
+
+    public function create(Request $request) {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:communities',
+            'description' => 'required|string|max:1000',
+            'privacy' => 'required|in:public,private',
+            'image_id' => 'nullable|integer|exists:images,id',
+        ]);
+
+        $community = Community::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'privacy' => $request->privacy === 'private', 
+            'image_id' => $request->image_id,
+            'creation_date' => now(), 
+        ]);
+
+        $authUser = Auth::user();
+        $community->moderators()->attach($authUser->id);
+
+        return response()->json([
+            'message' => 'Community created successfully',
+            'community' => $community,
+        ], 201);
+    }
+
+
+
     public function show($id)
     {
+    
         // Carregar comunidade com posts e autores (com o relacionamento correto)
         $community = Community::with(['posts.authors', 'posts.votes', 'posts.comments'])->find($id);
 
@@ -17,6 +51,9 @@ class CommunityController extends Controller
         if (!$community) {
             abort(404, 'Community not found');
         }
+
+        //dar cache à comunidade ao id the cache
+        $this->cacheRecentHub($community->id,$community->name);
 
         // Mapeando os posts da comunidade
         $posts = $community->posts->map(function ($post) {
@@ -51,6 +88,35 @@ class CommunityController extends Controller
             'followers_count' => $followers_count
         ]);
     }
+
+
+    private function cacheRecentHub($communityId, $communityName)
+    {
+        $userId = Auth::user()->id;
+        
+        //cache key
+        $cacheKey = "recent_hubs:{$userId}";
+
+        $hubData = ['id' => $communityId, 'name' => $communityName];
+
+        // Dar fetch aos hubs mais recentes na cache
+        $recentHubs = Cache::get($cacheKey, []);
+
+        // Remover o hub se esse já estiver na cache
+        $recentHubs = array_filter($recentHubs, fn($hub) => $hub['id'] !== $communityId);
+
+        // Addicionar o hub no inicio
+        array_unshift($recentHubs, $hubData);
+
+        // Manter só os 4 primeiros
+        $recentHubs = array_slice($recentHubs, 0, 4);
+
+        // Guardar na cache por 12 horas:
+        Cache::put($cacheKey, $recentHubs, now()->addHours(12));
+
+
+    }
+
 
     public function updatePrivacy(Request $request, $id)
     {
@@ -119,6 +185,17 @@ class CommunityController extends Controller
         }
         
         return redirect()->back()->with('error', 'You are not following this community.');
+    }
+
+    public function index(Request $request) {
+        $sortBy = $request->get('sort_by', 'name'); 
+        $order = $request->get('order', 'asc'); 
+
+        $communities = Community::withCount('followers')
+            ->orderBy($sortBy, $order)
+            ->paginate(6);
+
+        return view('pages.hubs', compact('communities', 'sortBy', 'order'));
     }
 
     /*

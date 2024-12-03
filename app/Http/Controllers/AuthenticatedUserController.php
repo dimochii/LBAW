@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuthenticatedUser;
+use App\Models\Post;
+use App\Models\News;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -50,9 +53,13 @@ class AuthenticatedUserController extends Controller
 
         $followers = $user->followers;
         $following = $user->follows;
-        $posts = $user->authoredPosts()->paginate(10);
+        $authored_news =  $this-> getAuthoredNews($user);
+        $authored_topics =  $this-> getAuthoredTopics($user);
+        $voted_news =  $this-> getVotedNews($user);
+        $voted_topics = $this -> getVotedTopics($user);
 
-        return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
+
+        return view('pages.profile', compact('user', 'followers', 'following', 'authored_news','authored_topics', 'voted_news', 'voted_topics'));
     }
 
     public function getFollowers($id)
@@ -142,7 +149,7 @@ class AuthenticatedUserController extends Controller
 
     $user->save();
 
-    // Redirect back to the profile page with success message
+    // Redirect back to the A page with success message
     return redirect()->route('user.profile', $user->id)->with('success', 'Profile updated successfully!');
 }
 
@@ -175,49 +182,160 @@ class AuthenticatedUserController extends Controller
     /**
      * Get the posts authored by the user and display them on the profile page.
      */
-    public function getAuthoredPosts($id)
+    private function fetchPostData($query)
     {
-        $user = AuthenticatedUser::findOrFail($id);
-        $followers = $user->followers;
-        $following = $user->follows;
-
-        // Fetch authored posts with pagination
-        $posts = $user->authoredPosts()->paginate(10);
-
-        return view('pages.profile', compact('user', 'followers', 'following', 'posts'));
+        $posts = $query->withCount([
+            'votes as upvotes_count' => fn($q) => $q->where('upvote', true),
+            'votes as downvotes_count' => fn($q) => $q->where('upvote', false),
+            'comments as comments_count'
+        ])->get();
+    
+        foreach ($posts as $post) {
+            $post->user_upvoted = Auth::check() ? $post->userVote(Auth::user()->id)?->upvote ?? false : false;
+            $post->user_downvoted = Auth::check() ? !$post->userVote(Auth::user()->id)?->upvote ?? false : false;
+        }
+    
+        return $posts;
     }
+
+    public function getAuthoredNews($user)
+    {
+        return $this->fetchPostData($user->authoredPosts()->whereHas('news'));
+    }
+
+
+public function getAuthoredTopics($user)
+{
+    return $this->fetchPostData($user->authoredPosts()->whereHas('topic'));
+}  
+
+public function getVotedNews($user)
+{
+    return $this->fetchPostData(Post::whereHas('news')->whereHas('votes', function ($query) use ($user) {
+        $query->where('authenticated_user_id', $user->id)->where('upvote', true);
+    }));
+}
+
+    
+public function getVotedTopics($user)
+{
+    return $this->fetchPostData(Post::whereHas('topic')->whereHas('votes', function ($query) use ($user) {
+        $query->where('authenticated_user_id', $user->id)->where('upvote', true);
+    }));
+}
+
+    public function follow($id)
+    {
+        $userToFollow = AuthenticatedUser::findOrFail($id);
+        
+        if (Auth::check()) {
+            $authenticatedUser = Auth::user(); 
+    
+            // Check if the authenticated user is already following the target user
+            if ($authenticatedUser->follows()->where('followed_id', $userToFollow->id)->exists()) {
+                // If already following, detach (unfollow)
+                $authenticatedUser->follows()->detach($userToFollow->id);
+    
+                return redirect()->back()->with('success', 'You have unfollowed ' . $userToFollow->name);
+            } else {
+                // If not following, attach (follow)
+                $authenticatedUser->follows()->attach($userToFollow->id);
+    
+                return redirect()->back()->with('success', 'You are now following ' . $userToFollow->name);
+            }
+        }
+    
+        return redirect()->back()->with('error', 'Something went wrong.');
+    }
+    
+
+    
 
     public function suspend($id)
-{
-    // Check if the current user is an admin
-    if (!Auth::user()->is_admin) {
-        return response()->json(['message' => 'Unauthorized'], 403);
+    {
+        // Check if the current user is an admin
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $user = AuthenticatedUser::findOrFail($id);
+        $user->is_suspended = true;
+        $user->save();
+
+        return response()->json(['message' => 'User suspended successfully']);
     }
 
-    $user = AuthenticatedUser::findOrFail($id);
-    $user->is_suspended = true;
-    $user->save();
+    /**
+     * Unsuspend a user.
+     */
+    public function unsuspend($id)
+    {
+        // Check if the current user is an admin
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
-    return response()->json(['message' => 'User suspended successfully']);
-}
+        $user = AuthenticatedUser::findOrFail($id);
+        $user->is_suspended = false;
+        $user->save();
 
-/**
- * Unsuspend a user.
- */
-public function unsuspend($id)
-{
-    // Check if the current user is an admin
-    if (!Auth::user()->is_admin) {
-        return response()->json(['message' => 'Unauthorized'], 403);
+        return response()->json(['message' => 'User unsuspended successfully']);
     }
 
-    $user = AuthenticatedUser::findOrFail($id);
-    $user->is_suspended = false;
-    $user->save();
+    public function favorites() {
 
-    return response()->json(['message' => 'User unsuspended successfully']);
-}
+        if (!Auth::check()) {
+            return response()->json(['message' => 'You are not logged in'], 403);
+        }
+    
+        $favorites = Auth::user()->favouritePosts;
+        return view('partials.favorites',compact('favorites'));
+    }
 
+    public function addfavorite(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'You are not logged in'], 403);
+        }
 
+        $post = Post::find($id);
 
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        $user = Auth::user();
+
+        if ($user->favouritePosts()->where('post_id', $id)->exists()) {
+            return response()->json(['message' => 'Post is already in your favorites'], 400);
+        }
+
+        $user->favouritePosts()->attach($id);
+
+        return response()->json(['message' => 'Post added to favorites successfully'], 201);
+    }
+
+    public function remfavorite(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'You are not logged in'], 403);
+        }
+    
+        $post = Post::find($id);
+    
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+    
+        $user = Auth::user();
+    
+        if (!$user->favouritePosts()->where('post_id', $id)->exists()) {
+            return response()->json(['message' => 'Post is not in your favorites'], 400);
+        }
+    
+        $user->favouritePosts()->detach($id);
+    
+        return response()->json(['message' => 'Post removed from favorites successfully'], 200);
+    }
+    
 }
