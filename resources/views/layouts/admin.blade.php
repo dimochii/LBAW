@@ -32,22 +32,29 @@
         </a>
       </div>
       {{-- left bar --}}
-      <div class="text-lg mb-auto">
-        <h3 class="px-4 font-light text-gray-500 mb-2 mt-4 ">manage</h3>
-        <div class="*:*:underline-effect *:px-4 gap-2 flex flex-col text-xl *:ml-2 pb-4">
-          <a href="">
-            <span>users</span>
-          </a>
-          <a href="">
-            <span>hubs</span>
-          </a>
-          <a href="">
-            <span>news</span>
-          </a>
-          <a href="">
-            <span>topics</span>
-          </a>
+      <div class="text-lg mb-auto divide-y-2 divide-black">
+        <div class="p-4">
+          <h3 class="font-light text-gray-500 mb-2">admin</h3>
+          <a href="" class="underline-effect ml-2">overview</a>
         </div>
+        <div>
+          <h3 class="px-4 font-light text-gray-500 mb-2 mt-4 ">manage</h3>
+          <div class="*:*:underline-effect *:px-4 gap-2 flex flex-col text-xl *:ml-2 pb-4">
+            <a href="">
+              <span>users</span>
+            </a>
+            <a href="">
+              <span>hubs</span>
+            </a>
+            <a href="">
+              <span>news</span>
+            </a>
+            <a href="">
+              <span>topics</span>
+            </a>
+          </div>
+        </div>
+
       </div>
       {{-- footer --}}
 
@@ -91,7 +98,7 @@
       </footer>
     </aside>
 
-    <div class="w-full divide-y-2 divide-black">      
+    <div class="w-full divide-y-2 divide-black">
       @yield('content')
     </div>
   </div>
