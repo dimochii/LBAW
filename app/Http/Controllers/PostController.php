@@ -10,8 +10,10 @@ use App\Models\Topic;
 use App\Models\Vote;
 use App\Models\PostVote;
 use App\Models\Comment;
+use App\Models\Community;
 use App\Models\CommentVote;
 use App\Models\Notification;
+use App\Models\PostNotification;
 
 class PostController extends Controller
 {
