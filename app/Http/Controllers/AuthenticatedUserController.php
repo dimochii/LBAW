@@ -97,61 +97,61 @@ class AuthenticatedUserController extends Controller
     }
 
     public function update(Request $request, $id)
-{
+    {
 
-    if (Auth::user()->id != $id) {
-        return response()->json(['message' => 'Unauthorized'], 403);
+        if (Auth::user()->id != $id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $user = AuthenticatedUser::findOrFail($id);
+
+
+        // Validate the data
+        $validatedData = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'username' => 'nullable|string|max:255|unique:authenticated_users,username,' . $user->id,
+            'email' => 'nullable|email|max:255|unique:authenticated_users,email,' . $user->id,
+            'birth_date' => 'nullable|date|before:today',
+            'description' => 'nullable|string',
+            'password' => 'nullable|string|min:8|confirmed',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Update only provided fields
+        if (!empty($validatedData['name'])) {
+            $user->name = $validatedData['name'];
+        }
+        if (!empty($validatedData['username'])) {
+            $user->username = $validatedData['username'];
+        }
+        if (!empty($validatedData['email'])) {
+            $user->email = $validatedData['email'];
+        }
+        if (!empty($validatedData['birth_date'])) {
+            $user->birth_date = $validatedData['birth_date'];
+        }
+        if (!empty($validatedData['description'])) {
+            $user->description = $validatedData['description'];
+        }
+
+        // Update password if provided
+        if (!empty($validatedData['password'])) {
+            $user->password = Hash::make($validatedData['password']);
+        }
+
+        // Handle file upload if provided
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images'), $filename);
+            $user->image_id = $filename; // Save the filename as the image ID
+        }
+
+        $user->save();
+
+        // Redirect back to the A page with success message
+        return redirect()->route('user.profile', $user->id)->with('success', 'Profile updated successfully!');
     }
-
-    $user = AuthenticatedUser::findOrFail($id);
-
-
-    // Validate the data
-    $validatedData = $request->validate([
-        'name' => 'nullable|string|max:255',
-        'username' => 'nullable|string|max:255|unique:authenticated_users,username,' . $user->id,
-        'email' => 'nullable|email|max:255|unique:authenticated_users,email,' . $user->id,
-        'birth_date' => 'nullable|date|before:today',
-        'description' => 'nullable|string',
-        'password' => 'nullable|string|min:8|confirmed',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    // Update only provided fields
-    if (!empty($validatedData['name'])) {
-        $user->name = $validatedData['name'];
-    }
-    if (!empty($validatedData['username'])) {
-        $user->username = $validatedData['username'];
-    }
-    if (!empty($validatedData['email'])) {
-        $user->email = $validatedData['email'];
-    }
-    if (!empty($validatedData['birth_date'])) {
-        $user->birth_date = $validatedData['birth_date'];
-    }
-    if (!empty($validatedData['description'])) {
-        $user->description = $validatedData['description'];
-    }
-
-    // Update password if provided
-    if (!empty($validatedData['password'])) {
-        $user->password = Hash::make($validatedData['password']);
-    }
-
-    // Handle file upload if provided
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('images'), $filename);
-        $user->image_id = $filename; // Save the filename as the image ID
-    }
-
-    $user->save();
-
-    // Redirect back to the A page with success message
-    return redirect()->route('user.profile', $user->id)->with('success', 'Profile updated successfully!');
-}
 
     /**
      * Remove the specified user from storage.
@@ -203,26 +203,25 @@ class AuthenticatedUserController extends Controller
         return $this->fetchPostData($user->authoredPosts()->whereHas('news'));
     }
 
+    public function getAuthoredTopics($user)
+    {
+        return $this->fetchPostData($user->authoredPosts()->whereHas('topic'));
+    }  
 
-public function getAuthoredTopics($user)
-{
-    return $this->fetchPostData($user->authoredPosts()->whereHas('topic'));
-}  
-
-public function getVotedNews($user)
-{
-    return $this->fetchPostData(Post::whereHas('news')->whereHas('votes', function ($query) use ($user) {
-        $query->where('authenticated_user_id', $user->id)->where('upvote', true);
-    }));
-}
+    public function getVotedNews($user)
+    {
+        return $this->fetchPostData(Post::whereHas('news')->whereHas('votes', function ($query) use ($user) {
+            $query->where('authenticated_user_id', $user->id)->where('upvote', true);
+        }));
+    }
 
     
-public function getVotedTopics($user)
-{
-    return $this->fetchPostData(Post::whereHas('topic')->whereHas('votes', function ($query) use ($user) {
-        $query->where('authenticated_user_id', $user->id)->where('upvote', true);
-    }));
-}
+    public function getVotedTopics($user)
+    {
+        return $this->fetchPostData(Post::whereHas('topic')->whereHas('votes', function ($query) use ($user) {
+            $query->where('authenticated_user_id', $user->id)->where('upvote', true);
+        }));
+    }
 
     public function follow($id)
     {
@@ -249,7 +248,6 @@ public function getVotedTopics($user)
     }
     
 
-    
 
     public function suspend($id)
     {
