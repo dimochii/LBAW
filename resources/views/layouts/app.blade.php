@@ -6,14 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ config('app.name', 'Laravel') }}</title>
-  <script defer src="{{ asset('js/layout.js') }}" ></script>
+  <script defer src="{{ asset('js/layout.js') }}"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
+
   <link rel="stylesheet" href={{ asset('css/app.css') }}>
-  <link rel="stylesheet" href="{{ asset('css/build.css' )}}">
+  
+  @vite('resources/css/app.css')
+ 
+  {{--
+  <link rel="stylesheet" href="{{ asset('css/build.css' )}}"> --}}
 
 </head>
 
@@ -116,16 +121,17 @@
       </div>
 
 
-        <!-- Right Section -->
-        <div class="bg-pastelBlue h-full w-32 md:w-64 flex items-center border-l-2 border-black justify-evenly">
-            @if (Auth::check())
-            <a href="{{ route('post.create') }}">
-              <svg class="w-5 h-5 fill-[#3C3D37] hover:fill-[#3C3D37]/80 hover:rotate-180 transition-all "
-                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 455 455"
-                xml:space="preserve">
-                <polygon points="455,212.5 242.5,212.5 242.5,0 212.5,0 212.5,212.5 0,212.5 0,242.5 212.5,242.5 212.5,455 242.5,455 242.5,242.5 455,242.5 " />
-              </svg>
-            </a>
+      <!-- Right Section -->
+      <div class="bg-pastelBlue h-full w-32 md:w-64 flex items-center border-l-2 border-black justify-evenly">
+        @if (Auth::check())
+        <a href="{{ route('post.create') }}">
+          <svg class="w-5 h-5 fill-[#3C3D37] hover:fill-[#3C3D37]/80 hover:rotate-180 transition-all "
+            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 455 455"
+            xml:space="preserve">
+            <polygon
+              points="455,212.5 242.5,212.5 242.5,0 212.5,0 212.5,212.5 0,212.5 0,242.5 212.5,242.5 212.5,455 242.5,455 242.5,242.5 455,242.5 " />
+          </svg>
+        </a>
 
           <a href="{{ route('notifications.show', Auth::user()->id) }}"
             class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
@@ -138,18 +144,20 @@
           </a>
 
         <div class="relative group">
-            <a href="{{ route('user.profile',  Auth::user()->id) }}" class="relative fill-transparent text-[#3C3D37] hover:text-[#3C3D37]/80 transition-colors">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-              </a>
-              <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <!-- Changed to direct link instead of form -->
-                  <a href="{{ route('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                      Logout
-                  </a>
-              </div>
+          <a href="{{ route('user.profile',  Auth::user()->id) }}"
+            class="relative fill-transparent text-[#3C3D37] hover:text-[#3C3D37]/80 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </a>
+          <div
+            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <!-- Changed to direct link instead of form -->
+            <a href="{{ route('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+              Logout
+            </a>
+          </div>
         </div>
         @else
         <a href="{{ route('login') }}"
@@ -198,7 +206,8 @@
           <div class="py-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
             <div class="space-y-1 *:transition-colors *:pl-6">
-              <a href="{{ url('/hubs/create') }}"  class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
+              <a href="{{ url('/hubs/create') }}"
+                class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
                 <span class="">+ Create Hub</span>
               </a>
               <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
@@ -263,104 +272,102 @@
       <!-- Right Sidebar -->
       @if (Request::is('hub/*'))
       <aside id="right-sidebar"
-          class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
-          
-          <!-- Hubs Section -->
-          <div class="p-4 border-b-2 border-black">
-              <div class="flex flex-wrap items-start gap-3">
-                  <div class="w-12 h-12 bg-green-500 rounded-full flex-shrink-0"></div>
-                  <div class="flex-1 break-words">
-                      <h2 class="font-medium break-all">/{{ $community->name }}</h2>
-                      <p class="text-sm text-gray-600 whitespace-normal">
-                          {{ $community->description }}
-                      </p>
-                      <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
-                          <div class="flex items-center shrink-0">
-                              <span>{{ $community->read_count }}</span>
-                              <span class="ml-1">Reading</span>
-                          </div>
-                          <div class="flex items-center shrink-0">
-                              <span>{{ $community->followers_count }}</span>
-                              <span class="ml-1">Following</span>
-                          </div>
-                      </div>
-                      <div>
-                        @auth
-                            @if($is_following)
-                                <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                                  bg-[#F4F2ED] text-black border-2 border-black">
-                                        unfollow -
-                                    </button>
-                                </form>
-                            @else
-                                <form action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" 
-                                            class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                                  bg-black text-[#F4F2ED]">
-                                        follow +
-                                    </button>
-                                </form>
-                            @endif
-                        @else
-                            <a href="{{ route('login') }}" 
-                              class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                      bg-black text-[#F4F2ED]">
-                                follow +
-                            </a>
-                        @endauth
-                    </div>
-                  </div>
+        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
+
+        <!-- Hubs Section -->
+        <div class="p-4 border-b-2 border-black">
+          <div class="flex flex-wrap items-start gap-3">
+            <div class="w-12 h-12 bg-green-500 rounded-full flex-shrink-0"></div>
+            <div class="flex-1 break-words">
+              <h2 class="font-medium break-all">/{{ $community->name }}</h2>
+              <p class="text-sm text-gray-600 whitespace-normal">
+                {{ $community->description }}
+              </p>
+              <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
+                <div class="flex items-center shrink-0">
+                  <span>{{ $community->read_count }}</span>
+                  <span class="ml-1">Reading</span>
+                </div>
+                <div class="flex items-center shrink-0">
+                  <span>{{ $community->followers_count }}</span>
+                  <span class="ml-1">Following</span>
+                </div>
               </div>
-          </div>
-
-          <!-- Moderators Section -->
-          <div class="p-4">
-            <h3 class="text-sm font-medium text-gray-500 mb-3">moderators</h3>
-            <div class="space-y-3">
-              @php
-                  // Busca moderadores do hub (simulação de chamada a um controlador ou modelo)
-                  $moderators = $hub->moderators ?? []; // Exemplo de busca
-                  $defaultModerators = [
-                      ['username' => '@admin', 'role' => 'Administrator', 'color' => 'bg-blue-500'],
-                      ['username' => '@friends', 'role' => 'Moderator', 'color' => 'bg-green-500'],
-                      ['username' => '@walkPro123', 'role' => 'Moderator', 'color' => 'bg-yellow-500'],
-                  ];
-
-                  $colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500', 'bg-orange-500'];
-              @endphp
-
-              @if (count($moderators) > 0)
-                @foreach ($moderators as $moderator)
-                  @php
-                    $moderatorColor = $moderator['color'] ?? $colors[array_rand($colors)];
-                  @endphp
-                  <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 {{ $moderatorColor }} rounded-full flex-shrink-0"></div>
-                    <div>
-                      <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
-                      <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
-                    </div>
-                  </div>
-                @endforeach
-              @else
-                <!-- Default Moderators -->
-                @foreach ($defaultModerators as $moderator)
-                  <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 {{ $moderator['color'] }} rounded-full flex-shrink-0"></div>
-                    <div>
-                      <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
-                      <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
-                    </div>
-                  </div>
-                @endforeach
-              @endif
+              <div>
+                @auth
+                @if($is_following)
+                <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                                  bg-[#F4F2ED] text-black border-2 border-black">
+                    unfollow -
+                  </button>
+                </form>
+                @else
+                <form action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
+                  @csrf
+                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                                  bg-black text-[#F4F2ED]">
+                    follow +
+                  </button>
+                </form>
+                @endif
+                @else
+                <a href="{{ route('login') }}" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                      bg-black text-[#F4F2ED]">
+                  follow +
+                </a>
+                @endauth
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- Moderators Section -->
+        <div class="p-4">
+          <h3 class="text-sm font-medium text-gray-500 mb-3">moderators</h3>
+          <div class="space-y-3">
+            @php
+            // Busca moderadores do hub (simulação de chamada a um controlador ou modelo)
+            $moderators = $hub->moderators ?? []; // Exemplo de busca
+            $defaultModerators = [
+            ['username' => '@admin', 'role' => 'Administrator', 'color' => 'bg-blue-500'],
+            ['username' => '@friends', 'role' => 'Moderator', 'color' => 'bg-green-500'],
+            ['username' => '@walkPro123', 'role' => 'Moderator', 'color' => 'bg-yellow-500'],
+            ];
+
+            $colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500',
+            'bg-orange-500'];
+            @endphp
+
+            @if (count($moderators) > 0)
+            @foreach ($moderators as $moderator)
+            @php
+            $moderatorColor = $moderator['color'] ?? $colors[array_rand($colors)];
+            @endphp
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 {{ $moderatorColor }} rounded-full flex-shrink-0"></div>
+              <div>
+                <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
+                <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
+              </div>
+            </div>
+            @endforeach
+            @else
+            <!-- Default Moderators -->
+            @foreach ($defaultModerators as $moderator)
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 {{ $moderator['color'] }} rounded-full flex-shrink-0"></div>
+              <div>
+                <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
+                <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
+              </div>
+            </div>
+            @endforeach
+            @endif
+          </div>
+        </div>
 
       </aside>
 
@@ -371,4 +378,5 @@
     onclick="toggleLeftSidebar()">
   </div>
 </body>
+
 </html>

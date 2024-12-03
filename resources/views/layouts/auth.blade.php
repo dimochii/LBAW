@@ -8,8 +8,9 @@
   <script src="{{ asset('js/layout.js') }}"></script>
   {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-5554225.css') }}"> --}}
   {{-- <link rel="stylesheet" href={{ asset('css/app.css') }} --}}
-  <link rel="stylesheet" href="{{ asset('css/build.css' )}}">
-
+  {{-- <link rel="stylesheet" href="{{ asset('css/build.css' )}}"> --}}
+  <link rel="stylesheet" href={{ asset('css/app.css') }}>
+  @vite('resources/css/app.css')
 
 </head>
 
