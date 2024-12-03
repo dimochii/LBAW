@@ -134,9 +134,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::get('/communities', [CommunityController::class, 'index'])->name('communities.index');
-Route::middleware('auth')->group(function () {
-    Route::get('/hubs', [CommunityController::class, 'index'])->name('communities.index');
-});
 
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
