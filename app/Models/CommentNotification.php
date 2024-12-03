@@ -11,7 +11,7 @@ class CommentNotification extends Model
     public $timestamps = false;
 
     protected $fillable = ['notification_id', 'comment_id'];
-    protected $primaryKey =['notification_id', 'comment_id'];
+
 
     public function notification()
     {
