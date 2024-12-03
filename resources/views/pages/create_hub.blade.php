@@ -46,7 +46,7 @@
                           required></textarea>
             </div>
 
-            <div class="space-y-6">
+            <div class="space-y-6 border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
                 <label class="block text-2xl font-medium">Privacy</label>
                 <div class="flex gap-8">
                     <label class="relative group flex items-center gap-3 cursor-pointer">
@@ -83,16 +83,23 @@
                 <input type="file" id="image" name="image" class="w-full text-xl border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-colors duration-300">
             </div>
 
-            <div class="preview-section mt-8 ">
+            <div class="preview-section mt-8">
                 <h2 class="text-2xl font-medium mb-4">Preview</h2>
                 <div class="preview-container border border-black/10 p-6">
-                    <div class="flex items-center mb-4 rounded-lg" >
-                        <img src="/api/placeholder/80/80" alt="Community Image" class="w-20 h-20 mr-4" id="preview-image">
-                        <h3 class="text-3xl font-medium" id="preview-name">Community Name</h3>
+                    <div class="flex items-center mb-4">
+                        <div class="relative w-10 h-10 rounded-full overflow-hidden mr-4">
+                            <img src="/api/placeholder/80/80" alt="Community Image" class="w-full h-full object-cover rounded-full" id="preview-image">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-3xl font-medium" id="preview-name">Community Name</h3>
+                            <div id="privacy-indicator" class="flex items-center">
+                                <!-- Privacy lock icon will be dynamically added here -->
+                            </div>
+                        </div>
                     </div>
                     <p class="text-xl" id="preview-description">Community Description</p>
                     <div class="mt-4 text-xl">
-                        <span id="preview-members">1 Member</span>
+                        <span id="preview-members">1 member</span>
                         <span class="mx-2">•</span>
                         <span id="preview-online">1 online</span>
                     </div>
@@ -127,6 +134,40 @@ const previewDescription = document.getElementById('preview-description');
 const previewImage = document.getElementById('preview-image');
 const previewMembers = document.getElementById('preview-members');
 const previewOnline = document.getElementById('preview-online');
+const privacyIndicator = document.getElementById('privacy-indicator');
+
+function createLockSVG(isPrivate) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("width", "24");
+    svg.setAttribute("height", "24");
+    svg.setAttribute("fill", isPrivate ? "red" : "green");
+    svg.setAttribute("class", "ml-2");
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    
+    if (isPrivate) {
+        path.setAttribute("d", "M17 10V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zM7 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v3H7V7z");
+    } else {
+        path.setAttribute("d", "M17 8V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v1a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zm-9-1a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v1H8V7z");
+    }
+
+    svg.appendChild(path);
+    return svg;
+}
+
+function updatePrivacyIndicator() {
+    privacyIndicator.innerHTML = '';
+
+    const selectedPrivacy = document.querySelector('input[name="privacy"]:checked').value;
+    const lockSVG = createLockSVG(selectedPrivacy === 'private');
+    privacyIndicator.appendChild(lockSVG);
+}
+
+document.querySelectorAll('input[name="privacy"]').forEach(radio => {
+    radio.addEventListener('change', updatePrivacyIndicator);
+});
 
 nameInput.addEventListener('input', () => {
     previewName.textContent = nameInput.value;
@@ -142,7 +183,9 @@ imageInput.addEventListener('change', () => {
     previewImage.src = URL.createObjectURL(file);
 });
 
-previewMembers.textContent = '1 Member';
+previewMembers.textContent = '1 member';
 previewOnline.textContent = '1 online';
+
+updatePrivacyIndicator();
 </script>
 @endsection
