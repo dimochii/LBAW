@@ -2,7 +2,7 @@
 @section('content')
 <div class="text-gray-900 bg-[#F5F5F0] min-h-screen">
     <div class="container mx-auto px-4">
-        <h1 class="text-5xl text-gray-800 tracking-tighter font-medium py-4">Reports</h1>
+        <h1 class="text-5xl text-gray-800 tracking-tighter font-medium py-4 ">Reports</h1>
 
         <div class="table-responsive">
             @if($reports->isEmpty())
@@ -10,7 +10,7 @@
                     <p class="text-gray-600 text-xl font-light">No reports found.</p>
                 </div>
             @else
-                <table class="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <table class="w-full bg-white border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>

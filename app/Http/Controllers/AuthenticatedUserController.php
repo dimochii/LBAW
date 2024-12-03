@@ -50,17 +50,22 @@ class AuthenticatedUserController extends Controller
     public function show($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
-
         $followers = $user->followers;
         $following = $user->follows;
-        $authored_news =  $this-> getAuthoredNews($user);
-        $authored_topics =  $this-> getAuthoredTopics($user);
-        $voted_news =  $this-> getVotedNews($user);
-        $voted_topics = $this -> getVotedTopics($user);
 
+        $authored_news = $this->getAuthoredNews($user);
+        $authored_topics = $this->getAuthoredTopics($user);
+        $voted_news = $this->getVotedNews($user);
+        $voted_topics = $this->getVotedTopics($user);
 
-        return view('pages.profile', compact('user', 'followers', 'following', 'authored_news','authored_topics', 'voted_news', 'voted_topics'));
+        $isFollowing = Auth::check() && Auth::user()->follows()->where('followed_id', $id)->exists();
+
+        return view('pages.profile', compact(
+            'user', 'followers', 'following', 'authored_news', 
+            'authored_topics', 'voted_news', 'voted_topics', 'isFollowing'
+        ));
     }
+
 
     public function getFollowers($id)
     {
