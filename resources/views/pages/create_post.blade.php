@@ -31,56 +31,58 @@
             </div>
             <!-- Community Dropdown -->
             <div class="relative">
-                <label for="community" 
-                       class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
-                              transition-all duration-300 peer-placeholder-shown:text-3xl 
-                              peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
-                    Select Community
+                <label for="community"
+                class="absolute left-0 -top-6 text-2xl font-medium text-black/60
+                transition-all duration-300 peer-placeholder-shown:text-3xl
+                peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
+                Select Community
                 </label>
-                <select name="community_id" 
-                        id="community" 
-                        class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10 
-                               focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
-                               transition-all duration-300"
-                        required>
+                <div class="relative group">
+                    <select name="community_id"
+                    id="community"
+                    class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10
+                    focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
+                    transition-all duration-300"
+                    required>
                     <option value="" disabled selected>Select a Community</option>
                     @foreach(Auth::user()->communities as $community)
-                        <option value="{{ $community->id }}">{{ $community->name }}</option>
+                    <option value="{{ $community->id }}">/{{ $community->name }}</option>
                     @endforeach
-                </select>
+                    </select>
+                </div>
             </div>
 
 
             <!-- Post Type Selection with slide effect -->
-            <div class="space-y-6">
+            <div class="space-y-6 border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
                 <label class="block text-2xl font-medium">Post Type</label>
                 <div class="flex gap-8">
                     <!-- News Radio -->
                     <label class="relative group flex items-center gap-3 cursor-pointer">
                         <input type="radio" 
-                               name="type" 
-                               value="news"
-                               class="peer hidden" 
-                               checked>
+                            name="type" 
+                            value="news"
+                            class="peer hidden" 
+                            checked>
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-whatsup-green transition-colors duration-300">
-                            <div class="absolute inset-1 rounded-full bg-black transform scale-0 
-                                      peer-checked:scale-100 transition-transform duration-300"></div>
+                                group-hover:border-green-200 transition-colors duration-300">
+                            <div class="absolute inset-1 rounded-full bg-green-200 transform scale-0 
+                                    peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-whatsup-green transition-colors duration-300">News</span>
+                        <span class="text-xl group-hover:text-green-200 transition-colors duration-300">News</span>
                     </label>
 
                     <label class="relative group flex items-center gap-3 cursor-pointer">
                         <input type="radio" 
-                               name="type" 
-                               value="topic"
-                               class="peer hidden">
+                            name="type" 
+                            value="topic"
+                            class="peer hidden">
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-whatsup-green transition-colors duration-300">
-                            <div class="absolute inset-1 rounded-full bg-black transform scale-0 
-                                      peer-checked:scale-100 transition-transform duration-300"></div>
+                                group-hover:border-green-200  transition-colors duration-300">
+                            <div class="absolute inset-1 rounded-full bg-green-200 transform scale-0 
+                                    peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-whatsup-green transition-colors duration-300">Topic</span>
+                        <span class="text-xl group-hover:text-green-200  transition-colors duration-300">Topic</span>
                     </label>
                 </div>
             </div>
@@ -92,7 +94,7 @@
                        id="news_url" 
                        name="news_url" 
                        class="w-full text-xl border-b-2 border-black/10 focus:border-black 
-                              focus:outline-none pb-2 transition-colors duration-300"
+                              focus:outline-none pb-2 transition-colors duration-300 rounded-lg"
                        placeholder="https://">
             </div>
 
@@ -142,7 +144,7 @@
                             d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
                             clip-rule="evenodd" />
                     </svg>
-                    <div class="absolute inset-0 bg-whatsup-green transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
+                    <div class="absolute inset-0 bg-pastelGreen  transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
                 </button>
             </div>
         </form>
@@ -200,61 +202,5 @@ function markdownToHTML(markdown) {
         .replace(/(<br>\s*){2,}/g, '<br>') // Add <br> for plain text lines
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Type selection handling
-    const typeInputs = document.querySelectorAll('input[name="type"]');
-    const newsUrlContainer = document.getElementById('newsUrlContainer');
-    
-    function toggleNewsUrl() {
-        const isNews = document.querySelector('input[name="type"]:checked').value === 'news';
-        newsUrlContainer.classList.toggle('scale-y-0', !isNews);
-        newsUrlContainer.classList.toggle('opacity-0', !isNews);
-        newsUrlContainer.classList.toggle('hidden', !isNews);
-    }
-    
-    typeInputs.forEach(input => {
-        input.addEventListener('change', toggleNewsUrl);
-    });
-
-    // Editor tabs and preview handling
-    const writeToggle = document.getElementById('write-toggle');
-    const previewToggle = document.getElementById('preview-toggle');
-    const editorContent = document.getElementById('editor-content');
-    const previewContent = document.getElementById('preview-content');
-
-    // Tab key behavior for indentation
-    editorContent.addEventListener("keydown", (e) => {
-        if (e.key === "Tab") {
-            e.preventDefault();
-            const start = editorContent.selectionStart;
-            const end = editorContent.selectionEnd;
-            editorContent.value = editorContent.value.substring(0, start) + "  " + 
-                                editorContent.value.substring(end);
-            editorContent.selectionStart = editorContent.selectionEnd = start + 2;
-        }
-    });
-
-    // Live preview updates
-    editorContent.addEventListener('input', (e) => {
-        const markdownText = e.target.value;
-        previewContent.innerHTML = markdownToHTML(markdownText);
-    });
-
-    // Toggle preview visibility
-    writeToggle.addEventListener('change', () => {
-        editorContent.classList.remove('hidden');
-        previewContent.classList.add('hidden');
-    });
-
-    previewToggle.addEventListener('change', () => {
-        editorContent.classList.add('hidden');
-        previewContent.classList.remove('hidden');
-        // Update preview content
-        previewContent.innerHTML = markdownToHTML(editorContent.value);
-    });
-
-    // Initialize state
-    toggleNewsUrl();
-});
 </script>
 @endsection

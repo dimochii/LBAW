@@ -9,6 +9,38 @@ use Illuminate\Support\Facades\Cache;
 
 class CommunityController extends Controller
 {
+    public function createHub()
+    {
+        return view('pages.create_hub');
+    }
+
+    public function create(Request $request) {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:communities',
+            'description' => 'required|string|max:1000',
+            'privacy' => 'required|in:public,private',
+            'image_id' => 'nullable|integer|exists:images,id',
+        ]);
+
+        $community = Community::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'privacy' => $request->privacy === 'private', 
+            'image_id' => $request->image_id,
+            'creation_date' => now(), 
+        ]);
+
+        $authUser = Auth::user();
+        $community->moderators()->attach($authUser->id);
+
+        return response()->json([
+            'message' => 'Community created successfully',
+            'community' => $community,
+        ], 201);
+    }
+
+
+
     public function show($id)
     {
     
@@ -153,6 +185,17 @@ class CommunityController extends Controller
         }
         
         return redirect()->back()->with('error', 'You are not following this community.');
+    }
+
+    public function index(Request $request) {
+        $sortBy = $request->get('sort_by', 'name'); 
+        $order = $request->get('order', 'asc'); 
+
+        $communities = Community::withCount('followers')
+            ->orderBy($sortBy, $order)
+            ->paginate(6);
+
+        return view('pages.hubs', compact('communities', 'sortBy', 'order'));
     }
 
     /*
