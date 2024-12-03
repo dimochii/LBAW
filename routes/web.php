@@ -15,6 +15,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,7 +92,7 @@ Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware(
 Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('auth')->name('news.update');
 
 //Topic
-Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
+Route::get('/newstopic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
     //editing
 Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topics.edit');
 Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('auth')->name('topics.update');
@@ -145,5 +146,10 @@ Route::post('/report/{id}',[ReportController::class,'report'])->middleware('auth
 Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
 
-
+//Notifications
+Route::get('/notifications', [NotificationController::class, 'show'])
+    ->middleware('auth')
+    ->name('notifications.show');
+    //mark as read
+Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 

@@ -12,9 +12,9 @@ class Vote extends Model
     protected $fillable = ['upvote', 'authenticated_user_id'];
 
     public function user()
-    {
-        return $this->belongsTo(AuthenticatedUser::class);
-    }
+{
+    return $this->belongsTo(AuthenticatedUser::class, 'authenticated_user_id');
+}
 
     public function voteNotification()
     {
