@@ -11,67 +11,98 @@ use App\Models\Vote;
 use App\Models\PostVote;
 use App\Models\Comment;
 use App\Models\CommentVote;
+use DOMDocument;
+use DOMXPath;
 
 class PostController extends Controller
 {
+  public function getOgTags($newsURL)
+  {
+    libxml_use_internal_errors(true);
+    $c = file_get_contents($newsURL);
+    $d = new DomDocument();
+    $d->loadHTML($c);
+    $xp = new domxpath($d);
     
-    public function createPost()
-    {
-        return view('pages.create_post');
-    }
-    public function create(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'community_id' => 'required|exists:communities,id',
-            'type' => 'required|in:news,topic',
-        ]);
+    $ogTags = [];
 
-        $post = Post::create([
-            'title' => $request->title,
-            'content' => $request->content,
-            'community_id' => $request->community_id,
-        ]);
-
-        $user = Auth::user(); 
-        $post->authors()->attach($user->id, ['pinned' => false]); 
-
-
-        if ($request->type === 'news') {
-            return app(NewsController::class)->createNews($post, $request->news_url);
-        } elseif ($request->type === 'topic') {
-            return app(TopicController::class)->createTopic($post);
-        }
-        
-
-        return response()->json(['message' => 'Invalid type'], 400);
-    }
-
-    public function delete(Request $request, $id)
-    {
-        $post = Post::find($id); 
-
-        if (!$post) {
-            return response()->json(['message' => 'Post not found'], 404);
-        }
-
-        $user = Auth::user();
-
-        if (!$post->authors->contains($user->id)) { 
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        if ($post->votes()->exists() || $post->comments()->exists()) {
-            return response()->json(['message' => 'Post cannot be deleted as it has votes or comments'], 400);
-        }
-
-        $post->authors()->detach(); 
-        $post->delete(); 
-
-        return response()->json(['message' => 'Post deleted successfully'], 200);
+    $imageElement = $xp->query("//meta[@property='og:image']")->item(0);
+    if ($imageElement) {
+      $ogTags['image'] = $imageElement->getAttribute("content");
     }
     
+    $titleElement = $xp->query("//meta[@property='og:title']")->item(0);
+    if ($titleElement) {
+      $ogTags['title'] = $titleElement->getAttribute("content");
+    }
+
+    return $ogTags;
+  }
+
+  public function createPost()
+  {
+    return view('pages.create_post');
+  }
+
+  public function create(Request $request)
+  {
+    $request->validate([
+      'title' => 'required|string|max:255',
+      'content' => 'required|string',
+      'community_id' => 'required|exists:communities,id',
+      'type' => 'required|in:news,topic',
+    ]);
+
+
+    $post = Post::create([
+      'title' => $request->title,
+      'content' => $request->content,
+      'community_id' => $request->community_id,
+    ]);
+
+    $user = Auth::user();
+    $post->authors()->attach($user->id, ['pinned' => false]);
+
+
+    if ($request->type === 'news') {
+      $ogTags = PostController::getOgTags($request->news_url);
+
+      $post->title = $ogTags['title'];
+      $post->save();
+
+      return app(NewsController::class)->createNews($post, $request->news_url, $ogTags['image']);
+    } elseif ($request->type === 'topic') {
+      return app(TopicController::class)->createTopic($post);
+    }
+
+
+    return response()->json(['message' => 'Invalid type'], 400);
+  }
+
+  public function delete(Request $request, $id)
+  {
+    $post = Post::find($id);
+
+    if (!$post) {
+      return response()->json(['message' => 'Post not found'], 404);
+    }
+
+    $user = Auth::user();
+
+    if (!$post->authors->contains($user->id)) {
+      return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    if ($post->votes()->exists() || $post->comments()->exists()) {
+      return response()->json(['message' => 'Post cannot be deleted as it has votes or comments'], 400);
+    }
+
+    $post->authors()->detach();
+    $post->delete();
+
+    return response()->json(['message' => 'Post deleted successfully'], 200);
+  }
+
   public function upvote($post_id)
   {
     $post = Post::findOrFail($post_id);
@@ -124,7 +155,7 @@ class PostController extends Controller
   {
     $post = Post::findOrFail($post_id);
     $user = Auth::user();
-    $voteType = $request->input('vote_type'); 
+    $voteType = $request->input('vote_type');
 
     $existingVote = $post->votes()->where('authenticated_user_id', $user->id)->first();
 
@@ -149,7 +180,7 @@ class PostController extends Controller
         $existingVote->postVote()->delete();
         $existingVote->voteNotification()->delete();
         $existingVote->delete();
-        
+
         if (!$existingVote->upvote) $newScore++;
         else $newScore--;
       }
@@ -167,7 +198,7 @@ class PostController extends Controller
       return response()->json([
         'status' => 'created',
         'message' => 'Post upvoted successfully.',
-        'vote' => 'upvote', 
+        'vote' => 'upvote',
         'newScore' => $newScore
       ]);
     } else if ($voteType === 'downvote') {
@@ -191,7 +222,6 @@ class PostController extends Controller
       'status' => 'error',
       'message' => 'Invalid action.',
       'vote' => null,
-    ], 400); 
+    ], 400);
   }
-
 }

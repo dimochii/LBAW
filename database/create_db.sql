@@ -100,6 +100,7 @@ CREATE TABLE comment_votes (
 CREATE TABLE news (
     post_id INT PRIMARY KEY,
     news_url VARCHAR(255) NOT NULL,
+    image_url VARCHAR(500),
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
