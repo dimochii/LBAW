@@ -15,8 +15,8 @@
                     @if($notification->postNotification && $notification->postNotification->post)
                         {{-- Notification for Post --}}
                         <a href="{{ route($notification->postNotification->post->news ? 'news.show' : 'topics.show', $notification->postNotification->post->id) }}">
-                            {{ $notification->postNotification->post->title }}
-                        </a>
+                            New post on {{ $notification->postNotification->post->community->name }}: {{ $notification->postNotification->post->title }} 
+                            </a>
                     @elseif($notification->commentNotification && $notification->commentNotification->comment->post)
                         {{-- Notification for Comment --}}
                         <a href="{{ route($notification->commentNotification->comment->post->news ? 'news.show' : 'topics.show', $notification->commentNotification->comment->post->id) }}">
@@ -25,7 +25,7 @@
                     @elseif($notification->upvoteNotification && $notification->upvoteNotification->vote->postVote->post)
                         {{-- Notification for Vote --}}
                         <a href="{{ route($notification->upvoteNotification->vote->postVote->post->news ? 'news.show' : 'topics.show', $notification->upvoteNotification->vote->postVote->post->id) }}">
-                            Your vote on: {{ $notification->upvoteNotification->vote->postVote->post->title }}
+                            {{ $notification->upvoteNotification->vote->user->username }} upvoted: {{ $notification->upvoteNotification->vote->postVote->post->title }}
                         </a>
                     @elseif($notification->followNotification && $notification->followNotification->follower)
                         {{-- Notification for Follow --}}
@@ -57,9 +57,9 @@
                         <a href="{{ route($notification->commentNotification->comment->post->news ? 'news.show' : 'topics.show', $notification->commentNotification->comment->post->id) }}">
                             Comment on: {{ $notification->commentNotification->comment->post->title }}
                         </a>
-                    @elseif($notification->upvoteNotification && $notification->upvoteNotification->vote->postVote && $notification->upvoteNotification->vote->postVote->post)
+                        @elseif($notification->upvoteNotification && $notification->upvoteNotification->vote->postVote && $notification->upvoteNotification->vote->postVote->post)
                         <a href="{{ route($notification->upvoteNotification->vote->postVote->post->news ? 'news.show' : 'topics.show', $notification->upvoteNotification->vote->postVote->post->id) }}">
-                            Your vote on: {{ $notification->upvoteNotification->vote->postVote->post->title }}
+                            {{ $notification->upvoteNotification->vote->user->username }} upvoted: {{ $notification->upvoteNotification->vote->postVote->post->title }}
                         </a>
                     @elseif($notification->followNotification && $notification->followNotification->follower)
                         <a href="{{ route('user.profile', $notification->followNotification->follower->id) }}">

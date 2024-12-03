@@ -282,30 +282,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION vote_create_notification_trigger()
-RETURNS TRIGGER AS $$
-DECLARE
-    new_notification_id INT;  
-BEGIN
-    INSERT INTO notifications (is_read, authenticated_user_id)
-    VALUES (FALSE, NEW.authenticated_user_id) 
-    RETURNING id INTO new_notification_id;
 
-    INSERT INTO upvote_notifications (notification_id, vote_id)
-    VALUES (new_notification_id, NEW.id);
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 CREATE TRIGGER follow_notification_trigger
 AFTER INSERT ON user_followers
 FOR EACH ROW
 EXECUTE FUNCTION follow_create_notification_trigger();
 
-CREATE TRIGGER upvote_notification_trigger
-AFTER INSERT ON votes
-FOR EACH ROW
-EXECUTE FUNCTION vote_create_notification_trigger();
 
 
 
