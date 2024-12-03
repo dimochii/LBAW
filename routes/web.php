@@ -98,8 +98,6 @@ Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('
 
 
 
-
-
 //Posts
 //creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
@@ -113,10 +111,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/global', 'global')->name('global');
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
+    Route::get('/admin', 'admin')->name('admin');
   });
 
-  Route::get('/messages', [MessageController::class, 'index'])->name('messages');
-  Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+  // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
+  Route::get('/notifications', function() {
+    return view('pages.admin');
+  })->name('notifications');
 
   // Search
   Route::controller(SearchController::class)->group(function () {
