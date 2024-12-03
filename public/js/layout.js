@@ -159,3 +159,21 @@ document.addEventListener('click', function(event) {
         overlay.classList.add('hidden');
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const profileIcon = document.getElementById('profileIcon');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    // Mostrar o dropdown ao clicar no ícone
+    profileIcon.addEventListener('click', function (event) {
+      event.preventDefault();
+      dropdownMenu.classList.toggle('hidden');
+    });
+
+    // Fechar o dropdown ao clicar fora dele
+    document.addEventListener('click', function (event) {
+      if (!dropdownMenu.contains(event.target) && !profileIcon.contains(event.target)) {
+        dropdownMenu.classList.add('hidden');
+      }
+    });
+  });
