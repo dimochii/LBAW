@@ -113,11 +113,14 @@
         </div>
       </div>
     </div>
-    <a href="{{ $newsItem->news_url ?? '#' }}" class="w-1/2 md:block hidden">
+    @if(!is_null($newsItem->image_url))
+    <a href="{{ $newsItem->news_url ?? '#' }}" class="w-1/2 md:block hidden p-4">
+      
       <img class=" object-cover  object-left w-full h-full"
-        src="https://imagens.publico.pt/imagens.aspx/1955774?tp=UH&db=IMAGENS&type=JPG&share=1&o=BarraFacebook_Publico.png"
+        src="{{ $newsItem->image_url }}"
         alt="">
     </a>
+    @endif
   </div>
 
   @isset($newsItem->post->content)

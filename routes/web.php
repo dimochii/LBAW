@@ -43,29 +43,29 @@ Route::redirect('/', '/news');
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
-    Route::get('/login', 'showLoginForm')->name('login');
-    Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout');
+  Route::get('/login', 'showLoginForm')->name('login');
+  Route::post('/login', 'authenticate');
+  Route::get('/logout', 'logout')->name('logout');
 });
 
 Route::controller(RegisterController::class)->group(function () {
-    Route::get('/register', 'showRegistrationForm')->name('register');
-    Route::post('/register', 'register');
+  Route::get('/register', 'showRegistrationForm')->name('register');
+  Route::post('/register', 'register');
 });
 
 //Authenticated User
-    //profile
+//profile
 Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
-    //edit profile
+//edit profile
 Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
-Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update'); 
-Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile'); 
+Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');
+Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 
-    //followers & following
+//followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
 Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
 Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])->name('user.follow');
-    //articles
+//articles
 
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
 Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
@@ -73,7 +73,7 @@ Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavo
 
 
 //articles
-    
+
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
@@ -82,47 +82,48 @@ Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments']
 Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->name('comments.store');
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware('auth')->name('comments.update');
 
-    //upvote & downvote
+//upvote & downvote
 Route::post('/news/{post_id}/upvote', [PostController::class, 'upvote'])->name('news.upvote');
 Route::post('/news/{post_id}/downvote', [PostController::class, 'downvote'])->name('news.downvote');
 Route::post('/news/{post_id}/voteupdate', [PostController::class, 'voteUpdate'])->name('news.voteupdate');
 
-    //editing
+//editing
 Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware('auth')->name('news.edit');
 Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('auth')->name('news.update');
 
 //Topic
-Route::get('/newstopic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
-    //editing
+Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
+//editing
 Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topics.edit');
 Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('auth')->name('topics.update');
 
 
 
-
-
 //Posts
-    //creation
+//creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
 Route::delete('/posts/delete/{id}', [PostController::class, 'delete'])->middleware('auth')->name('post.delete');
 
 
 Route::middleware('auth')->group(function () {
-    Route::controller(FeedController::class)->group(function () {
-        Route::get('/home', 'home')->name('home'); 
-        Route::get('/global', 'global')->name('global');
-        Route::get('/recent', 'recent')->name('recent');
-        Route::get('/about-us', 'aboutUs')->name('about-us');
-    });
+  Route::controller(FeedController::class)->group(function () {
+    Route::get('/home', 'home')->name('home');
+    Route::get('/global', 'global')->name('global');
+    Route::get('/recent', 'recent')->name('recent');
+    Route::get('/about-us', 'aboutUs')->name('about-us');
+    Route::get('/admin', 'admin')->name('admin');
+  });
 
-    Route::get('/messages', [MessageController::class, 'index'])->name('messages');
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+  // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
+  Route::get('/notifications', function() {
+    return view('pages.admin');
+  })->name('notifications');
 
-    // Search
-    Route::controller(SearchController::class)->group(function () {
-        Route::get('/search', 'search')->name('search');
-    });
+  // Search
+  Route::controller(SearchController::class)->group(function () {
+    Route::get('/search', 'search')->name('search');
+  });
 });
 
 
@@ -130,7 +131,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities.show');
 Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('auth')->name('communities.create');
 Route::middleware('auth')->group(function () {
-    Route::get('/hubs/create', [CommunityController::class, 'createHub']);
+  Route::get('/hubs/create', [CommunityController::class, 'createHub']);
 });
 
 Route::get('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
@@ -142,7 +143,7 @@ Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])-
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
 Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
-Route::post('/report/{id}',[ReportController::class,'report'])->middleware('auth');
+Route::post('/report/{id}', [ReportController::class, 'report'])->middleware('auth');
 Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
 

@@ -88,14 +88,15 @@ class NewsController extends Controller
   }
 
 
-  public function createNews(Post $post, $newsUrl)
+  public function createNews(Post $post, $newsUrl, $imageUrl = null)
   {
     $news = News::create([
       'post_id' => $post->id,
       'news_url' => $newsUrl,
+      'image_url' => $imageUrl
     ]);
 
-    return redirect()->route('news')->with('success', 'News created successfully');
+    return redirect()->route('news')->with('success', $news);
   }
 
   public function edit($post_id)
