@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\CommentNotification;
+use App\Models\Notification; // Assuming you have a Notification model for general notifications
+use App\Models\AuthenticatedUser; // To get the authors of the post
+
 
 class CommentController extends Controller
 {
@@ -48,16 +52,44 @@ class CommentController extends Controller
             'content' => 'required|string',
             'parent_comment_id' => 'nullable|exists:comments,id'
         ]);
-
+    
+        // Retrieve the post being commented on
+        $post = Post::find($post_id);
+    
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+    
+        // Create the comment
         $comment = Comment::create([
-          'content' => $validatedData['content'], 
-          'post_id' => $post_id, // The ID of the post this comment belongs to
-          'authenticated_user_id' => auth()->user()->id, // The authenticated user's ID
-          'parent_comment_id' => $validatedData['parent_comment_id'], // If it's a reply, provide the parent comment ID
-          'creation_date' => now(), // Current timestamp
-          'updated' => false, // Current timestamp (if you're using `updated_at`, replace with that)
-      ]);
-
+            'content' => $validatedData['content'], 
+            'post_id' => $post_id, // The ID of the post this comment belongs to
+            'authenticated_user_id' => auth()->user()->id, // The authenticated user's ID
+            'parent_comment_id' => $validatedData['parent_comment_id'], // If it's a reply, provide the parent comment ID
+            'creation_date' => now(), // Current timestamp
+            'updated' => false, // Set to false initially
+        ]);
+    
+        // Get the authors of the post (excluding the commenter to avoid sending notifications to the commenter)
+        $authors = $post->authors()->where('authenticated_user_id', '!=', auth()->user()->id)->get();
+    
+        // Create a notification for each author
+        foreach ($authors as $author) {
+            // Create a Notification (this could be a general notification, or a custom notification)
+            $notification = Notification::create([
+                'is_read' => false,
+                'notification_date' => now(),
+                'authenticated_user_id' => $author->id, // The author receiving the notification
+                // Add other fields if necessary
+            ]);
+    
+            // Link the notification to the comment
+            $commentNotification = CommentNotification::create([
+                'notification_id' => $notification->id,
+                'comment_id' => $comment->id,
+            ]);
+        }
+    
         return response()->json([
             'comment' => [
                 'id' => $comment->id,

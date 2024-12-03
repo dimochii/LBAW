@@ -11,7 +11,6 @@ class UpvoteNotification extends Model
     public $timestamps = false;
 
     protected $fillable = ['notification_id', 'vote_id'];
-    protected $primaryKey =['notification_id', 'vote_id'];
 
     public function notification()
     {

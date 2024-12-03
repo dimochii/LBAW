@@ -13,7 +13,6 @@
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href={{ asset('css/app.css') }}>
-  @vite('resources/css/app.css')
   <link rel="stylesheet" href="{{ asset('css/build.css' )}}">
 
 </head>
@@ -128,7 +127,7 @@
               </svg>
             </a>
 
-          <a href="{{ route('notifications') }}"
+          <a href="{{ route('notifications.show', Auth::user()->id) }}"
             class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
             <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
             <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
