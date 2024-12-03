@@ -46,9 +46,9 @@ CREATE TABLE authenticated_users (
 );
 
 CREATE TABLE user_followers (
+    id SERIAL PRIMARY KEY,
     follower_id INT,
     followed_id INT,
-    PRIMARY KEY (follower_id, followed_id),
     FOREIGN KEY (follower_id) REFERENCES authenticated_users(id),
     FOREIGN KEY (followed_id) REFERENCES authenticated_users(id)
 );
@@ -69,9 +69,10 @@ CREATE TABLE votes (
 );
 
 CREATE TABLE post_votes (
+    id SERIAL PRIMARY KEY,
     vote_id INT,
     post_id INT,
-    PRIMARY KEY (vote_id, post_id),
+
     FOREIGN KEY (vote_id) REFERENCES votes(id),
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
