@@ -26,4 +26,12 @@ class NotificationController extends Controller
             'readNotifications' => $readNotifications,
         ]);
     }
+    public function markAsRead($id)
+{
+    $notification = Notification::findOrFail($id);  // Find the notification by its ID
+    $notification->is_read = true;  // Mark it as read
+    $notification->save();  // Save the change
+
+    return redirect()->back();  // Redirect the user back to the notifications page
+}
 }

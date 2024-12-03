@@ -143,3 +143,6 @@ Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('
 Route::get('/notifications', [NotificationController::class, 'show'])
     ->middleware('auth')
     ->name('notifications.show');
+    //mark as read
+Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
