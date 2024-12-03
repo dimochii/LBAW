@@ -12,10 +12,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
-  {{--
   <link rel="stylesheet" href={{ asset('css/app.css') }}>
-  @vite('resources/css/app.css') --}}
-  {{-- @vite('resources/css/app.css') --}}
   <link rel="stylesheet" href="{{ asset('css/build.css' )}}">
 
 </head>
@@ -201,6 +198,9 @@
           <div class="py-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
             <div class="space-y-1 *:transition-colors *:pl-6">
+              <a href="{{ url('/hubs/create') }}"  class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
+                <span class="">+ Create Hub</span>
+              </a>
               <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
                 <div class="w-2 h-2 rounded-full bg-green-500"></div>
                 <span class="">/Economics</span>
@@ -239,17 +239,14 @@
           <div class="py-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">info</h3>
             <div class="*:*:underline-effect *:px-4 *:py-1 flex flex-col text-xl ml-2">
-              <a href="{{ url('/home') }}" class="">
+              <a href="{{ url('/about-us') }}" class="">
                 <span class="">about us</span>
               </a>
               <a href="#" class="">
                 <span class="">best of</span>
               </a>
-              <a href="#" class="">
+              <a href="{{ url('/hubs') }}" class="">
                 <span class="">hubs</span>
-              </a>
-              <a href="#" class="">
-                <span class="">help</span>
               </a>
             </div>
           </div>
