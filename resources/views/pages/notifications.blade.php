@@ -14,7 +14,6 @@
                     <strong>{{ $notification->notification_date }}</strong>: 
                     @if($notification->postNotification)
                         New post in a community you follow: 
-                        <a href="{{ route('posts.show', $notification->postNotification->post->id) }}">
                             {{ $notification->postNotification->post->title }}
                         </a>
                     @endif

@@ -11,7 +11,6 @@ class PostNotification extends Notification
     public $timestamps = false;
 
     protected $fillable = ['notification_id', 'post_id'];
-    protected $primaryKey =['notification_id', 'post_id'];
 
     public function notification()
     {

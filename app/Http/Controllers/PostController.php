@@ -31,6 +31,7 @@ class PostController extends Controller
                 'notification_date' => now(),
                 'authenticated_user_id' => $follower->id,
             ]);
+            //dd($post, $post->id ?? null);
 
             // Link the notification to the post
             PostNotification::create([
