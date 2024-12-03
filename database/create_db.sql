@@ -46,9 +46,9 @@ CREATE TABLE authenticated_users (
 );
 
 CREATE TABLE user_followers (
+    id SERIAL PRIMARY KEY,
     follower_id INT,
     followed_id INT,
-    PRIMARY KEY (follower_id, followed_id),
     FOREIGN KEY (follower_id) REFERENCES authenticated_users(id),
     FOREIGN KEY (followed_id) REFERENCES authenticated_users(id)
 );
@@ -69,9 +69,10 @@ CREATE TABLE votes (
 );
 
 CREATE TABLE post_votes (
+    id SERIAL PRIMARY KEY,
     vote_id INT,
     post_id INT,
-    PRIMARY KEY (vote_id, post_id),
+
     FOREIGN KEY (vote_id) REFERENCES votes(id),
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
@@ -282,30 +283,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION vote_create_notification_trigger()
-RETURNS TRIGGER AS $$
-DECLARE
-    new_notification_id INT;  
-BEGIN
-    INSERT INTO notifications (is_read, authenticated_user_id)
-    VALUES (FALSE, NEW.authenticated_user_id) 
-    RETURNING id INTO new_notification_id;
 
-    INSERT INTO upvote_notifications (notification_id, vote_id)
-    VALUES (new_notification_id, NEW.id);
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 CREATE TRIGGER follow_notification_trigger
 AFTER INSERT ON user_followers
 FOR EACH ROW
 EXECUTE FUNCTION follow_create_notification_trigger();
 
-CREATE TRIGGER upvote_notification_trigger
-AFTER INSERT ON votes
-FOR EACH ROW
-EXECUTE FUNCTION vote_create_notification_trigger();
 
 
 
