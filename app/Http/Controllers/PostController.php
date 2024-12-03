@@ -18,29 +18,37 @@ use App\Models\UpvoteNotification;
 
 class PostController extends Controller
 {
-    private function notifyCommunityFollowers($communityId, $post)
-    {
-        $community = Community::find($communityId);
+  private function notifyCommunityFollowers($communityId, $post)
+  {
+      $community = Community::find($communityId);
+  
+      // Retrieve followers of the community
+      $followers = $community->followers;
+  
+      // Get the authors of the post
+      $authors = $post->authors->pluck('id')->toArray(); // Get author IDs
+  
+      foreach ($followers as $follower) {
+          // Skip notifying if the follower is an author of the post
+          if (in_array($follower->id, $authors)) {
+              continue;
+          }
+  
+          // Create a notification for each follower
+          $notification = Notification::create([
+              'is_read' => false,
+              'notification_date' => now(),
+              'authenticated_user_id' => $follower->id,
+          ]);
+  
+          // Link the notification to the post
+          PostNotification::create([
+              'notification_id' => $notification->id,
+              'post_id' => $post->id,
+          ]);
+      }
+  }
 
-        // Retrieve followers of the community
-        $followers = $community->followers;
-
-        foreach ($followers as $follower) {
-            // Create a notification for each follower
-            $notification = Notification::create([
-                'is_read' => false,
-                'notification_date' => now(),
-                'authenticated_user_id' => $follower->id,
-            ]);
-            //dd($post, $post->id ?? null);
-
-            // Link the notification to the post
-            PostNotification::create([
-                'notification_id' => $notification->id,
-                'post_id' => $post->id,
-            ]);
-        }
-    }
     
     public function createPost()
     {

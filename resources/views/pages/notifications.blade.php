@@ -10,13 +10,19 @@
     @else
         <ul>
             @foreach($unreadNotifications as $notification)
+                @if(!($notification->postNotification && $notification->postNotification->post) &&
+                    !($notification->commentNotification && $notification->commentNotification->comment->post) &&
+                    !($notification->upvoteNotification && $notification->upvoteNotification->vote->postVote->post) &&
+                    !($notification->followNotification && $notification->followNotification->follower))
+                    @continue
+                @endif
                 <li>
                     <strong>{{ $notification->notification_date }}</strong>: 
                     @if($notification->postNotification && $notification->postNotification->post)
                         {{-- Notification for Post --}}
                         <a href="{{ route($notification->postNotification->post->news ? 'news.show' : 'topics.show', $notification->postNotification->post->id) }}">
                             New post on {{ $notification->postNotification->post->community->name }}: {{ $notification->postNotification->post->title }} 
-                            </a>
+                        </a>
                     @elseif($notification->commentNotification && $notification->commentNotification->comment->post)
                         {{-- Notification for Comment --}}
                         <a href="{{ route($notification->commentNotification->comment->post->news ? 'news.show' : 'topics.show', $notification->commentNotification->comment->post->id) }}">
@@ -32,9 +38,6 @@
                         <a href="{{ route('user.profile', $notification->followNotification->follower->id) }}">
                             New follower: {{ $notification->followNotification->follower->name }}
                         </a>
-                    @else
-                        {{-- Fallback for undefined notification types --}}
-                        <p>Notification type not recognized.</p>
                     @endif
                 </li>
             @endforeach
@@ -47,9 +50,16 @@
     @else
         <ul>
             @foreach($readNotifications as $notification)
+                @if(!($notification->postNotification && $notification->postNotification->post) &&
+                    !($notification->commentNotification && $notification->commentNotification->comment->post) &&
+                    !($notification->upvoteNotification && $notification->upvoteNotification->vote->postVote->post) &&
+                    !($notification->followNotification && $notification->followNotification->follower))
+                    @continue
+                @endif
                 <li>
                     <strong>{{ $notification->notification_date }}</strong>: 
                     @if($notification->postNotification && $notification->postNotification->post)
+                        {{-- Notification for Post --}}
                         <a href="{{ route($notification->postNotification->post->news ? 'news.show' : 'topics.show', $notification->postNotification->post->id) }}">
                             {{ $notification->postNotification->post->title }}
                         </a>
@@ -57,7 +67,7 @@
                         <a href="{{ route($notification->commentNotification->comment->post->news ? 'news.show' : 'topics.show', $notification->commentNotification->comment->post->id) }}">
                             Comment on: {{ $notification->commentNotification->comment->post->title }}
                         </a>
-                        @elseif($notification->upvoteNotification && $notification->upvoteNotification->vote->postVote && $notification->upvoteNotification->vote->postVote->post)
+                    @elseif($notification->upvoteNotification && $notification->upvoteNotification->vote->postVote && $notification->upvoteNotification->vote->postVote->post)
                         <a href="{{ route($notification->upvoteNotification->vote->postVote->post->news ? 'news.show' : 'topics.show', $notification->upvoteNotification->vote->postVote->post->id) }}">
                             {{ $notification->upvoteNotification->vote->user->username }} upvoted: {{ $notification->upvoteNotification->vote->postVote->post->title }}
                         </a>
@@ -65,8 +75,6 @@
                         <a href="{{ route('user.profile', $notification->followNotification->follower->id) }}">
                             New follower: {{ $notification->followNotification->follower->name }}
                         </a>
-                    @else
-                        <p>Notification type not recognized.</p>
                     @endif
                 </li>
             @endforeach
