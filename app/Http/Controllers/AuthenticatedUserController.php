@@ -300,47 +300,69 @@ public function getVotedTopics($user)
     public function addfavorite(Request $request, $id)
     {
         if (!Auth::check()) {
-            return response()->json(['message' => 'You are not logged in'], 403);
+            return response()->json(['message' => 'Você não está logado'], 403);
         }
 
         $post = Post::find($id);
 
         if (!$post) {
-            return response()->json(['message' => 'Post not found'], 404);
+            return response()->json(['message' => 'Post não encontrado'], 404);
         }
 
         $user = Auth::user();
 
-        if ($user->favouritePosts()->where('post_id', $id)->exists()) {
-            return response()->json(['message' => 'Post is already in your favorites'], 400);
+        // Verifica se o post já está favoritado
+        $existingFavorite = \DB::table('favorite_posts')
+            ->where('authenticated_user_id', $user->id)
+            ->where('post_id', $id)
+            ->exists();
+
+        if ($existingFavorite) {
+            return response()->json(['message' => 'Este post já está nos seus favoritos'], 400);
         }
 
-        $user->favouritePosts()->attach($id);
+        // Adiciona o post à tabela favorite_posts
+        \DB::table('favorite_posts')->insert([
+            'authenticated_user_id' => $user->id,
+            'post_id' => $id
+        ]);
 
-        return response()->json(['message' => 'Post added to favorites successfully'], 201);
+        return response()->json(['message' => 'Post adicionado aos favoritos'], 201);
     }
+
 
     public function remfavorite(Request $request, $id)
     {
         if (!Auth::check()) {
-            return response()->json(['message' => 'You are not logged in'], 403);
+            return response()->json(['message' => 'Você não está logado'], 403);
         }
-    
+
         $post = Post::find($id);
-    
+
         if (!$post) {
-            return response()->json(['message' => 'Post not found'], 404);
+            return response()->json(['message' => 'Post não encontrado'], 404);
         }
-    
+
         $user = Auth::user();
-    
-        if (!$user->favouritePosts()->where('post_id', $id)->exists()) {
-            return response()->json(['message' => 'Post is not in your favorites'], 400);
+
+        // Verifica se o post não está nos favoritos
+        $existingFavorite = \DB::table('favorite_posts')
+            ->where('authenticated_user_id', $user->id)
+            ->where('post_id', $id)
+            ->exists();
+
+        if (!$existingFavorite) {
+            return response()->json(['message' => 'Este post não está nos seus favoritos'], 400);
         }
-    
-        $user->favouritePosts()->detach($id);
-    
-        return response()->json(['message' => 'Post removed from favorites successfully'], 200);
+
+        // Remove o post da tabela favorite_posts
+        \DB::table('favorite_posts')
+            ->where('authenticated_user_id', $user->id)
+            ->where('post_id', $id)
+            ->delete();
+
+        return response()->json(['message' => 'Post removido dos favoritos'], 200);
     }
+
     
 }

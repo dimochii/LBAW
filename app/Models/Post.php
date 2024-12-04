@@ -68,6 +68,11 @@ class Post extends Model
         return $this->belongsToMany(AuthenticatedUser::class,'favorite_posts');
     }
 
+    public function isFavoritedByUser()
+    {
+        return Auth::check() && $this->favourites()->where('authenticated_user_id', Auth::id())->exists();
+    }
+
     public function postNotification()
     {
         return $this->hasOne(PostNotification::class);
