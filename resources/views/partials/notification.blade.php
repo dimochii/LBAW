@@ -13,7 +13,7 @@
                 </svg>
                 New post on {{ $notification->postNotification->post->community->name }}: 
                 <span class="font-medium">{{ $notification->postNotification->post->title }}</span>
-            </a>
+            </a> 		
         @elseif($notification->commentNotification && $notification->commentNotification->comment->post)
             <a href="{{ route($notification->commentNotification->comment->post->news ? 'news.show' : 'topics.show', $notification->commentNotification->comment->post->id) }}"
                onclick="markAsRead({{ $notification->id }})"
@@ -34,9 +34,8 @@
             <a href="{{ route($notification->upvoteNotification->vote->postVote->post->news ? 'news.show' : 'topics.show', $notification->upvoteNotification->vote->postVote->post->id) }}"
                onclick="markAsRead({{ $notification->id }})"
                class="flex items-center hover:text-blue-600 transition-colors">
-                <!-- Upvote Triangle Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-pastelRed" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9l6 6 6-6" />
                 </svg>
                 <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
                     <img src="{{ $notification->upvoteNotification->vote->user->avatar ?? 'default-avatar.png' }}" 
@@ -62,9 +61,9 @@
     </td>
     <td class="px-4 py-4">
         @if($notification->read)
-            <span class="inline-block w-2 h-2 bg-green-500 rounded-full"></span> <!-- Read status -->
+            <span class="inline-block w-2 h-2 bg-green-500 rounded-full"></span> 
         @else
-            <span class="inline-block w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span> <!-- Unread status -->
+            <span class="inline-block w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span> 
         @endif
     </td>
 </tr>
