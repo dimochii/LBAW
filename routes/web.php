@@ -16,7 +16,6 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,10 +68,10 @@ Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])
 //articles
 
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
-Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
-Route::post('/favorites/{postId}/toggle', [FavoriteController::class, 'toggleFavorite'])->middleware('auth');
 
+Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite']);
+Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite']);
 
 
 

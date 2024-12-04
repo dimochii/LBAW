@@ -56,20 +56,20 @@ news = Bool
 
     <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
       <div>
-        <input 
-            id="favorite-{{$post->id}}" 
-            type="checkbox" 
-            class="hidden peer/favorite" 
-            {{ $post->isFavoritedByUser() ? 'checked' : '' }}
-            data-post-id="{{ $post->id }}">
+          <input 
+              id="favorite-{{$post->post_id}}" 
+              type="checkbox" 
+              class="hidden peer/favorite" 
+              {{ Auth::check() && Auth::user()->favouritePosts->contains($post->post_id) ? 'checked' : '' }} 
+              name="favorite" 
+              onchange="toggleFavorite({{ $post->post_id }})">
 
-        <label for="favorite-{{$post->id}}" 
-            class="cursor-pointer peer-checked/favorite:fill-red-400 fill-[#3C3D37] transition-all ease-out favorite-button">
-            
-            <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-        </label>
+          <label for="favorite-{{$post->post_id}}" 
+              class="cursor-pointer peer-checked/favorite:fill-pink-500 cursor-pointer group-hover/wrapper:hover:fill-pink-500 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
+              <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+          </label>
       </div>
       <div>
         <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{ $item->user_upvoted ?
@@ -140,32 +140,29 @@ news = Bool
   </a>
   @endif
 </div>
+
 <script>
-  document.querySelectorAll('.favorite-button').forEach(button => {
-    button.addEventListener('click', async (event) => {
-        const postId = button.previousElementSibling.dataset.postId;
-
-        try {
-            const response = await fetch(`/favorites/${postId}/toggle`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-            });
-
-            const data = await response.json();
-
-            if (data.favorited) {
-                button.querySelector('svg').classList.add('fill-red-400');
+    function toggleFavorite(postId) {
+        const isChecked = document.getElementById(`favorite-${postId}`).checked;
+        const url = isChecked ? `/favorite/${postId}/add` : `/favorite/${postId}/remove`;
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: postId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                console.log(data.message);
             } else {
-                button.querySelector('svg').classList.remove('fill-red-400');
+                console.log('An error occurred');
             }
-        } catch (error) {
-            console.error('Error toggling favorite:', error);
-        }
-    });
-});
-
+        })
+        .catch(error => console.error('Error:', error));
+    }
 </script>
 
