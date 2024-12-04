@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="p-4">
-    <h1 class="text-xl font-bold mb-4 flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <h1 class="tracking-tighter font-medium text-6xl flex items-center py-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 mr-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
         Notifications
@@ -210,20 +210,6 @@
     </div>
 </div>
 
-<script>
-    function markAsRead(notificationId) {
-        fetch(`/notifications/${notificationId}/read`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-            },
-        }).then(response => {
-            if (response.ok) {
-                location.reload(); 
-            }
-        });
-    }
-</script>
 @endsectionhite border-2 border-black/10 rounded-lg p-4 text-center text-gray-500">
                     No read notifications.
                 </div>
