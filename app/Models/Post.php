@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth; 
 
 class Post extends Model
 {
@@ -65,13 +66,21 @@ class Post extends Model
 
     public function favourites()
     {
-        return $this->belongsToMany(AuthenticatedUser::class,'favorite_posts');
+        return $this->belongsToMany(
+            AuthenticatedUser::class,
+            'favorite_posts',
+            'post_id',
+            'authenticated_user_id'
+        );
     }
 
     public function isFavoritedByUser()
     {
-        return Auth::check() && $this->favourites()->where('authenticated_user_id', Auth::id())->exists();
+        return Auth::check() && $this->favourites()->where('authenticated_user_id', Auth::user()->id)->exists();
     }
+
+
+
 
     public function postNotification()
     {

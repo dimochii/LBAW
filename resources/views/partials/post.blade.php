@@ -56,16 +56,21 @@ news = Bool
 
     <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
       <div>
-        <input id="{{$post->post_id}}-favorite" type="checkbox" class="hidden peer/favorite" 
-          {{ $item->user_favorited ? 'checked' : '' }} name="favorite">
-        <label for="{{$post->post_id}}-favorite" 
-          class="cursor-pointer peer-checked/favorite:fill-red-400 fill-[#3C3D37] transition-all ease-out">
-          <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
+        <input 
+            id="favorite-{{$post->id}}" 
+            type="checkbox" 
+            class="hidden peer/favorite" 
+            {{ $post->isFavoritedByUser() ? 'checked' : '' }}
+            data-post-id="{{ $post->id }}">
+
+        <label for="favorite-{{$post->id}}" 
+            class="cursor-pointer peer-checked/favorite:fill-red-400 fill-[#3C3D37] transition-all ease-out favorite-button">
+            
+            <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
         </label>
       </div>
-
       <div>
         <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{ $item->user_upvoted ?
         'checked' : '' }} name="vote">
@@ -135,4 +140,32 @@ news = Bool
   </a>
   @endif
 </div>
+<script>
+  document.querySelectorAll('.favorite-button').forEach(button => {
+    button.addEventListener('click', async (event) => {
+        const postId = button.previousElementSibling.dataset.postId;
+
+        try {
+            const response = await fetch(`/favorites/${postId}/toggle`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+            });
+
+            const data = await response.json();
+
+            if (data.favorited) {
+                button.querySelector('svg').classList.add('fill-red-400');
+            } else {
+                button.querySelector('svg').classList.remove('fill-red-400');
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+        }
+    });
+});
+
+</script>
 
