@@ -154,3 +154,4 @@ Route::get('/notifications', [NotificationController::class, 'show'])
     //mark as read
 Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
+

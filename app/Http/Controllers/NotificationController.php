@@ -35,39 +35,5 @@ class NotificationController extends Controller
     return redirect()->back();  // Redirect the user back to the notifications page
 }
 
-public function showUpvotes()
-{
-    $notifications = Auth::user()->notifications()
-        ->where('type', 'App\Notifications\UpvoteNotification')
-        ->get();
 
-    return view('notifications.tabs.upvotes', compact('notifications'));
-}
-
-public function showPosts()
-{
-    $notifications = Auth::user()->notifications()
-        ->where('type', 'App\Notifications\PostNotification')
-        ->get();
-
-    return view('notifications.tabs.posts', compact('notifications'));
-}
-
-public function showComments()
-{
-    $notifications = Auth::user()->notifications()
-        ->where('type', 'App\Notifications\CommentNotification')
-        ->get();
-
-    return view('notifications.tabs.comments', compact('notifications'));
-}
-
-public function showFollows()
-{
-    $notifications = Auth::user()->notifications()
-        ->where('type', 'App\Notifications\FollowNotification')
-        ->get();
-
-    return view('notifications.tabs.follows', compact('notifications'));
-}
 }
