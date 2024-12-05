@@ -128,4 +128,12 @@
       @endif
     @endif
   </div>
+
+
+  <form method="POST" action="{{ url('/deletemyaccount') }}">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">Delete My Account</button>
+</form>
+
 @endsection

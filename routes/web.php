@@ -70,6 +70,7 @@ Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
 Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
+Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware('auth');
 
 //admin
 Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware('auth');
