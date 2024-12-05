@@ -16,6 +16,8 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\PasswordResetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +49,13 @@ Route::controller(LoginController::class)->group(function () {
   Route::post('/login', 'authenticate');
   Route::get('/logout', 'logout')->name('logout');
 });
+
+Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset-password', [PasswordResetController::class, 'updatePassword'])->name('password.update');
+Route::post('/password/update', [PasswordResetController::class, 'updatePassword'])->name('password.update');
+
 
 Route::controller(RegisterController::class)->group(function () {
   Route::get('/register', 'showRegistrationForm')->name('register');
@@ -159,5 +168,9 @@ Route::get('/notifications', [NotificationController::class, 'show'])
     ->name('notifications.show');
     //mark as read
 Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
+// Recover password
+
+Route::post('/send', [MailController::class, 'send']);
 
 

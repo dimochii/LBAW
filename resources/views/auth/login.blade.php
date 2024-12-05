@@ -78,7 +78,11 @@
                                     </p>
                                 @endif
                             </div>
-
+                            <p>
+                                <a href="{{ url('/forgot-password') }}" class="text-pastelBlue text-xs font-medium hover:text-pastelGreen transition-colors">
+                                    Forgot password?
+                                </a>
+                            </p>
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center">
                                     <input id="remember" name="remember" type="checkbox"
