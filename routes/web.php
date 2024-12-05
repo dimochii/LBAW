@@ -35,11 +35,24 @@ Route::redirect('/', '/news');
 
 
 
-// Cards
+
 
 
 // API
 
+
+Route::middleware('auth')->group(function () {
+  Route::controller(FeedController::class)->group(function () {
+    Route::get('/home', 'home')->name('home');
+    Route::get('/global', 'global')->name('global');
+    Route::get('/recent', 'recent')->name('recent');
+    Route::get('/about-us', 'aboutUs')->name('about-us');
+    Route::get('/admin/{id}/options', [AdminController::class, 'show'])->name('user.admin');
+    Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
+    Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
+    Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
+    Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->name('users.remove_admin');
+  });
 
 
 // Authentication
@@ -55,7 +68,7 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 //admin
-Route::get('/admin/{id}/options', [AdminController::class, 'show'])->name('user.admin');
+
 
 //Authenticated User
 //profile
@@ -117,14 +130,7 @@ Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
 Route::delete('/posts/delete/{id}', [PostController::class, 'delete'])->middleware('auth')->name('post.delete');
 
-Route::middleware('auth')->group(function () {
-  Route::controller(FeedController::class)->group(function () {
-    Route::get('/home', 'home')->name('home');
-    Route::get('/global', 'global')->name('global');
-    Route::get('/recent', 'recent')->name('recent');
-    Route::get('/about-us', 'aboutUs')->name('about-us');
-    //Route::get('/admin', 'admin')->name('admin');
-  });
+
 
   // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
   Route::get('/notifications', function() {

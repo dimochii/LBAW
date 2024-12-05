@@ -2,7 +2,9 @@
 
 @section('content')
 
-
+<head>
+<script defer src="{{ asset('js/app.js') }}"></script>
+</head>
 {{-- <div class="flex-1 bg-pastelRed h-12 flex items-center pl-2 md:pl-4 relative">
   <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -29,7 +31,7 @@
     <tbody class="divide-y divide-gray-200">
     @foreach($users as $user)
       <tr class="hover:bg-gray-50 transition-colors">
-        <td class="px-4 py-4 whitespace-nowrap">1</td>
+        <td class="px-4 py-4 whitespace-nowrap">{{$user->id}}</td>
         <td class="px-4 py-4">
           <a class="flex items-center" href="">
             <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
@@ -41,11 +43,23 @@
         {{ $user->name }}
         </td>
         <td class="px-4 py-4">
-          <input id="red-checkbox" type="checkbox" class="w-4 h-4 accent-blue-500" @if($user->is_admin) checked @endif>
-        </td>
+          <input
+              id="admin-checkbox-{{ $user->id }}"
+              type="checkbox"
+              class="w-4 h-4 accent-blue-500"
+              @if($user->is_admin) checked @endif
+              onclick="toggleAdmin({{ $user->id }}, this.checked)"
+          >
+      </td>
         <td class="px-4 py-4">
-          <input id="red-checkbox" type="checkbox" class="w-4 h-4 accent-red-500" @if($user->is_suspended) checked @endif>
-        </td>
+          <input
+              id="suspend-checkbox-{{ $user->id }}"
+              type="checkbox"
+              class="w-4 h-4 accent-red-500"
+              @if($user->is_suspended) checked @endif
+              onclick="toggleSuspend({{ $user->id }}, this.checked)"
+          >
+      </td>
         <td class="px-4 py-4">
           <button name="delete-button"
             class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
@@ -229,3 +243,75 @@
 </div>
 
 @endsection
+
+<script>
+    function toggleSuspend(userId, isChecked) {
+        const action = isChecked ? 'suspend' : 'unsuspend';
+        const confirmationMessage = isChecked
+            ? 'Are you sure you want to suspend this user?'
+            : 'Are you sure you want to unsuspend this user?';
+
+        if (confirm(confirmationMessage)) {
+            fetch(`/users/${userId}/${action}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update user status.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                alert(error.message);
+                // Revert checkbox state if the request fails
+                document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
+            });
+        } else {
+            // Revert checkbox state if the user cancels the action
+            document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
+        }
+    }
+
+    function toggleAdmin(userId, isChecked) {
+        const action = isChecked ? 'make_admin' : 'remove_admin';
+        const confirmationMessage = isChecked
+            ? 'Are you sure you want to grant this user admin privileges?'
+            : 'Are you sure you want to revoke this user\'s admin privileges?';
+
+        if (confirm(confirmationMessage)) {
+            fetch(`/users/${userId}/${action}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update admin status.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                alert(error.message);
+                // Revert checkbox state if the request fails
+                document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
+            });
+        } else {
+            // Revert checkbox state if the user cancels the action
+            document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
+        }
+    }
+</script>
