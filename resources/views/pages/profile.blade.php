@@ -75,6 +75,11 @@
            class="py-4 relative group {{ $activeTab === 'upvoted' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
           upvoted
         </a>
+        <!-- Add Favorites Tab -->
+        <a href="{{ url('/users/' . $user->id . '/profile?tab=favorites') }}"
+           class="py-4 relative group {{ $activeTab === 'favorites' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+          favorites
+        </a>
       </nav>
     </div>
   </div>
@@ -119,6 +124,17 @@
         @endforeach
       @else
         <p class="text-gray-500">This user has not upvoted any posts yet.</p>
+      @endif
+    @elseif ($activeTab === 'favorites')
+      @if (!$favorites->isEmpty())
+        @foreach ($favorites as $favorite)
+          @include('partials.post', [
+              'news' => $favorite->news ? true : false, 
+              'post' => $favorite,
+          ])
+      @endforeach
+      @else
+        <p class="text-gray-500">This user has no favorite posts yet.</p>
       @endif
     @endif
   </div>

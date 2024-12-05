@@ -57,11 +57,17 @@ class AuthenticatedUserController extends Controller
         $authored_topics = $this->getAuthoredTopics($user);
         $voted_news = $this->getVotedNews($user);
         $voted_topics = $this->getVotedTopics($user);
+        
+        if (!Auth::check()) {
+            return response()->json(['message' => 'You are not logged in'], 403);
+        }
+    
+        $favorites = Auth::user()->favouritePosts;
 
         $isFollowing = Auth::check() && Auth::user()->follows()->where('followed_id', $id)->exists();
 
         return view('pages.profile', compact(
-            'user', 'followers', 'following', 'authored_news', 
+            'user', 'followers', 'following', 'authored_news', 'favorites', 
             'authored_topics', 'voted_news', 'voted_topics', 'isFollowing'
         ));
     }

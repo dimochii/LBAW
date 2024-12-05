@@ -60,6 +60,10 @@ Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])-
 Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
 Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');
 Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+Route::get('/users/{user}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+Route::get('/users/{user}/profile/favorites', [AuthenticatedUserController::class, 'favorites']);
+
+
 
 //followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
