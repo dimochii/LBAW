@@ -18,6 +18,7 @@ use App\Http\Controllers\SideController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
