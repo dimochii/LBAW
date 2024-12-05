@@ -43,7 +43,6 @@ class GoogleController extends Controller
             Auth::login($user);
         }
 
-        // After login, redirect to homepage
         return redirect()->intended('home');
     }
 

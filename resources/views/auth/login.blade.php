@@ -78,7 +78,10 @@
                                     </p>
                                 @endif
                             </div>
-                            <a href="{{ route('google-auth') }}" class="google-btn">Continue with Google</a>
+                            <a href="{{ route('google-auth') }}" class="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pastelBlue">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png" alt="Google logo" class="h-5 mr-2">
+                                <span>Continue with Google</span>
+                            </a>
                             <p>
                                 <a href="{{ url('/forgot-password') }}" class="text-pastelBlue text-xs font-medium hover:text-pastelGreen transition-colors">
                                     Forgot password?
