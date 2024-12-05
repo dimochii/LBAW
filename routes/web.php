@@ -50,9 +50,11 @@ Route::controller(LoginController::class)->group(function () {
   Route::get('/logout', 'logout')->name('logout');
 });
 
-Route::get('/forgot-password', [PasswordResetController::class, 'showResetForm'])->name('password.request');
+Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.request');
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
-
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset-password', [PasswordResetController::class, 'updatePassword'])->name('password.update');
+Route::post('/password/update', [PasswordResetController::class, 'updatePassword'])->name('password.update');
 
 
 Route::controller(RegisterController::class)->group(function () {
