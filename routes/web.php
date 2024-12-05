@@ -173,4 +173,10 @@ Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRe
 
 Route::post('/send', [MailController::class, 'send']);
 
+// OAuth API
+
+Route::controller(GoogleController::class)->group(function () {
+  Route::get('auth/google', 'redirect')->name('google-auth');
+  Route::get('auth/google/call-back', 'callbackGoogle')->name('google-call-back');
+});
 

@@ -78,6 +78,7 @@
                                     </p>
                                 @endif
                             </div>
+                            <a href="{{ route('google-auth') }}" class="google-btn">Continue with Google</a>
                             <p>
                                 <a href="{{ url('/forgot-password') }}" class="text-pastelBlue text-xs font-medium hover:text-pastelGreen transition-colors">
                                     Forgot password?
