@@ -115,7 +115,7 @@ class PostController extends Controller
     return response()->json(['message' => 'Invalid type'], 400);
   }
 
-  public function delete(Request $request, $id)
+  public function destroy(Request $request, $id)
   {
     $post = Post::find($id);
 

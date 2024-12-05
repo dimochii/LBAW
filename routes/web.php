@@ -15,6 +15,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NotificationController;
 
 /*
@@ -53,12 +54,16 @@ Route::controller(RegisterController::class)->group(function () {
   Route::post('/register', 'register');
 });
 
+//admin
+Route::get('/admin/{id}/options', [AdminController::class, 'show'])->name('user.admin');
+
 //Authenticated User
 //profile
 Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 //edit profile
 Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
 Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');
+Route::post('/users/{id}', [AuthenticatedUserController::class, 'destroy'])->name('user.destroy');
 Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 Route::get('/users/{user}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 Route::get('/users/{user}/profile/favorites', [AuthenticatedUserController::class, 'favorites']);
@@ -118,7 +123,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/global', 'global')->name('global');
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
-    Route::get('/admin', 'admin')->name('admin');
+    //Route::get('/admin', 'admin')->name('admin');
   });
 
   // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
@@ -139,6 +144,7 @@ Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('
 Route::middleware('auth')->group(function () {
   Route::get('/hubs/create', [CommunityController::class, 'createHub']);
 });
+Route::post('/hubs/destroy', [CommunityController::class, 'destroy'])->middleware('auth')->name('communities.destroy');
 
 Route::get('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::get('/communities', [CommunityController::class, 'index'])->name('communities.index');
