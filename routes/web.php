@@ -82,7 +82,12 @@ Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])
 
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
+Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware('auth');
 
+
+//admin
+Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware('auth');
+Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'unsuspend'])->middleware('auth');
 Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite']);
 Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite']);
 
@@ -144,7 +149,7 @@ Route::middleware('auth')->group(function () {
 
 //Hub
 Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities.show');
-Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('auth')->name('communities.create');
+
 Route::middleware('auth')->group(function () {
   Route::get('/hubs/create', [CommunityController::class, 'createHub']);
 });
