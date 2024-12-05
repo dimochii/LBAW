@@ -57,6 +57,9 @@ class AuthenticatedUserController extends Controller
         $authored_topics = $this->getAuthoredTopics($user);
         $voted_news = $this->getVotedNews($user);
         $voted_topics = $this->getVotedTopics($user);
+        $favourite_news = $this->getFavouriteNews($user);
+        $favourite_topics = $this->getFavouriteTopics($user);
+
         
         if (!Auth::check()) {
             return response()->json(['message' => 'You are not logged in'], 403);
@@ -68,7 +71,7 @@ class AuthenticatedUserController extends Controller
 
         return view('pages.profile', compact(
             'user', 'followers', 'following', 'authored_news', 'favorites', 
-            'authored_topics', 'voted_news', 'voted_topics', 'isFollowing'
+            'authored_topics', 'voted_news', 'voted_topics','favourite_news', 'favourite_topics', 'isFollowing'
         ));
     }
 
@@ -216,9 +219,21 @@ class AuthenticatedUserController extends Controller
 
 
 public function getAuthoredTopics($user)
-{
-    return $this->fetchPostData($user->authoredPosts()->whereHas('topic'));
-}  
+    {
+        return $this->fetchPostData($user->authoredPosts()->whereHas('topic'));
+    }  
+
+
+public function getFavouriteNews($user)
+    {
+        return $this->fetchPostData($user->favouritePosts()->whereHas('news'));
+    }
+
+public function getFavouriteTopics($user)
+    {
+        return $this->fetchPostData($user->favouritePosts()->whereHas('topic'));
+    }
+
 
 public function getVotedNews($user)
 {

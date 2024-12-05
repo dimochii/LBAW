@@ -156,7 +156,7 @@ class CommunityController extends Controller
         ]);
 
         // Associar o usuário autenticado como moderador
-        $authUser = Auth::user();
+        $authUser = Auth::user(); 
         $community->moderators()->attach($authUser->id);
 
         return response()->json([
