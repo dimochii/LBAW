@@ -33,7 +33,7 @@
       <tr class="hover:bg-gray-50 transition-colors">
         <td class="px-4 py-4 whitespace-nowrap">{{$user->id}}</td>
         <td class="px-4 py-4">
-          <a class="flex items-center" href="">
+          <a class="flex items-center" href="{{ route('user.profile', $user->id) }}">
             <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
               class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
             <span class="break-all">{{ '@' . $user->username }}</span>
@@ -92,7 +92,7 @@
       <tr class="hover:bg-gray-50 transition-colors">
         <td class="px-4 py-4 whitespace-nowrap">{{ $hub->id }}</td>
         <td class="px-4 py-4">
-          <a class="flex items-center" href="">
+          <a class="flex items-center" href="{{ route('communities.show', $hub->id) }}">
             <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
               class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
             <span
@@ -164,6 +164,7 @@
         </td>
         <td
           class="px-4 py-4 break-all max-w-[16rem] overflow-hidden whitespace-nowrap text-ellipsis hover:overflow-auto hover:whitespace-normal hover:text-wrap hover:max-w-prose transition-all">
+          <a class="flex items-center" href="{{ route('news.show',['post_id' => $item->post->id]) }}">
           {{ $item->post->title }}
         </td>
         <td
@@ -211,6 +212,7 @@
 
         <td
           class="px-4 py-4 break-all max-w-[16rem] overflow-hidden whitespace-nowrap text-ellipsis hover:overflow-auto hover:whitespace-normal hover:text-wrap hover:max-w-prose transition-all">
+          <a class="flex items-center" href="{{ route('topic.show',['post_id' => $topic->post->id]) }}">
           {{ $topic->post->title }}
         </td>
         <td
