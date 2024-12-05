@@ -254,7 +254,7 @@
               <a href="#" class="">
                 <span class="">best of</span>
               </a>
-              <a href="{{ url('/hubs') }}" class="">
+              <a href="{{ url('/all-hubs') }}" class="">
                 <span class="">hubs</span>
               </a>
             </div>

@@ -95,7 +95,7 @@
                 <p class="text-gray-500">No posts available in this hub yet.</p>
                 @auth
                 @if($is_following)
-                <a href="{{ route('posts.create', ['community_id' => $community->id]) }}" 
+                <a href="{{ route('post.create', ['community_id' => $community->id]) }}" 
                    class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white text-sm font-medium rounded-full hover:bg-blue-600 transition-colors duration-200">
                     Create the first post
                 </a>
