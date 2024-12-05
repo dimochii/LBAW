@@ -49,6 +49,11 @@ Route::controller(LoginController::class)->group(function () {
   Route::get('/logout', 'logout')->name('logout');
 });
 
+Route::get('/recover_pass', function () {
+  return view('auth.recover_pass');
+})->name('recover_pass');
+
+
 Route::controller(RegisterController::class)->group(function () {
   Route::get('/register', 'showRegistrationForm')->name('register');
   Route::post('/register', 'register');
