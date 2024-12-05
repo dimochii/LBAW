@@ -103,36 +103,25 @@
           {{ $hub->description }}
         </td>
         <td class="px-4 py-4">
-        <form 
-    action="{{ route('communities.update.privacy', ['id' => $hub->id]) }}" 
-    method="POST" 
-    id="privacy-toggle-form"
-    class="inline-block">
-    @csrf
-    <button type="submit" 
-        name="is_private" 
-        value="{{ $hub->is_private ? 0 : 1 }}" 
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full 
-               {{ $hub->is_private ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
-        @if($hub->is_private)
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
-        Private
-        @else
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            <path d="M7 11h10"></path>
-        </svg>
-        Public
-        @endif
-    </button>
-</form>
-
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $hub->is_private ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+            @if($hub->is_private)
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Private
+            @else
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              <path d="M7 11h10"></path>
+            </svg>
+            Public
+            @endif
+          </span>
         </td>
 
         <td class="px-4 py-4">

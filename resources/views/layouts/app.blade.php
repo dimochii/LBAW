@@ -150,7 +150,7 @@
                     <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="rounded-full w-8 h-8 mr-3" />
                     <div>
                       <div class="font-medium text-gray-900 pr-6">{{ Auth::user()->name }}</div>
-                      <div class="text-gray-500 text-sm">Ver perfil</div>
+                      <div class="text-gray-500 text-sm">View profile</div>
                     </div>
                   </div>
                 </a>
