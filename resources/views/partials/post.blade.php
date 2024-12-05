@@ -142,28 +142,4 @@ news = Bool
   @endif
 </div>
 
-<script>
-    function toggleFavorite(postId) {
-        const isChecked = document.getElementById(`favorite-${postId}`).checked;
-        const url = isChecked ? `/favorite/${postId}/add` : `/favorite/${postId}/remove`;
-        
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: postId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                console.log(data.message);
-            } else {
-                console.log('An error occurred');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-</script>
 
