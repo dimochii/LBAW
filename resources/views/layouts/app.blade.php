@@ -6,14 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ config('app.name', 'Laravel') }}</title>
-  <script defer src="{{ asset('js/layout.js') }}" ></script>
+  <script defer src="{{ asset('js/layout.js') }}"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
+
   <link rel="stylesheet" href={{ asset('css/app.css') }}>
-  <link rel="stylesheet" href="{{ asset('css/build.css' )}}">
+  
+  @vite('resources/css/app.css')
+ 
+  {{--
+  <link rel="stylesheet" href="{{ asset('css/build.css' )}}"> --}}
 
 </head>
 
@@ -118,51 +123,54 @@
 
         <!-- Right Section -->
         <div class="bg-pastelBlue h-full w-32 md:w-64 flex items-center border-l-2 border-black justify-evenly">
-            @if (Auth::check())
+          @if (Auth::check())
             <a href="{{ route('post.create') }}">
-              <svg class="w-5 h-5 fill-[#3C3D37] hover:fill-[#3C3D37]/80 hover:rotate-180 transition-all "
-                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 455 455"
-                xml:space="preserve">
-                <polygon points="455,212.5 242.5,212.5 242.5,0 212.5,0 212.5,212.5 0,212.5 0,242.5 212.5,242.5 212.5,455 242.5,455 242.5,242.5 455,242.5 " />
+              <svg class="w-5 h-5 fill-[#3C3D37] hover:fill-[#3C3D37]/80 hover:rotate-180 transition-all" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 455 455" xml:space="preserve">
+                <polygon points="455,212.5 242.5,212.5 242.5,0 212.5,0 212.5,212.5 0,212.5 0,242.5 212.5,242.5 212.5,455 242.5,455 242.5,242.5 455,242.5" />
               </svg>
             </a>
 
-          <a href="{{ route('notifications.show', Auth::user()->id) }}"
-            class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
-            <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
-            <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
-            <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-          </a>
+            <a href="{{ route('notifications.show', Auth::user()->id) }}" class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
+              <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
+              <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
+              <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </a>
 
-        <div class="relative group">
-            <a href="{{ route('user.profile',  Auth::user()->id) }}" class="relative fill-transparent text-[#3C3D37] hover:text-[#3C3D37]/80 transition-colors">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+            <div class="relative">
+              <a href="#" class="relative fill-transparent text-[#3C3D37] hover:text-[#3C3D37]/80 transition-colors" id="profileIcon">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
               </a>
-              <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <!-- Changed to direct link instead of form -->
-                  <a href="{{ route('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                      Logout
-                  </a>
+              <div id="dropdownMenu" class="absolute right-0 mt-4 bg-white border border-gray-200 w-48 rounded-lg shadow-lg hidden z-50">
+                <a href="{{ route('user.profile', Auth::user()->id) }}" class="block pr-8 py-2 text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                  <div class="flex items-center px-4 py-3">
+                    <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="rounded-full w-8 h-8 mr-3" />
+                    <div>
+                      <div class="font-medium text-gray-900 pr-6">{{ Auth::user()->name }}</div>
+                      <div class="text-gray-500 text-sm">Ver perfil</div>
+                    </div>
+                  </div>
+                </a>
+                <a href="{{ route('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Logout
+                </a>
               </div>
+            </div>
+          @else
+            <a href="{{ route('login') }}" class="px-2 md:px-4 py-1.5 text-sm font-medium text-[#F4F2ED] bg-black/20 hover:bg-black/30 rounded-full transition-colors duration-200 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span class="hidden md:inline">Login</span>
+            </a>
+          @endif
         </div>
-        @else
-        <a href="{{ route('login') }}"
-          class="px-2 md:px-4 py-1.5 text-sm font-medium text-[#F4F2ED] bg-black/20 hover:bg-black/30 rounded-full transition-colors duration-200 flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          <span class="hidden md:inline">Login</span>
-        </a>
-        @endif
-      </div>
-
     </header>
 
     <div class="flex flex-1">
@@ -198,7 +206,8 @@
           <div class="py-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
             <div class="space-y-1 *:transition-colors *:pl-6">
-              <a href="{{ url('/hubs/create') }}"  class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
+              <a href="{{ url('/hubs/create') }}"
+                class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
                 <span class="">+ Create Hub</span>
               </a>
               <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
@@ -245,7 +254,7 @@
               <a href="#" class="">
                 <span class="">best of</span>
               </a>
-              <a href="{{ url('/hubs') }}" class="">
+              <a href="{{ url('/all-hubs') }}" class="">
                 <span class="">hubs</span>
               </a>
             </div>
@@ -263,104 +272,102 @@
       <!-- Right Sidebar -->
       @if (Request::is('hub/*'))
       <aside id="right-sidebar"
-          class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
-          
-          <!-- Hubs Section -->
-          <div class="p-4 border-b-2 border-black">
-              <div class="flex flex-wrap items-start gap-3">
-                  <div class="w-12 h-12 bg-green-500 rounded-full flex-shrink-0"></div>
-                  <div class="flex-1 break-words">
-                      <h2 class="font-medium break-all">/{{ $community->name }}</h2>
-                      <p class="text-sm text-gray-600 whitespace-normal">
-                          {{ $community->description }}
-                      </p>
-                      <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
-                          <div class="flex items-center shrink-0">
-                              <span>{{ $community->read_count }}</span>
-                              <span class="ml-1">Reading</span>
-                          </div>
-                          <div class="flex items-center shrink-0">
-                              <span>{{ $community->followers_count }}</span>
-                              <span class="ml-1">Following</span>
-                          </div>
-                      </div>
-                      <div>
-                        @auth
-                            @if($is_following)
-                                <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                                  bg-[#F4F2ED] text-black border-2 border-black">
-                                        unfollow -
-                                    </button>
-                                </form>
-                            @else
-                                <form action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" 
-                                            class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                                  bg-black text-[#F4F2ED]">
-                                        follow +
-                                    </button>
-                                </form>
-                            @endif
-                        @else
-                            <a href="{{ route('login') }}" 
-                              class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                      bg-black text-[#F4F2ED]">
-                                follow +
-                            </a>
-                        @endauth
-                    </div>
-                  </div>
+        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
+
+        <!-- Hubs Section -->
+        <div class="p-4 border-b-2 border-black">
+          <div class="flex flex-wrap items-start gap-3">
+            <div class="w-12 h-12 bg-green-500 rounded-full flex-shrink-0"></div>
+            <div class="flex-1 break-words">
+              <h2 class="font-medium break-all">/{{ $community->name }}</h2>
+              <p class="text-sm text-gray-600 whitespace-normal">
+                {{ $community->description }}
+              </p>
+              <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
+                <div class="flex items-center shrink-0">
+                  <span>{{ $community->read_count }}</span>
+                  <span class="ml-1">Reading</span>
+                </div>
+                <div class="flex items-center shrink-0">
+                  <span>{{ $community->followers_count }}</span>
+                  <span class="ml-1">Following</span>
+                </div>
               </div>
-          </div>
-
-          <!-- Moderators Section -->
-          <div class="p-4">
-            <h3 class="text-sm font-medium text-gray-500 mb-3">moderators</h3>
-            <div class="space-y-3">
-              @php
-                  // Busca moderadores do hub (simulação de chamada a um controlador ou modelo)
-                  $moderators = $hub->moderators ?? []; // Exemplo de busca
-                  $defaultModerators = [
-                      ['username' => '@admin', 'role' => 'Administrator', 'color' => 'bg-blue-500'],
-                      ['username' => '@friends', 'role' => 'Moderator', 'color' => 'bg-green-500'],
-                      ['username' => '@walkPro123', 'role' => 'Moderator', 'color' => 'bg-yellow-500'],
-                  ];
-
-                  $colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500', 'bg-orange-500'];
-              @endphp
-
-              @if (count($moderators) > 0)
-                @foreach ($moderators as $moderator)
-                  @php
-                    $moderatorColor = $moderator['color'] ?? $colors[array_rand($colors)];
-                  @endphp
-                  <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 {{ $moderatorColor }} rounded-full flex-shrink-0"></div>
-                    <div>
-                      <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
-                      <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
-                    </div>
-                  </div>
-                @endforeach
-              @else
-                <!-- Default Moderators -->
-                @foreach ($defaultModerators as $moderator)
-                  <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 {{ $moderator['color'] }} rounded-full flex-shrink-0"></div>
-                    <div>
-                      <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
-                      <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
-                    </div>
-                  </div>
-                @endforeach
-              @endif
+              <div>
+                @auth
+                @if($is_following)
+                <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                                  bg-[#F4F2ED] text-black border-2 border-black">
+                    unfollow -
+                  </button>
+                </form>
+                @else
+                <form action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
+                  @csrf
+                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                                  bg-black text-[#F4F2ED]">
+                    follow +
+                  </button>
+                </form>
+                @endif
+                @else
+                <a href="{{ route('login') }}" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                      bg-black text-[#F4F2ED]">
+                  follow +
+                </a>
+                @endauth
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- Moderators Section -->
+        <div class="p-4">
+          <h3 class="text-sm font-medium text-gray-500 mb-3">moderators</h3>
+          <div class="space-y-3">
+            @php
+            // Busca moderadores do hub (simulação de chamada a um controlador ou modelo)
+            $moderators = $hub->moderators ?? []; // Exemplo de busca
+            $defaultModerators = [
+            ['username' => '@admin', 'role' => 'Administrator', 'color' => 'bg-blue-500'],
+            ['username' => '@friends', 'role' => 'Moderator', 'color' => 'bg-green-500'],
+            ['username' => '@walkPro123', 'role' => 'Moderator', 'color' => 'bg-yellow-500'],
+            ];
+
+            $colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500',
+            'bg-orange-500'];
+            @endphp
+
+            @if (count($moderators) > 0)
+            @foreach ($moderators as $moderator)
+            @php
+            $moderatorColor = $moderator['color'] ?? $colors[array_rand($colors)];
+            @endphp
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 {{ $moderatorColor }} rounded-full flex-shrink-0"></div>
+              <div>
+                <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
+                <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
+              </div>
+            </div>
+            @endforeach
+            @else
+            <!-- Default Moderators -->
+            @foreach ($defaultModerators as $moderator)
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 {{ $moderator['color'] }} rounded-full flex-shrink-0"></div>
+              <div>
+                <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
+                <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
+              </div>
+            </div>
+            @endforeach
+            @endif
+          </div>
+        </div>
 
       </aside>
 
@@ -371,4 +378,5 @@
     onclick="toggleLeftSidebar()">
   </div>
 </body>
+
 </html>

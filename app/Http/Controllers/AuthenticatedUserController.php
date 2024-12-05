@@ -50,17 +50,28 @@ class AuthenticatedUserController extends Controller
     public function show($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
-
         $followers = $user->followers;
         $following = $user->follows;
-        $authored_news =  $this-> getAuthoredNews($user);
-        $authored_topics =  $this-> getAuthoredTopics($user);
-        $voted_news =  $this-> getVotedNews($user);
-        $voted_topics = $this -> getVotedTopics($user);
 
+        $authored_news = $this->getAuthoredNews($user);
+        $authored_topics = $this->getAuthoredTopics($user);
+        $voted_news = $this->getVotedNews($user);
+        $voted_topics = $this->getVotedTopics($user);
+        
+        if (!Auth::check()) {
+            return response()->json(['message' => 'You are not logged in'], 403);
+        }
+    
+        $favorites = Auth::user()->favouritePosts;
 
-        return view('pages.profile', compact('user', 'followers', 'following', 'authored_news','authored_topics', 'voted_news', 'voted_topics'));
+        $isFollowing = Auth::check() && Auth::user()->follows()->where('followed_id', $id)->exists();
+
+        return view('pages.profile', compact(
+            'user', 'followers', 'following', 'authored_news', 'favorites', 
+            'authored_topics', 'voted_news', 'voted_topics', 'isFollowing'
+        ));
     }
+
 
     public function getFollowers($id)
     {
@@ -313,33 +324,34 @@ class AuthenticatedUserController extends Controller
         return response()->json(['message' => 'Post added to favorites successfully'], 201);
     }
 
+
     public function remfavorite(Request $request, $id)
     {
         if (!Auth::check()) {
             return response()->json(['message' => 'You are not logged in'], 403);
         }
-    
+
         $post = Post::find($id);
-    
+
         if (!$post) {
             return response()->json(['message' => 'Post not found'], 404);
         }
-    
+
         $user = Auth::user();
-    
+
         if (!$user->favouritePosts()->where('post_id', $id)->exists()) {
             return response()->json(['message' => 'Post is not in your favorites'], 400);
         }
-    
+
         $user->favouritePosts()->detach($id);
-    
+
         return response()->json(['message' => 'Post removed from favorites successfully'], 200);
     }
     //Deleted User ---> id = 1
+
     public function deletemyaccount() {
         $user = Auth::user();
-        $deletedUserId = 1; 
-    
+        $deletedUserId = 1;     
         $deletedUser = AuthenticatedUser::find($deletedUserId);
     
         if (!$deletedUser) {

@@ -28,13 +28,12 @@ export default {
   plugins: [
     typography,
   ],
-  
+
   safelist: [
     {
       pattern: /bg-+/,
     },
-    'underline-effect',
-    'underline-effect-light',
+
   ],
 }
 

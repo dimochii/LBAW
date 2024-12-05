@@ -44,8 +44,24 @@
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
 
-
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
+        <div>
+            <input 
+                id="favorite-{{$newsItem->post_id}}" 
+                type="checkbox" 
+                class="hidden peer/favorite" 
+                {{ Auth::check() && Auth::user()->favouritePosts->contains($newsItem->post_id) ? 'checked' : '' }} 
+                name="favorite" 
+                onchange="toggleFavorite({{ $newsItem->post_id }})">
+
+            <label for="favorite-{{$newsItem->post_id}}" 
+                class="cursor-pointer peer-checked/favorite:fill-pink-500 cursor-pointer group-hover/wrapper:hover:fill-pink-500 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
+                <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </label>
+        </div>
+
         <div>
           <input id="{{$newsItem->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{
             $newsItem->user_upvoted ?
@@ -113,11 +129,14 @@
         </div>
       </div>
     </div>
-    <a href="{{ $newsItem->news_url ?? '#' }}" class="w-1/2 md:block hidden">
+    @if(!is_null($newsItem->image_url))
+    <a href="{{ $newsItem->news_url ?? '#' }}" class="w-1/2 md:block hidden p-4">
+      
       <img class=" object-cover  object-left w-full h-full"
-        src="https://imagens.publico.pt/imagens.aspx/1955774?tp=UH&db=IMAGENS&type=JPG&share=1&o=BarraFacebook_Publico.png"
+        src="{{ $newsItem->image_url }}"
         alt="">
     </a>
+    @endif
   </div>
 
   @isset($newsItem->post->content)
@@ -495,6 +514,7 @@
         console.error('Error while posting comment:', error);
       }
   })
+
 
   </script>
 

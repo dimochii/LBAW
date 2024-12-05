@@ -23,7 +23,7 @@
     @endif
 
     <!-- Form to test adding a post to favorites -->
-    <form method="POST" action="{{ url('/favorites/2') }}">
+    <form method="POST" action="{{ url('/favorite/2/add') }}">
         @csrf
         <button type="submit" class="btn btn-primary">Add Post 2 to Favorites</button>
     </form>

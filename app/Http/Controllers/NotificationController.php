@@ -34,4 +34,6 @@ class NotificationController extends Controller
 
     return redirect()->back();  // Redirect the user back to the notifications page
 }
+
+
 }

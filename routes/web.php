@@ -16,6 +16,8 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\PasswordResetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,41 +45,56 @@ Route::redirect('/', '/news');
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
-    Route::get('/login', 'showLoginForm')->name('login');
-    Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout');
+  Route::get('/login', 'showLoginForm')->name('login');
+  Route::post('/login', 'authenticate');
+  Route::get('/logout', 'logout')->name('logout');
 });
 
+Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset-password', [PasswordResetController::class, 'updatePassword'])->name('password.update');
+Route::post('/password/update', [PasswordResetController::class, 'updatePassword'])->name('password.update');
+
+
 Route::controller(RegisterController::class)->group(function () {
-    Route::get('/register', 'showRegistrationForm')->name('register');
-    Route::post('/register', 'register');
+  Route::get('/register', 'showRegistrationForm')->name('register');
+  Route::post('/register', 'register');
 });
 
 //Authenticated User
-    //profile
+//profile
 Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
-    //edit profile
+//edit profile
 Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
-Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update'); 
-Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile'); 
+Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');
+Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+Route::get('/users/{user}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+Route::get('/users/{user}/profile/favorites', [AuthenticatedUserController::class, 'favorites']);
 
-    //followers & following
+
+
+//followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
 Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->name('user.following');
 Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])->name('user.follow');
-    //articles
+//articles
 
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
-Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
 Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware('auth');
+
 
 //admin
 Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware('auth');
 Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'unsuspend'])->middleware('auth');
+Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite']);
+Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite']);
+
+
 
 //articles
-    
+
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
@@ -86,47 +103,47 @@ Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments']
 Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->name('comments.store');
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware('auth')->name('comments.update');
 
-    //upvote & downvote
+//upvote & downvote
 Route::post('/news/{post_id}/upvote', [PostController::class, 'upvote'])->name('news.upvote');
 Route::post('/news/{post_id}/downvote', [PostController::class, 'downvote'])->name('news.downvote');
 Route::post('/news/{post_id}/voteupdate', [PostController::class, 'voteUpdate'])->name('news.voteupdate');
 
-    //editing
+//editing
 Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware('auth')->name('news.edit');
 Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('auth')->name('news.update');
 
 //Topic
 Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
-    //editing
+//editing
 Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topics.edit');
 Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('auth')->name('topics.update');
 
 
 
-
-
 //Posts
-    //creation
+//creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
 Route::delete('/posts/delete/{id}', [PostController::class, 'delete'])->middleware('auth')->name('post.delete');
 
-
 Route::middleware('auth')->group(function () {
-    Route::controller(FeedController::class)->group(function () {
-        Route::get('/home', 'home')->name('home'); 
-        Route::get('/global', 'global')->name('global');
-        Route::get('/recent', 'recent')->name('recent');
-        Route::get('/about-us', 'aboutUs')->name('about-us');
-    });
+  Route::controller(FeedController::class)->group(function () {
+    Route::get('/home', 'home')->name('home');
+    Route::get('/global', 'global')->name('global');
+    Route::get('/recent', 'recent')->name('recent');
+    Route::get('/about-us', 'aboutUs')->name('about-us');
+    Route::get('/admin', 'admin')->name('admin');
+  });
 
-    Route::get('/messages', [MessageController::class, 'index'])->name('messages');
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+  // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
+  Route::get('/notifications', function() {
+    return view('pages.admin');
+  })->name('notifications');
 
-    // Search
-    Route::controller(SearchController::class)->group(function () {
-        Route::get('/search', 'search')->name('search');
-    });
+  // Search
+  Route::controller(SearchController::class)->group(function () {
+    Route::get('/search', 'search')->name('search');
+  });
 });
 
 
@@ -134,11 +151,11 @@ Route::middleware('auth')->group(function () {
 Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities.show');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/hubs/create', [CommunityController::class, 'createHub']);
+  Route::get('/hubs/create', [CommunityController::class, 'createHub']);
 });
 
-Route::get('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
-Route::get('/communities', [CommunityController::class, 'index'])->name('communities.index');
+Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
+Route::get('/all-hubs', [CommunityController::class, 'index'])->name('communities.index');
 
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
@@ -146,7 +163,7 @@ Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])-
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
 Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
-Route::post('/report/{id}',[ReportController::class,'report'])->middleware('auth');
+Route::post('/report/{id}', [ReportController::class, 'report'])->middleware('auth');
 Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
 
@@ -156,4 +173,9 @@ Route::get('/notifications', [NotificationController::class, 'show'])
     ->name('notifications.show');
     //mark as read
 Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
+// Recover password
+
+Route::post('/send', [MailController::class, 'send']);
+
 
