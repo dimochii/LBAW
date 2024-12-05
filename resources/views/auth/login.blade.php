@@ -79,7 +79,7 @@
                                 @endif
                             </div>
                             <p>
-                                <a href="{{ route('recover_pass') }}" class="text-pastelBlue text-xs font-medium hover:text-pastelGreen transition-colors">
+                                <a href="{{ url('/forgot-password') }}" class="text-pastelBlue text-xs font-medium hover:text-pastelGreen transition-colors">
                                     Forgot password?
                                 </a>
                             </p>

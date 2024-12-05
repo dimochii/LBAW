@@ -42,19 +42,16 @@
                     </p>
                 </div>
 
+                @if(session('success'))
+                    <div class="mb-4 p-4 bg-green-100 text-green-800 rounded">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <div class="bg-white shadow-lg rounded-lg">
                     <div class="p-6 space-y-6">
-                        <form method="POST" action="/send" class="space-y-6">
+                        <form method="POST" action="{{ route('password.email') }}" class="space-y-6">
                             @csrf
-
-                            <div class="space-y-2">
-                                <label for="name" class="block text-sm font-medium text-gray-700">
-                                    Your name
-                                </label>
-                                <input id="name" name="name" type="text" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-pastelBlue focus:border-pastelBlue text-sm"
-                                    placeholder="Name">
-                            </div>
 
                             <div class="space-y-2">
                                 <label for="email" class="block text-sm font-medium text-gray-700">
@@ -67,7 +64,7 @@
 
                             <button type="submit"
                                 class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pastelGreen hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pastelBlue transition-colors">
-                                Send
+                                Send Password Reset Link
                             </button>
                         </form>
                     </div>

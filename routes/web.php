@@ -17,6 +17,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\PasswordResetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,9 +50,9 @@ Route::controller(LoginController::class)->group(function () {
   Route::get('/logout', 'logout')->name('logout');
 });
 
-Route::get('/recover_pass', function () {
-  return view('auth.recover_pass');
-})->name('recover_pass');
+Route::get('/forgot-password', [PasswordResetController::class, 'showResetForm'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+
 
 
 Route::controller(RegisterController::class)->group(function () {
