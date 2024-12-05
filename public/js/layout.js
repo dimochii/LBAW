@@ -159,3 +159,46 @@ document.addEventListener('click', function(event) {
         overlay.classList.add('hidden');
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const profileIcon = document.getElementById('profileIcon');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    // Mostrar o dropdown ao clicar no ícone
+    profileIcon.addEventListener('click', function (event) {
+      event.preventDefault();
+      dropdownMenu.classList.toggle('hidden');
+    });
+
+    // Fechar o dropdown ao clicar fora dele
+    document.addEventListener('click', function (event) {
+      if (!dropdownMenu.contains(event.target) && !profileIcon.contains(event.target)) {
+        dropdownMenu.classList.add('hidden');
+      }
+    });
+  });
+
+// ---------- Favorite button ----------
+
+function toggleFavorite(postId) {
+    const isChecked = document.getElementById(`favorite-${postId}`).checked;
+    const url = isChecked ? `/favorite/${postId}/add` : `/favorite/${postId}/remove`;
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: postId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            console.log(data.message);
+        } else {
+            console.log('An error occurred');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}

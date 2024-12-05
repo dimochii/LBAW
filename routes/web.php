@@ -60,6 +60,10 @@ Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])-
 Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
 Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');
 Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+Route::get('/users/{user}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+Route::get('/users/{user}/profile/favorites', [AuthenticatedUserController::class, 'favorites']);
+
+
 
 //followers & following
 Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->name('user.followers');
@@ -68,8 +72,11 @@ Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])
 //articles
 
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
-Route::post('/favorites/{id}', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
+
+Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite']);
+Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite']);
+
 
 
 //articles
@@ -104,7 +111,6 @@ Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
 Route::delete('/posts/delete/{id}', [PostController::class, 'delete'])->middleware('auth')->name('post.delete');
-
 
 Route::middleware('auth')->group(function () {
   Route::controller(FeedController::class)->group(function () {
@@ -153,4 +159,5 @@ Route::get('/notifications', [NotificationController::class, 'show'])
     ->name('notifications.show');
     //mark as read
 Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
 

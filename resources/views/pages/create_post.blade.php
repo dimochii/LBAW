@@ -29,60 +29,60 @@
                        placeholder="Enter title"
                        required>
             </div>
-            <!-- Community Dropdown -->
+
             <div class="relative">
                 <label for="community"
-                class="absolute left-0 -top-6 text-2xl font-medium text-black/60
-                transition-all duration-300 peer-placeholder-shown:text-3xl
-                peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
-                Select Community
+                       class="absolute left-0 -top-6 text-2xl font-medium text-black/60
+                              transition-all duration-300 peer-placeholder-shown:text-3xl
+                              peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
+                    Select Community
                 </label>
                 <div class="relative group">
                     <select name="community_id"
-                    id="community"
-                    class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10
-                    focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
-                    transition-all duration-300"
-                    required>
-                    <option value="" disabled selected>Select a Community</option>
-                    @foreach(Auth::user()->communities as $community)
-                    <option value="{{ $community->id }}">/{{ $community->name }}</option>
-                    @endforeach
+                            id="community"
+                            class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10
+                                   focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
+                                   transition-all duration-300"
+                            required>
+                        <option value="" disabled selected>Select a Community</option>
+                        @foreach(Auth::user()->communities as $community)
+                        <option value="{{ $community->id }}">/{{ $community->name }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
 
-
-            <!-- Post Type Selection with slide effect -->
             <div class="space-y-6 border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
                 <label class="block text-2xl font-medium">Post Type</label>
                 <div class="flex gap-8">
-                    <!-- News Radio -->
                     <label class="relative group flex items-center gap-3 cursor-pointer">
                         <input type="radio" 
-                            name="type" 
-                            value="news"
-                            class="peer hidden" 
-                            checked>
-                        <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                group-hover:border-green-200 transition-colors duration-300">
-                            <div class="absolute inset-1 rounded-full bg-green-200 transform scale-0 
-                                    peer-checked:scale-100 transition-transform duration-300"></div>
+                               name="type" 
+                               value="news"
+                               class="peer hidden" 
+                               id="postTypeNews"
+                               checked>
+                        <div class="w-6 h-6 border-2 rounded-full relative transition-colors duration-300
+                            group-hover:border-green-500 peer-checked:border-green-500">
+                            <div class="absolute inset-1 rounded-full bg-green-500 transform scale-0 
+                                        peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-green-200 transition-colors duration-300">News</span>
+                        <span class="text-xl transition-colors duration-300 peer-checked:text-green-500">News</span>
                     </label>
 
+                    <!-- Topic Radio -->
                     <label class="relative group flex items-center gap-3 cursor-pointer">
                         <input type="radio" 
-                            name="type" 
-                            value="topic"
-                            class="peer hidden">
-                        <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                group-hover:border-green-200  transition-colors duration-300">
-                            <div class="absolute inset-1 rounded-full bg-green-200 transform scale-0 
-                                    peer-checked:scale-100 transition-transform duration-300"></div>
+                               name="type" 
+                               value="topic"
+                               class="peer hidden"
+                               id="postTypeTopic">
+                        <div class="w-6 h-6 border-2 rounded-full relative transition-colors duration-300
+                            group-hover:border-blue-500 peer-checked:border-blue-500">
+                            <div class="absolute inset-1 rounded-full bg-blue-500 transform scale-0 
+                                        peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-green-200  transition-colors duration-300">Topic</span>
+                        <span class="text-xl transition-colors duration-300 peer-checked:text-blue-500">Topic</span>
                     </label>
                 </div>
             </div>
@@ -116,10 +116,10 @@
                     <!-- Editor Content -->
                     <div class="relative">
                         <textarea id="editor-content" 
-                                name="content" 
-                                class="w-full h-64 p-6 text-lg font-vollkorn focus:outline-none resize-none
-                                       peer-checked/preview:hidden"
-                                placeholder="Write your post content here..."></textarea>
+                                  name="content" 
+                                  class="w-full h-64 p-6 text-lg font-vollkorn focus:outline-none resize-none
+                                         peer-checked/preview:hidden"
+                                  placeholder="Write your post content here..."></textarea>
                         <div id="preview-content" 
                              class="hidden w-full h-64 p-6 text-lg font-vollkorn overflow-y-auto
                                     prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] 
@@ -131,76 +131,39 @@
                 </div>
             </div>
 
-            <!-- Submit Button with hover effect -->
             <div class="flex justify-end">
                 <button type="submit" 
                         class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-black text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1">
                     <span class="relative z-10">Save Changes</span>
                     <svg xmlns="http://www.w3.org/2000/svg" 
-                        class="relative z-10 h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2" 
-                        viewBox="0 0 20 20" 
-                        fill="currentColor">
+                         class="relative z-10 h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2" 
+                         viewBox="0 0 20 20" 
+                         fill="currentColor">
                         <path fill-rule="evenodd" 
-                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
-                            clip-rule="evenodd" />
+                              d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
+                              clip-rule="evenodd" />
                     </svg>
-                    <div class="absolute inset-0 bg-pastelGreen  transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
+                    <div class="absolute inset-0 bg-pastelGreen transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<style>
-.underline-effect {
-    position: relative;
-}
-
-.underline-effect::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: -4px;
-    left: 0;
-    background-color: currentColor;
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform 0.3s ease-out;
-}
-
-.underline-effect:hover::after,
-input:checked + .underline-effect::after {
-    transform: scaleX(1);
-}
-</style>
-
 <script>
-function markdownToHTML(markdown) {
-    const headingClasses = {
-        1: "m-0 text-4xl font-bold",
-        2: "m-0 text-3xl font-bold",
-        3: "m-0 text-2xl font-bold",
-        4: "m-0 text-xl font-bold",
-        5: "m-0 text-lg font-bold",
-        6: "m-0 text-base font-bold",
-    } 
+document.addEventListener('DOMContentLoaded', function() {
+    const newsRadio = document.getElementById('postTypeNews');
+    const topicRadio = document.getElementById('postTypeTopic');
+    const newsUrlContainer = document.getElementById('newsUrlContainer');
 
-    return markdown
-        .replace(/^(#{1,6})\s*(.+)$/gm, (_, hashes, content) =>
-            `<h${hashes.length} class="${headingClasses[hashes.length]}">${content}</h${hashes.length}>`
-        ) // Headings
-        .replace(/^>\s*(.+)$/gm, 
-            `<blockquote class="prose-blockquote border-l-4 border-[#4793AF]/[.50] pl-4 italic text-gray-700">$1</blockquote>`
-        ) // Blockquotes
-        .replace(/-{3,}/g, '<hr class="my-4 border-[#4793AF]/[.50]"/>')
-        .replace(/\[([^\[]+)\]\(([^\)]+)\)/g, '<a href=\'$2\'>$1</a>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>') // Bold
-        .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>') // Italics
-        .replace(/`(.*?)`/g, '<code class="bg-gray-200 p-1 rounded text-[#4793AF]">$1</code>') // Inline Code
-        .replace(/^(?!<(h[1-6]|blockquote|hr)[^>]*>).+/gm, '$&<br>')
-        .replace(/(<br>\s*){2,}/g, '<br>') // Add <br> for plain text lines
-}
+    function toggleNewsUrl() {
+        newsUrlContainer.style.display = newsRadio.checked ? 'block' : 'none';
+    }
 
+    toggleNewsUrl();
+
+    newsRadio.addEventListener('change', toggleNewsUrl);
+    topicRadio.addEventListener('change', toggleNewsUrl);
+});
 </script>
 @endsection
