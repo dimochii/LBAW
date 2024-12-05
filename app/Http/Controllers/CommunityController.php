@@ -143,7 +143,9 @@ class CommunityController extends Controller
     {
         $community = Community::findOrFail($id);
 
-        $this->authorize('updatePrivacy', $community);
+        if (!($this->authorize('isAdmin') || $this->authorize('isCommunityAdmin', $community))) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $privacy = $request->input('privacy');
 
