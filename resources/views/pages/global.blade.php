@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="">
   <!-- Display success message if exists -->
   @if(session('success'))
   <div class="alert alert-success">
@@ -17,24 +17,24 @@
   <!-- Check if there are any news items -->
   @if(count($posts) === 0)
   <p>No posts available.</p>
-  @elseif(count($posts) >= 6)
+  {{-- @elseif(count($posts) >= 6)
   @include('partials.news_grid', ['posts' => $posts->take(6)])
   <div class="divide-y-2 divide-black border-b-2 border-black">
     @foreach($posts->slice(6) as $item)
-    
+
     @include('partials.post', [
-    'news' => 'true',
-    'post' => $post->news,
+    'news' => !is_null($post->news),
+    'post' => !is_null($post->news) ? $post->news : $post->topic,
     ])
     @endforeach
-  </div>
-  @else 
+  </div> --}}
+  @else
   <div class="divide-y-2 divide-black border-b-2 border-black">
     @foreach($posts as $item)
-    
+
     @include('partials.post', [
-    'news' => 'true',
-    'post' => $item->news,
+    'news' => !is_null($item->news),
+    'post' => !is_null($item->news) ? $item->news : $item->topic,
     ])
     @endforeach
   </div>
@@ -94,6 +94,27 @@ voteButtons.forEach((button) => {
       console.error("Error while updating the vote:", error);
     }
   });
+});
+
+
+// Regular expression to capture the domain
+const regex = /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/;
+
+// Get all elements with the attribute data-content="news-url"
+const newsUrls = document.querySelectorAll('[data-content="news-url"]');
+
+// Loop through each element
+newsUrls.forEach(element => {
+    // Get the current content (URL) of the element
+    const url = element.textContent.trim();
+    
+    // Apply the regex to the URL
+    const match = url.match(regex);
+    
+    // If a match is found, replace the element's content with the captured domain
+    if (match && match[1]) {
+        element.textContent = `( ${match[1]} \u{1F855} )`;
+    }
 });
   </script>
 </div>

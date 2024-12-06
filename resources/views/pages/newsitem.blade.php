@@ -6,11 +6,13 @@
   <div class=" flex flex-row" id="post-header">
     <div class="px-8 py-4 w-1/2 flex flex-col grow">
       <div class="flex items-center h-8 relative">
-      <a class="flex items-center" href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-          class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
-        <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown Community' }}</span>
-      </a>
+        <a class="flex items-center"
+          href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
+          <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
+            class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+          <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown
+            Community' }}</span>
+        </a>
 
 
         {{--
@@ -33,7 +35,10 @@
           </label>
           @if (Auth::check() && Auth::user()->can('isAuthor', $newsItem->post))
           @include('partials.options_dropdown', [
-          "options" => ['edit post' => route('news.edit',['post_id' => ($newsItem->post_id)])]
+          "options" => [
+          'edit post' => route('news.edit',['post_id' => ($newsItem->post_id)]),
+          // 'delete post' => route() -> incluir rota para delete
+          ]
           ])
           @endif
         </div>
@@ -46,20 +51,18 @@
 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         <div>
-            <input 
-                id="favorite-{{$newsItem->post_id}}" 
-                type="checkbox" 
-                class="hidden peer/favorite" 
-                {{ Auth::check() && Auth::user()->favouritePosts->contains($newsItem->post_id) ? 'checked' : '' }} 
-                name="favorite" 
-                onchange="toggleFavorite({{ $newsItem->post_id }})">
+          <input id="favorite-{{$newsItem->post_id}}" type="checkbox" class="hidden peer/favorite" {{ Auth::check() &&
+            Auth::user()->favouritePosts->contains($newsItem->post_id) ? 'checked' : '' }}
+          name="favorite"
+          onchange="toggleFavorite({{ $newsItem->post_id }})">
 
-            <label for="favorite-{{$newsItem->post_id}}" 
-                class="cursor-pointer peer-checked/favorite:fill-pink-500 cursor-pointer group-hover/wrapper:hover:fill-pink-500 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
-                <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-            </label>
+          <label for="favorite-{{$newsItem->post_id}}"
+            class="cursor-pointer peer-checked/favorite:fill-pink-500 cursor-pointer group-hover/wrapper:hover:fill-pink-500 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
+            <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+          </label>
         </div>
 
         <div>
@@ -77,7 +80,7 @@
         <span class="mr-2" id="{{ $newsItem->post_id}}-score">
           @php
           $score = $newsItem->upvotes_count - $newsItem->downvotes_count;
-          
+
           echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
           @endphp
         </span>
@@ -131,10 +134,8 @@
     </div>
     @if(!is_null($newsItem->image_url))
     <a href="{{ $newsItem->news_url ?? '#' }}" class="w-1/2 md:block hidden p-4">
-      
-      <img class=" object-cover  object-left w-full h-full"
-        src="{{ $newsItem->image_url }}"
-        alt="">
+
+      <img class=" object-cover  object-left w-full h-full" src="{{ $newsItem->image_url }}" alt="">
     </a>
     @endif
   </div>
