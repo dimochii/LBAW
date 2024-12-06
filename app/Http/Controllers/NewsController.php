@@ -19,12 +19,13 @@ class NewsController extends Controller
    */
   public function list()
   {
-      $news = News::with('post')->get();
+      //$news = News::with('post')->get();
+      $news = News::all();
   
       foreach ($news as $item) {
           $post = $item->post;
-          $item->upvotes_count = $post->upvote_count;
-          $item->downvotes_count = $post->downvote_count;
+          $item->upvotes_count = $post->getUpvoteCountAttribute();
+          $item->downvotes_count = $post->getDownvoteCountAttribute();
   
           if (Auth::check()) {
               $userVote = $post->userVote(Auth::user()->id);
@@ -46,14 +47,12 @@ class NewsController extends Controller
     $newsItem = News::with('post.community')
       ->where('post_id', $post_id)
       ->firstOrFail();
+    $post = Post::findOrFail($post_id);
 
-    $newsItem->upvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
-      $query->where('post_id', $newsItem->post_id);
-    })->where('upvote', true)->count();
+    $newsItem->upvotes_count =  $post->getUpvoteCountAttribute();
 
-    $newsItem->downvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
-      $query->where('post_id', $newsItem->post_id);
-    })->where('upvote', false)->count();
+    $newsItem->downvotes_count =  $post->getDownvoteCountAttribute();
+  
 
     $newsItem->score = $newsItem->upvotes_count - $newsItem->downvotes_count;
 

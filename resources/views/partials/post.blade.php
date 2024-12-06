@@ -19,6 +19,10 @@ news = Bool
         <span class="text-xl font-light underline-effect-light">h/{{ $post->post->community->name ?? 'Unknown Community'
           }}</span>
       </a>
+      <span class="ml-2 text-xs font-semibold px-2 py-1 rounded-md 
+    {{ $news ? 'bg-pastelBlue text-[#F4F2ED]' : 'bg-pastelGreen text-[#F4F2ED]' }} transition ease-out">
+    {{ $news ? 'News' : 'Topic' }}
+  </span>
       <div class="inline cursor-pointer pb-4 group ml-auto z-0">
         <input type="checkbox" class="peer hidden" id="{{$post->post_id}}-options">
         <label for="{{$post->post_id}}-options">

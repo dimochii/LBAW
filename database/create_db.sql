@@ -426,7 +426,18 @@ INSERT INTO posts (title, content, community_id) VALUES
 ('Upcoming Movies in 2024', 'What films are you excited about?', 7),
 ('Staying Fit During Winter', 'Winter workouts to keep you healthy.', 8),
 ('Game Development Basics', 'How to get started with game development.', 9),
-('Wildlife Photography Tips', 'Capture nature beautifully.', 10);
+('Wildlife Photography Tips', 'Capture nature beautifully.', 10),
+('AI in Everyday Life', 'How AI is simplifying our daily routines.', 1),
+('Underrated Books to Check Out', 'Hidden literary gems you might have missed.', 2),
+('Classic Anime That Still Shine', 'Timeless anime worth revisiting.', 3),
+('Budget-Friendly Travel Hacks', 'Explore the world without breaking the bank.', 4),
+('Creating Believable Characters', 'Bring your fantasy worlds to life with relatable characters.', 5),
+('Quick and Healthy Breakfast Ideas', 'Start your day with these simple, nutritious recipes.', 6),
+('Anticipated Sequels of 2024', 'Movie sequels everyone is looking forward to.', 7),
+('Staying Motivated to Exercise in the Cold', 'Tips to beat winter laziness and stay active.', 8),
+('The Best Tools for Aspiring Game Developers', 'Essential software and resources for beginners.', 9),
+('Photographing Wildlife in Challenging Conditions', 'How to capture stunning shots in tough environments.', 10);
+
 
 -- Step 5: Insert comments
 INSERT INTO comments (content, creation_date, authenticated_user_id, post_id) VALUES
@@ -619,15 +630,15 @@ INSERT INTO comment_votes (vote_id, comment_id) VALUES(1, 1),
 
 -- Step 9: Insert topics
 INSERT INTO topics (post_id, review_date, status) VALUES(1, CURRENT_TIMESTAMP, 'pending'),
-(2, CURRENT_TIMESTAMP, 'accepted'),
-(3, CURRENT_TIMESTAMP, 'rejected'),
-(4, CURRENT_TIMESTAMP, 'pending'),
-(5, CURRENT_TIMESTAMP, 'accepted'),
-(6, CURRENT_TIMESTAMP, 'pending'),
-(7, CURRENT_TIMESTAMP, 'accepted'),
-(8, CURRENT_TIMESTAMP, 'pending'),
-(9, CURRENT_TIMESTAMP, 'rejected'),
-(10, CURRENT_TIMESTAMP, 'accepted');
+(11, CURRENT_TIMESTAMP, 'accepted'),
+(12, CURRENT_TIMESTAMP, 'rejected'),
+(13, CURRENT_TIMESTAMP, 'pending'),
+(14, CURRENT_TIMESTAMP, 'accepted'),
+(15, CURRENT_TIMESTAMP, 'pending'),
+(16, CURRENT_TIMESTAMP, 'accepted'),
+(17, CURRENT_TIMESTAMP, 'pending'),
+(18, CURRENT_TIMESTAMP, 'rejected'),
+(19, CURRENT_TIMESTAMP, 'accepted');
 
 -- Step 10: Insert news
 INSERT INTO news (post_id, news_url) VALUES(1, 'http://example.com/news1'),
