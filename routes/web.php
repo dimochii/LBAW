@@ -187,3 +187,16 @@ Route::controller(GoogleController::class)->group(function () {
   Route::get('auth/google/call-back', 'callbackGoogle')->name('google-call-back');
 });
 
+
+Route::get('/images/{filename}', function ($filename) {
+  $path = base_path('images/' . $filename);
+
+  $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+  $extension = pathinfo($filename, PATHINFO_EXTENSION);
+
+  if (!File::exists($path) || !in_array($extension, $allowedExtensions)) {
+      abort(404);
+  }
+
+  return response()->file($path);
+})->name('images.serve');

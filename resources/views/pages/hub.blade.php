@@ -6,7 +6,7 @@
     @if($community)
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:px-8">
         <div class="flex items-start gap-6">
-            <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" alt="Profile Image"
+            <img src="{{ asset('images/hub' . $community->image_id . '.jpg') }}" alt="Profile Image"
                  class="rounded-full ring-2 ring-black h-32 w-32">
             <div>
             <div class="flex items-center gap-2">
