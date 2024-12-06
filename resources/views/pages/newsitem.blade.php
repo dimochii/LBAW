@@ -40,7 +40,7 @@
 
       </div>
       <a href="{{ $newsItem->news_url ?? '#' }}">
-        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">{{
+        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
 
