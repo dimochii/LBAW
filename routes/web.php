@@ -16,6 +16,7 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ModeratorController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PasswordResetController;
@@ -140,8 +141,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/global', 'global')->name('global');
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
-    Route::get('/admin/{id}/options', [AdminController::class, 'show'])->name('user.admin');
-    Route::get('/moderator/{id}/options', [ModeratorController::class, 'show'])->name('user.moderator');
+    Route::get('/admin', [AdminController::class, 'show'])->name('user.admin');
+    Route::get('/moderator', [ModeratorController::class, 'show'])->name('user.moderator');
     Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
     Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
