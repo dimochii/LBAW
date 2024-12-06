@@ -38,9 +38,10 @@ class Comment extends Model
         return $this->hasMany(Comment::class, 'parent_comment_id');
     }
 
-    public function Votes()
+    public function votes()
     {
-        return $this->hasMany(CommentVote::class);
+        return $this->hasManyThrough(Vote::class, CommentVote::class, 'comment_id', 'id', 'id', 'vote_id');
+
     }
 
     public function upvotesCount()

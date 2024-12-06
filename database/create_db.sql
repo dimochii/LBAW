@@ -93,9 +93,9 @@ CREATE TABLE comments (
 );
 
 CREATE TABLE comment_votes (
+    id SERIAL PRIMARY KEY,
     vote_id INT,
     comment_id INT,
-    PRIMARY KEY (vote_id, comment_id),
     FOREIGN KEY (vote_id) REFERENCES votes(id),
     FOREIGN KEY (comment_id) REFERENCES comments(id)
 );

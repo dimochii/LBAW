@@ -8,6 +8,14 @@
       <div class="flex-col flex">
         <div class="tracking-tighter font-medium text-6xl">{{ $user->name }}</div>
         <div>{{ '@' . $user->username }}</div>
+        <div class="flex items-center mt-2">
+  <span class="font-bold text-lg">Reputation:</span>
+  <span class="ml-2 text-xl font-semibold px-3 py-1 rounded-full 
+    {{ $reputation >= 1000 ? 'bg-gold text-white' : ($reputation >= 500 ? 'bg-silver text-black' : 'bg-gray-300 text-black') }}">
+    {{ $reputation }}
+  </span>
+</div>
+    
       </div>
       <p class="font-light">
         {{ $user->description }}

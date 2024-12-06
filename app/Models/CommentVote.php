@@ -10,7 +10,6 @@ class CommentVote extends Vote
     use HasFactory;
     public $timestamps = false;
     protected $fillable = ['vote_id', 'comment_id'];
-    protected $primaryKey = ['vote_id', 'comment_id'];
 
     public function vote()
     {

@@ -53,6 +53,7 @@ class AuthenticatedUserController extends Controller
         $voted_topics = $this->getVotedTopics($user);
         $favourite_news = $this->getFavouriteNews($user);
         $favourite_topics = $this->getFavouriteTopics($user);
+        $reputation = $this->getReputation($user);
 
         
         if (!Auth::check()) {
@@ -65,7 +66,7 @@ class AuthenticatedUserController extends Controller
 
         return view('pages.profile', compact(
             'user', 'followers', 'following', 'authored_news', 'favorites', 
-            'authored_topics', 'voted_news', 'voted_topics','favourite_news', 'favourite_topics', 'isFollowing'
+            'authored_topics', 'voted_news', 'voted_topics','favourite_news', 'favourite_topics', 'isFollowing', 'reputation'
         ));
     }
 
@@ -479,6 +480,39 @@ class AuthenticatedUserController extends Controller
         $user->delete();
     
         return redirect('/news')->with('message', 'User account has been successfully deleted.');
+    }
+    public function getReputation($user)
+    {
+
+        $postVotes = $user->authoredPosts()
+            ->with('votes') // Load votes relation
+            ->get()
+            ->flatMap(function ($post) {
+                return $post->votes;
+            });
+        
+        $postUpvotes = $postVotes->where('upvote', true)->count();
+        $postDownvotes = $postVotes->where('upvote', false)->count();
+
+        // Calculate comment upvotes and downvotes
+        $commentVotes = $user->comments()
+            ->with('votes') // Load votes relation
+            ->get()
+            ->flatMap(function ($comment) {
+                return $comment->votes;
+            });
+
+        $commentUpvotes = $commentVotes->where('vote.upvote', true)->count();
+        $commentDownvotes = $commentVotes->where('vote.upvote', false)->count();
+
+        // Calculate the net score
+        $postNetScore = $postUpvotes - $postDownvotes;
+        $commentNetScore = $commentUpvotes - $commentDownvotes;
+
+        $reputation = $postNetScore + $commentNetScore;
+
+        // Return the result
+        return $reputation;
     }
     
 
