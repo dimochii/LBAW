@@ -34,7 +34,7 @@ CREATE TABLE authenticated_users (
     name VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE CHECK (email LIKE '%_@__%.__%'),
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255),  
     reputation INT DEFAULT 0,
     is_suspended BOOLEAN DEFAULT FALSE,
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (creation_date <= CURRENT_TIMESTAMP),
@@ -42,8 +42,10 @@ CREATE TABLE authenticated_users (
     description TEXT,
     is_admin BOOLEAN DEFAULT FALSE,
     image_id INT,
+    google_id VARCHAR,
     FOREIGN KEY (image_id) REFERENCES images(id)
 );
+
 
 CREATE TABLE user_followers (
     id SERIAL PRIMARY KEY,

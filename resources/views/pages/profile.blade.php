@@ -144,7 +144,9 @@
     @csrf
     @method('DELETE')
     <button type="submit" class="btn btn-danger">Delete My Account</button>
-</form>
+  </form>
 
-@endsection
+  @endsection
 </div>
+
+
