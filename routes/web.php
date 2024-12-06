@@ -18,6 +18,7 @@ use App\Http\Controllers\SideController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -178,4 +179,10 @@ Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRe
 
 Route::post('/send', [MailController::class, 'send']);
 
+// OAuth API
+
+Route::controller(GoogleController::class)->group(function () {
+  Route::get('auth/google', 'redirect')->name('google-auth');
+  Route::get('auth/google/call-back', 'callbackGoogle')->name('google-call-back');
+});
 
