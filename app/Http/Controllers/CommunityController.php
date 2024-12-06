@@ -39,6 +39,27 @@ class CommunityController extends Controller
         ], 201);
     }
 
+    public function destroy($id)
+    {
+        // Find the community by ID
+        $community = Community::findOrFail($id);
+        if (!($this->authorize('isAdmin') || $this->authorize('isCommunityAdmin', $community))) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Check if the community has any posts
+        if ($community->posts()->exists()) {
+            // If the community has posts, prevent deletion
+            return redirect()->back()->with('error', 'Cannot delete a community that has posts.');
+        }
+
+        // If no posts exist, delete the community
+        $community->delete();
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'deleted community.');
+    }
+
 
 
     public function show($id)
@@ -156,7 +177,7 @@ class CommunityController extends Controller
         ]);
 
         // Associar o usuário autenticado como moderador
-        $authUser = Auth::user();
+        $authUser = Auth::user(); 
         $community->moderators()->attach($authUser->id);
 
         return redirect()->route('news')->with('success', 'Community created successfully!');

@@ -56,9 +56,9 @@ CREATE TABLE user_followers (
 );
 
 CREATE TABLE community_moderators (
+    id SERIAL PRIMARY KEY,
     authenticated_user_id INT,
     community_id INT,
-    PRIMARY KEY (authenticated_user_id, community_id),
     FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
     FOREIGN KEY (community_id) REFERENCES communities(id)
 );

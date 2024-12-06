@@ -124,18 +124,26 @@
       @else
         <p class="text-gray-500">This user has not upvoted any posts yet.</p>
       @endif
-    @elseif ($activeTab === 'favorites')
-      @if (!$favorites->isEmpty())
-        @foreach ($favorites as $favorite)
+      @elseif ($activeTab === 'favorites')
+        @if ($favourite_news->count() > 0)
+        @foreach ($favourite_news as $item)
           @include('partials.post', [
-              'news' => $favorite->news ? true : false, 
-              'post' => $favorite,
+            'news' => true,
+            'post' => $item->news,
           ])
-      @endforeach
-      @else
+        @endforeach
+        @elseif ($favourite_topics->count() > 0)   
+        @foreach ($favourite_topics as $item)    
+          @include('partials.post', [
+            'news' => false,
+            'post' => $item->topic,
+          ])
+        @endforeach
+    @else
         <p class="text-gray-500">This user has no favorite posts yet.</p>
-      @endif
     @endif
+@endif
+
   </div>
 
 

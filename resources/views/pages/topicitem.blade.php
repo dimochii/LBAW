@@ -129,14 +129,6 @@
         </div>
       </div>
     </div>
-    @if(!is_null($topicItem->image_url))
-    <a href="{{ $topicItem->news_url ?? '#' }}" class="w-1/2 md:block hidden p-4">
-      
-      <img class=" object-cover  object-left w-full h-full"
-        src="{{ $topicItem->image_url }}"
-        alt="">
-    </a>
-    @endif
   </div>
 
   @isset($topicItem->post->content)
