@@ -13,8 +13,9 @@ news = Bool
     <header class="flex items-center relative">
       <a class="flex items-center h-8"
         href="{{ route('communities.show', ['id' => $post->post->community->id ?? 'unknown']) }}">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-          class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+        <img src="{{ asset('images/hub' . $post->post->community->image_id . '.jpg') }}" alt="Community Image"
+        class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+
         <span class="text-xl font-light underline-effect-light">h/{{ $post->post->community->name ?? 'Unknown Community'
           }}</span>
       </a>

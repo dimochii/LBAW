@@ -2,8 +2,9 @@
   <div class="flex flex-row mt-5">
     <div class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]">
       <a href="">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="max-w-full rounded-3xl">
+        <img src="{{ asset('images/user' . $comment->user->image_id . '.jpg') }}" class="max-w-full rounded-3xl">
       </a>
+
       <a href="#c-{{ $comment->id }}"
         class="absolute top-[32px] bg-[#A6A6A6] hover:bg-[#4793AF] w-px hover:w-0.5 h-[calc(100%-32px)] cursor-pointer"></a>
     </div>

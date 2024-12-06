@@ -3,8 +3,7 @@
 @section('content')
 <div class="min-h-screen">
   <div class="flex flex-row gap-8 p-8 border-b-2 border-black items-center relative min-w-32">
-    <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" alt="Profile Image"
-      class="rounded-full ring-2 ring-black h-32 w-32">
+  <img src="{{ asset('images/user' . $user->image_id . '.jpg') }}" alt="Profile Image" class="rounded-full ring-2 ring-black h-32 w-32">
     <div class="h-full flex flex-col gap-4 flex-grow">
       <div class="flex-col flex">
         <div class="tracking-tighter font-medium text-6xl">{{ $user->name }}</div>
