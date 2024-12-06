@@ -11,9 +11,6 @@ class ModeratorController extends Controller
 {
     public function show(Request $request)
     { 
-        /*$moderated_hubs = Community::whereHas('moderators', function ($query) {
-            $query->where('community_id', Auth::user()->id);
-        })->get();*/
 
         $moderated_hubs= Auth::user()->moderatedCommunities;
 
@@ -22,7 +19,6 @@ class ModeratorController extends Controller
         if ($request->has('hub_id')) {
             $selected_hub = $moderated_hubs->firstWhere('id', $request->hub_id);
     
-            // Eager load related models for efficiency
             if ($selected_hub) {
                 $selected_hub->load(['posts', 'moderators', 'followers']);
             }
