@@ -22,19 +22,32 @@ class PostController extends Controller
 {
   public function getOgTags($newsURL)
   {
+
     libxml_use_internal_errors(true);
-    $c = file_get_contents($newsURL);
+
+    // create curl resource
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $newsURL);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+
+    $c = curl_exec($ch);
+
+    curl_close($ch);
+
     $d = new DomDocument();
     $d->loadHTML($c);
     $xp = new domxpath($d);
-    
+
     $ogTags = [];
 
     $imageElement = $xp->query("//meta[@property='og:image']")->item(0);
     if ($imageElement) {
       $ogTags['image'] = $imageElement->getAttribute("content");
     }
-    
+
     $titleElement = $xp->query("//meta[@property='og:title']")->item(0);
     if ($titleElement) {
       $ogTags['title'] = $titleElement->getAttribute("content");
@@ -44,33 +57,33 @@ class PostController extends Controller
   }
   private function notifyCommunityFollowers($communityId, $post)
   {
-      $community = Community::find($communityId);
-  
-      // Retrieve followers of the community
-      $followers = $community->followers;
-  
-      // Get the authors of the post
-      $authors = $post->authors->pluck('id')->toArray(); // Get author IDs
-  
-      foreach ($followers as $follower) {
-          // Skip notifying if the follower is an author of the post
-          if (in_array($follower->id, $authors)) {
-              continue;
-          }
-  
-          // Create a notification for each follower
-          $notification = Notification::create([
-              'is_read' => false,
-              'notification_date' => now(),
-              'authenticated_user_id' => $follower->id,
-          ]);
-  
-          // Link the notification to the post
-          PostNotification::create([
-              'notification_id' => $notification->id,
-              'post_id' => $post->id,
-          ]);
+    $community = Community::find($communityId);
+
+    // Retrieve followers of the community
+    $followers = $community->followers;
+
+    // Get the authors of the post
+    $authors = $post->authors->pluck('id')->toArray(); // Get author IDs
+
+    foreach ($followers as $follower) {
+      // Skip notifying if the follower is an author of the post
+      if (in_array($follower->id, $authors)) {
+        continue;
       }
+
+      // Create a notification for each follower
+      $notification = Notification::create([
+        'is_read' => false,
+        'notification_date' => now(),
+        'authenticated_user_id' => $follower->id,
+      ]);
+
+      // Link the notification to the post
+      PostNotification::create([
+        'notification_id' => $notification->id,
+        'post_id' => $post->id,
+      ]);
+    }
   }
 
 
@@ -98,7 +111,7 @@ class PostController extends Controller
     $user = Auth::user();
     $post->authors()->attach($user->id, ['pinned' => false]);
 
-        $this->notifyCommunityFollowers($request->community_id, $post);
+    $this->notifyCommunityFollowers($request->community_id, $post);
 
     if ($request->type === 'news') {
       $ogTags = PostController::getOgTags($request->news_url);
@@ -230,21 +243,21 @@ class PostController extends Controller
       ]);
 
       $newScore++;
-      
+
       foreach ($post->authors as $author) {
         if ($author->id != $user->id) { // Don't notify the user who voted
-            $notification = Notification::create([
-                'is_read' => false,
-                'notification_date' => now(),
-                'authenticated_user_id' => $author->id,
-            ]);
+          $notification = Notification::create([
+            'is_read' => false,
+            'notification_date' => now(),
+            'authenticated_user_id' => $author->id,
+          ]);
 
-            UpvoteNotification::create([
-                'notification_id' => $notification->id,
-                'vote_id' => $vote->id,
-            ]);
+          UpvoteNotification::create([
+            'notification_id' => $notification->id,
+            'vote_id' => $vote->id,
+          ]);
         }
-    }
+      }
 
       return response()->json([
         'status' => 'created',
