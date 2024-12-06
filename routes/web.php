@@ -134,6 +134,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/admin', 'admin')->name('admin');
+    Route::get('/bestof', 'bestof')->name('bestof');
   });
 
   // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');

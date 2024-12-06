@@ -251,7 +251,7 @@
               <a href="{{ url('/about-us') }}" class="">
                 <span class="">about us</span>
               </a>
-              <a href="#" class="">
+              <a href="{{ url('/bestof') }}" class="">
                 <span class="">best of</span>
               </a>
               <a href="{{ url('/all-hubs') }}" class="">

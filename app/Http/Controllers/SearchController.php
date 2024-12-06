@@ -27,7 +27,7 @@ class SearchController extends Controller
                                         'name' => $community->name,
                                         'description' => $community->description,
                                         'image' => $community->image_id,
-                                        'route' => url("/community/{$community->id}"),
+                                        'route' => url("/hub/{$community->id}"),
                                     ];
                                 });
 

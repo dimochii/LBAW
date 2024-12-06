@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Vote;
+use App\Models\Topic;
+use App\Models\News;
+
 use App\Models\PostVote;
 
 class FeedController extends Controller
@@ -169,4 +172,45 @@ class FeedController extends Controller
   public function admin() {
     return view('pages.admin');
   }
+
+
+  public function bestof()
+  {
+      // 10 topics
+      $topTopics = Topic::select('topics.*')
+          ->addSelect([
+              'votes_count' => function ($query) {
+                  $query->selectRaw('COUNT(*)')
+                      ->from('votes')
+                      ->join('post_votes', 'post_votes.vote_id', '=', 'votes.id')
+                      ->whereColumn('topics.post_id', 'post_votes.post_id');
+              }
+          ])
+          ->orderBy('votes_count', 'desc')
+          ->limit(10)
+          ->get();
+  
+      // 10 news
+      $topNews = News::select('news.*')
+          ->addSelect([
+              'votes_count' => function ($query) {
+                  $query->selectRaw('COUNT(*)')
+                      ->from('votes')
+                      ->join('post_votes', 'post_votes.vote_id', '=', 'votes.id')
+                      ->whereColumn('news.post_id', 'post_votes.post_id');
+              }
+          ])
+          ->orderBy('votes_count', 'desc')
+          ->limit(10)
+          ->get();
+  
+      
+      return view('pages.bestof', [
+          'topTopics' => $topTopics,
+          'topNews' => $topNews,
+      ]);
+  }
+  
+
+
 }
