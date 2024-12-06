@@ -43,6 +43,11 @@ class AuthenticatedUser extends Authenticatable
         return $this->belongsToMany(Community::class, 'community_followers');
     }
 
+    public function moderatedCommunities()
+    {
+        return $this->belongsToMany(Community::class, 'community_moderators');
+    }
+
     public function follows()
     {
         return $this->belongsToMany(AuthenticatedUser::class, 'user_followers', 'follower_id', 'followed_id');

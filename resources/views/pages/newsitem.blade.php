@@ -134,7 +134,7 @@
       
       <img class=" object-cover  object-left w-full h-full"
         src="{{ $newsItem->image_url }}"
-        alt="">
+        alt="https://imagens.publico.pt/imagens.aspx/1955774?tp=UH&db=IMAGENS&type=JPG&share=1&o=BarraFacebook_Publico.png">
     </a>
     @endif
   </div>

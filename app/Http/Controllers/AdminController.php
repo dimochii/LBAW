@@ -15,12 +15,11 @@ class AdminController extends Controller
     {
         $users = AuthenticatedUser::all();
         $hubs = Community::all();
-        $posts = Post::all();
         $news = News::all();
         $topics = Topic::all();
 
         return view('pages.admin', compact(
-            'users', 'hubs', 'posts', 'news', 'topics'
+            'users', 'hubs',  'news', 'topics'
         ));
     }
 }

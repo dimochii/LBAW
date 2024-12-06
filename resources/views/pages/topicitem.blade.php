@@ -90,11 +90,6 @@
         </div>
       </div>
     </div>
-    <a href="{{ $topicItem->topic_url ?? '#' }}" class="w-1/2 md:block hidden">
-      <img class=" object-cover object-left w-full h-full"
-        src="https://imagens.publico.pt/imagens.aspx/1955774?tp=UH&db=IMAGENS&type=JPG&share=1&o=BarraFacebook_Publico.png"
-        alt="">
-    </a>
   </div>
 
   @isset($topicItem->post->content)

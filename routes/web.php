@@ -126,6 +126,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/admin/{id}/options', [AdminController::class, 'show'])->name('user.admin');
+    Route::get('/moderator/{id}/options', [ModeratorController::class, 'show'])->name('user.moderator');
     Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
     Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');

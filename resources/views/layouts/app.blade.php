@@ -154,12 +154,22 @@
                     </div>
                   </div>
                 </a>
+                @if(Auth::user()->is_admin)
                 <a href="{{ route('user.admin', Auth::user()->id) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                   <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"  />
                   </svg>
                   Admin Options
                 </a>
+                @endif
+                @if(Auth::user()->moderatedCommunities()->exists())
+                <a href="{{ route('user.moderator', Auth::user()->id) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"  />
+                  </svg>
+                  Hub Options
+                </a>
+                @endif
                 <a href="{{ route('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                   <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
