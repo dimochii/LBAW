@@ -357,27 +357,40 @@ class AuthenticatedUserController extends Controller
         if (!$deletedUser) {
             return redirect('/news')->with('error', 'Unable to delete account: Deleted user does not exist.');
         }
-        
+    
+        // Reassign votes
         foreach ($user->votes ?? [] as $vote) {
             $vote->authenticated_user_id = $deletedUserId;
             $vote->save();
         }
     
+        // Reassign comments
         foreach ($user->comments ?? [] as $comment) {
             $comment->authenticated_user_id = $deletedUserId;
             $comment->save();
         }
     
+        // Reassign posts
         foreach ($user->posts ?? [] as $post) {
             $post->authenticated_user_id = $deletedUserId;
             $post->save();
         }
-
+    
+        // Reassign notifications
         foreach ($user->notifications ?? [] as $notification) {
             $notification->authenticated_user_id = $deletedUserId;
             $notification->save();
         }
-
+    
+        // Remove the user from being a moderator in any communities
+        foreach ($user->communities ?? [] as $community) {
+            if ($community->moderators->contains($user->id)) {
+                $community->moderators()->detach($user->id);
+            }
+        }
+        
+    
+        // Detach other relationships
         $user->favouritePosts()->detach();
         $user->communities()->detach();
         $user->follows()->detach();
@@ -388,6 +401,7 @@ class AuthenticatedUserController extends Controller
     
         return redirect('/news')->with('message', 'Your account has been successfully deleted.');
     }
+    
     
     public function deleteUserAccount(Request $request, $id) {
         $admin = Auth::user();
@@ -434,6 +448,13 @@ class AuthenticatedUserController extends Controller
         foreach ($user->notifications ?? [] as $notification) {
             $notification->authenticated_user_id = $deletedUserId;
             $notification->save();
+        }
+
+        // Detach user as a community moderator
+        foreach ($user->communities ?? [] as $community) {
+            if ($community->moderators()->where('id', $user->id)->exists()) {
+                $community->moderators()->detach($user->id);
+            }
         }
     
         // Detach relationships
