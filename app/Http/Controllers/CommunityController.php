@@ -171,7 +171,7 @@ class CommunityController extends Controller
         $community = Community::create([
             'name' => $request->name,
             'description' => $request->description,
-            'privacy' => $request->privacy,
+            'privacy' => $request->privacy === 'private',
             'image_id' => $request->image_id,
             'creation_date' => now(),
         ]);
@@ -180,10 +180,7 @@ class CommunityController extends Controller
         $authUser = Auth::user(); 
         $community->moderators()->attach($authUser->id);
 
-        return response()->json([
-            'message' => 'Community created successfully',
-            'community' => $community,
-        ], 201);
+        return redirect()->route('news')->with('success', 'Community created successfully!');
     }
 
     public function join($id)
@@ -218,6 +215,8 @@ class CommunityController extends Controller
 
         return view('pages.hubs', compact('communities', 'sortBy', 'order'));
     }
+
+    
 
     /*
     public function apply(Request $request, $id)

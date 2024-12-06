@@ -195,25 +195,24 @@ class AuthenticatedUserController extends Controller
         return $this->fetchPostData($user->authoredPosts()->whereHas('news'));
     }
 
-
-public function getAuthoredTopics($user)
+    public function getAuthoredTopics($user)
     {
         return $this->fetchPostData($user->authoredPosts()->whereHas('topic'));
     }  
 
 
-public function getFavouriteNews($user)
+    public function getFavouriteNews($user)
     {
         return $this->fetchPostData($user->favouritePosts()->whereHas('news'));
     }
 
-public function getFavouriteTopics($user)
+    public function getFavouriteTopics($user)
     {
         return $this->fetchPostData($user->favouritePosts()->whereHas('topic'));
     }
 
 
-public function getVotedNews($user)
+    public function getVotedNews($user)
 {
     return $this->fetchPostData(Post::whereHas('news')->whereHas('votes', function ($query) use ($user) {
         $query->where('authenticated_user_id', $user->id)->where('upvote', true);
@@ -221,12 +220,12 @@ public function getVotedNews($user)
 }
 
     
-public function getVotedTopics($user)
-{
-    return $this->fetchPostData(Post::whereHas('topic')->whereHas('votes', function ($query) use ($user) {
-        $query->where('authenticated_user_id', $user->id)->where('upvote', true);
-    }));
-}
+    public function getVotedTopics($user)
+    {
+        return $this->fetchPostData(Post::whereHas('topic')->whereHas('votes', function ($query) use ($user) {
+            $query->where('authenticated_user_id', $user->id)->where('upvote', true);
+        }));
+    }
 
     public function follow($id)
     {
@@ -360,6 +359,127 @@ public function getVotedTopics($user)
 
         return response()->json(['message' => 'Post removed from favorites successfully'], 200);
     }
+    //Deleted User ---> id = 1
 
+    public function deletemyaccount() {
+        $user = Auth::user();
+        $deletedUserId = 1;     
+        $deletedUser = AuthenticatedUser::find($deletedUserId);
     
+        if (!$deletedUser) {
+            return redirect('/news')->with('error', 'Unable to delete account: Deleted user does not exist.');
+        }
+    
+        // Reassign votes
+        foreach ($user->votes ?? [] as $vote) {
+            $vote->authenticated_user_id = $deletedUserId;
+            $vote->save();
+        }
+    
+        // Reassign comments
+        foreach ($user->comments ?? [] as $comment) {
+            $comment->authenticated_user_id = $deletedUserId;
+            $comment->save();
+        }
+    
+        // Reassign posts
+        foreach ($user->posts ?? [] as $post) {
+            $post->authenticated_user_id = $deletedUserId;
+            $post->save();
+        }
+    
+        // Reassign notifications
+        foreach ($user->notifications ?? [] as $notification) {
+            $notification->authenticated_user_id = $deletedUserId;
+            $notification->save();
+        }
+    
+        // Remove the user from being a moderator in any communities
+        foreach ($user->communities ?? [] as $community) {
+            if ($community->moderators->contains($user->id)) {
+                $community->moderators()->detach($user->id);
+            }
+        }
+        
+    
+        // Detach other relationships
+        $user->favouritePosts()->detach();
+        $user->communities()->detach();
+        $user->follows()->detach();
+        $user->followers()->detach();
+    
+        $user->delete();
+        Auth::logout();
+    
+        return redirect('/news')->with('message', 'Your account has been successfully deleted.');
+    }
+    
+    
+    public function deleteUserAccount(Request $request, $id) {
+        $admin = Auth::user();
+        
+        // Check if the authenticated user is an admin
+        if (!$admin->is_admin) {
+            return redirect()->back()->with('error', 'You are not authorized to perform this action.');
+        }
+    
+        $user = AuthenticatedUser::find($id);
+        
+        // Check if the user exists
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+    
+        $deletedUserId = 1; // ID of the "deleted user"
+        $deletedUser = AuthenticatedUser::find($deletedUserId);
+        
+        // Check if the "deleted user" exists
+        if (!$deletedUser) {
+            return redirect('/news')->with('error', 'Unable to delete account: Deleted user does not exist.');
+        }
+    
+        // Reassign votes
+        foreach ($user->votes ?? [] as $vote) {
+            $vote->authenticated_user_id = $deletedUserId;
+            $vote->save();
+        }
+    
+        // Reassign comments
+        foreach ($user->comments ?? [] as $comment) {
+            $comment->authenticated_user_id = $deletedUserId;
+            $comment->save();
+        }
+    
+        // Reassign posts
+        foreach ($user->authoredPosts ?? [] as $post) {
+            $post->pivot->authenticated_user_id = $deletedUserId;
+            $post->pivot->save();
+        }
+    
+        // Reassign notifications
+        foreach ($user->notifications ?? [] as $notification) {
+            $notification->authenticated_user_id = $deletedUserId;
+            $notification->save();
+        }
+
+        // Detach user as a community moderator
+        foreach ($user->communities ?? [] as $community) {
+            if ($community->moderators->contains($user->id)) {
+                $community->moderators()->detach($user->id);
+            }
+        }
+    
+        // Detach relationships
+        $user->favouritePosts()->detach();
+        $user->communities()->detach();
+        $user->follows()->detach();
+        $user->followers()->detach();
+    
+        // Delete the user
+        $user->delete();
+    
+        return redirect('/news')->with('message', 'User account has been successfully deleted.');
+    }
+    
+
 }

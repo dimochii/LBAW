@@ -15,7 +15,7 @@ class AuthenticatedUser extends Authenticatable
     const UPDATED_AT = null;
     protected $fillable = [
         'name', 'username', 'email', 'password', 'reputation', 
-        'is_suspended', 'creation_date', 'birth_date', 'description', 'is_admin', 'image_id'
+        'is_suspended', 'creation_date', 'birth_date', 'description', 'is_admin', 'image_id', 'google_id'
     ];
 
     public function getAuthIdentifierName()

@@ -127,65 +127,65 @@
 </div>
 
 <script>
-const nameInput = document.getElementById('name');
-const descriptionInput = document.getElementById('description');
-const previewName = document.getElementById('preview-name');
-const previewDescription = document.getElementById('preview-description');
-const previewImage = document.getElementById('preview-image');
-const previewMembers = document.getElementById('preview-members');
-const previewOnline = document.getElementById('preview-online');
-const privacyIndicator = document.getElementById('privacy-indicator');
+    const nameInput = document.getElementById('name');
+    const descriptionInput = document.getElementById('description');
+    const previewName = document.getElementById('preview-name');
+    const previewDescription = document.getElementById('preview-description');
+    const previewImage = document.getElementById('preview-image');
+    const previewMembers = document.getElementById('preview-members');
+    const previewOnline = document.getElementById('preview-online');
+    const privacyIndicator = document.getElementById('privacy-indicator');
 
-function createLockSVG(isPrivate) {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("width", "24");
-    svg.setAttribute("height", "24");
-    svg.setAttribute("fill", isPrivate ? "red" : "green");
-    svg.setAttribute("class", "ml-2");
+    function createLockSVG(isPrivate) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("width", "24");
+        svg.setAttribute("height", "24");
+        svg.setAttribute("fill", isPrivate ? "red" : "green");
+        svg.setAttribute("class", "ml-2");
 
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    
-    if (isPrivate) {
-        path.setAttribute("d", "M17 10V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zM7 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v3H7V7z");
-    } else {
-        path.setAttribute("d", "M17 8V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v1a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zm-9-1a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v1H8V7z");
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        
+        if (isPrivate) {
+            path.setAttribute("d", "M17 10V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zM7 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v3H7V7z");
+        } else {
+            path.setAttribute("d", "M17 8V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v1a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zm-9-1a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v1H8V7z");
+        }
+
+        svg.appendChild(path);
+        return svg;
     }
 
-    svg.appendChild(path);
-    return svg;
-}
+    function updatePrivacyIndicator() {
+        privacyIndicator.innerHTML = '';
 
-function updatePrivacyIndicator() {
-    privacyIndicator.innerHTML = '';
+        const selectedPrivacy = document.querySelector('input[name="privacy"]:checked').value;
+        const lockSVG = createLockSVG(selectedPrivacy === 'private');
+        privacyIndicator.appendChild(lockSVG);
+    }
 
-    const selectedPrivacy = document.querySelector('input[name="privacy"]:checked').value;
-    const lockSVG = createLockSVG(selectedPrivacy === 'private');
-    privacyIndicator.appendChild(lockSVG);
-}
+    document.querySelectorAll('input[name="privacy"]').forEach(radio => {
+        radio.addEventListener('change', updatePrivacyIndicator);
+    });
 
-document.querySelectorAll('input[name="privacy"]').forEach(radio => {
-    radio.addEventListener('change', updatePrivacyIndicator);
-});
+    nameInput.addEventListener('input', () => {
+        previewName.textContent = nameInput.value;
+    });
 
-nameInput.addEventListener('input', () => {
-    previewName.textContent = nameInput.value;
-});
+    descriptionInput.addEventListener('input', () => {
+        previewDescription.textContent = descriptionInput.value;
+    });
 
-descriptionInput.addEventListener('input', () => {
-    previewDescription.textContent = descriptionInput.value;
-});
+    const imageInput = document.getElementById('image');
+    imageInput.addEventListener('change', () => {
+        const file = imageInput.files[0];
+        previewImage.src = URL.createObjectURL(file);
+    });
 
-const imageInput = document.getElementById('image');
-imageInput.addEventListener('change', () => {
-    const file = imageInput.files[0];
-    previewImage.src = URL.createObjectURL(file);
-});
+    previewMembers.textContent = '1 member';
+    previewOnline.textContent = '1 online';
 
-previewMembers.textContent = '1 member';
-previewOnline.textContent = '1 online';
-
-updatePrivacyIndicator();
+    updatePrivacyIndicator();
 </script>
 @endsection

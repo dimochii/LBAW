@@ -15,6 +15,29 @@
 </div> --}}
 
 <div class="p-4">
+  <div class="w-[50%] mx-auto">
+    <x-chartjs-component :chart="$chartHubs" />
+  </div>
+</div>
+
+<div class="p-4 ">
+  <div class="w-[50%] mx-auto">
+    <x-chartjs-component :chart="$chartUsers" />
+  </div>
+</div>
+
+<div class="p-4 ">
+  <div class="w-[50%] mx-auto">
+    <x-chartjs-component :chart="$postsPDay" />
+  </div>
+</div>
+~<div class="p-4 ">
+  <div class="w-[50%] mx-auto">
+    <x-chartjs-component :chart="$comboPosts" />
+  </div>
+</div>
+
+<div class="p-4">
   <h1 class="text-xl font-bold mb-2">users</h1>
   <table
     class="w-full bg-white border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
@@ -230,7 +253,9 @@
             class="{{ $topic->status ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100' }} text-sm border rounded-full px-3 py-1 font-bold">
             {{ $topic->status ? 'Approved' : 'Rejected' }}
           </span> --}}
-          <span class=" bg-orange-200 text-orange-500 text-sm border rounded-full px-3 py-1 font-bold whitespace-nowrap">Waiting Approval</span>
+          <span
+            class=" bg-orange-200 text-orange-500 text-sm border rounded-full px-3 py-1 font-bold whitespace-nowrap">Waiting
+            Approval</span>
         </td>
         <td class="px-4 py-4">
           <button name="delete-button"

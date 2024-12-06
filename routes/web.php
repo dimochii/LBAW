@@ -17,6 +17,9 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +54,13 @@ Route::controller(LoginController::class)->group(function () {
   Route::get('/logout', 'logout')->name('logout');
 });
 
+Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset-password', [PasswordResetController::class, 'updatePassword'])->name('password.update');
+Route::post('/password/update', [PasswordResetController::class, 'updatePassword'])->name('password.update');
+
+
 Route::controller(RegisterController::class)->group(function () {
   Route::get('/register', 'showRegistrationForm')->name('register');
   Route::post('/register', 'register');
@@ -80,7 +90,12 @@ Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])
 
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
+Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware('auth');
 
+
+//admin
+Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware('auth');
+Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'unsuspend'])->middleware('auth');
 Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite']);
 Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite']);
 
@@ -131,6 +146,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
     Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
     Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->name('users.remove_admin');
+    Route::get('/bestof', 'bestof')->name('bestof');
   });
 
   // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
@@ -147,14 +163,14 @@ Route::middleware('auth')->group(function () {
 
 //Hub
 Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities.show');
-Route::get('/hubs/create', [CommunityController::class, 'create'])->middleware('auth')->name('communities.create');
+
 Route::middleware('auth')->group(function () {
   Route::get('/hubs/create', [CommunityController::class, 'createHub']);
 });
 Route::post('/hubs/destroy', [CommunityController::class, 'destroy'])->middleware('auth')->name('communities.destroy');
 
-Route::get('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
-Route::get('/communities', [CommunityController::class, 'index'])->name('communities.index');
+Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
+Route::get('/all-hubs', [CommunityController::class, 'index'])->name('communities.index');
 
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
@@ -173,4 +189,14 @@ Route::get('/notifications', [NotificationController::class, 'show'])
     //mark as read
 Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
+// Recover password
+
+Route::post('/send', [MailController::class, 'send']);
+
+// OAuth API
+
+Route::controller(GoogleController::class)->group(function () {
+  Route::get('auth/google', 'redirect')->name('google-auth');
+  Route::get('auth/google/call-back', 'callbackGoogle')->name('google-call-back');
+});
 
