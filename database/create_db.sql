@@ -748,7 +748,7 @@ INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
 
 INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
 -- Tech community
-(3, 1), (4, 1), (5, 1), (31, 1), (2,1),
+(3, 1), (4, 1), (5, 1), (31, 1), 
 -- Book Lovers
 (4, 2), (18, 2), (29, 2), (40, 2),
 -- Anime Fans

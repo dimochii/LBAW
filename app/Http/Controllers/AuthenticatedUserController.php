@@ -452,7 +452,7 @@ class AuthenticatedUserController extends Controller
 
         // Detach user as a community moderator
         foreach ($user->communities ?? [] as $community) {
-            if ($community->moderators()->where('id', $user->id)->exists()) {
+            if ($community->moderators->contains($user->id)) {
                 $community->moderators()->detach($user->id);
             }
         }
