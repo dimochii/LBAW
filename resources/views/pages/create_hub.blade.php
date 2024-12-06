@@ -56,11 +56,11 @@
                                class="peer hidden" 
                                checked>
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-pastelGreen  transition-colors duration-300">
+                                  group-hover:border-green-400  transition-colors duration-300">
                             <div class="absolute inset-1 rounded-full bg-black transform scale-0 
                                       peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-pastelGreen  transition-colors duration-300">Public</span>
+                        <span class="text-xl group-hover:text-green-400 transition-colors duration-300">Public</span>
                     </label>
 
                     <label class="relative group flex items-center gap-3 cursor-pointer">
@@ -69,14 +69,39 @@
                                value="private" 
                                class="peer hidden">
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-pastelGreen transition-colors duration-300">
+                                  group-hover:border-red-500 transition-colors duration-300">
                             <div class="absolute inset-1 rounded-full bg-black transform scale-0 
                                       peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-pastelGreen  transition-colors duration-300">Private</span>
+                        <span class="text-xl group-hover:text-red-500 transition-colors duration-300">Private</span>
                     </label>
                 </div>
             </div>
+
+            <div>
+                <label for="moderators" class="block text-2xl font-medium mb-2">Additional Moderators</label>
+                <select 
+                    name="moderators[]" 
+                    id="moderators" 
+                    multiple 
+                    class="w-full rounded text-l border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-all duration-300"
+                >
+                    @foreach(Auth::user()->follows as $potentialModerator)
+                        <option 
+                            class = "hover:bg-sky-400"
+                            value="{{ $potentialModerator->id }}" 
+                            data-image="{{ $potentialModerator->profile_photo_url }}">
+                            {{ $potentialModerator->name }} ({{ $potentialModerator->username }})
+                        </option>
+                    @endforeach
+                </select>
+                <p class="text-sm text-gray-600 mt-1">Select users you follow to be additional moderators</p>
+            </div>
+
+            <div id="selected-moderators" class="flex flex-wrap gap-2 mt-4">
+                <!-- Chips dynamically added here -->
+            </div>
+
 
             <div class="space-y-6">
                 <label for="image" class="block text-2xl font-medium">Hub Image</label>
@@ -149,8 +174,10 @@
         
         if (isPrivate) {
             path.setAttribute("d", "M17 10V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zM7 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v3H7V7z");
+            path.style.fill = '#EF4444'; 
         } else {
             path.setAttribute("d", "M17 8V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v1a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zm-9-1a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v1H8V7z");
+            path.style.fill = '#22C55E'; 
         }
 
         svg.appendChild(path);
@@ -187,5 +214,57 @@
     previewOnline.textContent = '1 online';
 
     updatePrivacyIndicator();
+
+    const moderatorsSelect = document.getElementById('moderators');
+    moderatorsSelect.multiple = true;
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+    const moderatorsSelect = document.getElementById('moderators');
+    const selectedModeratorsContainer = document.getElementById('selected-moderators');
+    const previewMembers = document.getElementById('preview-members');
+
+    moderatorsSelect.addEventListener('change', () => {
+        selectedModeratorsContainer.innerHTML = ''; 
+
+        Array.from(moderatorsSelect.selectedOptions).forEach(option => {
+            const moderatorChip = document.createElement('div');
+            moderatorChip.className = 'flex items-center bg-gradient-to-r from-[#EE6055] via-[#60D394] to-[#AAF683] text-black px-3 py-2 rounded-full text-sm font-medium shadow-lg';
+
+            // Imagem do moderador
+            const img = document.createElement('img');
+            img.src = option.dataset.image;
+            img.alt = `${option.text} photo`;
+            img.className = 'w-8 h-8 rounded-full mr-2';
+
+            const text = document.createElement('span');
+            text.textContent = option.text;
+            text.className = 'mr-2';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '&times;';
+            removeBtn.className = 'text-white hover:text-gray-200 text-lg font-bold';
+            removeBtn.addEventListener('click', () => {
+                option.selected = false;
+                moderatorChip.remove();
+                updateMembersCount();
+            });
+
+           
+            moderatorChip.appendChild(text);
+            moderatorChip.appendChild(removeBtn);
+
+            selectedModeratorsContainer.appendChild(moderatorChip);
+        });
+
+        updateMembersCount();
+    });
+
+    function updateMembersCount() {
+        const count = moderatorsSelect.selectedOptions.length + 1; // Inclui o criador
+        previewMembers.textContent = `${count} member${count > 1 ? 's' : ''}`;
+    }
+});
+
 </script>
 @endsection

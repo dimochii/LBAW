@@ -20,8 +20,10 @@ class CommunityController extends Controller
             'description' => 'required|string|max:1000',
             'privacy' => 'required|in:public,private',
             'image_id' => 'nullable|integer|exists:images,id',
+            'moderators' => 'nullable|array',
+            'moderators.*' => 'exists:authenticated_users,id'
         ]);
-
+    
         $community = Community::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -29,10 +31,15 @@ class CommunityController extends Controller
             'image_id' => $request->image_id,
             'creation_date' => now(), 
         ]);
-
-        $authUser = Auth::user();
-        $community->moderators()->attach($authUser->id);
-
+    
+        // Attach current user as primary moderator
+        $community->moderators()->attach(Auth::user()->id);
+    
+        // Attach additional moderators if provided
+        if ($request->has('moderators')) {
+            $community->moderators()->attach($request->moderators);
+        }
+    
         return response()->json([
             'message' => 'Community created successfully',
             'community' => $community,
@@ -138,6 +145,7 @@ class CommunityController extends Controller
     }
 
     // Armazenar uma nova comunidade
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -145,6 +153,8 @@ class CommunityController extends Controller
             'description' => 'required|string|max:1000',
             'privacy' => 'required|in:public,private',
             'image_id' => 'nullable|integer|exists:images,id',
+            'moderators' => 'nullable|array',
+            'moderators.*' => 'exists:authenticated_users,id'
         ]);
 
         $community = Community::create([
@@ -155,9 +165,13 @@ class CommunityController extends Controller
             'creation_date' => now(),
         ]);
 
-        // Associar o usuário autenticado como moderador
-        $authUser = Auth::user();
-        $community->moderators()->attach($authUser->id);
+        // Attach current user as primary moderator
+        $community->moderators()->attach(Auth::user()->id);
+
+        // Attach additional moderators if provided
+        if ($request->has('moderators')) {
+            $community->moderators()->attach($request->moderators);
+        }
 
         return redirect()->route('news')->with('success', 'Community created successfully!');
     }
@@ -190,7 +204,7 @@ class CommunityController extends Controller
 
         $communities = Community::withCount('followers')
             ->orderBy($sortBy, $order)
-            ->paginate(6);
+            ->paginate(12);
 
         return view('pages.hubs', compact('communities', 'sortBy', 'order'));
     }

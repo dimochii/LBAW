@@ -378,6 +378,12 @@ class AuthenticatedUserController extends Controller
             $notification->save();
         }
 
+        foreach ($user->communities ?? [] as $community) {
+            if ($community->moderators()->where('id', $user->id)->exists()) {
+                $community->moderators()->detach($user->id);
+            }
+        }
+        
         $user->favouritePosts()->detach();
         $user->communities()->detach();
         $user->follows()->detach();

@@ -154,6 +154,7 @@ Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities
 Route::middleware('auth')->group(function () {
   Route::get('/hubs/create', [CommunityController::class, 'createHub']);
 });
+Route::get('/search/users', [SearchController::class, 'searchUsers']);
 
 Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::get('/all-hubs', [CommunityController::class, 'index'])->name('communities.index');
