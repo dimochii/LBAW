@@ -8,7 +8,9 @@
       <div class="flex items-center h-8 relative">
         <a class="flex items-center"
           href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
-          <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
+        
+          <img src="{{ asset('images/hub' . $newsItem->post->community->image_id . '.jpg') }}" 
+        
             class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
           <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown
             Community' }}</span>
@@ -155,9 +157,9 @@
       @foreach($newsItem->post->authors as $index => $author)
       <a href="{{ route('user.profile', $author->id) }}"
         class="transition-all transform col-start-1 row-start-1 ml-[{{ $index * 14 }}px] group-hover:ml-[{{$index * 36}}px]">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
+        <img src="{{ asset('images/user' . $newsItem->post->authors[1]->image_id . '.jpg') }}"   
           class="max-w-full rounded-3xl min-w-[32px] w-[32px]">
-      </a>
+      </a> <!--authors[1] just displays the first one -->
       @endforeach
       <div class="col-start-2 row-start-1">
         contributors • {{$newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown
@@ -177,7 +179,7 @@
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
       <a class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]" href="">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="max-w-full rounded-3xl">
+        <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}" class="max-w-full rounded-3xl">
       </a>
       <span class="text-xl font-light">start a thread</span>
     </div>
