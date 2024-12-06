@@ -108,6 +108,7 @@
                                class="mt-2 block w-full border-2 border-gray-200 p-4 font-light text-lg transition-colors duration-300 focus:border-black focus:ring-0">
                     </div>
                 </div>
+                
             </div>
 
             {{-- Right Column --}}
@@ -152,6 +153,15 @@
                 </div>
             </div>
 
+            <div class="md:col-span-2 flex justify-start">
+                 <form method="POST" action="{{ route('user.delete', $user->id) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white btn btn-primary">
+                        <span>delete my account</span>
+                    </button>
+                </form>
+            </div>
             {{-- Submit Button --}}
             <div class="md:col-span-2 flex justify-end">
                 <button type="submit" 
