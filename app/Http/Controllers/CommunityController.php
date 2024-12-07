@@ -106,9 +106,12 @@ class CommunityController extends Controller
         $followers_count = $community->followers()->count();
 
         $user = Auth::user();
+        if($user) {
         $is_following = $community->followers()
             ->where('authenticated_user_id', $user->id) 
             ->exists();
+        }
+        else {$is_following = false;}
 
         return view('pages.hub', [
             'community' => $community,
@@ -124,29 +127,32 @@ class CommunityController extends Controller
 
     private function cacheRecentHub($communityId, $communityName)
     {
-        $userId = Auth::user()->id;
-        
-        //cache key
-        $cacheKey = "recent_hubs:{$userId}";
+        $userId = Auth::check() ? Auth::user()->id : null; // Check if the user is authenticated
+    $cacheKey = $userId ? "recent_hubs:{$userId}" : "recent_hubs:guest";
 
-        $hubData = ['id' => $communityId, 'name' => $communityName];
+    $hubData = ['id' => $communityId, 'name' => $communityName];
 
-        // Dar fetch aos hubs mais recentes na cache
-        $recentHubs = Cache::get($cacheKey, []);
+    // Fetch recent hubs from cache (use session for guests)
+    $recentHubs = $userId 
+        ? Cache::get($cacheKey, []) 
+        : session()->get($cacheKey, []);
 
-        // Remover o hub se esse já estiver na cache
-        $recentHubs = array_filter($recentHubs, fn($hub) => $hub['id'] !== $communityId);
+    // Remove the hub if it already exists
+    $recentHubs = array_filter($recentHubs, fn($hub) => $hub['id'] !== $communityId);
 
-        // Addicionar o hub no inicio
-        array_unshift($recentHubs, $hubData);
+    // Add the hub to the start
+    array_unshift($recentHubs, $hubData);
 
-        // Manter só os 4 primeiros
-        $recentHubs = array_slice($recentHubs, 0, 4);
+    // Keep only the first 4 hubs
+    $recentHubs = array_slice($recentHubs, 0, 4);
 
-        // Guardar na cache por 12 horas:
+    if ($userId) {
+        // Store in cache for authenticated users
         Cache::put($cacheKey, $recentHubs, now()->addHours(12));
-
-
+    } else {
+        // Store in session for guests
+        session()->put($cacheKey, $recentHubs);
+    }
     }
 
 

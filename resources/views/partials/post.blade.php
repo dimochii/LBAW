@@ -80,7 +80,10 @@ news = Bool
         </label>
       </div>
       @php 
-        $userVote = $item->userVote(Auth::user()->id);
+      if(Auth::check()){
+        $userVote = $item->userVote(Auth::user()->id);}
+      else 
+      $userVote = false;
       @endphp
       <div>
         <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{($userVote?->upvote ?? false) ?

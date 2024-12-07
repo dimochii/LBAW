@@ -142,7 +142,7 @@
           @include('partials.post', [
             'news' => true,
             'item' =>$item, 
-            'post' => $item
+            'post' => $item->news
           ])
         @endforeach
         @elseif ($favourite_topics->count() > 0)   
@@ -150,7 +150,7 @@
           @include('partials.post', [
             'news' => false,
             'item' =>$item, 
-            'post' => $item,
+            'post' => $item->topic,
           ])
         @endforeach
     @else
