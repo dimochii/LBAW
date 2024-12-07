@@ -155,19 +155,32 @@
     </div> --}}
     {{-- ml-[{{ $index * 18 }}px] --}}
 
-    <div class="grid cursor-pointer group mr-auto gap-4 items-center">
-      @foreach($newsItem->post->authors as $index => $author)
-      <a href="{{ route('user.profile', $author->id) }}"
-        class="transition-all transform col-start-1 row-start-1 ml-[{{ $index * 14 }}px] group-hover:ml-[{{$index * 36}}px]">
-        <img src="{{ asset('images/user' . $newsItem->post->authors[0]->image_id . '.jpg') }}"   
-          class="max-w-full rounded-3xl min-w-[32px] w-[32px]">
-      </a> <!--authors[1] just displays the first one -->
-      @endforeach
-      <div class="col-start-2 row-start-1">
-        contributors • {{$newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown
-        date'}}
+    <div id="contributors-container" class="flex items-center space-x-2">
+      <div class="flex -space-x-4 rtl:space-x-reverse items-center transition-all" id="contributors-images">
+        @foreach($newsItem->post->authors->take(4) as $author)
+          <a href="{{ route('user.profile', $author->id) }}" class="group">
+            <img 
+              src="{{ asset('images/user' . $author->image_id . '.jpg') }}" 
+              alt="{{ $author->name }}" 
+              class="w-10 h-10 border-2 border-white rounded-full "
+            >
+          </a>
+        @endforeach
+        @if($newsItem->post->authors->count() > 4)
+          <button 
+            id="expand-button" 
+            class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-slate-600 border-2 border-white rounded-full hover:bg-gray-600"
+          >
+            +{{ $newsItem->post->authors->count() - 4 }}
+          </button>
+        @endif
       </div>
     </div>
+    <div class="text-sm text-gray-600">
+      contributors • {{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown date' }}
+    </div>
+
+
 
     <div data-text="markdown"
       class="break-words font-vollkorn max-w-[95%] prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded prose-code:text-[#4793AF]">
@@ -523,6 +536,31 @@
         console.error('Error while posting comment:', error);
       }
   })
+
+  document.getElementById('expand-button')?.addEventListener('click', function () {
+    const contributorsContainer = document.getElementById('contributors-images');
+    const authors = @json($newsItem->post->authors);
+    
+    contributorsContainer.innerHTML = ''; // Limpa os itens existentes.
+    
+    // Adiciona todas as imagens lado a lado.
+    authors.forEach(author => {
+      const anchor = document.createElement('a');
+      anchor.href = `{{ route('user.profile', ':id') }}`.replace(':id', author.id);
+      anchor.className = 'group';
+
+      const img = document.createElement('img');
+      img.src = `{{ asset('images/user' . ':image_id' . '.jpg') }}`.replace(':image_id', author.image_id);
+      img.alt = author.name;
+      img.className = 'w-10 h-10 border-2 border-white rounded-full dark:border-gray-800';
+
+      anchor.appendChild(img);
+      contributorsContainer.appendChild(anchor);
+    });
+
+    // Remove o botão "+" após expandir.
+    this.remove();
+  });
 
 
   </script>

@@ -9,7 +9,7 @@
             <img src="{{ asset('images/hub' . $community->image_id . '.jpg') }}" 
                  onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                  alt="Community Image" 
-                 class="rounded-full ring-2 ring-black h-32 w-32">
+                 class="rounded-full  h-32 w-32">
             <div>
             <div class="flex items-center gap-2">
     <!-- Community Name -->

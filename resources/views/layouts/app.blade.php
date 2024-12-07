@@ -241,7 +241,7 @@
           @endphp
 
           <div class="py-4">
-              <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
+              <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
               <div class="space-y-1 *:transition-colors *:pl-6">
                   @foreach ($recentHubs as $recent)
                   <a href="/hub/{{ $recent['id'] }}" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
@@ -256,7 +256,7 @@
           </div>
 
           <div class="py-4">
-              <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
+              <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
               <div class="space-y-1 *:transition-colors *:pl-6">
                   @foreach ($userHubs as $hubs)
                   <a href="/hub/{{ $hubs['id'] }}" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
@@ -302,7 +302,11 @@
         <!-- Hubs Section -->
         <div class="p-4 border-b-2 border-black">
           <div class="flex flex-wrap items-start gap-3">
-            <div class="w-12 h-12 bg-green-500 rounded-full flex-shrink-0"></div>
+            <img src="{{ asset('images/hub' . $community->image_id . '.jpg') }}" 
+                 onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
+                 alt="Community Image"
+                 class="rounded-full  size-20" >
+          
             <div class="flex-1 break-words">
               <h2 class="font-medium break-all">/{{ $community->name }}</h2>
               <p class="text-sm text-gray-600 whitespace-normal">
@@ -355,7 +359,7 @@
           <div class="space-y-3">
             @php
             // Busca moderadores do hub (simulação de chamada a um controlador ou modelo)
-            $moderators = $hub->moderators ?? []; // Exemplo de busca
+            $moderators = $community->moderators ?? []; // Exemplo de busca
             $defaultModerators = [
             ['username' => '@admin', 'role' => 'Administrator', 'color' => 'bg-blue-500'],
             ['username' => '@friends', 'role' => 'Moderator', 'color' => 'bg-green-500'],
@@ -374,8 +378,10 @@
             <div class="flex items-center space-x-2">
               <div class="w-8 h-8 {{ $moderatorColor }} rounded-full flex-shrink-0"></div>
               <div>
-                <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
-                <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
+                <p class="text-sm font-medium">{{ $moderator['name'] }}</p>
+                <p class="text-xs text-gray-500"><span>
+                  @
+                </span>{{ $moderator['username'] }}</p>
               </div>
             </div>
             @endforeach
