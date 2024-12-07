@@ -159,7 +159,7 @@
       @foreach($newsItem->post->authors as $index => $author)
       <a href="{{ route('user.profile', $author->id) }}"
         class="transition-all transform col-start-1 row-start-1 ml-[{{ $index * 14 }}px] group-hover:ml-[{{$index * 36}}px]">
-        <img src="{{ asset('images/user' . $newsItem->post->authors[1]->image_id . '.jpg') }}"   
+        <img src="{{ asset('images/user' . $newsItem->post->authors[0]->image_id . '.jpg') }}"   
           class="max-w-full rounded-3xl min-w-[32px] w-[32px]">
       </a> <!--authors[1] just displays the first one -->
       @endforeach

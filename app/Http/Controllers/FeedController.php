@@ -53,6 +53,7 @@ class FeedController extends Controller
       ->get();
 
     foreach ($posts as $item) {
+
       $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
         $query->where('post_id', $item->post_id);
       })->first();
