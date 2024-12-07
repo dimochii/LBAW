@@ -45,6 +45,7 @@
         <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data" 
               class="grid grid-cols-1 md:grid-cols-2 gap-12">
             @csrf
+            @method('PUT')
 
             {{-- Left Column --}}
             <div class="space-y-8">

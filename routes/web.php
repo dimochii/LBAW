@@ -75,8 +75,7 @@ Route::controller(RegisterController::class)->group(function () {
 Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 //edit profile
 Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
-Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');
-Route::get('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');
+Route::post('/users/{id}/update', [AuthenticatedUserController::class, 'update'])->name('user.update');
 Route::post('/users/{id}', [AuthenticatedUserController::class, 'destroy'])->name('user.destroy');
 Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 Route::get('/users/{user}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
