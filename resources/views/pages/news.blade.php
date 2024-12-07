@@ -17,7 +17,7 @@
 
   <!-- Check if there are any news items -->
   @if ($activeTab === 'News')
-    @if($news->isEmpty())
+  @if($news->isEmpty())
       <p>No news available.</p>
     @else
       @include('partials.news_grid', ['posts' => $news->take(6)])
@@ -35,13 +35,13 @@
     @if($topics->isEmpty())
       <p>No topics available.</p>
     @else
-
       <div class="divide-y-2 divide-black border-b-2 border-black">
-          @foreach($topics as $post)
-            @include('partials.post', ['news' => false, 'post' => $post->topic, 'item' => $post])
+          @foreach($topics as $topic)
+            @include('partials.post', ['news' => false, 'post' => $topic->topic, 'img' => false, 'item' => $topic])
           @endforeach
       </div>
     @endif
+
   @endif
 
   <script>
