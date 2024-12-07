@@ -79,8 +79,11 @@ news = Bool
           </svg>
         </label>
       </div>
+      @php 
+        $userVote = $item->userVote(Auth::user()->id);
+      @endphp
       <div>
-        <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{ $item->user_upvoted ?
+        <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{($userVote?->upvote ?? false) ?
         'checked' : '' }} name="vote">
         <label for="{{$post->post_id}}-upvote"
           class=" peer-checked/upvote:fill-blue-400 cursor-pointer group-hover/wrapper:hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
@@ -92,14 +95,13 @@ news = Bool
 
       <span class="mr-2" id="{{ $post->post_id}}-score">
         @php
-
-        $score = $item->upvotes_count - $item->downvotes_count;
+        $score = $item->getUpvoteCountAttribute() - $item->getDownvoteCountAttribute();
         echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
         @endphp
       </span>
 
       <div class="">
-        <input id="{{$post->post_id}}-downvote" type="checkbox" class="hidden peer/downvote" {{ $item->user_downvoted ?
+        <input id="{{$post->post_id}}-downvote" type="checkbox" class="hidden peer/downvote" {{ ($userVote ? !$userVote->upvote : false) ?
         'checked' : '' }} name="vote">
         <label for="{{$post->post_id}}-downvote"
           class="cursor-pointer peer-checked/downvote:fill-red-400  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">

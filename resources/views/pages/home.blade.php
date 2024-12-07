@@ -27,7 +27,7 @@
             @include('partials.post', [
             'news' => 'true',
             'post' => $post->news,
-            'item' => $post->news,
+            'item' => $post,
             ])
           @endforeach
         </div>
@@ -36,8 +36,8 @@
     @if($topics->isEmpty())
       <p>No topics available.</p>
     @else
-          @foreach($topics as $topic)
-            @include('partials.post', ['news' => false, 'post' => $topic->topic, 'img' => false, 'item' => $topic->topic])
+          @foreach($topics as $post)
+            @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
           @endforeach
       </div>
     @endif

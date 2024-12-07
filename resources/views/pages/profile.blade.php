@@ -97,6 +97,7 @@
         @foreach ($authored_news as $item)
           @include('partials.post', [
             'news' => true,
+            'item' =>$item, 
             'post' => $item->news,
           ])
         @endforeach
@@ -108,6 +109,7 @@
         @foreach ($authored_topics as $item)
           @include('partials.post', [
             'news' => false,
+            'item' =>$item, 
             'post' => $item->topic,
           ])
         @endforeach
@@ -119,6 +121,7 @@
         @foreach ($voted_news as $item)
           @include('partials.post', [
             'news' => true,
+            'item' =>$item, 
             'post' => $item->news,
           ])
         @endforeach
@@ -126,6 +129,7 @@
         @foreach ($voted_topics as $item)
           @include('partials.post', [
             'news' => false,
+            'item' =>$item, 
             'post' => $item->topic,
           ])
         @endforeach
@@ -137,14 +141,16 @@
         @foreach ($favourite_news as $item)
           @include('partials.post', [
             'news' => true,
-            'post' => $item->news,
+            'item' =>$item, 
+            'post' => $item
           ])
         @endforeach
         @elseif ($favourite_topics->count() > 0)   
         @foreach ($favourite_topics as $item)    
           @include('partials.post', [
             'news' => false,
-            'post' => $item->topic,
+            'item' =>$item, 
+            'post' => $item,
           ])
         @endforeach
     @else

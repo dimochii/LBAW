@@ -53,14 +53,6 @@ class FeedController extends Controller
       ->get();
 
     foreach ($posts as $item) {
-      $item->upvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->post_id);
-      })->where('upvote', true)->count();
-
-      $item->downvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->post_id);
-      })->where('upvote', false)->count();
-
       $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
         $query->where('post_id', $item->post_id);
       })->first();

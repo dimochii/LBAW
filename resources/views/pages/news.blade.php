@@ -26,7 +26,7 @@
             @include('partials.post', [
             'news' => 'true',
             'post' => $post,
-            'item' => $post->post
+            'item' => $post
             ])
           @endforeach
         </div>

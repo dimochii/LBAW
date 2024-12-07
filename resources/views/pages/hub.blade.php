@@ -110,7 +110,7 @@
                     @foreach ($newsPosts as $post)
                         @include('partials.post', [
                             'news' => 'true',
-                            'item' => $post->news,
+                            'item' => $post,
                             'post' => $post->news,
                         ])
                     @endforeach
@@ -119,8 +119,8 @@
 
             @elseif ($activeTab === 'Topics')
             @if ($topicPosts->count() > 0)
-                @foreach ($topicPosts as $topic)
-                @include('partials.post', ['news' => false, 'post' => $topic->topic, 'img' => false, 'item' => $topic->topic])
+                @foreach ($topicPosts as $post)
+                @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
                 @endforeach
                 @endif
 
