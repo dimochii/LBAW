@@ -15,6 +15,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ModeratorController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PasswordResetController;
@@ -37,10 +39,12 @@ Route::redirect('/', '/news');
 
 
 
-// Cards
+
 
 
 // API
+
+
 
 
 
@@ -63,12 +67,16 @@ Route::controller(RegisterController::class)->group(function () {
   Route::post('/register', 'register');
 });
 
+//admin
+
+
 //Authenticated User
 //profile
 Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 //edit profile
 Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
 Route::post('/users/{id}', [AuthenticatedUserController::class, 'update'])->name('user.update');
+Route::post('/users/{id}', [AuthenticatedUserController::class, 'destroy'])->name('user.destroy');
 Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 Route::get('/users/{user}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
 Route::get('/users/{user}/profile/favorites', [AuthenticatedUserController::class, 'favorites']);
@@ -133,8 +141,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/global', 'global')->name('global');
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
-    Route::get('/admin', 'admin')->name('admin');
     Route::get('/bestof', 'bestof')->name('bestof');
+    Route::get('/admin', [AdminController::class, 'show'])->name('user.admin');
+    Route::get('/moderator', [ModeratorController::class, 'show'])->name('user.moderator');
+    Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
+    Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
+    Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
+    Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->name('users.remove_admin');
   });
 
   // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
@@ -155,7 +168,7 @@ Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities
 Route::middleware('auth')->group(function () {
   Route::get('/hubs/create', [CommunityController::class, 'createHub']);
 });
-Route::get('/search/users', [SearchController::class, 'searchUsers']);
+Route::post('/hubs/destroy', [CommunityController::class, 'destroy'])->middleware('auth')->name('communities.destroy');
 
 Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
 Route::get('/all-hubs', [CommunityController::class, 'index'])->name('communities.index');
@@ -188,3 +201,16 @@ Route::controller(GoogleController::class)->group(function () {
   Route::get('auth/google/call-back', 'callbackGoogle')->name('google-call-back');
 });
 
+
+Route::get('/images/{filename}', function ($filename) {
+  $path = base_path('images/' . $filename);
+
+  $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+  $extension = pathinfo($filename, PATHINFO_EXTENSION);
+
+  if (!File::exists($path) || !in_array($extension, $allowedExtensions)) {
+      abort(404);
+  }
+
+  return response()->file($path);
+})->name('images.serve');

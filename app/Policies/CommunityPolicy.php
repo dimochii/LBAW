@@ -16,6 +16,6 @@ class CommunityPolicy
     }
     public function updatePrivacy(AuthenticatedUser $user, Community $community)
     {
-        return $community->moderators->pluck('id')->contains($user->id);
+        return ($community->moderators->pluck('id')->contains($user->id) || $user->is_admin);
     }
 }

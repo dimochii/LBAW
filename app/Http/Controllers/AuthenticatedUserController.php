@@ -13,18 +13,14 @@ use Illuminate\Validation\ValidationException;
 
 class AuthenticatedUserController extends Controller
 {
-      /**
-     * Display a listing of the users.
-     */
+
     public function index()
     {
         $users = AuthenticatedUser::all();
         return response()->json($users);
     }
 
-    /**
-     * Store a newly created user in storage.
-     */
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -44,9 +40,7 @@ class AuthenticatedUserController extends Controller
         return response()->json($user, 201);
     }
 
-    /**
-     * Display the specified user.
-     */
+
     public function show($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
@@ -57,6 +51,9 @@ class AuthenticatedUserController extends Controller
         $authored_topics = $this->getAuthoredTopics($user);
         $voted_news = $this->getVotedNews($user);
         $voted_topics = $this->getVotedTopics($user);
+        $favourite_news = $this->getFavouriteNews($user);
+        $favourite_topics = $this->getFavouriteTopics($user);
+
         
         if (!Auth::check()) {
             return response()->json(['message' => 'You are not logged in'], 403);
@@ -68,7 +65,7 @@ class AuthenticatedUserController extends Controller
 
         return view('pages.profile', compact(
             'user', 'followers', 'following', 'authored_news', 'favorites', 
-            'authored_topics', 'voted_news', 'voted_topics', 'isFollowing'
+            'authored_topics', 'voted_news', 'voted_topics','favourite_news', 'favourite_topics', 'isFollowing'
         ));
     }
 
@@ -88,20 +85,15 @@ class AuthenticatedUserController extends Controller
 
         return view('pages.following', compact('user', 'following'));
     }
-    /**
-     * Update the specified user in storage.
-     */
+
     public function edit($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
-        // Check if the logged-in user is trying to edit their own profile
-        $this->authorize('editProfile', $user);
-        if (Auth::user()->id != $id) {
-            // If not, deny access by returning a 403 error or redirecting them
+
+        if (!$this->authorize('editProfile', $user)) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // If the logged-in user is editing their own profile, fetch the user
         $user = Auth::user();
 
         return view('pages.edit_profile', compact('user'));
@@ -117,7 +109,6 @@ class AuthenticatedUserController extends Controller
         $user = AuthenticatedUser::findOrFail($id);
 
 
-        // Validate the data
         $validatedData = $request->validate([
             'name' => 'nullable|string|max:255',
             'username' => 'nullable|string|max:255|unique:authenticated_users,username,' . $user->id,
@@ -128,7 +119,6 @@ class AuthenticatedUserController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Update only provided fields
         if (!empty($validatedData['name'])) {
             $user->name = $validatedData['name'];
         }
@@ -145,28 +135,23 @@ class AuthenticatedUserController extends Controller
             $user->description = $validatedData['description'];
         }
 
-        // Update password if provided
         if (!empty($validatedData['password'])) {
             $user->password = Hash::make($validatedData['password']);
         }
 
-        // Handle file upload if provided
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('images'), $filename);
-            $user->image_id = $filename; // Save the filename as the image ID
+            $user->image_id = $filename; 
         }
 
         $user->save();
 
-        // Redirect back to the A page with success message
         return redirect()->route('user.profile', $user->id)->with('success', 'Profile updated successfully!');
     }
 
-    /**
-     * Remove the specified user from storage.
-     */
+
     public function destroy($id)
     {
         if (Auth::user()->id != $id) {
@@ -179,9 +164,7 @@ class AuthenticatedUserController extends Controller
         return response()->json(['message' => 'User deleted successfully']);
     }
 
-    /**
-     * Get the communities followed by the user.
-     */
+
     public function getCommunities($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
@@ -190,9 +173,7 @@ class AuthenticatedUserController extends Controller
         return response()->json($communities);
     }
 
-    /**
-     * Get the posts authored by the user and display them on the profile page.
-     */
+
     private function fetchPostData($query)
     {
         $posts = $query->withCount([
@@ -219,12 +200,24 @@ class AuthenticatedUserController extends Controller
         return $this->fetchPostData($user->authoredPosts()->whereHas('topic'));
     }  
 
-    public function getVotedNews($user)
+
+    public function getFavouriteNews($user)
     {
-        return $this->fetchPostData(Post::whereHas('news')->whereHas('votes', function ($query) use ($user) {
-            $query->where('authenticated_user_id', $user->id)->where('upvote', true);
-        }));
+        return $this->fetchPostData($user->favouritePosts()->whereHas('news'));
     }
+
+    public function getFavouriteTopics($user)
+    {
+        return $this->fetchPostData($user->favouritePosts()->whereHas('topic'));
+    }
+
+
+    public function getVotedNews($user)
+{
+    return $this->fetchPostData(Post::whereHas('news')->whereHas('votes', function ($query) use ($user) {
+        $query->where('authenticated_user_id', $user->id)->where('upvote', true);
+    }));
+}
 
     
     public function getVotedTopics($user)
@@ -241,14 +234,11 @@ class AuthenticatedUserController extends Controller
         if (Auth::check()) {
             $authenticatedUser = Auth::user(); 
     
-            // Check if the authenticated user is already following the target user
             if ($authenticatedUser->follows()->where('followed_id', $userToFollow->id)->exists()) {
-                // If already following, detach (unfollow)
                 $authenticatedUser->follows()->detach($userToFollow->id);
     
                 return redirect()->back()->with('success', 'You have unfollowed ' . $userToFollow->name);
             } else {
-                // If not following, attach (follow)
                 $authenticatedUser->follows()->attach($userToFollow->id);
     
                 return redirect()->back()->with('success', 'You are now following ' . $userToFollow->name);
@@ -259,10 +249,35 @@ class AuthenticatedUserController extends Controller
     }
     
 
+    public function  makeAdmin($id)
+    {
+        
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $user = AuthenticatedUser::findOrFail($id);
+        $user->is_admin = true;
+        $user->save();
+
+        return response()->json(['message' => 'User gained admin privileges successfully']);
+    }
+    public function  removeAdmin($id)
+    {
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $user = AuthenticatedUser::findOrFail($id);
+        $user->is_admin = false;
+        $user->save();
+
+        return response()->json(['message' => 'User lost admin privileges successfully']);
+    }
+    
 
     public function suspend($id)
-    {
-        // Check if the current user is an admin
+    { 
         if (!Auth::user()->is_admin) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -274,12 +289,8 @@ class AuthenticatedUserController extends Controller
         return response()->json(['message' => 'User suspended successfully']);
     }
 
-    /**
-     * Unsuspend a user.
-     */
     public function unsuspend($id)
     {
-        // Check if the current user is an admin
         if (!Auth::user()->is_admin) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -290,6 +301,7 @@ class AuthenticatedUserController extends Controller
 
         return response()->json(['message' => 'User unsuspended successfully']);
     }
+
 
     public function favorites() {
 

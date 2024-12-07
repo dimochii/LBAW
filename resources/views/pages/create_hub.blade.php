@@ -86,14 +86,14 @@
                     multiple 
                     class="w-full rounded text-l border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-all duration-300"
                 >
-                    @foreach(Auth::user()->follows as $potentialModerator)
-                        <option 
-                            class = "hover:bg-sky-400"
-                            value="{{ $potentialModerator->id }}" 
-                            data-image="{{ $potentialModerator->profile_photo_url }}">
-                            {{ $potentialModerator->name }} ({{ $potentialModerator->username }})
-                        </option>
-                    @endforeach
+                @foreach(Auth::user()->follows->sortBy('name') as $potentialModerator)
+                    <option 
+                        class="hover:bg-sky-400"
+                        value="{{ $potentialModerator->id }}" 
+                        data-image="{{ $potentialModerator->profile_photo_url }}">
+                        {{ $potentialModerator->name }} ({{ $potentialModerator->username }})
+                    </option>
+                @endforeach
                 </select>
                 <p class="text-sm text-gray-600 mt-1">Select users you follow to be additional moderators</p>
             </div>
@@ -220,51 +220,148 @@
 
     
     document.addEventListener('DOMContentLoaded', () => {
-    const moderatorsSelect = document.getElementById('moderators');
-    const selectedModeratorsContainer = document.getElementById('selected-moderators');
-    const previewMembers = document.getElementById('preview-members');
+        const moderatorsSelect = document.getElementById('moderators');
+        const selectedModeratorsContainer = document.getElementById('selected-moderators');
+        const previewMembers = document.getElementById('preview-members');
 
-    moderatorsSelect.addEventListener('change', () => {
-        selectedModeratorsContainer.innerHTML = ''; 
+        // Color palette inspired by news and journalism themes
+        const newsColors = [
+        { bg: '#2C3E50', text: '#ECF0F1' },  // Dark blue-gray with light text
+        { bg: '#34495E', text: '#ECF0F1' },  // Slightly lighter blue-gray
+        { bg: '#2980B9', text: '#FFFFFF' },  // Bright blue
+        { bg: '#3498DB', text: '#FFFFFF' },  // Lighter bright blue
+        { bg: '#16A085', text: '#FFFFFF' },  // Teal green
+        { bg: '#1ABC9C', text: '#FFFFFF' },  // Lighter teal
+        { bg: '#8E44AD', text: '#FFFFFF' },  // Deep purple
+        { bg: '#9B59B6', text: '#FFFFFF' }   // Lighter purple
+        ];
+        let colorIndex = 0;
 
+        moderatorsSelect.addEventListener('change', () => {
+        selectedModeratorsContainer.innerHTML = '';
+        
         Array.from(moderatorsSelect.selectedOptions).forEach(option => {
+            // Cycle through colors
+            const currentColor = newsColors[colorIndex];
+            colorIndex = (colorIndex + 1) % newsColors.length;
+
+            // Create moderator chip with enhanced styling
             const moderatorChip = document.createElement('div');
-            moderatorChip.className = 'flex items-center bg-gradient-to-r from-[#EE6055] via-[#60D394] to-[#AAF683] text-black px-3 py-2 rounded-full text-sm font-medium shadow-lg';
+            moderatorChip.className = 'moderator-chip';
+            moderatorChip.style.backgroundColor = currentColor.bg;
+            moderatorChip.style.color = currentColor.text;
 
-            // Imagem do moderador
-            const img = document.createElement('img');
-            img.src = option.dataset.image;
-            img.alt = `${option.text} photo`;
-            img.className = 'w-8 h-8 rounded-full mr-2';
+            // User Icon (SVG)
+            const iconSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            iconSvg.setAttribute('viewBox', '0 0 24 24');
+            iconSvg.setAttribute('width', '24');
+            iconSvg.setAttribute('height', '24');
+            iconSvg.setAttribute('fill', 'none');
+            iconSvg.setAttribute('stroke', currentColor.text);
+            iconSvg.setAttribute('stroke-width', '2');
+            iconSvg.setAttribute('stroke-linecap', 'round');
+            iconSvg.setAttribute('stroke-linejoin', 'round');
+            iconSvg.className = 'moderator-chip-icon';
 
+            // User icon path
+            const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconPath.setAttribute('d', 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2');
+            const iconCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            iconCircle.setAttribute('cx', '12');
+            iconCircle.setAttribute('cy', '7');
+            iconCircle.setAttribute('r', '4');
+
+            iconSvg.appendChild(iconPath);
+            iconSvg.appendChild(iconCircle);
+            
+            // Moderator Name
             const text = document.createElement('span');
             text.textContent = option.text;
-            text.className = 'mr-2';
-
+            text.className = 'moderator-chip-name';
+            
+            // Remove Button with icon
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '&times;';
-            removeBtn.className = 'text-white hover:text-gray-200 text-lg font-bold';
-            removeBtn.addEventListener('click', () => {
-                option.selected = false;
-                moderatorChip.remove();
-                updateMembersCount();
+            removeBtn.className = 'moderator-chip-remove';
+
+            // Hover and interaction effects
+            moderatorChip.addEventListener('mouseover', () => {
+            moderatorChip.style.transform = 'scale(1.05)';
+            moderatorChip.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+            });
+            
+            moderatorChip.addEventListener('mouseout', () => {
+            moderatorChip.style.transform = 'scale(1)';
+            moderatorChip.style.boxShadow = 'none';
             });
 
-           
+            removeBtn.addEventListener('click', () => {
+            option.selected = false;
+            moderatorChip.remove();
+            updateMembersCount();
+            });
+
+            // Append elements
+            moderatorChip.appendChild(iconSvg);
             moderatorChip.appendChild(text);
             moderatorChip.appendChild(removeBtn);
-
             selectedModeratorsContainer.appendChild(moderatorChip);
         });
-
+        
         updateMembersCount();
-    });
+        });
 
-    function updateMembersCount() {
-        const count = moderatorsSelect.selectedOptions.length + 1; // Inclui o criador
+        function updateMembersCount() {
+        const count = moderatorsSelect.selectedOptions.length + 1; // Includes creator
         previewMembers.textContent = `${count} member${count > 1 ? 's' : ''}`;
-    }
-});
+        }
+
+        // Add CSS for chip styling
+        const style = document.createElement('style');
+        style.textContent = `
+        .moderator-chip {
+            display: flex;
+            align-items: center;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin: 4px;
+            max-width: 250px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .moderator-chip-icon {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 0.5rem;
+            padding: 0.25rem;
+        }
+
+        .moderator-chip-name {
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 0.5rem;
+        }
+
+        .moderator-chip-remove {
+            padding: 0.25rem 0.5rem;
+            background: rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .moderator-chip-remove:hover {
+            background: rgba(0,0,0,0.2);
+        }
+        `;
+        document.head.appendChild(style);
+        });
 
 </script>
 @endsection

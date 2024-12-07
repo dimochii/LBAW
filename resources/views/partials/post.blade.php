@@ -9,12 +9,13 @@ news = Bool
 
 <div data-post="{{$post->post_id}}"
   class="p-4 hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper h-full w-full flex {{ isset($img_left) && $img_left ? 'flex-row' : 'flex-row-reverse' }}">
-  <div class="h-full w-full flex-col flex">
+  <div class="h-full w-full flex-col flex gap-4">
     <header class="flex items-center relative">
       <a class="flex items-center h-8"
         href="{{ route('communities.show', ['id' => $post->post->community->id ?? 'unknown']) }}">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-          class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+        <img src="{{ asset('images/hub' . $post->post->community->image_id . '.jpg') }}" alt="Community Image"
+        class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+
         <span class="text-xl font-light underline-effect-light">h/{{ $post->post->community->name ?? 'Unknown Community'
           }}</span>
       </a>
@@ -34,16 +35,20 @@ news = Bool
     </header>
 
     <div class="grow">
-      
-      @if ($news)
-      <a href="{{ route('news.show',['post_id' => ($post->post->id)]) ?? '#' }}">
-        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">
-          {{ $post->post->title ?? 'No title available' }}</p>
-      </a>
 
+      @if ($news)
+
+      <a href="{{ route('news.show',['post_id' => ($post->post->id)]) ?? '#' }}"
+        class="inline my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">
+        {{ $post->post->title ?? 'No title available' }}</a>
+
+      @if ($post->news_url)
+      <a href="{{$post->news_url}}" class="inline ml-2 text-sm lg:text-base text-gray-500 group-hover/wrapper:text-gray-300 underline-effect-light"
+        data-content="news-url">{{$post->news_url}}</a>
+      @endif
       @else
       <a href="{{ route('topic.show',['post_id' => ($post->post->id)]) ?? '#' }}">
-        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
+        <p class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
           $post->post->title ?? 'No title available' }}</p>
       </a>
 
@@ -57,20 +62,18 @@ news = Bool
 
     <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
       <div>
-          <input 
-              id="favorite-{{$post->post_id}}" 
-              type="checkbox" 
-              class="hidden peer/favorite" 
-              {{ Auth::check() && Auth::user()->favouritePosts->contains($post->post_id) ? 'checked' : '' }} 
-              name="favorite" 
-              onchange="toggleFavorite({{ $post->post_id }})">
+        <input id="favorite-{{$post->post_id}}" type="checkbox" class="hidden peer/favorite" {{ Auth::check() &&
+          Auth::user()->favouritePosts->contains($post->post_id) ? 'checked' : '' }}
+        name="favorite"
+        onchange="toggleFavorite({{ $post->post_id }})">
 
-          <label for="favorite-{{$post->post_id}}" 
-              class="cursor-pointer peer-checked/favorite:fill-pink-500 cursor-pointer group-hover/wrapper:hover:fill-pink-500 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
-              <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-          </label>
+        <label for="favorite-{{$post->post_id}}"
+          class="cursor-pointer peer-checked/favorite:fill-pink-500 cursor-pointer group-hover/wrapper:hover:fill-pink-500 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
+          <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </label>
       </div>
       <div>
         <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{ $item->user_upvoted ?
@@ -141,5 +144,3 @@ news = Bool
   </a>
   @endif
 </div>
-
-
