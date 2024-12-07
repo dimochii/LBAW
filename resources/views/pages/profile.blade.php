@@ -9,11 +9,46 @@
         <div class="tracking-tighter font-medium text-6xl">{{ $user->name }}</div>
         <div>{{ '@' . $user->username }}</div>
         <div class="flex items-center mt-2">
-  <span class="font-bold text-lg">Reputation:</span>
-  <span class="ml-2 text-xl font-semibold px-3 py-1 rounded-full 
-    {{ $reputation >= 1000 ? 'bg-gold text-white' : ($reputation >= 500 ? 'bg-silver text-black' : 'bg-gray-300 text-black') }}">
-    {{ $reputation }}
-  </span>
+        <div class="flex items-center mt-2">
+    <span class="font-bold text-lg">Reputation:</span>
+    <div class="ml-4 flex items-center">
+        {{-- Reputation Value with Dynamic Badge --}}
+        <span class="text-xl font-semibold px-4 py-2 rounded-full shadow-lg 
+            {{ $reputation >= 1000 ? 'bg-pastelYellow text-black' : 
+               ($reputation >= 500 ? 'bg-pastelBlue text-black' : 
+               ($reputation >= 0 ? 'bg-gray-200 text-black' : 
+               'bg-pastelRed text-white')) }}" 
+               id="reputation-badge">
+            {{ $reputation }}
+        </span>
+        
+        {{-- Reputation Title with Icons --}}
+        <div class="ml-3 flex items-center">
+            <span class="text-sm font-bold italic text-gray-600">
+                {{ $reputation >= 1000 ? 'Legend' : 
+                   ($reputation >= 500 ? 'Influencer' : 
+                   ($reputation >= 100 ? 'Contributor' : 
+                   ($reputation >= 0 ? 'Lurker' : 
+                   'Outcast')))}}
+            </span>
+            
+            {{-- Icons Based on Reputation --}}
+            <span class="ml-2 text-lg" id="reputation-icon">
+                @if ($reputation >= 1000)
+                    <i class="fas fa-star"></i> {{-- Star Icon for Legend --}}
+                @elseif ($reputation >= 500)
+                    <i class="fas fa-trophy"></i> {{-- Trophy Icon for Influencer --}}
+                @elseif ($reputation >= 100)
+                    <i class="fas fa-thumbs-up"></i> {{-- Thumbs-up for Contributor --}}
+                @elseif ($reputation >= 0)
+                    <i class="fas fa-eye-slash"></i> {{-- Eye-slash for Lurker --}}
+                @else
+                    <i class="fas fa-skull-crossbones"></i> {{-- Skull Icon for Outcast --}}
+                @endif
+            </span>
+        </div>
+    </div>
+</div>
 </div>
     
       </div>
@@ -183,4 +218,5 @@
 
   </div>
 @endsection
+
 
