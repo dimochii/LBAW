@@ -183,7 +183,7 @@
       <a class="size-8 rounded-full" href="">
         <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}" class="size-8 rounded-full ">
       </a>
-      <span class="text-xl font-light">start a thread</span>
+      <span class=" px-2 text-xl font-light">start a thread</span>
     </div>
 
     @include('partials.text_editor_md', [

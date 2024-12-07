@@ -155,10 +155,11 @@
             <a href="{{ route('user.profile', Auth::user()->id) }}"
               class="block pr-8 py-2 text-gray-700 hover:bg-gray-100 border-b border-gray-200">
               <div class="flex items-center px-4 py-3">
-                <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-                  class="rounded-full w-8 h-8 mr-3" />
+                <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}"
+                onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
+                  class="size-10 rounded-full " />
                 <div>
-                  <div class="font-medium text-gray-900 pr-6">{{ Auth::user()->name }}</div>
+                  <div class=" px-2 font-medium text-gray-900 pr-6">{{ Auth::user()->name }}</div>
                   <div class="text-gray-500 text-sm">Ver perfil</div>
                 </div>
               </div>
@@ -227,51 +228,47 @@
               <a href="{{ url('/recent') }}" class="">
                 <span class="">recent</span>
               </a>
-            </div>
-          </div>
-
-          <!-- Recent Section -->
-          <div class="py-4">
-            <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
-            <div class="space-y-1 *:transition-colors *:pl-6">
               <a href="{{ url('/hubs/create') }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
                 <span class="">+ Create Hub</span>
               </a>
-              <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
-                <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                <span class="">/Economics</span>
-              </a>
-              <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
-                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                <span class="">/Sports</span>
-              </a>
-              <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
-                <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                <span class="">/Portugal</span>
-              </a>
-              <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
-                <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-                <span class="">/Finances</span>
-              </a>
             </div>
           </div>
+          
+          @php
+          $colors = ['green-500', 'blue-500', 'red-500', 'yellow-500'];
+          $colorIndex = 0;
+          @endphp
 
-          <!-- Hubs Section -->
           <div class="py-4">
-            <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
-            <div class="space-y-1 *:transition-colors *:pl-6">
-              <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
-                <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                <span class="">/Economics</span>
-              </a>
-              <a href="#" class="flex items-center space-x-2 px-4 py-2  hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
-                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                <span class="">/Sports</span>
-              </a>
-            </div>
+              <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
+              <div class="space-y-1 *:transition-colors *:pl-6">
+                  @foreach ($recentHubs as $recent)
+                  <a href="/hub/{{ $recent['id'] }}" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
+                      <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div>
+                      <span>/{{ $recent['name'] }}</span>
+                  </a>
+                  @php
+                  $colorIndex = ($colorIndex + 1) % count($colors);
+                  @endphp
+                  @endforeach
+              </div>
           </div>
 
+          <div class="py-4">
+              <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
+              <div class="space-y-1 *:transition-colors *:pl-6">
+                  @foreach ($userHubs as $hubs)
+                  <a href="/hub/{{ $hubs['id'] }}" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
+                      <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div>
+                      <span>/{{ $hubs['name'] }}</span>
+                  </a>
+                  @php
+                  $colorIndex = ($colorIndex + 1) % count($colors);
+                  @endphp
+                  @endforeach
+              </div>
+          </div>
           <!-- Info Section -->
           <div class="py-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">info</h3>

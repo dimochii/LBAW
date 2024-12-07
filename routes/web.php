@@ -21,6 +21,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\LeftController;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,6 +160,7 @@ Route::middleware('auth')->group(function () {
   Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
   });
+
 });
 
 
@@ -214,3 +216,6 @@ Route::get('/images/{filename}', function ($filename) {
 
   return response()->file($path);
 })->name('images.serve');
+
+// Left side bar
+

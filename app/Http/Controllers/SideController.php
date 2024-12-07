@@ -5,31 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class SideController extends Controller
 {
-    public function show()
+    public static function fetchSidebarData()
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
-        $userHubs = $user->communities->take(5)->map(function ($community) {
-                return [
-                    'id' => $community->id,
-                    'name' => $community->name,
-                ];
-            });
-        
-        $recentHubs = Cache::get("recent_hubs:{$user->id}", []);
-        Log::info('Recent Hubs Cache:', ['cache' => Cache::get("recent_hubs:{$user->id}")]);
+        $userHubs = $user ? $user->communities->take(5)->map(function ($community) {
+            return [
+                'id' => $community->id,
+                'name' => $community->name,
+            ];
+        }) : [];
 
-        if (!$recentHubs) {
-            $recentHubs = [];
-        }
-        
-        return view('partials.leftside_bar', [
-            'userHubs' => $userHubs,
-            'recentHubs' => $recentHubs,
-        ]);
+        $recentHubs = $user ? Cache::get("recent_hubs:{$user->id}", []) : [];
+
+        return compact('userHubs', 'recentHubs');
     }
 
 }
