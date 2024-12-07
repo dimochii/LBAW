@@ -160,7 +160,7 @@
                   class="size-10 rounded-full " />
                 <div>
                   <div class=" px-2 font-medium text-gray-900 pr-6">{{ Auth::user()->name }}</div>
-                  <div class="text-gray-500 text-sm">Ver perfil</div>
+                  <div class="text-gray-500 text-sm">View profile</div>
                 </div>
               </div>
             </a>
