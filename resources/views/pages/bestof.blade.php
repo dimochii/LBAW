@@ -1,92 +1,140 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4">
-    <h1 class="tracking-tighter py-8 font-medium text-5xl">Best of Topics and News</h1>
+<div class="container mx-auto px-4 py-12 min-h-screen">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="tracking-tight font-medium text-5xl mb-8 text-gray-900">
+            Best of Topics and News
+        </h1>
 
-    {{-- Top Topics Section --}}
-    <div class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">Top 10 Topics</h2>
-        
-        @if ($topTopics->isEmpty())
-            <p class="text-gray-500">No topics found.</p>
-        @else
-            <div class="space-y-4">
-                @foreach ($topTopics as $index => $topic)
-                    <div class="bg-white border rounded-lg p-4 flex items-center justify-between hover:bg-gray-50 transition">
-                        <div class="flex-grow pr-4">
-                            <div class="flex items-center">
-                                <img src="{{ $topic->post->community->avatar_url ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
-                                    class="w-8 h-8 rounded-full mr-2">
-                                <span class="text-sm text-gray-600">
-                                    h/{{ $topic->post->community->name ?? 'Unknown Community' }}
-                                </span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-xl font-bold text-gray-400">{{ $index + 1 }}</span>
-                                <h3 class="text-lg font-medium text-gray-800">{{ $topic->post->title }}</h3>
-                            </div>
+        @php
+            $voteColors = [
+                'bg-yellow-300', 'bg-green-400', 'bg-teal-400', 
+                'bg-blue-400', 'bg-indigo-400', 'bg-violet-500',
+                'bg-pink-400', 'bg-red-400', 'bg-gray-400'
+            ];
+        @endphp
 
-                            <div class="mt-2 text-sm text-gray-500">
-                                Reviewed on: {{ $topic->review_date ? $topic->review_date->format('F d, Y') : 'Pending Review' }}
-                            </div>
+        {{-- Top Topics Section --}}
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                Top 10 Topics
+                <span class="ml-4 flex-grow h-[4px] bg-gray-300"></span>
+            </h2>
 
-                            <div class="flex items-center space-x-4">
-                                <span class="bg-violet-500 text-violet-200 text-sm font-medium px-3 py-1 rounded-full">
-                                    {{ $topic->votes_count }} votes
-                                </span>
+            @if ($topTopics->isEmpty())
+                <div class="text-center py-6 bg-gray-100 rounded-lg">
+                    <p class="text-gray-500">No topics found.</p>
+                </div>
+            @else
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @foreach ($topTopics as $index => $topic)
+                        <div data-post="{{ $topic->post->post_id }}"
+                            class="p-4 hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper h-full w-full flex flex-row border border-2 border-black">
+                            <div class="h-full w-full flex-col flex gap-4">
+                                <header class="flex items-center relative">
+                                    <a class="flex items-center h-8"
+                                        href="{{ route('communities.show', ['id' => $topic->post->community->id ?? 'unknown']) }}">
+                                        <img src="{{ asset('images/hub' . $topic->post->community->image_id . '.jpg') }}" alt="Community Image"
+                                            class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+
+                                        <span class="text-xl font-light underline-effect-light">
+                                            h/{{ $topic->post->community->name ?? 'Unknown Community' }}
+                                        </span>
+                                    </a>
+                                </header>
+
+                                <div class="grow">
+                                    <a href="{{ route('topic.show', ['post_id' => ($topic->post->id)]) ?? '#' }}">
+                                        <p class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">
+                                            {{ $topic->post->title ?? 'No title available' }}
+                                        </p>
+                                    </a>
+                                </div>
+
+                                {{-- Votos e Destaques --}}
+                                <div class="mt-4">
+                                    <span class="{{ $voteColors[$index % count($voteColors)] }} text-white text-sm px-2 py-1 rounded-md">
+                                        {{ $topic->votes_count }} votes
+                                    </span>
+                                </div>
+
+                                <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
+                        
+
+                                    {{-- Additional Info --}}
+                                    <span class="ml-auto text-sm text-gray-500 group-hover/wrapper:text-gray-300">
+                                        Reviewed on: {{ $topic->review_date ? $topic->review_date->format('F d, Y') : 'Pending Review' }}
+                                    </span>
+                                </footer>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
-        @endif
-    </div>
+                    @endforeach
+                </div>
+            @endif
+        </section>
 
-    {{-- Top News Section --}}
-    <div class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">Top 10 News</h2>
-        
-        @if ($topNews->isEmpty())
-            <p class="text-gray-500">No news found.</p>
-        @else
-            <div class="space-y-4">
-                @foreach ($topNews as $index => $news)
-                    <div class="bg-white border rounded-lg p-4 flex items-center justify-between hover:bg-gray-50 transition">
-                        <div class="flex-grow pr-4">
-                            <div class="flex items-center">
-                                <img src="{{ $news->post->community->avatar_url ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
-                                    class="w-8 h-8 rounded-full mr-2">
-                                <span class="text-sm text-gray-600">
-                                    h/{{ $news->post->community->name ?? 'Unknown Community' }}
-                                </span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-xl font-bold text-gray-400">{{ $index + 1 }}</span>
-                                <a href="{{ $news->news_url }}" target="_blank" class="text-lg font-medium text-blue-600 hover:underline">
-                                    {{ $news->post->title }}
-                                </a>
-                            </div>
+        {{-- Top News Section --}}
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                Top 10 News
+                <span class="ml-4 flex-grow h-[4px] bg-gray-300"></span>
+            </h2>
+            @if ($topNews->isEmpty())
+                <div class="text-center py-6 bg-gray-100 rounded-lg">
+                    <p class="text-gray-500">No news found.</p>
+                </div>
+            @else
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @foreach ($topNews as $index => $news)
+                        <div data-post="{{ $news->post->post_id }}"
+                            class="p-4 hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper h-full w-full flex flex-row border border-2 border-black">
+                            <div class="h-full w-full flex-col flex gap-4">
+                                <header class="flex items-center relative">
+                                    <a class="flex items-center h-8"
+                                        href="{{ route('communities.show', ['id' => $news->post->community->id ?? 'unknown']) }}">
+                                        <img src="{{ asset('images/hub' . $news->post->community->image_id . '.jpg') }}" alt="Community Image"
+                                            class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
 
-                            <div class="mt-2 text-sm text-gray-500">
-                                Posted on: {{ $news->post->creation_date->format('F d, Y') }}
-                            </div>
+                                        <span class="text-xl font-light underline-effect-light">
+                                            h/{{ $news->post->community->name ?? 'Unknown Community' }}
+                                        </span>
+                                    </a>
+                                </header>
 
-                            <div class="flex items-center space-x-4">
-                                {{-- Post Image --}}
-                                @if(!is_null($news->image_url))
-                                    <img src="{{ $news->image_url }}" alt="Post Image" class="w-24 h-16 object-cover rounded-md">
-                                @endif
+                                <div class="grow">
+                                    <a href="{{ route('news.show', ['post_id' => ($news->post->id)]) ?? '#' }}"
+                                        class="inline my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">
+                                        {{ $news->post->title ?? 'No title available' }}
+                                    </a>
 
-                                <span class="bg-sky-400 text-blue-950 text-sm font-medium px-3 py-1 rounded-full">
-                                    {{ $news->votes_count }} votes
-                                </span>
+                                    @if ($news->news_url)
+                                        <a href="{{ $news->news_url }}"
+                                            class="inline ml-2 text-sm lg:text-base text-gray-500 group-hover/wrapper:text-gray-300 underline-effect-light"
+                                            data-content="news-url">{{ $news->news_url }}</a>
+                                    @endif
+                                </div>
+
+                                {{-- Votos e Destaques --}}
+                                <div class="mt-4">
+                                    <span class="{{ $voteColors[$index % count($voteColors)] }} text-white text-sm px-2 py-1 rounded-md">
+                                        {{ $news->votes_count }} votes
+                                    </span>
+                                </div>
+
+                                <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
+
+                                    {{-- Additional Info --}}
+                                    <span class="ml-auto text-sm text-gray-500 group-hover/wrapper:text-gray-300">
+                                        Posted on: {{ $news->post->creation_date->format('F d, Y') }}
+                                    </span>
+                                </footer>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
-        @endif
+                    @endforeach
+                </div>
+            @endif
+        </section>
     </div>
 </div>
 @endsection
