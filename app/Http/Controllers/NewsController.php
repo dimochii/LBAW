@@ -20,41 +20,22 @@ class NewsController extends Controller
    */
   public function list()
   {
-      //$news = News::with('post')->get();
-      $news = News::all();
-  
-      foreach ($news as $item) {
-          $post = $item->post;
-          $item->upvotes_count = $post->getUpvoteCountAttribute();
-          $item->downvotes_count = $post->getDownvoteCountAttribute();
-  
-          if (Auth::check()) {
-              $userVote = $post->userVote(Auth::user()->id);
-              $item->user_upvoted = $userVote?->upvote ?? false;
-              $item->user_downvoted = $userVote ? !$userVote->upvote : false;
-          } else {
-              $item->user_upvoted = false;
-              $item->user_downvoted = false;
-          }
-      }
-      $topics = Topic::with('post')->get();
-        
-        foreach ($topics as $item) {
-            $post = $item->post;
-            $item->upvotes_count = $post->getUpvoteCountAttribute();
-            $item->downvotes_count = $post->getDownvoteCountAttribute();
 
-            if (Auth::check()) {
-                $userVote = $post->userVote(Auth::user()->id);
-                $item->user_upvoted = $userVote?->upvote ?? false;
-                $item->user_downvoted = $userVote ? !$userVote->upvote : false;
-            } else {
-                $item->user_upvoted = false;
-                $item->user_downvoted = false;
-            }
-        }
+      $posts = Post::all();
   
-      return view('pages.news', compact('news', 'topics'));
+        
+        $news = $posts->filter(function ($post) {
+          return !is_null($post['news']);
+        });
+
+        $topics = $posts->filter(function ($post) {
+          return !is_null($post['topic']);
+      });
+  
+      return view('pages.news', [
+        'news' => $news,
+        'topics' => $topics
+      ]);
   }
   
 

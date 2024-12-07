@@ -25,7 +25,7 @@
           @foreach($news->slice(6) as $post)
             @include('partials.post', [
             'news' => 'true',
-            'post' => $post,
+            'post' => $post->news,
             'item' => $post
             ])
           @endforeach
@@ -35,10 +35,10 @@
     @if($topics->isEmpty())
       <p>No topics available.</p>
     @else
-      @include('partials.topics_grid', ['posts' => $topics->take(6)])
+
       <div class="divide-y-2 divide-black border-b-2 border-black">
-          @foreach($topics->slice(6) as $topic)
-            @include('partials.post', ['news' => false, 'post' => $topic, 'img' => false, 'item' => $topic])
+          @foreach($topics as $post)
+            @include('partials.post', ['news' => false, 'post' => $post->topic, 'item' => $post])
           @endforeach
       </div>
     @endif
