@@ -15,23 +15,19 @@
   </div> --}}
   <div class="dropdown mb-4">
   <select id="content-type-selector" class="form-select">
-    <option value="{{ route('news') }}" selected>News</option>
-    <option value="{{ route('topics') }}">Topics</option>
+    <option value="{{ route('topics') }}" selected>Topics</option>
+    <option value="{{ route('news') }}">News</option>
   </select>
 </div>
 
   <!-- Check if there are any news items -->
-  @if($news->isEmpty())
-  <p>No news available.</p>
+  @if($topics->isEmpty())
+  <p>No topics available.</p>
   @else
-  @include('partials.news_grid', ['posts' => $news->take(6)])
+  @include('partials.topics_grid', ['posts' => $topics->take(6)])
   <div class="divide-y-2 divide-black border-b-2 border-black">
-    @foreach($news->slice(6) as $post)
-    @include('partials.post', [
-    'news' => 'true',
-    'post' => $post,
-    'item' => $post->post
-    ])
+    @foreach($topics->slice(6) as $topic)
+    @include('partials.post', ['news' => false, 'post' => $topic, 'img' => false, 'item' => $topic])
     @endforeach
   </div>
   @endif

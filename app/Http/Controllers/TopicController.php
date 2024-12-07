@@ -91,8 +91,8 @@ class TopicController extends Controller
         
         foreach ($topics as $item) {
             $post = $item->post;
-            $item->upvotes_count = $post->upvote_count;
-            $item->downvotes_count = $post->downvote_count;
+            $item->upvotes_count = $post->getUpvoteCountAttribute();
+            $item->downvotes_count = $post->getDownvoteCountAttribute();
 
             if (Auth::check()) {
                 $userVote = $post->userVote(Auth::user()->id);

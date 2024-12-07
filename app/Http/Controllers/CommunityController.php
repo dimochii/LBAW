@@ -81,7 +81,7 @@ class CommunityController extends Controller
             // Contagem de upvotes e downvotes diretamente da tabela de votos
             $upvotes = $post->votes->where('upvote', true)->count();
             $downvotes = $post->votes->where('upvote', false)->count();
-
+        
             return [
                 'id' => $post->id,
                 'title' => $post->title,
@@ -90,9 +90,18 @@ class CommunityController extends Controller
                 'created_at' => $post->created_at,
                 'score' => $upvotes - $downvotes, 
                 'comments_count' => $post->comments->count(), 
+                'news' => $post->news,  // Add the related news
+                'topic' => $post->topic,
             ];
         });
 
+        $newsPosts = $community->posts->filter(function ($post) {
+            return !is_null($post['news']);
+        });
+
+        $topicPosts = $community->posts->filter(function ($post) {
+            return !is_null($post['topic']);
+        });
         $posts_count = $posts ->count();
         $followers_count = $community->followers()->count();
 
@@ -103,7 +112,9 @@ class CommunityController extends Controller
 
         return view('pages.hub', [
             'community' => $community,
-            'posts' => $posts,
+           // 'posts' => $posts,
+            'newsPosts'=> $newsPosts,
+            'topicPosts'=> $topicPosts,
             'is_following' => $is_following,
             'posts_count' => $posts_count,
             'followers_count' => $followers_count

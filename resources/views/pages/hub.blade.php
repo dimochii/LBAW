@@ -78,18 +78,60 @@
             </div>
         </div>
     </div>
+    @php
+        $activeTab = request()->query('tab', 'News'); // Default to 'articles'
+      @endphp
+    <nav class="max-w-7xl mx-auto px-6 flex flex-wrap gap-4 md:gap-8">
+        <a href="{{ url('/hub/' . $community->id . '/?tab=News') }}"
+           class="py-4 relative group {{ $activeTab === 'News' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+          News
+        </a>
+        <a href="{{ url('/hub/' . $community->id . '/?tab=Topics') }}"
+           class="py-4 relative group {{ $activeTab === 'Topics' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+          Topics
+        </a>
+      </nav>
+    <!-- Moderators Section -->
+    <div class="mt-8 bg-white rounded-xl shadow-sm p-6">
+        <h2 class="text-lg font-semibold mb-4">Moderators</h2>
+        <div class="space-y-3">
+            @foreach($community->moderators as $moderator)
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden">
+                    <img src="{{ $moderator->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
+                         alt="{{ $moderator->username }}"
+                         class="w-full h-full object-cover">
+                </div>
+                <span class="text-sm text-gray-700">{{ $moderator['username'] }}</span> 
+            </div>
+            @endforeach
+        </div>
+    </div>
 
     <!-- Posts Section -->
     <div>
         <!-- Posts Grid -->
         <div class="divide-y-2 border-b-2 border-black">
-            @if ($community->posts->count() > 0)
-                @foreach ($community->posts as $post)
-                    @include('partials.post_hub', [
-                        'news' => 'true',
-                        'post' => $post->news,
-                    ])
+        @if ($activeTab === 'News')
+            @if ($newsPosts->count() > 0)
+                    @foreach ($newsPosts as $post)
+                        @include('partials.post', [
+                            'news' => 'true',
+                            'item' => $post->news,
+                            'post' => $post->news,
+                        ])
+                    @endforeach
+            @endif
+
+
+            @elseif ($activeTab === 'Topics')
+            @if ($topicPosts->count() > 0)
+                @foreach ($topicPosts as $topic)
+                @include('partials.post', ['news' => false, 'post' => $topic->topic, 'img' => false, 'item' => $topic->topic])
                 @endforeach
+                @endif
+
+        
             @else
             <div class="text-center py-12 bg-white rounded-xl shadow-sm">
                 <p class="text-gray-500">No posts available in this hub yet.</p>
@@ -113,22 +155,7 @@
         @endif
     </div>
 
-    <!-- Moderators Section -->
-    <div class="mt-8 bg-white rounded-xl shadow-sm p-6">
-        <h2 class="text-lg font-semibold mb-4">Moderators</h2>
-        <div class="space-y-3">
-            @foreach($community->moderators as $moderator)
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden">
-                    <img src="{{ $moderator->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
-                         alt="{{ $moderator->username }}"
-                         class="w-full h-full object-cover">
-                </div>
-                <span class="text-sm text-gray-700">{{ $moderator['username'] }}</span> 
-            </div>
-            @endforeach
-        </div>
-    </div>
+    
 
     @else
     <div class="py-12 text-center">
