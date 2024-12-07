@@ -67,4 +67,23 @@ class SearchController extends Controller
         return response()->json($results);
     }
 
+    public function searchUsers(Request $request)
+    {
+        $search = $request->input('search');
+
+        $users = AuthenticatedUser::where('name', 'like', "%$search%")
+            ->orWhere('email', 'like', "%$search%")
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'image' => $user->image_id ? asset("storage/{$user->image_id}") : asset('images/default-avatar.png'),
+                ];
+            });
+
+        return response()->json($users);
+    }
+
+
 }

@@ -167,8 +167,8 @@
   {{-- comment editor --}}
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
-      <a class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]" href="">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="max-w-full rounded-3xl">
+      <a class="size-8 rounded-full " href="">
+        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="size-8 rounded-full">
       </a>
       <span class="text-xl font-light">start a thread</span>
     </div>

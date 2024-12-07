@@ -94,39 +94,42 @@ class PostController extends Controller
 
   public function create(Request $request)
   {
-    $request->validate([
-      'title' => 'required|string|max:255',
-      'content' => 'required|string',
-      'community_id' => 'required|exists:communities,id',
-      'type' => 'required|in:news,topic',
-    ]);
+      $request->validate([
+          'title' => 'required|string|max:255',
+          'content' => 'required|string',
+          'community_id' => 'required|exists:communities,id',
+          'type' => 'required|in:news,topic',
+          'authors' => 'nullable|array',
+          'authors.*' => 'exists:authenticated_users,id', 
+      ]);
 
+      $post = Post::create([
+          'title' => $request->title,
+          'content' => $request->content,
+          'community_id' => $request->community_id,
+      ]);
 
-    $post = Post::create([
-      'title' => $request->title,
-      'content' => $request->content,
-      'community_id' => $request->community_id,
-    ]);
+      $post->authors()->attach(Auth::user()->id, ['pinned' => false]);
+      
+      if ($request->has('authors'))
+        $post->authors()->attach($request->authors, ['pinned' => false]);
 
-    $user = Auth::user();
-    $post->authors()->attach($user->id, ['pinned' => false]);
+      $this->notifyCommunityFollowers($request->community_id, $post);
 
-    $this->notifyCommunityFollowers($request->community_id, $post);
+      if ($request->type === 'news') {
+          $ogTags = $this->getOgTags($request->news_url);
 
-    if ($request->type === 'news') {
-      $ogTags = PostController::getOgTags($request->news_url);
+          $post->title = $ogTags['title'] ?? $post->title; 
+          $post->save();
 
-      $post->title = $ogTags['title'];
-      $post->save();
+          return app(NewsController::class)->createNews($post, $request->news_url, $ogTags['image'] ?? null);
+      } elseif ($request->type === 'topic') {
+          return app(TopicController::class)->createTopic($post);
+      }
 
-      return app(NewsController::class)->createNews($post, $request->news_url, $ogTags['image']);
-    } elseif ($request->type === 'topic') {
-      return app(TopicController::class)->createTopic($post);
-    }
-
-
-    return response()->json(['message' => 'Invalid type'], 400);
+      return response()->json(['message' => 'Invalid type'], 400);
   }
+
 
   public function destroy(Request $request, $id)
   {

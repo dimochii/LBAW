@@ -56,11 +56,11 @@
                                class="peer hidden" 
                                checked>
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-pastelGreen  transition-colors duration-300">
+                                  group-hover:border-green-400  transition-colors duration-300">
                             <div class="absolute inset-1 rounded-full bg-black transform scale-0 
                                       peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-pastelGreen  transition-colors duration-300">Public</span>
+                        <span class="text-xl group-hover:text-green-400 transition-colors duration-300">Public</span>
                     </label>
 
                     <label class="relative group flex items-center gap-3 cursor-pointer">
@@ -69,14 +69,39 @@
                                value="private" 
                                class="peer hidden">
                         <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-pastelGreen transition-colors duration-300">
+                                  group-hover:border-red-500 transition-colors duration-300">
                             <div class="absolute inset-1 rounded-full bg-black transform scale-0 
                                       peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
-                        <span class="text-xl group-hover:text-pastelGreen  transition-colors duration-300">Private</span>
+                        <span class="text-xl group-hover:text-red-500 transition-colors duration-300">Private</span>
                     </label>
                 </div>
             </div>
+
+            <div>
+                <label for="moderators" class="block text-2xl font-medium mb-2">Additional Moderators</label>
+                <select 
+                    name="moderators[]" 
+                    id="moderators" 
+                    multiple 
+                    class="w-full rounded text-l border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-all duration-300"
+                >
+                @foreach(Auth::user()->follows->sortBy('name') as $potentialModerator)
+                    <option 
+                        class="hover:bg-sky-400"
+                        value="{{ $potentialModerator->id }}" 
+                        data-image="{{ $potentialModerator->profile_photo_url }}">
+                        {{ $potentialModerator->name }} ({{ $potentialModerator->username }})
+                    </option>
+                @endforeach
+                </select>
+                <p class="text-sm text-gray-600 mt-1">Select users you follow to be additional moderators</p>
+            </div>
+
+            <div id="selected-moderators" class="flex flex-wrap gap-2 mt-4">
+                <!-- Chips dynamically added here -->
+            </div>
+
 
             <div class="space-y-6">
                 <label for="image" class="block text-2xl font-medium">Hub Image</label>
@@ -149,8 +174,10 @@
         
         if (isPrivate) {
             path.setAttribute("d", "M17 10V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zM7 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v3H7V7z");
+            path.style.fill = '#EF4444'; 
         } else {
             path.setAttribute("d", "M17 8V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v1a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zm-9-1a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v1H8V7z");
+            path.style.fill = '#22C55E'; 
         }
 
         svg.appendChild(path);
@@ -187,5 +214,154 @@
     previewOnline.textContent = '1 online';
 
     updatePrivacyIndicator();
+
+    const moderatorsSelect = document.getElementById('moderators');
+    moderatorsSelect.multiple = true;
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const moderatorsSelect = document.getElementById('moderators');
+        const selectedModeratorsContainer = document.getElementById('selected-moderators');
+        const previewMembers = document.getElementById('preview-members');
+
+        // Color palette inspired by news and journalism themes
+        const newsColors = [
+        { bg: '#2C3E50', text: '#ECF0F1' },  // Dark blue-gray with light text
+        { bg: '#34495E', text: '#ECF0F1' },  // Slightly lighter blue-gray
+        { bg: '#2980B9', text: '#FFFFFF' },  // Bright blue
+        { bg: '#3498DB', text: '#FFFFFF' },  // Lighter bright blue
+        { bg: '#16A085', text: '#FFFFFF' },  // Teal green
+        { bg: '#1ABC9C', text: '#FFFFFF' },  // Lighter teal
+        { bg: '#8E44AD', text: '#FFFFFF' },  // Deep purple
+        { bg: '#9B59B6', text: '#FFFFFF' }   // Lighter purple
+        ];
+        let colorIndex = 0;
+
+        moderatorsSelect.addEventListener('change', () => {
+        selectedModeratorsContainer.innerHTML = '';
+        
+        Array.from(moderatorsSelect.selectedOptions).forEach(option => {
+            // Cycle through colors
+            const currentColor = newsColors[colorIndex];
+            colorIndex = (colorIndex + 1) % newsColors.length;
+
+            // Create moderator chip with enhanced styling
+            const moderatorChip = document.createElement('div');
+            moderatorChip.className = 'moderator-chip';
+            moderatorChip.style.backgroundColor = currentColor.bg;
+            moderatorChip.style.color = currentColor.text;
+
+            // User Icon (SVG)
+            const iconSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            iconSvg.setAttribute('viewBox', '0 0 24 24');
+            iconSvg.setAttribute('width', '24');
+            iconSvg.setAttribute('height', '24');
+            iconSvg.setAttribute('fill', 'none');
+            iconSvg.setAttribute('stroke', currentColor.text);
+            iconSvg.setAttribute('stroke-width', '2');
+            iconSvg.setAttribute('stroke-linecap', 'round');
+            iconSvg.setAttribute('stroke-linejoin', 'round');
+            iconSvg.className = 'moderator-chip-icon';
+
+            // User icon path
+            const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconPath.setAttribute('d', 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2');
+            const iconCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            iconCircle.setAttribute('cx', '12');
+            iconCircle.setAttribute('cy', '7');
+            iconCircle.setAttribute('r', '4');
+
+            iconSvg.appendChild(iconPath);
+            iconSvg.appendChild(iconCircle);
+            
+            // Moderator Name
+            const text = document.createElement('span');
+            text.textContent = option.text;
+            text.className = 'moderator-chip-name';
+            
+            // Remove Button with icon
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '&times;';
+            removeBtn.className = 'moderator-chip-remove';
+
+            // Hover and interaction effects
+            moderatorChip.addEventListener('mouseover', () => {
+            moderatorChip.style.transform = 'scale(1.05)';
+            moderatorChip.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+            });
+            
+            moderatorChip.addEventListener('mouseout', () => {
+            moderatorChip.style.transform = 'scale(1)';
+            moderatorChip.style.boxShadow = 'none';
+            });
+
+            removeBtn.addEventListener('click', () => {
+            option.selected = false;
+            moderatorChip.remove();
+            updateMembersCount();
+            });
+
+            // Append elements
+            moderatorChip.appendChild(iconSvg);
+            moderatorChip.appendChild(text);
+            moderatorChip.appendChild(removeBtn);
+            selectedModeratorsContainer.appendChild(moderatorChip);
+        });
+        
+        updateMembersCount();
+        });
+
+        function updateMembersCount() {
+        const count = moderatorsSelect.selectedOptions.length + 1; // Includes creator
+        previewMembers.textContent = `${count} member${count > 1 ? 's' : ''}`;
+        }
+
+        // Add CSS for chip styling
+        const style = document.createElement('style');
+        style.textContent = `
+        .moderator-chip {
+            display: flex;
+            align-items: center;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin: 4px;
+            max-width: 250px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .moderator-chip-icon {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 0.5rem;
+            padding: 0.25rem;
+        }
+
+        .moderator-chip-name {
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 0.5rem;
+        }
+
+        .moderator-chip-remove {
+            padding: 0.25rem 0.5rem;
+            background: rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .moderator-chip-remove:hover {
+            background: rgba(0,0,0,0.2);
+        }
+        `;
+        document.head.appendChild(style);
+        });
+
 </script>
 @endsection
