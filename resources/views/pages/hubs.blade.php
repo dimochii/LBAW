@@ -2,7 +2,7 @@
 @section('content')
 <div class="text-gray-900 bg-[#F5F5F0] min-h-screen">
     <div class="container mx-auto px-4">
-        <h1 class="text-5xl text-gray-800 tracking-tighter font-medium py-4">Hubs</h1>
+        <h1 class="text-5xl py-8 text-gray-800 tracking-tighter font-medium py-4">Hubs</h1>
 
         <div class="mb-4 flex justify-end">
             <form method="GET" action="{{ route('communities.index') }}" class="flex space-x-4">

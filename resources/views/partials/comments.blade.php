@@ -1,8 +1,8 @@
 <div class="relative mb-3 min-w-72 max-w-full" id="c-{{ $comment->id }}" data-id="{{ $comment->id }}" data-parent-id="{{ is_null($comment->parent_comment_id) ? 'null' : $comment->parent_comment_id}}">
   <div class="flex flex-row mt-5">
-    <div class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]">
+    <div class="size-8 rounded-full ">
       <a href="">
-        <img src="{{ asset('images/user' . $comment->user->image_id . '.jpg') }}" class="max-w-full rounded-3xl">
+        <img src="{{ asset('images/user' . $comment->user->image_id . '.jpg') }}" class="size-8 rounded-full">
       </a>
 
       <a href="#c-{{ $comment->id }}"
@@ -11,7 +11,7 @@
     <details open class="group/details-{{ $comment ->id }} mt-2 grow">
       {{-- Comment Header --}}
       <summary class="list-none">
-        <div class="text-sm mb-5">
+        <div class="px-2 text-sm mb-5">
           <a href="#" class="underline-effect">{{ $comment->user->username }}</a>
           <span>•</span>
           <span>{{ $comment->creation_date ? $comment->creation_date->diffForHumans() : '?' }}</span>

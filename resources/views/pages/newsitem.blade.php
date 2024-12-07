@@ -11,8 +11,8 @@
         
           <img src="{{ asset('images/hub' . $newsItem->post->community->image_id . '.jpg') }}" 
         
-            class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
-          <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown
+            class="size-8 rounded-full ring-2  ring-white">
+          <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
             Community' }}</span>
         </a>
 
@@ -124,7 +124,7 @@
           </span>
           @if (count($newsItem->post->authors) === 1)
           <a data-name="authors" class="underline-effect">
-            {{ $author->username ?? 'Unknown' }}
+            {{ $newsItem->post->authors[0]->username  ?? 'Unknown' }}
           </a>
           @else
           @include('partials.authors_dropdown', [
@@ -149,7 +149,7 @@
     {{-- <div>
       <a class="flex items-center" href="">
         <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-          class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
+          class="size-8 rounded-full ">
         <span class="underline-effect">@anonymous</span>
       </a>
     </div> --}}
@@ -180,14 +180,14 @@
   {{-- comment editor --}}
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
-      <a class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]" href="">
-        @php 
+      <a class="size-8 rounded-full" href="">
+      @php 
           if(Auth::check()) {$image_id = Auth::user()->image_id;}
           else { $image_id = 1;}
         @endphp
-        <img src="{{ asset('images/user' .$image_id . '.jpg') }}" class="max-w-full rounded-3xl">
+        <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}" class="size-8 rounded-full ">
       </a>
-      <span class="text-xl font-light">start a thread</span>
+      <span class=" px-2 text-xl font-light">start a thread</span>
     </div>
 
     @include('partials.text_editor_md', [

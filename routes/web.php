@@ -21,6 +21,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\LeftController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,7 +92,7 @@ Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])
 
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
-Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware('auth');
+Route::delete('/users/{id}', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware('auth')->name('user.delete');
 
 
 //admin
@@ -141,13 +142,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/global', 'global')->name('global');
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
+    Route::get('/bestof', 'bestof')->name('bestof');
     Route::get('/admin', [AdminController::class, 'show'])->name('user.admin');
     Route::get('/moderator', [ModeratorController::class, 'show'])->name('user.moderator');
     Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
     Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
     Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->name('users.remove_admin');
-    Route::get('/bestof', 'bestof')->name('bestof');
   });
 
   // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
@@ -159,6 +160,7 @@ Route::middleware('auth')->group(function () {
   Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
   });
+
 });
 
 
@@ -214,3 +216,6 @@ Route::get('/images/{filename}', function ($filename) {
 
   return response()->file($path);
 })->name('images.serve');
+
+// Left side bar
+

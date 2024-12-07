@@ -13,10 +13,11 @@ news = Bool
     <header class="flex items-center relative">
       <a class="flex items-center h-8"
         href="{{ route('communities.show', ['id' => $post->post->community->id ?? 'unknown']) }}">
-        <img src="{{ asset('images/hub' . $post->post->community->image_id . '.jpg') }}" alt="Community Image"
-        class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+        <img src="{{ $post->post->community->image_id ? asset('images/hub' . $post->post->community->image_id . '.jpg') : 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
+        onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
+          class="size-8 rounded-full ">
 
-        <span class="text-xl font-light underline-effect-light">h/{{ $post->post->community->name ?? 'Unknown Community'
+        <span class="text-xl font-light underline-effect-light px-2">h/{{ $post->post->community->name ?? 'Unknown Community'
           }}</span>
       </a>
       <span class="ml-2 text-xs font-semibold px-2 py-1 rounded-md 
@@ -138,7 +139,7 @@ news = Bool
         </span>
         @if (count($post->post->authors) === 1)
         <a data-name="authors" class="underline-effect-light">
-          {{ $author->username ?? 'Unknown' }}
+          {{ $post->post->authors[0]->username ?? 'Unknown' }}
         </a>
         @else
         @include('partials.authors_dropdown')

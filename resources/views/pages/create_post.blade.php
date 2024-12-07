@@ -98,6 +98,29 @@
                        placeholder="https://">
             </div>
 
+            <div>
+                <label for="authors" class="block text-2xl font-medium mb-2">Additional Authors</label>
+                <select 
+                    name="authors[]" 
+                    id="authors" 
+                    multiple 
+                    class="w-full rounded text-l border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-all duration-300"
+                >
+                    @foreach(Auth::user()->follows->sortBy('name') as $potentialAuthor)
+                        <option 
+                            class="hover:bg-sky-400"
+                            value="{{ $potentialAuthor->id }}" 
+                            data-image="{{ $potentialAuthor->profile_photo_url }}">
+                            {{ $potentialAuthor->name }} ({{ $potentialAuthor->username }})
+                        </option>
+                    @endforeach
+                </select>
+                <p class="text-sm text-gray-600 mt-1">Select users you follow to be additional authors</p>
+            </div>
+
+            <div id="selected-authors" class="flex flex-wrap gap-2 mt-4">
+                <!-- Chips dynamically added here -->
+            </div>
             <div class="space-y-4">
                 <label class="block text-2xl font-medium">Content</label>
                 <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
@@ -165,5 +188,128 @@ document.addEventListener('DOMContentLoaded', function() {
     newsRadio.addEventListener('change', toggleNewsUrl);
     topicRadio.addEventListener('change', toggleNewsUrl);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const authorsSelect = document.getElementById('authors');
+    const selectedAuthorsContainer = document.getElementById('selected-authors');
+    const previewMembers = document.getElementById('preview-members');
+
+    // Color palette for author chips
+    const authorColors = [
+        { bg: '#1D3557', text: '#F1FAEE' },  // Navy Blue
+        { bg: '#457B9D', text: '#F1FAEE' },  // Steel Blue
+        { bg: '#A8DADC', text: '#1D3557' },  // Aqua
+        { bg: '#E63946', text: '#F1FAEE' },  // Red
+        { bg: '#F4A261', text: '#264653' },  // Coral
+        { bg: '#2A9D8F', text: '#E9C46A' },  // Teal
+    ];
+    let colorIndex = 0;
+
+    authorsSelect.addEventListener('change', () => {
+        selectedAuthorsContainer.innerHTML = '';
+        
+        Array.from(authorsSelect.selectedOptions).forEach(option => {
+            const currentColor = authorColors[colorIndex];
+            colorIndex = (colorIndex + 1) % authorColors.length;
+
+            const authorChip = document.createElement('div');
+            authorChip.className = 'author-chip';
+            authorChip.style.backgroundColor = currentColor.bg;
+            authorChip.style.color = currentColor.text;
+
+            const iconSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            iconSvg.setAttribute('viewBox', '0 0 24 24');
+            iconSvg.setAttribute('width', '24');
+            iconSvg.setAttribute('height', '24');
+            iconSvg.setAttribute('fill', 'none');
+            iconSvg.setAttribute('stroke', currentColor.text);
+            iconSvg.setAttribute('stroke-width', '2');
+            iconSvg.setAttribute('stroke-linecap', 'round');
+            iconSvg.setAttribute('stroke-linejoin', 'round');
+            iconSvg.className = 'author-chip-icon';
+
+            const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconPath.setAttribute('d', 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2');
+            const iconCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            iconCircle.setAttribute('cx', '12');
+            iconCircle.setAttribute('cy', '7');
+            iconCircle.setAttribute('r', '4');
+
+            iconSvg.appendChild(iconPath);
+            iconSvg.appendChild(iconCircle);
+
+            const text = document.createElement('span');
+            text.textContent = option.text;
+            text.className = 'author-chip-name';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '&times;';
+            removeBtn.className = 'author-chip-remove';
+
+            authorChip.addEventListener('mouseover', () => {
+                authorChip.style.transform = 'scale(1.05)';
+                authorChip.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+            });
+            authorChip.addEventListener('mouseout', () => {
+                authorChip.style.transform = 'scale(1)';
+                authorChip.style.boxShadow = 'none';
+            });
+
+            removeBtn.addEventListener('click', () => {
+                option.selected = false;
+                authorChip.remove();
+                updateMembersCount();
+            });
+
+            authorChip.appendChild(iconSvg);
+            authorChip.appendChild(text);
+            authorChip.appendChild(removeBtn);
+            selectedAuthorsContainer.appendChild(authorChip);
+        });
+
+    });
+
+    const style = document.createElement('style');
+    style.textContent = `
+        .author-chip {
+            display: flex;
+            align-items: center;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin: 4px;
+            max-width: 250px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .author-chip-icon {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 0.5rem;
+            padding: 0.25rem;
+        }
+        .author-chip-name {
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 0.5rem;
+        }
+        .author-chip-remove {
+            padding: 0.25rem 0.5rem;
+            background: rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        .author-chip-remove:hover {
+            background: rgba(0,0,0,0.2);
+        }
+    `;
+    document.head.appendChild(style);
+});
+
 </script>
 @endsection

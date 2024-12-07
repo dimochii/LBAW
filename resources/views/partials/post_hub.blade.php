@@ -108,7 +108,7 @@ news = Bool
         </span>
         @if (count($post->post->authors) === 1)
         <a data-name="authors" class="underline-effect-light">
-          {{ $author->username ?? 'Unknown' }}
+          {{ $post->post->authors[0]->username ?? 'Unknown' }}
         </a>
         @else
         @include('partials.authors_dropdown')
