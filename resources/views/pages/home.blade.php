@@ -14,30 +14,33 @@
     <a href="{{ route('post.create') }}" class="btn btn-primary">Create New Post</a>
   </div> --}}
 
-  <!-- Check if there are any news items -->
-  @if(count($posts) === 0)
-  <p>No posts available.</p>
-  @elseif(count($posts) >= 6)
-  @include('partials.news_grid', ['posts' => $posts->take(6)])
-  <div class="divide-y-2 divide-black border-b-2 border-black">
-    @foreach($posts->slice(6) as $item)
-    
-    @include('partials.post', [
-    'news' => 'true',
-    'post' => $post->news,
-    ])
-    @endforeach
-  </div>
-  @else 
-  <div class="divide-y-2 divide-black border-b-2 border-black">
-    @foreach($posts as $item)
-    
-    @include('partials.post', [
-    'news' => 'true',
-    'post' => $item->news,
-    ])
-    @endforeach
-  </div>
+  @php
+        $activeTab = request()->query('tab', 'News'); // Default to 'News'
+      @endphp
+
+    @include('partials.news_topic_nav', ['url' => '/home/'])
+    @if ($activeTab === 'News')
+    @if($news->isEmpty())
+      <p>No news available.</p>
+    @else
+          @foreach($news as $post)
+            @include('partials.post', [
+            'news' => 'true',
+            'post' => $post->news,
+            'item' => $post->news,
+            ])
+          @endforeach
+        </div>
+    @endif
+    @elseif ($activeTab === 'Topics')
+    @if($topics->isEmpty())
+      <p>No topics available.</p>
+    @else
+          @foreach($topics as $topic)
+            @include('partials.post', ['news' => false, 'post' => $topic->topic, 'img' => false, 'item' => $topic->topic])
+          @endforeach
+      </div>
+    @endif
   @endif
 
   <script>

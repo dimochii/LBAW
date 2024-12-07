@@ -122,7 +122,6 @@ Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware(
 Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('auth')->name('news.update');
 
 //Topic
-Route::get('/topics', [TopicController::class, 'list'])->name('topics');
 Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');
 //editing
 Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topics.edit');

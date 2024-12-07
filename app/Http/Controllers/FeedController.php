@@ -18,6 +18,21 @@ use Illuminate\Support\Facades\DB;
 
 class FeedController extends Controller
 {
+  private function fetchPostData($query)
+    {
+        $posts = $query->withCount([
+            'votes as upvotes_count' => fn($q) => $q->where('upvote', true),
+            'votes as downvotes_count' => fn($q) => $q->where('upvote', false),
+            'comments as comments_count'
+        ])->get();
+    
+        foreach ($posts as $post) {
+            $post->user_upvoted = Auth::check() ? $post->userVote(Auth::user()->id)?->upvote ?? false : false;
+            $post->user_downvoted = Auth::check() ? !$post->userVote(Auth::user()->id)?->upvote ?? false : false;
+        }
+    
+        return $posts;
+    }
   // Fetch posts from user's communities created in the last 72 hours, order them by vote quantity, caches values for 60mins
   public function home()
   {
@@ -50,6 +65,15 @@ class FeedController extends Controller
         $query->where('post_id', $item->post_id);
       })->first();
 
+      $news = $posts->filter(function ($post) {
+        return !is_null($post['news']);
+      });
+
+    $topic = $posts->filter(function ($post) {
+        return !is_null($post['topic']);
+    });
+
+
       if ($userVote) {
         $item->user_upvoted = $userVote->upvote;
         $item->user_downvoted = !$userVote->upvote;
@@ -61,7 +85,8 @@ class FeedController extends Controller
     }
 
     return view('pages.home', [
-      'posts' => $posts
+      'news' => $news,
+      'topics' => $topic
     ]);
   }
   public function global()

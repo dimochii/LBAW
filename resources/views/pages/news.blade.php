@@ -17,31 +17,31 @@
 
   <!-- Check if there are any news items -->
   @if ($activeTab === 'News')
-  @if($news->isEmpty())
-  <p>No news available.</p>
-  @else
-  @include('partials.news_grid', ['posts' => $news->take(6)])
-  <div class="divide-y-2 divide-black border-b-2 border-black">
-    @foreach($news->slice(6) as $post)
-    @include('partials.post', [
-    'news' => 'true',
-    'post' => $post,
-    'item' => $post->post
-    ])
-    @endforeach
-  </div>
-  @endif
-  @elseif ($activeTab === 'Topics')
-  @if($topics->isEmpty())
-  <p>No topics available.</p>
-  @else
-  @include('partials.topics_grid', ['posts' => $topics->take(6)])
-  <div class="divide-y-2 divide-black border-b-2 border-black">
-    @foreach($topics->slice(6) as $topic)
-    @include('partials.post', ['news' => false, 'post' => $topic, 'img' => false, 'item' => $topic])
-    @endforeach
-  </div>
-  @endif
+    @if($news->isEmpty())
+      <p>No news available.</p>
+    @else
+      @include('partials.news_grid', ['posts' => $news->take(6)])
+        <div class="divide-y-2 divide-black border-b-2 border-black">
+          @foreach($news->slice(6) as $post)
+            @include('partials.post', [
+            'news' => 'true',
+            'post' => $post,
+            'item' => $post->post
+            ])
+          @endforeach
+        </div>
+    @endif
+    @elseif ($activeTab === 'Topics')
+    @if($topics->isEmpty())
+      <p>No topics available.</p>
+    @else
+      @include('partials.topics_grid', ['posts' => $topics->take(6)])
+      <div class="divide-y-2 divide-black border-b-2 border-black">
+          @foreach($topics->slice(6) as $topic)
+            @include('partials.post', ['news' => false, 'post' => $topic, 'img' => false, 'item' => $topic])
+          @endforeach
+      </div>
+    @endif
   @endif
 
   <script>
