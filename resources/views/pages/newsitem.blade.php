@@ -11,8 +11,8 @@
         
           <img src="{{ asset('images/hub' . $newsItem->post->community->image_id . '.jpg') }}" 
         
-            class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
-          <span class="text-2xl font-light underline-effect">h/{{ $newsItem->post->community->name ?? 'Unknown
+            class="size-8 rounded-full ring-2  ring-white">
+          <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
             Community' }}</span>
         </a>
 
@@ -124,7 +124,7 @@
           </span>
           @if (count($newsItem->post->authors) === 1)
           <a data-name="authors" class="underline-effect">
-            {{ $author->username ?? 'Unknown' }}
+            {{ $newsItem->post->authors[0]->username  ?? 'Unknown' }}
           </a>
           @else
           @include('partials.authors_dropdown', [
@@ -149,7 +149,7 @@
     {{-- <div>
       <a class="flex items-center" href="">
         <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-          class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
+          class="size-8 rounded-full ">
         <span class="underline-effect">@anonymous</span>
       </a>
     </div> --}}
@@ -159,8 +159,8 @@
       @foreach($newsItem->post->authors as $index => $author)
       <a href="{{ route('user.profile', $author->id) }}"
         class="transition-all transform col-start-1 row-start-1 ml-[{{ $index * 14 }}px] group-hover:ml-[{{$index * 36}}px]">
-        <img src="{{ asset('images/user' . $newsItem->post->authors[1]->image_id . '.jpg') }}"   
-          class="max-w-full rounded-3xl min-w-[32px] w-[32px]">
+        <img src="{{ asset('images/user' . $newsItem->post->authors[0]->image_id . '.jpg') }}"   
+          class="size-8 rounded-full ">
       </a> <!--authors[1] just displays the first one -->
       @endforeach
       <div class="col-start-2 row-start-1">
@@ -180,8 +180,8 @@
   {{-- comment editor --}}
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
-      <a class="min-w-[32px] mr-3 flex flex-col items-center w-[32px]" href="">
-        <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}" class="max-w-full rounded-3xl">
+      <a class="size-8 rounded-full" href="">
+        <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}" class="size-8 rounded-full ">
       </a>
       <span class="text-xl font-light">start a thread</span>
     </div>

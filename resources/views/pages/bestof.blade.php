@@ -36,9 +36,9 @@
                                     <a class="flex items-center h-8"
                                         href="{{ route('communities.show', ['id' => $topic->post->community->id ?? 'unknown']) }}">
                                         <img src="{{ asset('images/hub' . $topic->post->community->image_id . '.jpg') }}" alt="Community Image"
-                                            class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+                                            class="size-8 rounded-full">
 
-                                        <span class="text-xl font-light underline-effect-light">
+                                        <span class=" px-2 text-xl font-light underline-effect-light">
                                             h/{{ $topic->post->community->name ?? 'Unknown Community' }}
                                         </span>
                                     </a>
@@ -94,9 +94,9 @@
                                     <a class="flex items-center h-8"
                                         href="{{ route('communities.show', ['id' => $news->post->community->id ?? 'unknown']) }}">
                                         <img src="{{ asset('images/hub' . $news->post->community->image_id . '.jpg') }}" alt="Community Image"
-                                            class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+                                            class="size-8 rounded-full">
 
-                                        <span class="text-xl font-light underline-effect-light">
+                                        <span class="px-2 text-xl font-light underline-effect-light">
                                             h/{{ $news->post->community->name ?? 'Unknown Community' }}
                                         </span>
                                     </a>

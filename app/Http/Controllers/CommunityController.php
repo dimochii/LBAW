@@ -32,10 +32,8 @@ class CommunityController extends Controller
             'creation_date' => now(), 
         ]);
     
-        // Attach current user as primary moderator
         $community->moderators()->attach(Auth::user()->id);
     
-        // Attach additional moderators if provided
         if ($request->has('moderators')) {
             $community->moderators()->attach($request->moderators);
         }
