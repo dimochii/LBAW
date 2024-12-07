@@ -50,6 +50,7 @@ class FeedController extends Controller
       ->whereIn('community_id', $authUser->communities->pluck('id'))
       ->where('creation_date', '>', now()->subHours(72))
       ->orderBy('votes_count', 'desc')
+      ->orderBy('creation_date', 'desc')
       ->get();
 
     foreach ($posts as $item) {
@@ -57,14 +58,6 @@ class FeedController extends Controller
       $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
         $query->where('post_id', $item->post_id);
       })->first();
-
-      $news = $posts->filter(function ($post) {
-        return !is_null($post['news']);
-      });
-
-    $topic = $posts->filter(function ($post) {
-        return !is_null($post['topic']);
-    });
 
 
       if ($userVote) {
@@ -76,10 +69,22 @@ class FeedController extends Controller
         $item->user_downvoted = false;
       }
     }
+    $news = $posts->filter(function ($post) {
+      return !is_null($post->news); // Only posts with associated news
+  })->sortByDesc(function ($post) {
+      return [$post->score, $post->creation_date]; // Score first, then creation date
+  });
+
+  // Filter and sort topics
+  $topics = $posts->filter(function ($post) {
+      return !is_null($post->topic); // Only posts with associated topics
+  })->sortByDesc(function ($post) {
+      return [$post->score, $post->creation_date]; // Score first, then creation date
+  });
 
     return view('pages.home', [
       'news' => $news,
-      'topics' => $topic
+      'topics' => $topics
     ]);
   }
   public function global()
