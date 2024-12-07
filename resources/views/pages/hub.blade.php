@@ -48,7 +48,7 @@
                 <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
                     <div class="flex items-center gap-2">
                         <span>{{ number_format($followers_count ?? 0, 0) }}</span>
-                        <span>Readers</span>
+                        <span>Followers</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span>{{ number_format($posts_count ?? 0, 0) }}</span>
@@ -78,19 +78,12 @@
             </div>
         </div>
     </div>
+    
     @php
-        $activeTab = request()->query('tab', 'News'); // Default to 'articles'
+        $activeTab = request()->query('tab', 'News'); // Default to 'News'
       @endphp
-    <nav class="max-w-7xl mx-auto px-6 flex flex-wrap gap-4 md:gap-8">
-        <a href="{{ url('/hub/' . $community->id . '/?tab=News') }}"
-           class="py-4 relative group {{ $activeTab === 'News' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
-          News
-        </a>
-        <a href="{{ url('/hub/' . $community->id . '/?tab=Topics') }}"
-           class="py-4 relative group {{ $activeTab === 'Topics' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
-          Topics
-        </a>
-      </nav>
+    @include('partials.news_topic_nav', ['url' => '/hub/' . $community->id])
+
     <!-- Moderators Section -->
     <div class="mt-8 bg-white rounded-xl shadow-sm p-6">
         <h2 class="text-lg font-semibold mb-4">Moderators</h2>

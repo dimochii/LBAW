@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\Vote;
+use App\Models\Topic;
 use App\Models\PostVote;
 use App\Models\Comment;
 use App\Models\CommentVote;
@@ -36,8 +37,24 @@ class NewsController extends Controller
               $item->user_downvoted = false;
           }
       }
+      $topics = Topic::with('post')->get();
+        
+        foreach ($topics as $item) {
+            $post = $item->post;
+            $item->upvotes_count = $post->getUpvoteCountAttribute();
+            $item->downvotes_count = $post->getDownvoteCountAttribute();
+
+            if (Auth::check()) {
+                $userVote = $post->userVote(Auth::user()->id);
+                $item->user_upvoted = $userVote?->upvote ?? false;
+                $item->user_downvoted = $userVote ? !$userVote->upvote : false;
+            } else {
+                $item->user_upvoted = false;
+                $item->user_downvoted = false;
+            }
+        }
   
-      return view('pages.news', compact('news'));
+      return view('pages.news', compact('news', 'topics'));
   }
   
 

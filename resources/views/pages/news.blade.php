@@ -9,18 +9,14 @@
   </div>
   @endif
 
-  <!-- Button to go to the post creation page -->
-  {{-- <div style="margin-bottom: 20px;">
-    <a href="{{ route('post.create') }}" class="btn btn-primary">Create New Post</a>
-  </div> --}}
-  <div class="dropdown mb-4">
-  <select id="content-type-selector" class="form-select">
-    <option value="{{ route('news') }}" selected>News</option>
-    <option value="{{ route('topics') }}">Topics</option>
-  </select>
-</div>
+  @php
+        $activeTab = request()->query('tab', 'News'); // Default to 'News'
+      @endphp
+
+  @include('partials.news_topic_nav', ['url' => '/news/'])
 
   <!-- Check if there are any news items -->
+  @if ($activeTab === 'News')
   @if($news->isEmpty())
   <p>No news available.</p>
   @else
@@ -35,6 +31,19 @@
     @endforeach
   </div>
   @endif
+  @elseif ($activeTab === 'Topics')
+  @if($topics->isEmpty())
+  <p>No topics available.</p>
+  @else
+  @include('partials.topics_grid', ['posts' => $topics->take(6)])
+  <div class="divide-y-2 divide-black border-b-2 border-black">
+    @foreach($topics->slice(6) as $topic)
+    @include('partials.post', ['news' => false, 'post' => $topic, 'img' => false, 'item' => $topic])
+    @endforeach
+  </div>
+  @endif
+  @endif
+
   <script>
     document.getElementById('content-type-selector').addEventListener('change', function () {
   window.location.href = this.value;
