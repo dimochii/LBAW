@@ -50,10 +50,12 @@
 
                 <p class="text-gray-600 mt-2 text-sm">{{ $community->description }}</p>
                 <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                <a href="{{ route('community.followers', $community->id) }}" class="flex items-center gap-2">
                     <div class="flex items-center gap-2">
                         <span>{{ number_format($followers_count ?? 0, 0) }}</span>
                         <span>Followers</span>
-                    </div>
+                    </div
+                </a>
                     <div class="flex items-center gap-2">
                         <span>{{ number_format($posts_count ?? 0, 0) }}</span>
                         <span>Posts</span>
@@ -93,6 +95,7 @@
         <h2 class="text-lg font-semibold mb-4">Moderators</h2>
         <div class="space-y-3">
             @foreach($community->moderators as $moderator)
+            <a href="{{ route('user.profile', $moderator->id) }}" class="flex items-center gap-2">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden">
                     <img src="{{ $moderator->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
@@ -101,6 +104,7 @@
                 </div>
                 <span class="text-sm text-gray-700">{{ $moderator['username'] }}</span> 
             </div>
+            </a>
             @endforeach
         </div>
     </div>

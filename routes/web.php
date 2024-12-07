@@ -185,6 +185,9 @@ Route::post('/report/{id}', [ReportController::class, 'report'])->middleware('au
 Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
 
+//Followers
+Route::get('/hub/{id}/followers', [CommunityController::class, 'getFollowers'])->name('community.followers');
+
 //Notifications
 Route::get('/notifications', [NotificationController::class, 'show'])
     ->middleware('auth')

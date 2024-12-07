@@ -241,7 +241,24 @@ class CommunityController extends Controller
         return view('pages.hubs', compact('communities', 'sortBy', 'order'));
     }
 
-    
+    public function getFollowers($id)
+    {
+        $community = Community::findOrFail($id);
+        $user = Auth::user();
+        if($user) {
+        $is_following = $community->followers()
+            ->where('authenticated_user_id', $user->id) 
+            ->exists();
+        }
+        else {$is_following = false;}
+        $followers = $community->followers()->get();
+
+        return view('pages.hub_followers', [
+            'community' => $community,
+            'followers'=> $followers,
+            'is_following' => $is_following
+        ]);
+    }
 
     /*
     public function apply(Request $request, $id)
