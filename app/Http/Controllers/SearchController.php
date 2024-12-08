@@ -32,7 +32,8 @@ class SearchController extends Controller
                                 });
 
         // Search posts
-        $posts = Post::whereRaw("to_tsvector('english', title || ' ' || content) @@ plainto_tsquery(?)", [$search])  
+        $posts = Post::whereRaw("to_tsvector('english', title || ' ' || content) @@ plainto_tsquery(?)", [$search])
+        ->orWhere('title','like',"%$search%")
              ->get()
              -> map(function($post) {
                 return [
@@ -52,7 +53,7 @@ class SearchController extends Controller
                      ->map(function($user) {
                         return [
                             'name' => $user->name,
-                            'image' => $user->image_id,
+                            'image' => $user->image_id ? asset("images/user{$user->image_id}.jpg") : null,
                             'route' => url("/users/{$user->id}/profile"),
                         ];
                      });

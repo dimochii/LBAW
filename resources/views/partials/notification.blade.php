@@ -8,7 +8,6 @@
         <td class="px-4 py-4">
             <strong class="text-sm text-gray-600">{{ $notification->notification_date }}</strong>
         </td>
-
         <td class="px-4 py-4 w-full">
             @if($notification->postNotification && $notification->postNotification->post)
                 <a href="{{ route($notification->postNotification->post->news ? 'news.show' : 'topics.show', $notification->postNotification->post->id) }}"
@@ -17,7 +16,7 @@
 
                    <!-- Community Avatar -->
                    <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                        <img src="{{ $notification->postNotification->post->community->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
+                        <img src="{{ asset('images/hub' . $notification->postNotification->post->community->image_id.'.jpg')}}"
                              alt="{{ $notification->postNotification->post->community->name }}"
                              class="w-full h-full object-cover">
                     </div>
@@ -31,11 +30,11 @@
                    onclick="markAsRead({{ $notification->id }})"
                    class="flex items-center hover:text-blue-600 transition-colors">
                    <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                        <img src="{{ $notification->commentNotification->comment->user->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
+                        <img src="{{ asset('images/user' . $notification->commentNotification->comment->user->image_id.'.jpg')}}" 
                              alt="{{ $notification->commentNotification->comment->user->username }}"
                              class="w-full h-full object-cover">
-                    </div>
-                    
+                    </div> 
+                    <!-- Ainda nao testei este-->
                     <div>
                         <span class="font-medium">{{ $notification->commentNotification->comment->user->username }}</span> commented on: 
                         <span class="font-medium">{{ $notification->commentNotification->comment->post->title }}</span>
@@ -48,19 +47,19 @@
                    onclick="markAsRead({{ $notification->id }})"
                    class="flex items-center hover:text-blue-600 transition-colors">
                     <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                        <img src="{{ $notification->upvoteNotification->vote->user->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
-                             alt="{{ $notification->upvoteNotification->vote->user->username }}"
+                        <img src="{{ asset('images/user' . $notification->upvoteNotification->vote->user->image_id.'.jpg')}}"                             alt="{{ $notification->upvoteNotification->vote->user->username }}"
                              class="w-full h-full object-cover">
                     </div>
                     {{ $notification->upvoteNotification->vote->user->username }} upvoted: 
                     <span class="font-medium ml-1">{{ $notification->upvoteNotification->vote->postVote->post->title }}</span>
                 </a>
+                <p></p>
             @elseif($notification->followNotification && $notification->followNotification->follower)
                 <a href="{{ route('user.profile', $notification->followNotification->follower->id) }}"
                    onclick="markAsRead({{ $notification->id }})"
                    class="flex items-center hover:text-blue-600 transition-colors">
                     <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                        <img src="{{ $notification->followNotification->follower->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
+                        <img src="{{ asset('images/user' . $notification->followNotification->follower->image_id.'.jpg')}}"
                              alt="{{ $notification->followNotification->follower->name }}"
                              class="w-full h-full object-cover">
                     </div>
