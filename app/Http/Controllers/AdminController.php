@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    private function newCommunitiesChart()
+  private function newCommunitiesChart()
   {
     // Get the date range for the last 14 days
     $startDate = now()->subDays(13)->startOfDay();
@@ -302,19 +302,61 @@ class AdminController extends Controller
 
     return $chart;
   }
-    public function show()
-    {
-        $users = AuthenticatedUser::all();
-        $hubs = Community::all();
-        $news = News::all();
-        $topics = Topic::all();
-        $chartHubs = $this->newCommunitiesChart();
-        $chartUsers = $this->newUsersChart();
-        $postsPDay = $this->postsPerDayChart();
-        $comboPosts = $this->postsComboChart();
+  public function overview()
+  {
+    $users = AuthenticatedUser::all();
+    $hubs = Community::all();
+    $news = News::all();
+    $topics = Topic::all();
+    $chartHubs = $this->newCommunitiesChart();
+    $chartUsers = $this->newUsersChart();
+    $postsPDay = $this->postsPerDayChart();
+    $comboPosts = $this->postsComboChart();
 
-        return view('pages.admin', compact(
-            'users', 'hubs',  'news', 'topics', 'chartHubs', 'chartUsers', 'postsPDay', 'comboPosts'
-        ));
-    }
+    return view('pages.admin', compact(
+      'users',
+      'hubs',
+      'news',
+      'topics',
+      'chartHubs',
+      'chartUsers',
+      'postsPDay',
+      'comboPosts'
+    ));
+  }
+
+  public function users()
+  {
+    $users = AuthenticatedUser::all();
+    $chartUsers = $this->newUsersChart();
+
+    return view('pages.admin_users', compact(
+      'users',
+      'chartUsers',
+    ));
+  }
+
+  public function hubs()
+  {
+    $hubs = Community::all();
+    $chartHubs = $this->newCommunitiesChart();
+    
+    return view('pages.admin_hubs', compact(
+      'hubs',
+      'chartHubs',
+    ));
+  }
+
+  public function posts()
+  {
+    $news = News::all();
+    $topics = Topic::all();
+    $comboPosts = $this->postsComboChart();
+
+    return view('pages.admin_posts', compact(
+      'news',
+      'topics',
+      'comboPosts'
+    )); 
+  }
 }

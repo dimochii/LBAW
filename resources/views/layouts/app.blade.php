@@ -18,7 +18,6 @@
 
   {{--
   <link rel="stylesheet" href="{{ asset('css/build.css' )}}"> --}}
-
 </head>
 
 <body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">

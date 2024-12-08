@@ -20,6 +20,7 @@
         @csrf
         @method('POST')
 
+        
         <!-- Current Privacy Badge -->
         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $community->privacy ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
             @if($community->privacy)
