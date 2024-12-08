@@ -8,6 +8,7 @@ use App\Models\Community;
 use App\Models\News;
 use App\Models\Topic;
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    private function newCommunitiesChart()
+  private function newCommunitiesChart()
   {
     // Get the date range for the last 14 days
     $startDate = now()->subDays(13)->startOfDay();
@@ -48,13 +49,13 @@ class AdminController extends Controller
       ->labels($labels->toArray())
       ->datasets([
         [
-          "label" => "New Communities",
-          "backgroundColor" => "rgba(54, 162, 235, 0.2)",
-          "borderColor" => "rgba(54, 162, 235, 1)",
-          "pointBorderColor" => "rgba(54, 162, 235, 1)",
-          "pointBackgroundColor" => "rgba(54, 162, 235, 1)",
+          "label" => "New hubs",
+          "backgroundColor" => "rgba(237, 215, 90, 0.2)",
+          "borderColor" => "rgba(237, 215, 90, 1)",
+          "pointBorderColor" => "rgba(237, 215, 90, 1)",
+          "pointBackgroundColor" => "rgba(237, 215, 90, 1)",
           "pointHoverBackgroundColor" => "#fff",
-          "pointHoverBorderColor" => "rgba(54, 162, 235, 1)",
+          "pointHoverBorderColor" => "rgba(237, 215, 90, 1)",
           "data" => $counts->toArray(),
           "fill" => false,
         ]
@@ -210,7 +211,7 @@ class AdminController extends Controller
   private function postsComboChart()
   {
     // Define the date range for the past 7 days
-    $startDate = now()->subDays(6)->startOfDay(); // Start 6 days ago to include today (7 days total)
+    $startDate = now()->subDays(13)->startOfDay(); // Start 6 days ago to include today (7 days total)
     $endDate = now()->endOfDay();
 
     // Fetch the data for news
@@ -281,7 +282,7 @@ class AdminController extends Controller
         "plugins" => [
           "title" => [
             "display" => true,
-            "text" => "Posts Analysis (Last 7 Days)"
+            "text" => "Posts Analysis"
           ]
         ],
         "scales" => [
@@ -302,19 +303,141 @@ class AdminController extends Controller
 
     return $chart;
   }
-    public function show()
-    {
-        $users = AuthenticatedUser::all();
-        $hubs = Community::all();
-        $news = News::all();
-        $topics = Topic::all();
-        $chartHubs = $this->newCommunitiesChart();
-        $chartUsers = $this->newUsersChart();
-        $postsPDay = $this->postsPerDayChart();
-        $comboPosts = $this->postsComboChart();
+  public function overview()
+  {
+    $users = AuthenticatedUser::all();
+    $hubs = Community::all();
+    $news = News::all();
+    $topics = Topic::all();
+    $chartHubs = $this->newCommunitiesChart();
+    $chartUsers = $this->newUsersChart();
+    $postsPDay = $this->postsPerDayChart();
+    $comboPosts = $this->postsComboChart();
 
-        return view('pages.admin', compact(
-            'users', 'hubs',  'news', 'topics', 'chartHubs', 'chartUsers', 'postsPDay', 'comboPosts'
-        ));
+    return view('pages.admin', compact(
+      'users',
+      'hubs',
+      'news',
+      'topics',
+      'chartHubs',
+      'chartUsers',
+      'postsPDay',
+      'comboPosts'
+    ));
+  }
+
+  public function users()
+  {
+    $users = AuthenticatedUser::all();
+    $chartUsers = $this->newUsersChart();
+
+    $date_span = Carbon::now()->subDays(13);
+    $startDate = now()->subDays(13)->toFormattedDateString();
+    $endDate = now()->toFormattedDateString();
+
+    $suspendedUserCount = AuthenticatedUser::where('is_suspended', true)->count();
+    $activeUserCount = DB::table('authenticated_users')
+      // Join authors table to get users who have authored posts in the last 30 days
+      ->leftJoin('authors', 'authenticated_users.id', '=', 'authors.authenticated_user_id')
+      // Join posts table to get posts' creation date for filtering
+      ->leftJoin('posts', 'authors.post_id', '=', 'posts.id')
+      // Join comments table to get users who have posted comments in the last 30 days
+      ->leftJoin('comments', 'authenticated_users.id', '=', 'comments.authenticated_user_id')
+      // Filter by posts or comments created in the last 30 days
+      ->where(function ($query) {
+        $query->where('posts.creation_date', '>=', Carbon::now()->subDays(30))
+          ->orWhere('comments.creation_date', '>=', Carbon::now()->subDays(30));
+      })
+      // Exclude suspended users
+      ->where('authenticated_users.is_suspended', false)
+      // Get distinct users who have either posted a comment or authored a post
+      ->distinct()
+      ->count('authenticated_users.id');
+
+    $newUserCount = AuthenticatedUser::whereDate('creation_date', '>', $date_span)->count();
+
+    return view('pages.admin_users', compact(
+      'users',
+      'chartUsers',
+      'startDate',
+      'endDate',
+      'newUserCount',
+      'suspendedUserCount',
+      'activeUserCount'
+    ));
+  }
+
+  public function hubs()
+  {
+    $hubs = Community::all();
+    $chartHubs = $this->newCommunitiesChart();
+    $date_span = Carbon::now()->subDays(13);
+
+    $startDate = now()->subDays(13)->toFormattedDateString();
+    $endDate = now()->toFormattedDateString();
+
+    $totalHubs = $hubs->count();
+    $newHubs = Community::whereDate('creation_date', '>', $date_span)->count();
+
+    $totalMods = DB::table('community_moderators')->count();
+
+    $activeHubs = DB::table('communities')
+      ->join('posts', 'communities.id', '=', 'posts.community_id')
+      ->where('posts.creation_date', '>', $date_span)
+      ->select('communities.id', 'communities.name', 'communities.description')
+      ->groupBy('communities.id')
+      ->get()
+      ->count();
+
+    return view('pages.admin_hubs', compact(
+      'hubs',
+      'chartHubs',
+      'startDate',
+      'endDate',
+      'totalHubs',
+      'newHubs',
+      'totalMods',
+      'activeHubs'
+
+    ));
+  }
+
+  public function posts()
+  {
+    $date_span = Carbon::now()->subDays(13);
+
+    $startDate = now()->subDays(13)->toFormattedDateString();
+    $endDate = now()->toFormattedDateString();
+
+    $activeTab = request()->query('tab', 'news');
+    if ($activeTab == 'topics') {
+      $data = Topic::all();
+    } else {
+      $data = News::all();
     }
+
+    $topicsCount = Topic::all()->count();
+    $newsCount = News::all()->count();
+
+    $newTopicsCount = Topic::whereHas('post', function ($query) use ($date_span) {
+      $query->whereDate('creation_date', '>', $date_span);
+    })->get()->count();
+
+    $newNewsCount = News::whereHas('post', function ($query) use ($date_span) {
+      $query->whereDate('creation_date', '>', $date_span);
+    })->get()->count();
+
+    $comboPosts = $this->postsComboChart();
+
+    return view('pages.admin_posts', compact(
+      'data',
+      'comboPosts',
+      'startDate',
+      'endDate',
+      'topicsCount',
+      'newsCount',
+      'newNewsCount',
+      'newTopicsCount'
+    ));
+  }
 }

@@ -37,10 +37,10 @@
   </div>
 </div>
 
-<div class="p-4">
+<div class="p-4 ">
   <h1 class="text-xl font-bold mb-2">users</h1>
   <table
-    class="w-full bg-white border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
+    class="min-w-[1000px] w-full bg-white border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
     <thead class="bg-gray-100">
       <tr>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>

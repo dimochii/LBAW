@@ -143,7 +143,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/bestof', 'bestof')->name('bestof');
-    Route::get('/admin', [AdminController::class, 'show'])->name('user.admin');
+    Route::get('/admin', [AdminController::class, 'overview'])->name('admin.overview');
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/admin/hubs', [AdminController::class, 'hubs'])->name('admin.hubs');
+    Route::get('/admin/posts', [AdminController::class, 'posts'])->name('admin.posts');
     Route::get('/moderator', [ModeratorController::class, 'show'])->name('user.moderator');
     Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
