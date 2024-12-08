@@ -164,7 +164,7 @@
               </div>
             </a>
             @if(Auth::user()->is_admin)
-                <a href="{{ route('user.admin', Auth::user()->id) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                <a href="{{ route('admin.overview', Auth::user()->id) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                   <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"  />
                   </svg>

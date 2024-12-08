@@ -211,7 +211,7 @@ class AdminController extends Controller
   private function postsComboChart()
   {
     // Define the date range for the past 7 days
-    $startDate = now()->subDays(6)->startOfDay(); // Start 6 days ago to include today (7 days total)
+    $startDate = now()->subDays(13)->startOfDay(); // Start 6 days ago to include today (7 days total)
     $endDate = now()->endOfDay();
 
     // Fetch the data for news
@@ -282,7 +282,7 @@ class AdminController extends Controller
         "plugins" => [
           "title" => [
             "display" => true,
-            "text" => "Posts Analysis (Last 7 Days)"
+            "text" => "Posts Analysis"
           ]
         ],
         "scales" => [
@@ -331,9 +331,39 @@ class AdminController extends Controller
     $users = AuthenticatedUser::all();
     $chartUsers = $this->newUsersChart();
 
+    $date_span = Carbon::now()->subDays(13);
+    $startDate = now()->subDays(13)->toFormattedDateString();
+    $endDate = now()->toFormattedDateString();
+
+    $suspendedUserCount = AuthenticatedUser::where('is_suspended', true)->count();
+    $activeUserCount = DB::table('authenticated_users')
+      // Join authors table to get users who have authored posts in the last 30 days
+      ->leftJoin('authors', 'authenticated_users.id', '=', 'authors.authenticated_user_id')
+      // Join posts table to get posts' creation date for filtering
+      ->leftJoin('posts', 'authors.post_id', '=', 'posts.id')
+      // Join comments table to get users who have posted comments in the last 30 days
+      ->leftJoin('comments', 'authenticated_users.id', '=', 'comments.authenticated_user_id')
+      // Filter by posts or comments created in the last 30 days
+      ->where(function ($query) {
+        $query->where('posts.creation_date', '>=', Carbon::now()->subDays(30))
+          ->orWhere('comments.creation_date', '>=', Carbon::now()->subDays(30));
+      })
+      // Exclude suspended users
+      ->where('authenticated_users.is_suspended', false)
+      // Get distinct users who have either posted a comment or authored a post
+      ->distinct()
+      ->count('authenticated_users.id');
+
+    $newUserCount = AuthenticatedUser::whereDate('creation_date', '>', $date_span)->count();
+
     return view('pages.admin_users', compact(
       'users',
       'chartUsers',
+      'startDate',
+      'endDate',
+      'newUserCount',
+      'suspendedUserCount',
+      'activeUserCount'
     ));
   }
 
@@ -341,10 +371,10 @@ class AdminController extends Controller
   {
     $hubs = Community::all();
     $chartHubs = $this->newCommunitiesChart();
-    $date_span = Carbon::now()->subWeeks(2);
+    $date_span = Carbon::now()->subDays(13);
 
-    $startDate = now()->subWeeks(2)->toFormattedDateString();
-    $endDate = now()->toFormattedDateString(); 
+    $startDate = now()->subDays(13)->toFormattedDateString();
+    $endDate = now()->toFormattedDateString();
 
     $totalHubs = $hubs->count();
     $newHubs = Community::whereDate('creation_date', '>', $date_span)->count();
@@ -374,14 +404,40 @@ class AdminController extends Controller
 
   public function posts()
   {
-    $news = News::all();
-    $topics = Topic::all();
+    $date_span = Carbon::now()->subDays(13);
+
+    $startDate = now()->subDays(13)->toFormattedDateString();
+    $endDate = now()->toFormattedDateString();
+
+    $activeTab = request()->query('tab', 'news');
+    if ($activeTab == 'topics') {
+      $data = Topic::all();
+    } else {
+      $data = News::all();
+    }
+
+    $topicsCount = Topic::all()->count();
+    $newsCount = News::all()->count();
+
+    $newTopicsCount = Topic::whereHas('post', function ($query) use ($date_span) {
+      $query->whereDate('creation_date', '>', $date_span);
+    })->get()->count();
+
+    $newNewsCount = News::whereHas('post', function ($query) use ($date_span) {
+      $query->whereDate('creation_date', '>', $date_span);
+    })->get()->count();
+
     $comboPosts = $this->postsComboChart();
 
     return view('pages.admin_posts', compact(
-      'news',
-      'topics',
-      'comboPosts'
+      'data',
+      'comboPosts',
+      'startDate',
+      'endDate',
+      'topicsCount',
+      'newsCount',
+      'newNewsCount',
+      'newTopicsCount'
     ));
   }
 }
