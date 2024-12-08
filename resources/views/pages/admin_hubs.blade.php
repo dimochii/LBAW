@@ -13,38 +13,48 @@
 
 <div class="flex flex-col md:flex-row md:divide-x-2 md:divide-y-0 divide-y-2 divide-black">
   <div class="flex flex-col w-[50%]  divide-y-2 divide-black ">
-    <div class="flex flex-row items-end p-4 h-full">
+    <div class="flex flex-row p-4 h-full">
       <h1 class=" tracking-tight font-medium text-5xl">hubs <span
           class="text-2xl tracking-normal opacity-60">manage</span>
       </h1>
-      <span class="ml-auto text-sm tracking-normal opacity-60">{{$startDate}} -> {{$endDate}}</span>
+      <span class="ml-auto text-sm tracking-normal opacity-60 mt-auto">{{$startDate}} -> {{$endDate}}</span>
     </div>
-    <div class="flex flex-row">
+    <div class="grid grid-cols-3">
       <div class="px-4 py-4 bg-pastelRed border-black border-r-2 flex flex-col">
+        <div class="text-2xl text-[#F4F2ED]/[.8] mb-auto">active hubs</div>
+        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED] mb-auto">{{$activeHubs}}</div>
+
+
+      </div>
+      <div class="px-4 py-4 bg-pastelYellow border-black border-r-2 flex flex-col">
+        <div class="text-2xl text-[#3C3D37]/[.8] mb-auto">moderators</div>
+        <div class="text-6xl font-bold tracking-tighter text-[#3C3D37] mb-auto">{{$totalMods}}</div>
+
+
+      </div>
+      <div class="px-4 py-4 bg-pastelGreen  flex flex-col">
         <div class="text-2xl text-[#F4F2ED]/[.8] mb-auto">total hubs</div>
-        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED]">{{$totalHubs}}00</div>
+        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED]">{{$totalHubs}}</div>
         <div class="text-lg tracking-tight text-[#F4F2ED]/[.8] mb-auto">{{$newHubs}} new hubs </div>
 
-        @if ($comparisonHubs !== 0)
-        <div class="before:content-['■_']">{{$comparisonHubs}} hubs.</div>
-        @endif
       </div>
-      <div class="flex flex-col grow ">
-        <div class="h-12 flex items-center pl-2 md:pl-4 relative border-b-2 border-black bg-pastelBlue">
-          <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input id="search-input" type="text" placeholder="search"
-            class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
-        </div>
-        <div class="grow bg-white flex items-center justify-center"> nao sei o que por aqui</div>
-      </div>
+
+    </div>
+
+
+    <div class="min-h-12 flex items-center pl-2 md:pl-4 relative border-b-2 border-black bg-pastelBlue">
+      <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input id="search-input" type="text" placeholder="search"
+        class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
     </div>
 
 
 
   </div>
+
   <div class="w-[50%]">
     <div class="w-[600px] mx-auto p-4">
       <x-chartjs-component :chart="$chartHubs" />
@@ -52,6 +62,10 @@
 
   </div>
 </div>
+
+
+
+
 
 <div class="">
   <table
@@ -67,6 +81,9 @@
         <th
           class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
           data-type="string">Description</th>
+        <th
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
+          data-type="number">Readers</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           privacy</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
@@ -87,6 +104,8 @@
         <td class="px-4 py-4 break-all max-w-prose" data-sort>
           {{ $hub->description }}
         </td>
+        <td class="px-4 py-4 whitespace-nowrap" data-sort>{{ $hub->followers->count() }}</td>
+
         <td class="px-4 py-4">
           <span
             class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $hub->is_private ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">

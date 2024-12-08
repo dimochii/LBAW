@@ -341,13 +341,23 @@ class AdminController extends Controller
   {
     $hubs = Community::all();
     $chartHubs = $this->newCommunitiesChart();
-    
-    $startDate = now()->subWeeks(2)->toDateString(); // 2 weeks ago (e.g., "2024-11-24")
-    $endDate = now()->toDateString(); // Today (e.g., "2024-12-08")
+    $date_span = Carbon::now()->subWeeks(2);
+
+    $startDate = now()->subWeeks(2)->toFormattedDateString();
+    $endDate = now()->toFormattedDateString(); 
 
     $totalHubs = $hubs->count();
-    $newHubs = Community::whereDate('creation_date', '>', Carbon::now()->subWeeks(2))->count();
-    $comparisonHubs = Community::whereBetween('creation_date', [Carbon::now()->subWeeks(4), Carbon::now()->subWeeks(2)])->count();    
+    $newHubs = Community::whereDate('creation_date', '>', $date_span)->count();
+
+    $totalMods = DB::table('community_moderators')->count();
+
+    $activeHubs = DB::table('communities')
+      ->join('posts', 'communities.id', '=', 'posts.community_id')
+      ->where('posts.creation_date', '>', $date_span)
+      ->select('communities.id', 'communities.name', 'communities.description')
+      ->groupBy('communities.id')
+      ->get()
+      ->count();
 
     return view('pages.admin_hubs', compact(
       'hubs',
@@ -355,8 +365,10 @@ class AdminController extends Controller
       'startDate',
       'endDate',
       'totalHubs',
-      'newHubs', 
-      'comparisonHubs'
+      'newHubs',
+      'totalMods',
+      'activeHubs'
+
     ));
   }
 
