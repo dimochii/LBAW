@@ -1,8 +1,8 @@
-<div id="reportModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+<div id="reportModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
     <div class="bg-white p-6 rounded shadow-lg w-96">
-        <form action="{{ route('report', $user->id) }}" method="POST">
+        <form id="reportForm" method="POST" action="">
             @csrf
-            <h2 class="text-xl font-semibold mb-4">Report {{ $user->name }}</h2>
+            <h2 id="reportTitle" class="text-xl font-semibold mb-4"></h2>
             
             {{-- Reason Input --}}
             <label for="reason" class="block mb-2 text-sm font-medium">Reason for Reporting:</label>
@@ -14,8 +14,8 @@
                 placeholder="Write your reason here..." 
                 required></textarea>
 
-            {{-- Hidden Report Type Input --}}
-            <input type="hidden" name="report_type" value="{{ $reportType }}">
+            {{-- Hidden Inputs for Report Details --}}
+            <input type="hidden" id="report_type" name="report_type">
 
             {{-- Submit and Cancel Buttons --}}
             <div class="mt-4 flex justify-end gap-2">
