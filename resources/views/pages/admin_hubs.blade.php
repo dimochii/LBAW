@@ -38,6 +38,7 @@
           <input id="search-input" type="text" placeholder="search"
             class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
         </div>
+        <div class="grow bg-white flex items-center justify-center"> nao sei o que por aqui</div>
       </div>
     </div>
 
@@ -125,7 +126,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-
+    const searchInput = document.getElementById('search-input');
     const table = document.querySelector('table');
     const tableBody = table.querySelector('tbody');
     const rows = tableBody.querySelectorAll('tr');
@@ -200,6 +201,27 @@
 
     }
 
+    function filterTable(query) {
+        const queryLower = query.toLowerCase();
+
+        rows.forEach(function (row) {
+            let rowVisible = false;
+
+            row.querySelectorAll('td').forEach(function (cell, index) {
+                const dataType = headers[index].getAttribute('data-type');
+                if (dataType) {
+                    const cellText = cell.textContent.toLowerCase();
+                    if (cellText.includes(queryLower)) {
+                        rowVisible = true; // If any cell matches, show the row
+                    }
+                }
+            });
+
+            // Show or hide the row based on whether it matched the query
+            row.style.display = rowVisible ? '' : 'none';
+        });
+    }
+
     // Assign click listeners to column headers for sorting
     headers.forEach(function (header, index) {
         if (header.hasAttribute('data-type')) {
@@ -207,6 +229,10 @@
                 sortColumn(index);
             });
         }
+    })
+
+    searchInput.addEventListener('input', function () {
+        filterTable(searchInput.value);
     });
   })
 

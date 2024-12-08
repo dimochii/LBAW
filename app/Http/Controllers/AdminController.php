@@ -49,7 +49,7 @@ class AdminController extends Controller
       ->labels($labels->toArray())
       ->datasets([
         [
-          "label" => "Hubs",
+          "label" => "New hubs",
           "backgroundColor" => "rgba(237, 215, 90, 0.2)",
           "borderColor" => "rgba(237, 215, 90, 1)",
           "pointBorderColor" => "rgba(237, 215, 90, 1)",
