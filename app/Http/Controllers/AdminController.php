@@ -440,4 +440,151 @@ class AdminController extends Controller
       'newTopicsCount'
     ));
   }
+
+  public function reports()
+  {
+      // Define the date range for the past 14 days
+      $date_span = Carbon::now()->subDays(13);
+      $startDate = now()->subDays(13)->toFormattedDateString();
+      $endDate = now()->toFormattedDateString();
+
+      // Fetch all reports
+      $reports = DB::table('reports')->get();
+
+      // Total reports
+      $totalReports = $reports->count();
+
+      // New reports in the last 14 days
+      $newReports = DB::table('reports')
+          ->whereBetween('creation_date', [$date_span, now()])
+          ->count();
+
+      // Resolved reports
+      $resolvedReports = DB::table('reports')
+          ->where('status', 'resolved')
+          ->count();
+
+      // Pending reports
+      $pendingReports = DB::table('reports')
+          ->where('status', 'pending')
+          ->count();
+
+      // Generate charts
+      $chartReports = $this->newReportsChart();
+      $statusChart = $this->reportsStatusChart();
+
+      return view('pages.admin_reports', compact(
+          'reports',
+          'totalReports',
+          'newReports',
+          'resolvedReports',
+          'pendingReports',
+          'startDate',
+          'endDate',
+          'chartReports',
+          'statusChart'
+      ));
+  }
+
+  private function newReportsChart()
+  {
+      // Define the date range for the past 14 days
+      $startDate = now()->subDays(13)->startOfDay();
+      $endDate = now()->endOfDay();
+
+      // Fetch the data for new reports
+      $data = DB::table('reports')
+          ->select(DB::raw('DATE(creation_date) as report_date'), DB::raw('COUNT(*) as new_reports'))
+          ->whereBetween('creation_date', [$startDate, $endDate])
+          ->groupBy('report_date')
+          ->orderBy('report_date', 'asc')
+          ->get();
+
+      // Generate a list of dates for the last 14 days
+      $labels = collect();
+      for ($date = $startDate->copy(); $date <= $endDate; $date->addDay()) {
+          $labels->push($date->toDateString());
+      }
+
+      // Map the counts to the corresponding dates
+      $counts = $labels->map(function ($date) use ($data) {
+          return $data->firstWhere('report_date', $date)?->new_reports ?? 0;
+      });
+
+      // Build the chart
+      $chart = Chartjs::build()
+          ->name('newReportsChart')
+          ->type('line')
+          ->size(['width' => 400, 'height' => 200])
+          ->labels($labels->toArray())
+          ->datasets([
+              [
+                  "label" => "New Reports",
+                  "backgroundColor" => "rgba(255, 159, 64, 0.2)",
+                  "borderColor" => "rgba(255, 159, 64, 1)",
+                  "pointBorderColor" => "rgba(255, 159, 64, 1)",
+                  "pointBackgroundColor" => "rgba(255, 159, 64, 1)",
+                  "pointHoverBackgroundColor" => "#fff",
+                  "pointHoverBorderColor" => "rgba(255, 159, 64, 1)",
+                  "data" => $counts->toArray(),
+                  "fill" => false,
+              ]
+          ])
+          ->options([
+              "scales" => [
+                  "y" => [
+                      "beginAtZero" => true,
+                      "ticks" => [
+                          "stepSize" => 1, // Ensure integer-only y-axis
+                      ],
+                  ],
+                  "x" => [
+                      "type" => "time",
+                      "time" => [
+                          "unit" => "day",
+                      ],
+                  ],
+              ],
+          ]);
+
+      return $chart;
+  }
+
+  private function reportsStatusChart()
+  {
+      // Fetch data for report statuses
+      $statuses = DB::table('reports')
+          ->select('status', DB::raw('COUNT(*) as count'))
+          ->groupBy('status')
+          ->pluck('count', 'status');
+
+      $labels = $statuses->keys()->toArray();
+      $counts = $statuses->values()->toArray();
+
+      // Build the chart
+      $chart = Chartjs::build()
+          ->name('reportsStatusChart')
+          ->type('doughnut')
+          ->size(['width' => 400, 'height' => 200])
+          ->labels($labels)
+          ->datasets([
+              [
+                  "label" => "Report Statuses",
+                  "backgroundColor" => ["rgba(75, 192, 192, 0.2)", "rgba(255, 99, 132, 0.2)", "rgba(255, 205, 86, 0.2)"],
+                  "borderColor" => ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)", "rgba(255, 205, 86, 1)"],
+                  "data" => $counts,
+              ]
+          ])
+          ->options([
+              "plugins" => [
+                  "title" => [
+                      "display" => true,
+                      "text" => "Report Status Distribution"
+                  ]
+              ]
+          ]);
+
+      return $chart;
+  }
+
 }

@@ -183,7 +183,7 @@ Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middlew
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
-Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
+Route::get('/reports/{id}', [ReportController::class, 'show'])->middleware('auth');
 Route::post('/report/{id}', [ReportController::class, 'report'])->middleware('auth')->name('report');
 Route::post('/reports/multiple', [ReportController::class, 'multipleReports'])->middleware('auth')->name('reports.multiple');
 Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');

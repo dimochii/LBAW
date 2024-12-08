@@ -2,7 +2,7 @@
 @section('content')
 <div class="text-gray-900 bg-[#F5F5F0] min-h-screen">
     <div class="container mx-auto px-4">
-        <h1 class="text-5xl text-gray-800 tracking-tighter font-medium py-4 ">Reports</h1>
+        <h1 class="text-5xl text-gray-800 tracking-tighter font-medium py-6 ">Reports</h1>
 
         <div class="table-responsive">
             @if($reports->isEmpty())
@@ -39,10 +39,6 @@
                     </tbody>
                 </table>
             @endif
-        </div>
-
-        <div class="mt-6 py-6 flex justify-center">
-            {{ $reports->appends(request()->query())->links('pagination::custom-pagination') }}
         </div>
     </div>
 </div>
