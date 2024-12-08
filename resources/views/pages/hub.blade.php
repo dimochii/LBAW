@@ -39,19 +39,23 @@
         </span>
 
         <!-- Dropdown for Privacy Selection -->
+         @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || Auth::user()->is_admin)
         <select name="privacy" id="privacy-dropdown" onchange="this.form.submit()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium border rounded-full {{ $community->privacy === 'private' ? 'border-red-300' : 'border-green-300' }} focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500">
             <option value="public" {{ $community->privacy === 'public' ? 'selected' : '' }}>public</option>
             <option value="private" {{ $community->privacy === 'private' ? 'selected' : '' }}>private</option>
         </select>
+        @endif
     </form>
 </div>
 
                 <p class="text-gray-600 mt-2 text-sm">{{ $community->description }}</p>
                 <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                <a href="{{ route('community.followers', $community->id) }}" class="flex items-center gap-2">
                     <div class="flex items-center gap-2">
                         <span>{{ number_format($followers_count ?? 0, 0) }}</span>
-                        <span>Readers</span>
-                    </div>
+                        <span>Followers</span>
+                    </div
+                </a>
                     <div class="flex items-center gap-2">
                         <span>{{ number_format($posts_count ?? 0, 0) }}</span>
                         <span>Posts</span>
@@ -80,18 +84,55 @@
             </div>
         </div>
     </div>
+    
+    @php
+        $activeTab = request()->query('tab', 'News'); // Default to 'News'
+      @endphp
+    @include('partials.news_topic_nav', ['url' => '/hub/' . $community->id])
+
+    <!-- Moderators Section -->
+    <div class="mt-8 bg-white rounded-xl shadow-sm p-6">
+        <h2 class="text-lg font-semibold mb-4">Moderators</h2>
+        <div class="space-y-3">
+            @foreach($community->moderators as $moderator)
+            <a href="{{ route('user.profile', $moderator->id) }}" class="flex items-center gap-2">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden">
+                    <img src="{{ $moderator->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
+                         alt="{{ $moderator->username }}"
+                         class="w-full h-full object-cover">
+                </div>
+                <span class="text-sm text-gray-700">{{ $moderator['username'] }}</span> 
+            </div>
+            </a>
+            @endforeach
+        </div>
+    </div>
 
     <!-- Posts Section -->
     <div>
         <!-- Posts Grid -->
         <div class="divide-y-2 border-b-2 border-black">
-            @if ($community->posts->count() > 0)
-                @foreach ($community->posts as $post)
-                    @include('partials.post_hub', [
-                        'news' => 'true',
-                        'post' => $post->news,
-                    ])
+        @if ($activeTab === 'News')
+            @if ($newsPosts->count() > 0)
+                    @foreach ($newsPosts as $post)
+                        @include('partials.post', [
+                            'news' => 'true',
+                            'item' => $post,
+                            'post' => $post->news,
+                        ])
+                    @endforeach
+            @endif
+
+
+            @elseif ($activeTab === 'Topics')
+            @if ($topicPosts->count() > 0)
+                @foreach ($topicPosts as $post)
+                @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
                 @endforeach
+                @endif
+
+        
             @else
             <div class="text-center py-12 bg-white rounded-xl shadow-sm">
                 <p class="text-gray-500">No posts available in this hub yet.</p>
@@ -115,22 +156,7 @@
         @endif
     </div>
 
-    <!-- Moderators Section -->
-    <div class="mt-8 bg-white rounded-xl shadow-sm p-6">
-        <h2 class="text-lg font-semibold mb-4">Moderators</h2>
-        <div class="space-y-3">
-            @foreach($community->moderators as $moderator)
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden">
-                    <img src="{{ $moderator->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
-                         alt="{{ $moderator->username }}"
-                         class="w-full h-full object-cover">
-                </div>
-                <span class="text-sm text-gray-700">{{ $moderator['username'] }}</span> 
-            </div>
-            @endforeach
-        </div>
-    </div>
+    
 
     @else
     <div class="py-12 text-center">

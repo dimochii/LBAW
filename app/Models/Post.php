@@ -47,6 +47,7 @@ class Post extends Model
     {
         return $this->votes()->where('authenticated_user_id', $userId)->first();
     }
+    
 
     public function news()
     {

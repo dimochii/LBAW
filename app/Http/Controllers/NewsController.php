@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\Vote;
+use App\Models\Topic;
 use App\Models\PostVote;
 use App\Models\Comment;
 use App\Models\CommentVote;
@@ -19,24 +20,22 @@ class NewsController extends Controller
    */
   public function list()
   {
-      $news = News::with('post')->get();
+
+      $posts = Post::all();
   
-      foreach ($news as $item) {
-          $post = $item->post;
-          $item->upvotes_count = $post->upvote_count;
-          $item->downvotes_count = $post->downvote_count;
+        
+        $news = $posts->filter(function ($post) {
+          return !is_null($post['news']);
+        });
+
+        $topics = $posts->filter(function ($post) {
+          return !is_null($post['topic']);
+      });
   
-          if (Auth::check()) {
-              $userVote = $post->userVote(Auth::user()->id);
-              $item->user_upvoted = $userVote?->upvote ?? false;
-              $item->user_downvoted = $userVote ? !$userVote->upvote : false;
-          } else {
-              $item->user_upvoted = false;
-              $item->user_downvoted = false;
-          }
-      }
-  
-      return view('pages.news', compact('news'));
+      return view('pages.news', [
+        'news' => $news,
+        'topics' => $topics
+      ]);
   }
   
 
@@ -46,14 +45,12 @@ class NewsController extends Controller
     $newsItem = News::with('post.community')
       ->where('post_id', $post_id)
       ->firstOrFail();
+    $post = Post::findOrFail($post_id);
 
-    $newsItem->upvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
-      $query->where('post_id', $newsItem->post_id);
-    })->where('upvote', true)->count();
+    $newsItem->upvotes_count =  $post->getUpvoteCountAttribute();
 
-    $newsItem->downvotes_count = Vote::whereHas('postVote', function ($query) use ($newsItem) {
-      $query->where('post_id', $newsItem->post_id);
-    })->where('upvote', false)->count();
+    $newsItem->downvotes_count =  $post->getDownvoteCountAttribute();
+  
 
     $newsItem->score = $newsItem->upvotes_count - $newsItem->downvotes_count;
 

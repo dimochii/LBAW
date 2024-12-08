@@ -15,30 +15,36 @@
   </div> --}}
 
   <!-- Check if there are any news items -->
-  @if(count($posts) === 0)
-  <p>No posts available.</p>
-  @elseif(count($posts) >= 6)
-  @include('partials.news_grid', ['posts' => $posts->take(6)])
-  <div class="divide-y-2 divide-black border-b-2 border-black">
-    @foreach($posts->slice(6) as $item)
-    
-    @include('partials.post', [
-    'news' => 'true',
-    'post' => $post->news,
-    ])
-    @endforeach
-  </div>
-  @else 
-  <div class="divide-y-2 divide-black border-b-2 border-black">
-    @foreach($posts as $item)
-    
-    @include('partials.post', [
-    'news' => 'true',
-    'post' => $item->news,
-    ])
-    @endforeach
-  </div>
+  
+  @php
+        $activeTab = request()->query('tab', 'News'); // Default to 'News'
+      @endphp
+
+    @include('partials.news_topic_nav', ['url' => '/recent/'])
+    @if ($activeTab === 'News')
+    @if($news->isEmpty())
+      <p>No news available.</p>
+    @else
+          @foreach($news as $post)
+            @include('partials.post', [
+            'news' => 'true',
+            'post' => $post->news,
+            'item' => $post,
+            ])
+          @endforeach
+        </div>
+    @endif
+    @elseif ($activeTab === 'Topics')
+    @if($topics->isEmpty())
+      <p>No topics available.</p>
+    @else
+          @foreach($topics as $post)
+            @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
+          @endforeach
+      </div>
+    @endif
   @endif
+
 
   <script>
     const voteButtons = document.querySelectorAll("input[type='checkbox']");

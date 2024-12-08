@@ -18,6 +18,21 @@ use Illuminate\Support\Facades\DB;
 
 class FeedController extends Controller
 {
+  private function fetchPostData($query)
+    {
+        $posts = $query->withCount([
+            'votes as upvotes_count' => fn($q) => $q->where('upvote', true),
+            'votes as downvotes_count' => fn($q) => $q->where('upvote', false),
+            'comments as comments_count'
+        ])->get();
+    
+        foreach ($posts as $post) {
+            $post->user_upvoted = Auth::check() ? $post->userVote(Auth::user()->id)?->upvote ?? false : false;
+            $post->user_downvoted = Auth::check() ? !$post->userVote(Auth::user()->id)?->upvote ?? false : false;
+        }
+    
+        return $posts;
+    }
   // Fetch posts from user's communities created in the last 72 hours, order them by vote quantity, caches values for 60mins
   public function home()
   {
@@ -35,20 +50,15 @@ class FeedController extends Controller
       ->whereIn('community_id', $authUser->communities->pluck('id'))
       ->where('creation_date', '>', now()->subHours(72))
       ->orderBy('votes_count', 'desc')
+      ->orderBy('creation_date', 'desc')
       ->get();
 
     foreach ($posts as $item) {
-      $item->upvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->post_id);
-      })->where('upvote', true)->count();
-
-      $item->downvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->post_id);
-      })->where('upvote', false)->count();
 
       $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
         $query->where('post_id', $item->post_id);
       })->first();
+
 
       if ($userVote) {
         $item->user_upvoted = $userVote->upvote;
@@ -59,9 +69,22 @@ class FeedController extends Controller
         $item->user_downvoted = false;
       }
     }
+    $news = $posts->filter(function ($post) {
+      return !is_null($post->news); // Only posts with associated news
+  })->sortByDesc(function ($post) {
+      return [$post->score, $post->creation_date]; // Score first, then creation date
+  });
+
+  // Filter and sort topics
+  $topics = $posts->filter(function ($post) {
+      return !is_null($post->topic); // Only posts with associated topics
+  })->sortByDesc(function ($post) {
+      return [$post->score, $post->creation_date]; // Score first, then creation date
+  });
 
     return view('pages.home', [
-      'posts' => $posts
+      'news' => $news,
+      'topics' => $topics
     ]);
   }
   public function global()
@@ -82,6 +105,7 @@ class FeedController extends Controller
       })
       ->where('creation_date', '>', now()->subHours(72))
       ->orderBy('votes_count', 'desc')
+      ->orderBy('creation_date', 'desc')
       ->get();
 
     $authUser = Auth::user(); // For retrieving user-specific votes
@@ -116,13 +140,26 @@ class FeedController extends Controller
         $item->user_downvoted = false;
       }
     }
+    $news = $posts->filter(function ($post) {
+      return !is_null($post->news); // Only posts with associated news
+  })->sortByDesc(function ($post) {
+      return [$post->score, $post->creation_date]; // Score first, then creation date
+  });
+
+  // Filter and sort topics
+  $topics = $posts->filter(function ($post) {
+      return !is_null($post->topic); // Only posts with associated topics
+  })->sortByDesc(function ($post) {
+      return [$post->score, $post->creation_date]; // Score first, then creation date
+  });
 
     // Cache the posts for 60 minutes
     // Cache::put('popular_posts', $posts, 60);
 
     // Render the view and pass the posts
     return view('pages.global', [
-      'posts' => $posts
+      'news' => $news,
+      'topics' => $topics
     ]);
   }
 
@@ -162,9 +199,23 @@ class FeedController extends Controller
       }
     }
 
+        $news = $posts->filter(function ($post) {
+      return !is_null($post->news); // Only posts with associated news
+  })->sortByDesc(function ($post) {
+      return [ $post->creation_date]; // Score first, then creation date
+  });
+
+  // Filter and sort topics
+  $topics = $posts->filter(function ($post) {
+      return !is_null($post->topic); // Only posts with associated topics
+  })->sortByDesc(function ($post) {
+      return [ $post->creation_date]; // Score first, then creation date
+  });
+
     // Render the view and pass the posts collection
     return view('pages.recent', [
-      'posts' => $posts,
+      'news' => $news,
+      'topics' => $topics
     ]);
   }
 

@@ -194,6 +194,10 @@
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
       <a class="size-8 rounded-full" href="">
+      @php 
+          if(Auth::check()) {$image_id = Auth::user()->image_id;}
+          else { $image_id = 1;}
+        @endphp
         <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}" class="size-8 rounded-full ">
       </a>
       <span class=" px-2 text-xl font-light">start a thread</span>
