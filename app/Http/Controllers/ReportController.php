@@ -37,7 +37,7 @@ class ReportController extends Controller
         
         $validatedData = $request->validate([
             'reason' => 'required|string|max:1000',
-            'report_type' => 'required|in:user_report,item_report,comment_report,',
+            'report_type' => 'required|in:user_report,item_report,comment_report,topic_report',
         ]);
 
         
@@ -54,29 +54,28 @@ class ReportController extends Controller
                 ->with('Sucess', 'You\'ve succesfully reported this user.');
     }
 
-    public function multipleReports(Request $request)
-    {
+    public function multipleReports(Request $request) {
+
     if (!Auth::check()) {
         return redirect('/news')->with('error', 'You must be logged in to submit a report.');
     }
 
-    $userIds = $request->input('reported_user_id'); // Expecting an array of user IDs
+    $userIds = $request->input('reported_user_id'); 
     if (!is_array($userIds)) {
-        $userIds = [$userIds]; // In case a single user is passed, convert it to an array
+        $userIds = [$userIds]; 
     }
-
+    
     if (in_array(Auth::user()->id, $userIds)) {
         return redirect()->route('user.profile', ['user' => Auth::user()->id])
             ->with('failure', 'You can\'t report yourself.');
     }
 
-    // Validate the request
     $validatedData = $request->validate([
         'reason' => 'required|string|max:1000',
-        'report_type' => 'required|in:user_report,item_report,comment_report',        
+        'report_type' => 'required|in:user_report,item_report,comment_report,topic_report',        
     ]);
 
-    // Loop through each reported user and create a report for them
+    
     foreach ($userIds as $userId) {
         Report::create([
             'reason' => $validatedData['reason'],
@@ -87,8 +86,7 @@ class ReportController extends Controller
         ]);
     }
 
-    return redirect()->route('user.profile', ['user' => $userIds[0]])  // Redirect to the first reported user's profile
-            ->with('success', 'You\'ve successfully reported the selected users.');
+    return redirect('/news')->with('sucess', 'authors reported.');
     }
 
 

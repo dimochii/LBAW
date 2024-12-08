@@ -18,12 +18,8 @@
           <span>•</span>
           <span class="underline-effect cursor-pointer group-open/details-{{ $comment ->id }}:before:content-['hide']">
             <button 
-             onclick="
-             document.getElementById('reportForm').action = '{{ route('report', $comment->user->id) }}';
-             document.getElementById('report_type').value = 'comment_report';
-             document.getElementById('reportTitle').textContent = 'Report {{ $comment->user->username }}\'s comment  ';
-             document.getElementById('reportModal').classList.remove('hidden');">
-             Report Comment
+             onclick=reportComment()>
+              Report Comment
             </button>
           </span>
 
@@ -96,7 +92,7 @@
       <div class="ml-{{$margin}}" name="replies">
         @foreach ($comment->children as $childComment)
         @include('partials.comments', ['comment' => $childComment, 'margin' => ($margin / 2) + 1])
-        @include('partials.report_box', ['user' => $childComment->user, 'reportType' => 'comment_report'])
+        @include('partials.report_box')
         @endforeach
       </div>
 
@@ -104,3 +100,14 @@
     </details>
   </div>
 </div>
+
+
+
+<script>
+  function reportComment() {
+    document.getElementById('reportForm').action = '{{ route('report', $comment->user->id) }}';
+    document.getElementById('report_type').value = 'comment_report';
+    document.getElementById('reportTitle').textContent = 'Report {{ $comment->user->username }}\'s comment  ';
+    document.getElementById('reportModal').classList.remove('hidden');
+  }
+</script>

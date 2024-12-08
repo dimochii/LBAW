@@ -50,17 +50,12 @@
         <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
-
       <!-- Juntei aqui -->
-      <button   onclick="
-      document.getElementById('reportForm').action = '{{ route('reports.multiple') }}';
-      document.getElementById('report_type').value = 'user_report';
-      document.getElementById('reportTitle').textContent = 'Report lll authors ';
-      document.getElementById('reportModal').classList.remove('hidden');">
-      Report 
-      </button>
-          <!--report first --> 
-
+    <button onclick=reportNews()>
+      Report
+    </button>
+      @include('partials.report_box')
+       <!--report first --> 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         
         <div>
@@ -573,6 +568,24 @@
 
   </script>
 
+<script>
+  function reportNews() {
 
+    const authors = @json($newsItem->post->authors->pluck('id')); 
+      const form = document.getElementById('reportForm'); 
+      form.reset();
+      authors.forEach(authorId => {
+        const input = document.createElement('input'); 
+        input.type = 'hidden';
+        input.name = 'reported_user_id[]'; 
+        input.value = authorId; 
+        form.appendChild(input); 
+        });
+      document.getElementById('reportForm').action = '{{ route('reports.multiple') }}';
+      document.getElementById('report_type').value = 'item_report';
+      document.getElementById('reportTitle').textContent = 'Report all authors';
+      document.getElementById('reportModal').classList.remove('hidden');
+  }
+</script>
 
   @endsection
