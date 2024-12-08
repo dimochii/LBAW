@@ -97,7 +97,7 @@ Route::delete('/users/{id}', [AuthenticatedUserController::class, 'deletemyaccou
 
 //admin
 Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware('auth');
-Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'unsuspend'])->middleware('auth');
+Route::post('/users/{id}/unsuspend',[AuthenticatedUserController::class,'unsuspend'])->middleware('auth');
 Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite']);
 Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite']);
 

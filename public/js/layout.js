@@ -36,18 +36,19 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 
     const createUserItem = (user) => `
-        <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
-             onclick="window.location.href='${user.route}'">
-            <div class="flex items-center gap-3">
-                ${user.image ? `
-                    <img src="/image/${user.image}" class="w-6 h-6 rounded-full object-cover">
-                ` : `
-                    <div class="w-6 h-6 rounded-full bg-blue-500"></div>
-                `}
-                <span class="text-sm text-gray-700">@${user.name}</span>
-            </div>
+    <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+         onclick="window.location.href='${user.route}'">
+        <div class="flex items-center gap-3">
+            ${user.image ? `
+                <img src="${user.image}" class="w-6 h-6 rounded-full object-cover">
+            ` : `
+                <div class="w-6 h-6 rounded-full bg-blue-500"></div>
+            `}
+            <span class="text-sm text-gray-700">@${user.name}</span>
         </div>
-    `;
+    </div>
+`;
+
 
     const updateSearchResults = (results) => {
         const communitiesContainer = searchResults.querySelector('.from-red-50.to-blue-50 .space-y-2');

@@ -7,8 +7,8 @@
     <div class="px-8 py-4 w-1/2 flex flex-col grow">
       <div class="flex items-center h-8 relative">
       <a class="flex items-center" href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-          class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+        <img src="{{ asset('images/hub' . $topicItem->post->community->image_id . '.jpg') }}" 
+        class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
         <span class="text-2xl font-light underline-effect">h/{{ $topicItem->post->community->name ?? 'Unknown Community' }}</span>
       </a>
      
@@ -151,7 +151,7 @@
       @foreach($topicItem->post->authors as $index => $author)
       <a href="{{ route('user.profile', $author->id) }}"
         class="transition-all transform col-start-1 row-start-1 ml-[{{ $index * 14 }}px] group-hover:ml-[{{$index * 36}}px]">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
+        <img src="{{ asset('images/user' . $author->image_id . '.jpg') }}" 
           class="max-w-full rounded-3xl min-w-[32px] w-[32px]">
       </a>
       @endforeach
@@ -173,7 +173,11 @@
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
       <a class="size-8 rounded-full " href="">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="size-8 rounded-full">
+        @php 
+          if(Auth::check()) {$image_id = Auth::user()->image_id;}
+          else { $image_id = 1;}
+        @endphp
+        <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}" class="size-8 rounded-full ">
       </a>
       <span class="text-xl font-light">start a thread</span>
     </div>
