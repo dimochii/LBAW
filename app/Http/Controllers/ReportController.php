@@ -30,6 +30,10 @@ class ReportController extends Controller
             return redirect('/news')->with('error', 'You must be logged in to submit a report.');
         }
 
+        if (Auth::user()->id == $id) {
+            return redirect()->route('user.profile', ['user' => $id])
+                ->with('failure', 'You can\'t report yourself.');
+        }
 
         $validatedData = $request->validate([
             'reason' => 'required|string|max:1000',
@@ -46,11 +50,10 @@ class ReportController extends Controller
         ]);
 
         
-        return response()->json([
-            'message' => 'Report submitted successfully',
-            'report' => $report,
-        ], 201);
+        return redirect()->route('user.profile', ['user' => $id])
+                ->with('Sucess', 'You\'ve succesfully reported this user.');
     }
+
 
 
     public function resolve($id)

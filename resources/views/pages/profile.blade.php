@@ -14,6 +14,10 @@
       </p>
     </div>
     <div class="flex flex-col items-end space-y-4">
+    <button id="report-button-comment" onclick="document.getElementById('reportModal').classList.remove('hidden')">
+      Report
+    </button>
+    @include('partials.report_box', ['user' => $user, 'reportType' => 'user_report'])
       {{-- Followers and Following on the Same Line --}}
       <div class="flex space-x-4 text-sm">
         <a href="{{ route('user.followers', $user->id) }}" 

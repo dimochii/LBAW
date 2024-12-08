@@ -4,7 +4,7 @@
         <p>{{ $comment->content }}</p>
         <small>Posted on: {{ $comment->creation_date }}</small>
     </div>
-
+ 
     <!-- Reply Form -->
     <div class="reply-form">
         <form action="{{ route('comments.store') }}" method="POST">
