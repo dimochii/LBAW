@@ -50,8 +50,14 @@
         <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
-
+      <!-- Juntei aqui -->
+    <button onclick=reportNews()>
+      Report
+    </button>
+      @include('partials.report_box')
+       <!--report first --> 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
+        
         <div>
           <input id="favorite-{{$newsItem->post_id}}" type="checkbox" class="hidden peer/favorite" {{ Auth::check() &&
             Auth::user()->favouritePosts->contains($newsItem->post_id) ? 'checked' : '' }}
@@ -65,6 +71,7 @@
                 d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           </label>
+          
         </div>
 
         <div>
@@ -565,6 +572,24 @@
 
   </script>
 
+<script>
+  function reportNews() {
 
+    const authors = @json($newsItem->post->authors->pluck('id')); 
+      const form = document.getElementById('reportForm'); 
+      form.reset();
+      authors.forEach(authorId => {
+        const input = document.createElement('input'); 
+        input.type = 'hidden';
+        input.name = 'reported_user_id[]'; 
+        input.value = authorId; 
+        form.appendChild(input); 
+        });
+      document.getElementById('reportForm').action = '{{ route('reports.multiple') }}';
+      document.getElementById('report_type').value = 'item_report';
+      document.getElementById('reportTitle').textContent = 'Report all authors';
+      document.getElementById('reportModal').classList.remove('hidden');
+  }
+</script>
 
   @endsection

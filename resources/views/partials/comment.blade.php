@@ -1,10 +1,11 @@
 <li class="comment">
     <div class="comment-content">
+
         <strong>{{ $comment->user->name ?? 'Anonymous' }}</strong>
         <p>{{ $comment->content }}</p>
         <small>Posted on: {{ $comment->creation_date }}</small>
     </div>
-
+ 
     <!-- Reply Form -->
     <div class="reply-form">
         <form action="{{ route('comments.store') }}" method="POST">

@@ -17,11 +17,14 @@
           <span>{{ $comment->creation_date ? $comment->creation_date->diffForHumans() : '?' }}</span>
           <span>•</span>
           <span class="underline-effect cursor-pointer group-open/details-{{ $comment ->id }}:before:content-['hide']">
+            <button 
+             onclick=reportComment()>
+              Report Comment
+            </button>
           </span>
 
         </div>
       </summary>
-
       {{-- Comment Body --}}
       <article data-text="markdown"
         class="font-vollkorn max-w-full prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] ml-1 prose-blockquote:my-2 prose-code:my-4 prose-headings:my-4 prose-hr:my-4">
@@ -39,6 +42,8 @@
               <path d="M21,21H3L12,3Z" />
             </svg>
           </label>
+          <!-- Report Button -->
+        
         </div>
 
         {{-- Score --}}
@@ -87,8 +92,22 @@
       <div class="ml-{{$margin}}" name="replies">
         @foreach ($comment->children as $childComment)
         @include('partials.comments', ['comment' => $childComment, 'margin' => ($margin / 2) + 1])
+        @include('partials.report_box')
         @endforeach
       </div>
+
+      
     </details>
   </div>
 </div>
+
+
+
+<script>
+  function reportComment() {
+    document.getElementById('reportForm').action = '{{ route('report', $comment->user->id) }}';
+    document.getElementById('report_type').value = 'comment_report';
+    document.getElementById('reportTitle').textContent = 'Report {{ $comment->user->username }}\'s comment  ';
+    document.getElementById('reportModal').classList.remove('hidden');
+  }
+</script>

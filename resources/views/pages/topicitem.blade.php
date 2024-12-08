@@ -11,8 +11,11 @@
           class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
         <span class="text-2xl font-light underline-effect">h/{{ $topicItem->post->community->name ?? 'Unknown Community' }}</span>
       </a>
-
-
+     
+     <button onclick=reportTopic()>
+        Report
+    </button>
+      @include('partials.report_box')
         {{--
         <!-- Edit Button (only if the current authenticated user is an author) -->
         @auth
@@ -22,6 +25,8 @@
           Post</a>
         @endif
         @endauth --}}
+
+      
         <div class="ml-auto">
           <input type="checkbox" class="peer hidden" id="{{$topicItem->post_id}}-options">
           <label for="{{$topicItem->post_id}}-options">
@@ -239,6 +244,9 @@
   </div>
 
   <script>
+    
+
+
     // Function to convert markdown to HTML
     function markdownToHTML(markdown) {
     const headingClasses = {
@@ -510,6 +518,26 @@
 
   </script>
 
+<script> 
 
+function reportTopic() {
+      const authors = @json($topicItem->post->authors->pluck('id')); 
+      const form = document.getElementById('reportForm'); 
+      form.reset();
+      authors.forEach(authorId => {
+        const input = document.createElement('input'); 
+       input.type = 'hidden';
+        input.name = 'reported_user_id[]'; 
+        input.value = authorId; 
+        form.appendChild(input); 
+        });
+      document.getElementById('reportForm').action = '{{ route('reports.multiple') }}';
+      document.getElementById('report_type').value = 'topic_report';
+      document.getElementById('reportTitle').textContent = 'Report all authors';
+      document.getElementById('reportModal').classList.remove('hidden');
+      
+    }
+
+</script>
 
   @endsection
