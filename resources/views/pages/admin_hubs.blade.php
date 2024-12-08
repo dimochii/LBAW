@@ -2,9 +2,6 @@
 
 @section('content')
 
-<head>
-<script defer src="{{ asset('js/app.js') }}"></script>
-</head>
 {{-- <div class="flex-1 bg-pastelRed h-12 flex items-center pl-2 md:pl-4 relative">
   <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -14,39 +11,79 @@
     class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
 </div> --}}
 
-<div class="p-4">
-  <div class="w-[50%] mx-auto">
-    <x-chartjs-component :chart="$chartHubs" />
+<div class="flex flex-col md:flex-row md:divide-x-2 md:divide-y-0 divide-y-2 divide-black">
+  <div class="flex flex-col w-[50%]  divide-y-2 divide-black ">
+    <div class="flex flex-row items-end p-4 h-full">
+      <h1 class=" tracking-tight font-medium text-5xl">hubs <span
+          class="text-2xl tracking-normal opacity-60">manage</span>
+      </h1>
+      <span class="ml-auto text-sm tracking-normal opacity-60">{{$startDate}} -> {{$endDate}}</span>
+    </div>
+    <div class="flex flex-row">
+      <div class="px-4 py-4 bg-pastelRed border-black border-r-2 flex flex-col">
+        <div class="text-2xl text-[#F4F2ED]/[.8] mb-auto">total hubs</div>
+        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED]">{{$totalHubs}}00</div>
+        <div class="text-lg tracking-tight text-[#F4F2ED]/[.8] mb-auto">{{$newHubs}} new hubs </div>
+
+        @if ($comparisonHubs !== 0)
+        <div class="before:content-['■_']">{{$comparisonHubs}} hubs.</div>
+        @endif
+      </div>
+      <div class="flex flex-col grow ">
+        <div class="h-12 flex items-center pl-2 md:pl-4 relative border-b-2 border-black bg-pastelBlue">
+          <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input id="search-input" type="text" placeholder="search"
+            class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+  <div class="w-[50%]">
+    <div class="w-[600px] mx-auto p-4">
+      <x-chartjs-component :chart="$chartHubs" />
+    </div>
+
   </div>
 </div>
 
-<div class="p-4">
-  <h1 class="text-xl font-bold mb-2">hubs</h1>
-
+<div class="">
   <table
-    class="w-full bg-white border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
+    class="w-full bg-white border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
     <thead class="bg-gray-100">
       <tr>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">privacy</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delete</th>
+        <th
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
+          data-type="number">ID</th>
+        <th
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
+          data-type="string">Name</th>
+        <th
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
+          data-type="string">Description</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
+          privacy</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
+          Delete</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200">
-    @foreach($hubs as $hub)
+      @foreach($hubs as $hub)
       <tr class="hover:bg-gray-50 transition-colors">
-        <td class="px-4 py-4 whitespace-nowrap">{{ $hub->id }}</td>
+        <td class="px-4 py-4 whitespace-nowrap" data-sort>{{ $hub->id }}</td>
         <td class="px-4 py-4">
           <a class="flex items-center" href="{{ route('communities.show', $hub->id) }}">
             <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
               class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
-            <span
-              class="truncate max-w-32 hover:max-w-full transition-all">{{ $hub->name }}</span>
+            <span class="truncate max-w-32 hover:max-w-full transition-all" data-sort>{{ $hub->name }}</span>
           </a>
         </td>
-        <td class="px-4 py-4 break-all max-w-prose">
+        <td class="px-4 py-4 break-all max-w-prose" data-sort>
           {{ $hub->description }}
         </td>
         <td class="px-4 py-4">
@@ -87,7 +124,93 @@
 @endsection
 
 <script>
-    function toggleSuspend(userId, isChecked) {
+  document.addEventListener('DOMContentLoaded', function () {
+
+    const table = document.querySelector('table');
+    const tableBody = table.querySelector('tbody');
+    const rows = tableBody.querySelectorAll('tr');
+    const headers = table.querySelectorAll('th');
+
+    // Initialize directions array after the table headers are loaded
+    const directions = Array.from(headers).map(function (header) {
+        return '';
+    });
+
+    const transform = function (index, content) {
+        const type = headers[index].getAttribute('data-type');
+        switch (type) {
+            case 'number':
+                return parseFloat(content);
+            case 'string':
+            default:
+                return content;
+        }
+    };
+
+    function updateHeaderText(index, direction) {
+        headers.forEach(function (header) {
+              header.textContent = header.textContent.replace(/ (ASC|DESC)$/, '');
+        });
+
+        const header = headers[index];
+
+        if (direction === 'asc') {
+            header.textContent = header.textContent.replace(/ (ASC|DESC)$/, '') + ' ASC';
+        } else {
+            header.textContent = header.textContent.replace(/ (ASC|DESC)$/, '') + ' DESC';
+        }
+    }
+
+    function sortColumn(index) {
+        // Set the direction for sorting
+        const direction = directions[index] || 'asc';
+
+        // Set the multiplier based on the sorting direction
+        const multiplier = direction === 'asc' ? 1 : -1;
+
+        // Convert the NodeList to an array so we can sort it
+        const newRows = Array.from(rows);
+
+        newRows.sort(function (rowA, rowB) {
+            const cellA = rowA.querySelectorAll('td')[index].innerHTML;
+            const cellB = rowB.querySelectorAll('td')[index].innerHTML;
+
+            const a = transform(index, cellA);
+            const b = transform(index, cellB);
+
+            if (a > b) return 1 * multiplier;
+            if (a < b) return -1 * multiplier;
+            return 0;
+        });
+
+        // Remove all current rows from the table
+        [].forEach.call(rows, function (row) {
+            tableBody.removeChild(row);
+        });
+
+        // Reverse the sorting direction for the next click
+        directions[index] = direction === 'asc' ? 'desc' : 'asc';
+
+        // Append the sorted rows back to the table
+        newRows.forEach(function (newRow) {
+            tableBody.appendChild(newRow);
+        });
+
+        updateHeaderText(index, directions[index]);
+
+    }
+
+    // Assign click listeners to column headers for sorting
+    headers.forEach(function (header, index) {
+        if (header.hasAttribute('data-type')) {
+            header.addEventListener('click', function () {
+                sortColumn(index);
+            });
+        }
+    });
+  })
+
+  function toggleSuspend(userId, isChecked) {
         const action = isChecked ? 'suspend' : 'unsuspend';
         const confirmationMessage = isChecked
             ? 'Are you sure you want to suspend this user?'

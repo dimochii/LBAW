@@ -18,6 +18,8 @@
   {{--
   <link rel="stylesheet" href="{{ asset('css/build.css' )}}"> --}}
 
+  <script defer src="{{ asset('js/app.js') }}"></script>
+
 </head>
 
 
@@ -51,18 +53,18 @@
             </a>
           </div>
         </div>
-
+        
       </div>
       {{-- footer --}}
 
       <footer class="bg-pastelBlue flex items-center justify-evenly py-2">
-        <a href="" class="flex flex-row items-center gap-2">
-          <svg class="fill-black h-3 w-3" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+        <a href="/" class="flex flex-row items-center gap-2">
+          {{-- <svg class="fill-black h-3 w-3" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
             <g data-name="Group 132" id="Group_132">
               <path
                 d="M38,52a2,2,0,0,1-1.41-.59l-24-24a2,2,0,0,1,0-2.82l24-24a2,2,0,0,1,2.82,0,2,2,0,0,1,0,2.82L16.83,26,39.41,48.59A2,2,0,0,1,38,52Z" />
             </g>
-          </svg>
+          </svg> --}}
           <span class="underline-effect">back</span>
         </a>
         {{-- <a href="{{ route('notifications') }}"

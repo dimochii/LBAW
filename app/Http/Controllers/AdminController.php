@@ -8,6 +8,7 @@ use App\Models\Community;
 use App\Models\News;
 use App\Models\Topic;
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
@@ -48,13 +49,13 @@ class AdminController extends Controller
       ->labels($labels->toArray())
       ->datasets([
         [
-          "label" => "New Communities",
-          "backgroundColor" => "rgba(54, 162, 235, 0.2)",
-          "borderColor" => "rgba(54, 162, 235, 1)",
-          "pointBorderColor" => "rgba(54, 162, 235, 1)",
-          "pointBackgroundColor" => "rgba(54, 162, 235, 1)",
+          "label" => "Hubs",
+          "backgroundColor" => "rgba(237, 215, 90, 0.2)",
+          "borderColor" => "rgba(237, 215, 90, 1)",
+          "pointBorderColor" => "rgba(237, 215, 90, 1)",
+          "pointBackgroundColor" => "rgba(237, 215, 90, 1)",
           "pointHoverBackgroundColor" => "#fff",
-          "pointHoverBorderColor" => "rgba(54, 162, 235, 1)",
+          "pointHoverBorderColor" => "rgba(237, 215, 90, 1)",
           "data" => $counts->toArray(),
           "fill" => false,
         ]
@@ -341,9 +342,21 @@ class AdminController extends Controller
     $hubs = Community::all();
     $chartHubs = $this->newCommunitiesChart();
     
+    $startDate = now()->subWeeks(2)->toDateString(); // 2 weeks ago (e.g., "2024-11-24")
+    $endDate = now()->toDateString(); // Today (e.g., "2024-12-08")
+
+    $totalHubs = $hubs->count();
+    $newHubs = Community::whereDate('creation_date', '>', Carbon::now()->subWeeks(2))->count();
+    $comparisonHubs = Community::whereBetween('creation_date', [Carbon::now()->subWeeks(4), Carbon::now()->subWeeks(2)])->count();    
+
     return view('pages.admin_hubs', compact(
       'hubs',
       'chartHubs',
+      'startDate',
+      'endDate',
+      'totalHubs',
+      'newHubs', 
+      'comparisonHubs'
     ));
   }
 
@@ -357,6 +370,6 @@ class AdminController extends Controller
       'news',
       'topics',
       'comboPosts'
-    )); 
+    ));
   }
 }
