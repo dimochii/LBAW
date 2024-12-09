@@ -18,10 +18,12 @@ class ReportController extends Controller
             return redirect('/news')->with('error', 'Access denied.');
         }*/
 
-        $reports = Report::orderBy('report_date', 'desc')->paginate(10);
+        // Recupera todos os relatórios, ordenados por data
+        $reports = Report::orderBy('report_date', 'desc')->get();
 
         return view('pages.reports', compact('reports'));
     }
+
 
 
     public function report(Request $request, $id)

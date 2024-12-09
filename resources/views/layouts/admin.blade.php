@@ -18,12 +18,14 @@
   {{--
   <link rel="stylesheet" href="{{ asset('css/build.css' )}}"> --}}
 
+  <script defer src="{{ asset('js/app.js') }}"></script>
+
 </head>
 
 
 <body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">
   <div class="flex flex-row divide-x-2 divide-black h-screen relative">
-    <aside class="w-32 md:w-48 divide-y-2 divide-black flex flex-col sticky top-0 h-screen">
+    <aside class="w-32 md:w-48 divide-y-2 divide-black flex flex-col fixed top-0 h-screen">
       {{-- title --}}
       <div class="w-32 md:w-48 h-12 bg-pastelGreen flex items-center">
         <a href="{{ url('/') }}" class="m-auto text-[#F4F2ED] font-bold text-4xl tracking-tigh">
@@ -35,37 +37,37 @@
       <div class="text-lg mb-auto divide-y-2 divide-black">
         <div class="p-4">
           <h3 class="font-light text-gray-500 mb-2">admin</h3>
-          <a href="" class="underline-effect ml-2">overview</a>
+          <a href="{{route('admin.overview')}}" class="underline-effect ml-2">overview</a>
         </div>
         <div>
           <h3 class="px-4 font-light text-gray-500 mb-2 mt-4 ">manage</h3>
           <div class="*:*:underline-effect *:px-4 gap-2 flex flex-col text-xl *:ml-2 pb-4">
-            <a href="">
+            <a href="{{route('admin.users')}}">
               <span>users</span>
             </a>
-            <a href="">
+            <a href="{{route('admin.hubs')}}">
               <span>hubs</span>
             </a>
-            <a href="">
-              <span>news</span>
+            <a href="{{route('admin.posts')}}">
+              <span>posts</span>
             </a>
-            <a href="">
-              <span>topics</span>
+            <a href="{{route('admin.reports')}}">
+              <span>reports</span>
             </a>
           </div>
         </div>
-
+        
       </div>
       {{-- footer --}}
 
       <footer class="bg-pastelBlue flex items-center justify-evenly py-2">
-        <a href="" class="flex flex-row items-center gap-2">
-          <svg class="fill-black h-3 w-3" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+        <a href="/" class="flex flex-row items-center gap-2">
+          {{-- <svg class="fill-black h-3 w-3" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
             <g data-name="Group 132" id="Group_132">
               <path
                 d="M38,52a2,2,0,0,1-1.41-.59l-24-24a2,2,0,0,1,0-2.82l24-24a2,2,0,0,1,2.82,0,2,2,0,0,1,0,2.82L16.83,26,39.41,48.59A2,2,0,0,1,38,52Z" />
             </g>
-          </svg>
+          </svg> --}}
           <span class="underline-effect">back</span>
         </a>
         {{-- <a href="{{ route('notifications') }}"
@@ -98,9 +100,12 @@
       </footer>
     </aside>
 
-    <div class="w-full divide-y-2 divide-black">
-      @yield('content')
-    </div>
+    <!-- Content Area -->
+    <main class="ml-32 md:ml-48 w-full overflow-y-auto ">
+      <div class="divide-y-2 divide-black w-full">
+        @yield('content')
+      </div>
+    </main>
   </div>
 
 
