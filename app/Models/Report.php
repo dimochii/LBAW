@@ -15,7 +15,7 @@ class Report extends Model
     protected $casts = [
         'report_type' => ReportType::class,
     ];
-    protected $fillable = ['reason', 'report_date', 'is_open', 'report_type', 'authenticated_user_id'];
+    protected $fillable = ['reported_id', 'reason', 'report_date', 'is_open', 'report_type', 'authenticated_user_id'];
 
     public function user()
     {

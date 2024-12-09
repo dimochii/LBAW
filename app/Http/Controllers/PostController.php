@@ -20,6 +20,13 @@ use DOMXPath;
 
 class PostController extends Controller
 {
+  public function show($id)
+  {
+    $post = Post::findOrFail($id);
+    if(!$post -> news()){return  redirect()->route('topic.show', $id);}
+    else{return redirect()->route('news.show', $id);}
+  }
+
   public function getOgTags($newsURL)
   {
 
@@ -95,7 +102,7 @@ class PostController extends Controller
   public function create(Request $request)
   {
       $request->validate([
-          'title' => 'required|string|max:255',
+          'title' => 'nullable|string|max:255',
           'content' => 'required|string',
           'community_id' => 'required|exists:communities,id',
           'type' => 'required|in:news,topic',
@@ -103,8 +110,10 @@ class PostController extends Controller
           'authors.*' => 'exists:authenticated_users,id', 
       ]);
 
+    $title = "News";
+
       $post = Post::create([
-          'title' => $request->title,
+          'title' => $title,
           'content' => $request->content,
           'community_id' => $request->community_id,
       ]);
@@ -118,8 +127,7 @@ class PostController extends Controller
 
       if ($request->type === 'news') {
           $ogTags = $this->getOgTags($request->news_url);
-
-          $post->title = $ogTags['title'] ?? $post->title; 
+          $post->title = $request->title ?? $ogTags['title'] ?? "News";
           $post->save();
 
           return app(NewsController::class)->createNews($post, $request->news_url, $ogTags['image'] ?? null);

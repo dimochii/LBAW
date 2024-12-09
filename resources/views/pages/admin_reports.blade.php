@@ -49,7 +49,7 @@
             <thead class="bg-gray-100">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">ID</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reported User</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reporter</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reported Type</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reason</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Status</th>
@@ -67,7 +67,28 @@
                             <span class="break-all" data-sort>{{ '@' . $report->user->username }}</span>
                         </a>
                     </td>
-                    <td class="px-4 py-4">{{ str_replace('_', ' ', $report->report_type->value) }}</td>
+                    <td class="px-4 py-4">
+    @if($report->report_type->value === 'user_report')
+        <a href="{{ route('user.profile', $report->reported_id) }}" class="text-blue-500 hover:underline">
+            {{ str_replace('_', ' ', $report->report_type->value) }}
+        </a>
+    @elseif($report->report_type->value === 'comment_report')
+        <a href="{{  route('post.show', $report->reported_id) }}" class="text-blue-500 hover:underline">
+            {{ str_replace('_', ' ', $report->report_type->value) }}
+        </a>
+    @elseif($report->report_type->value === 'item_report')
+        <a href="{{ route('news.show', $report->reported_id) }}" class="text-blue-500 hover:underline">
+            {{ str_replace('_', ' ', $report->report_type->value) }}
+        </a>
+    @elseif($report->report_type->value === 'topic_report')
+        <a href="{{ route('topic.show', $report->reported_id) }}" class="text-blue-500 hover:underline">
+            {{ str_replace('_', ' ', $report->report_type->value) }}
+        </a>
+    @else
+        {{ str_replace('_', ' ', $report->report_type->value) }}
+    @endif
+</td>
+
                     <td class="px-4 py-4">{{ $report->reason }}</td>
                     <td class="px-4 py-4">
                         <span class="{{ $report->is_open ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100' }} text-sm border rounded-full px-3 py-1 font-bold">
@@ -165,12 +186,21 @@
   });
   
   function openResolveModal(reportId) {
-    const modal = document.getElementById(`resolveModal-${reportId}`);
-    
+    const modal = document.getElementById('resolveModal');
     if (modal) {
-        modal.classList.remove('hidden'); 
+        modal.classList.remove('hidden');
+        const form = modal.querySelector('#resolveForm');
+        form.action = `/report/${reportId}/resolve`; 
+        document.getElementById('report_id').value = reportId;
     } else {
-        console.error(`Modal for report ${reportId} not found!`);
+        console.error(`Modal not found!`);
+    }
+}
+
+function closeResolveModal() {
+    const modal = document.getElementById('resolveModal');
+    if (modal) {
+        modal.classList.add('hidden');
     }
 }
 

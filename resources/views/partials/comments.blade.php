@@ -92,7 +92,7 @@
       <div class="ml-{{$margin}}" name="replies">
         @foreach ($comment->children as $childComment)
         @include('partials.comments', ['comment' => $childComment, 'margin' => ($margin / 2) + 1])
-        @include('partials.report_box')
+        @include('partials.report_box', ['reported_id' =>$comment->post->id] )
         @endforeach
       </div>
 
@@ -105,8 +105,9 @@
 
 <script>
   function reportComment() {
-    document.getElementById('reportForm').action = '{{ route('report', $comment->user->id) }}';
+    document.getElementById('reportForm').action = '{{ route('report') }}';
     document.getElementById('report_type').value = 'comment_report';
+    document.getElementById('reported_id').value = '{{ $comment->id }}';
     document.getElementById('reportTitle').textContent = 'Report {{ $comment->user->username }}\'s comment  ';
     document.getElementById('reportModal').classList.remove('hidden');
   }

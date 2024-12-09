@@ -26,8 +26,7 @@
                        class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 
                               focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
                               transition-all duration-300"
-                       placeholder="Enter title"
-                       required>
+                       placeholder="Enter title">
             </div>
 
             <div class="relative">
