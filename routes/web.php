@@ -103,7 +103,8 @@ Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfa
 
 
 
-//articles
+//Post
+Route::get('/post/{post_id}', [PostController::class, 'show'])->name('post.show');
 
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');

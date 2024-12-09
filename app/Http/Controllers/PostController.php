@@ -20,6 +20,13 @@ use DOMXPath;
 
 class PostController extends Controller
 {
+  public function show($id)
+  {
+    $post = Post::findOrFail($id);
+    if(!$post -> news()){return  redirect()->route('topic.show', $id);}
+    else{return redirect()->route('news.show', $id);}
+  }
+
   public function getOgTags($newsURL)
   {
 

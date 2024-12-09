@@ -92,7 +92,7 @@
       <div class="ml-{{$margin}}" name="replies">
         @foreach ($comment->children as $childComment)
         @include('partials.comments', ['comment' => $childComment, 'margin' => ($margin / 2) + 1])
-        @include('partials.report_box', ['reported_id' =>$comment->id] )
+        @include('partials.report_box', ['reported_id' =>$comment->post->id] )
         @endforeach
       </div>
 

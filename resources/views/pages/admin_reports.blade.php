@@ -67,7 +67,28 @@
                             <span class="break-all" data-sort>{{ '@' . $report->user->username }}</span>
                         </a>
                     </td>
-                    <td class="px-4 py-4">{{ str_replace('_', ' ', $report->report_type->value) }}</td>
+                    <td class="px-4 py-4">
+    @if($report->report_type->value === 'user_report')
+        <a href="{{ route('user.profile', $report->reported_id) }}" class="text-blue-500 hover:underline">
+            {{ str_replace('_', ' ', $report->report_type->value) }}
+        </a>
+    @elseif($report->report_type->value === 'comment_report')
+        <a href="{{  route('post.show', $report->reported_id) }}" class="text-blue-500 hover:underline">
+            {{ str_replace('_', ' ', $report->report_type->value) }}
+        </a>
+    @elseif($report->report_type->value === 'item_report')
+        <a href="{{ route('news.show', $report->reported_id) }}" class="text-blue-500 hover:underline">
+            {{ str_replace('_', ' ', $report->report_type->value) }}
+        </a>
+    @elseif($report->report_type->value === 'topic_report')
+        <a href="{{ route('topic.show', $report->reported_id) }}" class="text-blue-500 hover:underline">
+            {{ str_replace('_', ' ', $report->report_type->value) }}
+        </a>
+    @else
+        {{ str_replace('_', ' ', $report->report_type->value) }}
+    @endif
+</td>
+
                     <td class="px-4 py-4">{{ $report->reason }}</td>
                     <td class="px-4 py-4">
                         <span class="{{ $report->is_open ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100' }} text-sm border rounded-full px-3 py-1 font-bold">
