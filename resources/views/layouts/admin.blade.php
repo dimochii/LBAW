@@ -51,6 +51,9 @@
             <a href="{{route('admin.posts')}}">
               <span>posts</span>
             </a>
+            <a href="{{route('admin.reports')}}">
+              <span>reports</span>
+            </a>
           </div>
         </div>
         

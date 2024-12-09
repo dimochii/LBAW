@@ -147,6 +147,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/admin/hubs', [AdminController::class, 'hubs'])->name('admin.hubs');
     Route::get('/admin/posts', [AdminController::class, 'posts'])->name('admin.posts');
+    Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
     Route::get('/moderator', [ModeratorController::class, 'show'])->name('user.moderator');
     Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
@@ -183,10 +184,10 @@ Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middlew
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
-Route::get('/reports/{id}', [ReportController::class, 'show'])->middleware('auth');
+Route::get('reports/{report}', [ReportController::class, 'show'])->name('reports.show');
 Route::post('/report/{id}', [ReportController::class, 'report'])->middleware('auth')->name('report');
 Route::post('/reports/multiple', [ReportController::class, 'multipleReports'])->middleware('auth')->name('reports.multiple');
-Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
+Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth')->name('reports.resolve');
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
 
 //Followers

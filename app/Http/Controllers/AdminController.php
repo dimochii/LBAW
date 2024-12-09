@@ -7,6 +7,7 @@ use App\Models\AuthenticatedUser;
 use App\Models\Community;
 use App\Models\News;
 use App\Models\Topic;
+use App\Models\Report;
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -449,25 +450,19 @@ class AdminController extends Controller
       $endDate = now()->toFormattedDateString();
 
       // Fetch all reports
-      $reports = DB::table('reports')->get();
+      $reports = Report::all();
 
       // Total reports
       $totalReports = $reports->count();
 
       // New reports in the last 14 days
-      $newReports = DB::table('reports')
-          ->whereBetween('creation_date', [$date_span, now()])
-          ->count();
+      $newReports = Report::whereDate('report_date', '>', $date_span)->count();
 
-      // Resolved reports
-      $resolvedReports = DB::table('reports')
-          ->where('status', 'resolved')
-          ->count();
+      // Resolved reports (using 'status' to indicate resolved reports)
+      $resolvedReports = Report::where('is_open', false)->count(); // Assuming resolved reports are closed (is_open = false)
 
       // Pending reports
-      $pendingReports = DB::table('reports')
-          ->where('status', 'pending')
-          ->count();
+      $pendingReports = Report::where('is_open', true)->count(); // Pending reports are those still open
 
       // Generate charts
       $chartReports = $this->newReportsChart();
@@ -486,6 +481,8 @@ class AdminController extends Controller
       ));
   }
 
+
+
   private function newReportsChart()
   {
       // Define the date range for the past 14 days
@@ -493,9 +490,8 @@ class AdminController extends Controller
       $endDate = now()->endOfDay();
 
       // Fetch the data for new reports
-      $data = DB::table('reports')
-          ->select(DB::raw('DATE(creation_date) as report_date'), DB::raw('COUNT(*) as new_reports'))
-          ->whereBetween('creation_date', [$startDate, $endDate])
+      $data = Report::select(DB::raw('DATE(report_date) as report_date'), DB::raw('COUNT(*) as new_reports'))
+          ->whereBetween('report_date', [$startDate, $endDate])
           ->groupBy('report_date')
           ->orderBy('report_date', 'asc')
           ->get();
@@ -552,14 +548,17 @@ class AdminController extends Controller
 
   private function reportsStatusChart()
   {
-      // Fetch data for report statuses
-      $statuses = DB::table('reports')
-          ->select('status', DB::raw('COUNT(*) as count'))
-          ->groupBy('status')
-          ->pluck('count', 'status');
+      // Fetch data for report statuses based on the 'is_open' field
+      $statuses = Report::select('is_open', DB::raw('COUNT(*) as count'))
+          ->groupBy('is_open')
+          ->pluck('count', 'is_open');
 
-      $labels = $statuses->keys()->toArray();
-      $counts = $statuses->values()->toArray();
+      // Map the 'is_open' values to the status labels
+      $labels = ['Pending', 'Resolved'];
+      $counts = [
+          $statuses->get(true, 0),  // Pending reports (open)
+          $statuses->get(false, 0), // Resolved reports (closed)
+      ];
 
       // Build the chart
       $chart = Chartjs::build()
@@ -570,8 +569,8 @@ class AdminController extends Controller
           ->datasets([
               [
                   "label" => "Report Statuses",
-                  "backgroundColor" => ["rgba(75, 192, 192, 0.2)", "rgba(255, 99, 132, 0.2)", "rgba(255, 205, 86, 0.2)"],
-                  "borderColor" => ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)", "rgba(255, 205, 86, 1)"],
+                  "backgroundColor" => ["rgba(75, 192, 192, 0.2)", "rgba(255, 99, 132, 0.2)"],
+                  "borderColor" => ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)"],
                   "data" => $counts,
               ]
           ])
@@ -579,12 +578,27 @@ class AdminController extends Controller
               "plugins" => [
                   "title" => [
                       "display" => true,
-                      "text" => "Report Status Distribution"
+                      "text" => "Report Statuses"
+                  ]
+              ],
+              "scales" => [
+                  "y" => [
+                      "beginAtZero" => true,
+                      "ticks" => [
+                          "stepSize" => 1 // Ensures integer-only y-axis
+                      ]
+                  ],
+                  "x" => [
+                      "type" => "time",
+                      "time" => [
+                          "unit" => "day"
+                      ]
                   ]
               ]
           ]);
 
       return $chart;
   }
+
 
 }
