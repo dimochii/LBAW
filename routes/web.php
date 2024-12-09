@@ -188,7 +188,7 @@ Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])-
 
 Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
 Route::post('/report', [ReportController::class, 'report'])->middleware('auth')->name('report');
-Route::put('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
+Route::patch('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
 
 //Followers

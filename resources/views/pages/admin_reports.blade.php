@@ -49,7 +49,7 @@
             <thead class="bg-gray-100">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">ID</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reported User</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reporter</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reported Type</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reason</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Status</th>
@@ -186,12 +186,21 @@
   });
   
   function openResolveModal(reportId) {
-    const modal = document.getElementById(`resolveModal-${reportId}`);
-    
+    const modal = document.getElementById('resolveModal');
     if (modal) {
-        modal.classList.remove('hidden'); 
+        modal.classList.remove('hidden');
+        const form = modal.querySelector('#resolveForm');
+        form.action = `/report/${reportId}/resolve`; 
+        document.getElementById('report_id').value = reportId;
     } else {
-        console.error(`Modal for report ${reportId} not found!`);
+        console.error(`Modal not found!`);
+    }
+}
+
+function closeResolveModal() {
+    const modal = document.getElementById('resolveModal');
+    if (modal) {
+        modal.classList.add('hidden');
     }
 }
 

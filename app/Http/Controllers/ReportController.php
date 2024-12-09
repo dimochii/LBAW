@@ -72,10 +72,7 @@ class ReportController extends Controller
 
         $report->update(['is_open' => false]);
 
-        return response()->json([
-            'message' => 'Report resolved successfully',
-            'report' => $report,
-        ], 200);
+        return redirect()->back()->with('success', 'Report resolved successfully' );
     }
 
 

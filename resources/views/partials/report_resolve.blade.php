@@ -3,7 +3,7 @@
         <form id="resolveForm" method="POST" action="">
             @csrf
             @method('PATCH') 
-            <h2 id="resolveTitle" class="text-xl font-semibold mb-4">Are you sure you want to resolve this report?</h2>
+            <h2 class="text-xl font-semibold mb-4">Are you sure you want to resolve this report?</h2>
             <p class="text-sm text-gray-600 mb-4">Once resolved, the report will be closed and cannot be reopened.</p>
 
             <input type="hidden" id="report_id" name="report_id">
@@ -12,7 +12,7 @@
                 <button 
                     type="button" 
                     class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-                    onclick="document.getElementById('resolveModal').classList.add('hidden')">
+                    onclick="closeResolveModal()">
                     Cancel
                 </button>
                 <button 
@@ -24,13 +24,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    function openResolveModal(reportId) {
-        document.getElementById('resolveModal-' + reportId).classList.remove('hidden');
-    }
-
-    function closeResolveModal(reportId) {
-        document.getElementById('resolveModal-' + reportId).classList.add('hidden');
-    }
-</script>
