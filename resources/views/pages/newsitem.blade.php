@@ -36,13 +36,20 @@
             </svg>
           </label>
           @if (Auth::check() && Auth::user()->can('isAuthor', $newsItem->post))
-          @include('partials.options_dropdown', [
-          "options" => [
-          'edit post' => route('news.edit',['post_id' => ($newsItem->post_id)]),
-          // 'delete post' => route() -> incluir rota para delete
-          ]
-          ])
-          @endif
+            @include('partials.options_dropdown', [
+                "options" => [
+                    'edit post' => route('news.edit', ['post_id' => $newsItem->post_id]),
+                    // 'delete post' => route() -> incluir rota para delete
+                ]
+            ])
+        @else
+            @include('partials.options_dropdown', [
+                "options" => [
+                    'report post' => "javascript:reportNews()"
+                ]
+            ])
+            @include('partials.report_box',['reported_id' =>$newsItem->post_id])
+        @endif
         </div>
 
       </div>
@@ -50,11 +57,7 @@
         <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
-      <!-- Juntei aqui -->
-    <button onclick=reportNews()>
-      Report
-    </button>
-      @include('partials.report_box',  ['reported_id' => $newsItem->post_id])
+      
        <!--report first --> 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         

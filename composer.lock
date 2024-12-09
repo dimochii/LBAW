@@ -1145,12 +1145,12 @@
             "type": "library",
             "extra": {
                 "laravel": {
-                    "providers": [
-                        "IcehouseVentures\\LaravelChartjs\\Providers\\ChartjsServiceProvider"
-                    ],
                     "aliases": {
                         "Chartjs": "IcehouseVentures\\LaravelChartjs\\Facades\\Chartjs"
-                    }
+                    },
+                    "providers": [
+                        "IcehouseVentures\\LaravelChartjs\\Providers\\ChartjsServiceProvider"
+                    ]
                 }
             },
             "autoload": {

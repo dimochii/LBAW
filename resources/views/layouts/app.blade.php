@@ -18,7 +18,6 @@
 
   {{--
   <link rel="stylesheet" href="{{ asset('css/build.css' )}}"> --}}
-
 </head>
 
 <body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">
@@ -165,7 +164,7 @@
               </div>
             </a>
             @if(Auth::user()->is_admin)
-                <a href="{{ route('user.admin', Auth::user()->id) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                <a href="{{ route('admin.overview', Auth::user()->id) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                   <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"  />
                   </svg>
@@ -228,10 +227,6 @@
               <a href="{{ url('/recent') }}" class="">
                 <span class="">recent</span>
               </a>
-              <a href="{{ url('/hubs/create') }}"
-                class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
-                <span class="">+ Create Hub</span>
-              </a>
             </div>
           </div>
           
@@ -257,6 +252,10 @@
 
           <div class="py-4">
               <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
+              <a href="{{ url('/hubs/create') }}"
+                class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
+                <span class="">+ create hub</span>
+              </a>
               <div class="space-y-1 *:transition-colors *:pl-6">
                   @foreach ($userHubs as $hubs)
                   <a href="/hub/{{ $hubs['id'] }}" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">

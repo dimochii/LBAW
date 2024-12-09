@@ -12,10 +12,6 @@
         <span class="text-2xl font-light underline-effect">h/{{ $topicItem->post->community->name ?? 'Unknown Community' }}</span>
       </a>
      
-     <button onclick=reportTopic()>
-        Report
-    </button>
-      @include('partials.report_box', ['reported_id' =>$topicItem->post->id] )
         {{--
         <!-- Edit Button (only if the current authenticated user is an author) -->
         @auth
@@ -40,6 +36,13 @@
           @include('partials.options_dropdown', [
           "options" => ['edit post' => route('topics.edit',['post_id' => ($topicItem->post_id)])]
           ])
+          @else
+            @include('partials.options_dropdown', [
+                "options" => [
+                    'report post' => "javascript:reportTopic()"
+                ]
+            ])
+            @include('partials.report_box', ['reported_id' =>$topicItem->post_id])
           @endif
         </div>
 
@@ -537,7 +540,7 @@ function reportTopic() {
         });
       document.getElementById('reportForm').action = '{{ route('report') }}';
       document.getElementById('report_type').value = 'topic_report';
-      document.getElementById('reported_id').value = '{{ $topicItem->post->id }}';
+      document.getElementById('reported_id').value = '{{ $topicItem->post_id }}';
       document.getElementById('reportTitle').textContent = 'Report all authors';
       document.getElementById('reportModal').classList.remove('hidden');
       
