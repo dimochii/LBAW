@@ -31,9 +31,14 @@
     <x-chartjs-component :chart="$postsPDay" />
   </div>
 </div>
-~<div class="p-4 ">
+<div class="p-4 ">
   <div class="w-[50%] mx-auto">
     <x-chartjs-component :chart="$comboPosts" />
+  </div>
+</div>
+<div class="p-4 ">
+  <div class="w-[50%] mx-auto">
+    <x-chartjs-component :chart="$chartReports" />
   </div>
 </div>
 

@@ -312,6 +312,7 @@ class AdminController extends Controller
     $topics = Topic::all();
     $chartHubs = $this->newCommunitiesChart();
     $chartUsers = $this->newUsersChart();
+    $chartReports = $this->newReportsChart();
     $postsPDay = $this->postsPerDayChart();
     $comboPosts = $this->postsComboChart();
 
@@ -322,6 +323,7 @@ class AdminController extends Controller
       'topics',
       'chartHubs',
       'chartUsers',
+      'chartReports',
       'postsPDay',
       'comboPosts'
     ));

@@ -227,10 +227,6 @@
               <a href="{{ url('/recent') }}" class="">
                 <span class="">recent</span>
               </a>
-              <a href="{{ url('/hubs/create') }}"
-                class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
-                <span class="">+ Create Hub</span>
-              </a>
             </div>
           </div>
           
@@ -256,6 +252,10 @@
 
           <div class="py-4">
               <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
+              <a href="{{ url('/hubs/create') }}"
+                class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
+                <span class="">+ create hub</span>
+              </a>
               <div class="space-y-1 *:transition-colors *:pl-6">
                   @foreach ($userHubs as $hubs)
                   <a href="/hub/{{ $hubs['id'] }}" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">

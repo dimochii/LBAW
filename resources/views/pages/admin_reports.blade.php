@@ -76,13 +76,12 @@
                     </td>
                     <td class="px-4 py-4">
                         @if($report->is_open)
-                            <form action="{{ route('reports.resolve', $report->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" class="px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white font-bold">
-                                    resolve
-                                </button>
-                            </form>
+                            <button 
+                                class="px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white font-bold"
+                                onclick="openResolveModal({{ $report->id }})">
+                                resolve
+                            </button>
+                            @include('partials.report_resolve', ['report' => $report])
                         @endif
                     </td>
                 </tr>
@@ -163,4 +162,16 @@
 
     searchInput.addEventListener('input', () => filterTable(searchInput.value));
   });
+  document.addEventListener('DOMContentLoaded', function() {
+    // Now the DOM is fully loaded, you can safely access the elements.
+    const resolveModal = document.getElementById('resolveModal');
+    
+    if (resolveModal) {
+        resolveModal.classList.remove('hidden');
+    } else {
+        console.error("Modal not found!");
+    }
+});
+
+
 </script>
