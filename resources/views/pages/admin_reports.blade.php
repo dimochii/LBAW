@@ -76,11 +76,12 @@
                     </td>
                     <td class="px-4 py-4">
                         @if($report->is_open)
-                            <button 
-                                class="px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white font-bold"
-                                onclick="openResolveModal({{ $report->id }})">
-                                resolve
-                            </button>
+                        <button 
+                            class="px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white font-bold"
+                            onclick="openResolveModal({{ $report->id }})">
+                            resolve
+                        </button>
+
                             @include('partials.report_resolve', ['report' => $report])
                         @endif
                     </td>
@@ -162,16 +163,16 @@
 
     searchInput.addEventListener('input', () => filterTable(searchInput.value));
   });
-  document.addEventListener('DOMContentLoaded', function() {
-    // Now the DOM is fully loaded, you can safely access the elements.
-    const resolveModal = document.getElementById('resolveModal');
+  
+  function openResolveModal(reportId) {
+    const modal = document.getElementById(`resolveModal-${reportId}`);
     
-    if (resolveModal) {
-        resolveModal.classList.remove('hidden');
+    if (modal) {
+        modal.classList.remove('hidden'); 
     } else {
-        console.error("Modal not found!");
+        console.error(`Modal for report ${reportId} not found!`);
     }
-});
+}
 
 
 </script>

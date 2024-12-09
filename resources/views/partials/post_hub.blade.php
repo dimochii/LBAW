@@ -27,9 +27,21 @@ news = Bool
               d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
           </svg>
         </label>
-        @include('partials.options_dropdown', [
-        'options' => ['adeus' => '#'],
-        ])
+        @if (Auth::check() && Auth::user()->can('isAuthor', $newsItem->post))
+            @include('partials.options_dropdown', [
+                "options" => [
+                    'edit post' => route('news.edit', ['post_id' => $newsItem->post_id]),
+                    // 'delete post' => route() -> incluir rota para delete
+                ]
+            ])
+        @else
+            @include('partials.options_dropdown', [
+                "options" => [
+                    'report post' => "javascript:reportNews()"
+                ]
+            ])
+            @include('partials.report_box')
+        @endif
       </div>
 
 

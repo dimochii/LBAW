@@ -36,13 +36,20 @@
             </svg>
           </label>
           @if (Auth::check() && Auth::user()->can('isAuthor', $newsItem->post))
-          @include('partials.options_dropdown', [
-          "options" => [
-          'edit post' => route('news.edit',['post_id' => ($newsItem->post_id)]),
-          // 'delete post' => route() -> incluir rota para delete
-          ]
-          ])
-          @endif
+            @include('partials.options_dropdown', [
+                "options" => [
+                    'edit post' => route('news.edit', ['post_id' => $newsItem->post_id]),
+                    // 'delete post' => route() -> incluir rota para delete
+                ]
+            ])
+        @else
+            @include('partials.options_dropdown', [
+                "options" => [
+                    'report post' => "javascript:reportNews()"
+                ]
+            ])
+            @include('partials.report_box')
+        @endif
         </div>
 
       </div>
@@ -51,10 +58,6 @@
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
       
-    <button onclick=reportNews()>
-      Report
-    </button>
-      @include('partials.report_box')
        <!--report first --> 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         

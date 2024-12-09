@@ -12,9 +12,6 @@
         <span class="text-2xl font-light underline-effect">h/{{ $topicItem->post->community->name ?? 'Unknown Community' }}</span>
       </a>
      
-     <button onclick=reportTopic()>
-        Report
-    </button>
       @include('partials.report_box')
         {{--
         <!-- Edit Button (only if the current authenticated user is an author) -->
@@ -40,6 +37,13 @@
           @include('partials.options_dropdown', [
           "options" => ['edit post' => route('topics.edit',['post_id' => ($topicItem->post_id)])]
           ])
+          @else
+            @include('partials.options_dropdown', [
+                "options" => [
+                    'report post' => "javascript:reportTopic()"
+                ]
+            ])
+            @include('partials.report_box')
           @endif
         </div>
 
