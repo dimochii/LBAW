@@ -39,11 +39,13 @@
         </span>
 
         <!-- Dropdown for Privacy Selection -->
+         @if (Auth::check())
          @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || Auth::user()->is_admin)
         <select name="privacy" id="privacy-dropdown" onchange="this.form.submit()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium border rounded-full {{ $community->privacy === 'private' ? 'border-red-300' : 'border-green-300' }} focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500">
             <option value="public" {{ $community->privacy === 'public' ? 'selected' : '' }}>public</option>
             <option value="private" {{ $community->privacy === 'private' ? 'selected' : '' }}>private</option>
         </select>
+        @endif
         @endif
     </form>
 </div>
