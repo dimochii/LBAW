@@ -24,70 +24,34 @@ class ReportController extends Controller
     }
 
 
-    public function report(Request $request, $id)
+    public function report(Request $request)
     {
         if (!Auth::check()) {
             return redirect('/news')->with('error', 'You must be logged in to submit a report.');
         }
 
-        if (Auth::user()->id == $id) {
-            return redirect()->route('user.profile', ['user' => $id])
-                ->with('failure', 'You can\'t report yourself.');
-        }
         
         $validatedData = $request->validate([
+            'reported_id' => 'required|int',
             'reason' => 'required|string|max:1000',
             'report_type' => 'required|in:user_report,item_report,comment_report,topic_report',
         ]);
+        if ($request->report_type =='user_report' && (Auth::user()->id == $request->reported_id)){return redirect()->route('user.profile', ['user' => $id])
+            ->with('failure', 'You can\'t report yourself.');}
 
         
         $report = Report::create([
+            'reported_id' => $validatedData['reported_id'],
             'reason' => $validatedData['reason'],
             'report_date' => now(),
             'is_open' => true,
             'report_type' => $validatedData['report_type'],
-            'authenticated_user_id' => $id,
+            'authenticated_user_id' => Auth::user()->id,
         ]);
 
-        
-        return redirect()->route('user.profile', ['user' => $id])
-                ->with('Sucess', 'You\'ve succesfully reported this user.');
+        return redirect()->back()->with('success', 'Reported successfully' );
     }
 
-    public function multipleReports(Request $request) {
-
-    if (!Auth::check()) {
-        return redirect('/news')->with('error', 'You must be logged in to submit a report.');
-    }
-
-    $userIds = $request->input('reported_user_id'); 
-    if (!is_array($userIds)) {
-        $userIds = [$userIds]; 
-    }
-    
-    if (in_array(Auth::user()->id, $userIds)) {
-        return redirect()->route('user.profile', ['user' => Auth::user()->id])
-            ->with('failure', 'You can\'t report yourself.');
-    }
-
-    $validatedData = $request->validate([
-        'reason' => 'required|string|max:1000',
-        'report_type' => 'required|in:user_report,item_report,comment_report,topic_report',        
-    ]);
-
-    
-    foreach ($userIds as $userId) {
-        Report::create([
-            'reason' => $validatedData['reason'],
-            'report_date' => now(),
-            'is_open' => true,
-            'report_type' => $validatedData['report_type'],
-            'authenticated_user_id' => $userId,
-        ]);
-    }
-
-    return redirect('/news')->with('sucess', 'authors reported.');
-    }
 
 
     public function resolve($id)

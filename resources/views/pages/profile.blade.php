@@ -60,7 +60,7 @@
     <button onclick=reportProfile()>
     Report 
     </button>
-    @include('partials.report_box')
+    @include('partials.report_box',['reported_id' =>$user->id] )
 
 
       {{-- Followers and Following on the Same Line --}}
@@ -228,8 +228,9 @@
 
 <script>
   function reportProfile() {
-    document.getElementById('reportForm').action = '{{ route('report', $user->id) }}';
+    document.getElementById('reportForm').action = '{{ route('report') }}';
       document.getElementById('report_type').value = 'user_report';
+      document.getElementById('reported_id').value = '{{ $user->id }}';
       document.getElementById('reportTitle').textContent = 'Report {{ $user->username }}\'s profile  ';
       document.getElementById('reportModal').classList.remove('hidden');
   }

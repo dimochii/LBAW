@@ -15,7 +15,7 @@
      <button onclick=reportTopic()>
         Report
     </button>
-      @include('partials.report_box')
+      @include('partials.report_box', ['reported_id' =>$topicItem->post->id] )
         {{--
         <!-- Edit Button (only if the current authenticated user is an author) -->
         @auth
@@ -535,8 +535,9 @@ function reportTopic() {
         input.value = authorId; 
         form.appendChild(input); 
         });
-      document.getElementById('reportForm').action = '{{ route('reports.multiple') }}';
+      document.getElementById('reportForm').action = '{{ route('report') }}';
       document.getElementById('report_type').value = 'topic_report';
+      document.getElementById('reported_id').value = '{{ $topicItem->post->id }}';
       document.getElementById('reportTitle').textContent = 'Report all authors';
       document.getElementById('reportModal').classList.remove('hidden');
       
