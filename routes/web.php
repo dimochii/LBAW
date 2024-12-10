@@ -103,7 +103,8 @@ Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfa
 
 
 
-//articles
+//Post
+Route::get('/post/{post_id}', [PostController::class, 'show'])->name('post.show');
 
 //News
 Route::get('/news', [NewsController::class, 'list'])->name('news');
@@ -192,9 +193,8 @@ Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])-
 
 
 Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
-Route::post('/report/{id}', [ReportController::class, 'report'])->middleware('auth')->name('report');
-Route::post('/reports/multiple', [ReportController::class, 'multipleReports'])->middleware('auth')->name('reports.multiple');
-Route::patch('/reports/{report}/resolve', [ReportController::class, 'resolve'])->name('reports.resolve');
+Route::post('/report', [ReportController::class, 'report'])->middleware('auth')->name('report');
+Route::patch('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('auth');
 Route::get('/side', [SideController::class, 'show'])->middleware('auth')->name('side.show');
 
 //Followers

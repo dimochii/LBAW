@@ -16,6 +16,7 @@
 
             {{-- Hidden Inputs for Report Details --}}
             <input type="hidden" id="report_type" name="report_type">
+            <input type="hidden" id="reported_id" name="reported_id" value="{{ $reported_id }}">
 
             {{-- Submit and Cancel Buttons --}}
             <div class="mt-4 flex justify-end gap-2">

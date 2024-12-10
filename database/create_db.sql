@@ -165,6 +165,7 @@ CREATE TABLE suspensions (
 
 CREATE TABLE reports (
     id SERIAL PRIMARY KEY,
+    reported_id INT NOT NULL,
     reason TEXT NOT NULL,
     report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (report_date <= CURRENT_TIMESTAMP),
     is_open BOOLEAN DEFAULT TRUE,
@@ -1037,34 +1038,34 @@ INSERT INTO notifications (is_read, authenticated_user_id) VALUES(FALSE, 1),
 (FALSE, 49),
 (TRUE, 50);
 
-INSERT INTO reports (reason, report_date, is_open, report_type, authenticated_user_id) VALUES
+INSERT INTO reports (reported_id, reason, report_date, is_open, report_type, authenticated_user_id) VALUES
 -- User Reports
-('User is spamming the community with irrelevant content', '2024-01-15 10:30:00', true, 'user_report', 1),
-('Harassment and inappropriate messages', '2024-01-16 14:20:00', false, 'user_report', 2),
-('Multiple accounts used for vote manipulation', '2024-01-17 09:15:00', true, 'user_report', 3),
-('Impersonating another user', '2024-01-18 16:45:00', true, 'user_report', 4),
-('Spreading misinformation', '2024-01-19 11:25:00', false, 'user_report', 5),
+(2,'User is spamming the community with irrelevant content', '2024-01-15 10:30:00', true, 'user_report', 1),
+(3,'Harassment and inappropriate messages', '2024-01-16 14:20:00', false, 'user_report', 2),
+(4,'Multiple accounts used for vote manipulation', '2024-01-17 09:15:00', true, 'user_report', 3),
+(5,'Impersonating another user', '2024-01-18 16:45:00', true, 'user_report', 4),
+(6,'Spreading misinformation', '2024-01-19 11:25:00', false, 'user_report', 5),
 
 -- Comment Reports
-('Hate speech in comment', '2024-01-20 13:10:00', true, 'comment_report', 6),
-('Spam comment with malicious links', '2024-01-21 15:30:00', false, 'comment_report', 7),
-('Harassment in comment section', '2024-01-22 17:45:00', true, 'comment_report', 8),
-('Off-topic and inflammatory comments', '2024-01-23 09:20:00', false, 'comment_report', 9),
-('Personal information shared in comment', '2024-01-24 14:15:00', true, 'comment_report', 10),
+(2,'Hate speech in comment', '2024-01-20 13:10:00', true, 'comment_report', 6),
+(3,'Spam comment with malicious links', '2024-01-21 15:30:00', false, 'comment_report', 7),
+(4,'Harassment in comment section', '2024-01-22 17:45:00', true, 'comment_report', 8),
+(5,'Off-topic and inflammatory comments', '2024-01-23 09:20:00', false, 'comment_report', 9),
+(6,'Personal information shared in comment', '2024-01-24 14:15:00', true, 'comment_report', 10),
 
 -- Item (Post) Reports
-('Copyright violation in post', '2024-01-25 10:45:00', true, 'item_report', 11),
-('Misleading news article', '2024-01-26 16:30:00', false, 'item_report', 12),
-('Inappropriate content in post', '2024-01-27 11:20:00', true, 'item_report', 13),
-('Duplicate post spam', '2024-01-28 13:40:00', false, 'item_report', 14),
-('False information in news post', '2024-01-29 15:55:00', true, 'item_report', 15),
+(2,'Copyright violation in post', '2024-01-25 10:45:00', true, 'item_report', 11),
+(3,'Misleading news article', '2024-01-26 16:30:00', false, 'item_report', 12),
+(4,'Inappropriate content in post', '2024-01-27 11:20:00', true, 'item_report', 13),
+(5,'Duplicate post spam', '2024-01-28 13:40:00', false, 'item_report', 14),
+(6,'False information in news post', '2024-01-29 15:55:00', true, 'item_report', 15),
 
 -- Topic Reports
-('Topic violates community guidelines', '2024-01-30 12:25:00', true, 'topic_report', 16),
-('Inappropriate topic title', '2024-02-01 14:35:00', false, 'topic_report', 17),
-('Topic contains sensitive material', '2024-02-02 16:50:00', true, 'topic_report', 18),
-('Topic promotes harmful behavior', '2024-02-03 09:30:00', false, 'topic_report', 19),
-('Topic contains personal attacks', '2024-02-04 11:45:00', true, 'topic_report', 20);
+(2,'Topic violates community guidelines', '2024-01-30 12:25:00', true, 'topic_report', 16),
+(3,'Inappropriate topic title', '2024-02-01 14:35:00', false, 'topic_report', 17),
+(4,'Topic contains sensitive material', '2024-02-02 16:50:00', true, 'topic_report', 18),
+(5,'Topic promotes harmful behavior', '2024-02-03 09:30:00', false, 'topic_report', 19),
+(6,'Topic contains personal attacks', '2024-02-04 11:45:00', true, 'topic_report', 20);
 
 INSERT INTO user_followers (follower_id, followed_id) VALUES 
 (2, 3), (3, 4), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (12, 13), (14, 15), (16, 17), (18, 19), (19, 20), (21, 22), (23, 24), (25, 26), (27, 28), (29, 30), (31, 32), (33, 34), (35, 36), (37, 38), (39, 40), (41, 42), (43, 44), (45, 46), (47, 48), (49, 50);

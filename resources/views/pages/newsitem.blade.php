@@ -48,7 +48,7 @@
                     'report post' => "javascript:reportNews()"
                 ]
             ])
-            @include('partials.report_box')
+            @include('partials.report_box',['reported_id' =>$newsItem->post_id])
         @endif
         </div>
 
@@ -586,8 +586,9 @@
         input.value = authorId; 
         form.appendChild(input); 
         });
-      document.getElementById('reportForm').action = '{{ route('reports.multiple') }}';
+      document.getElementById('reportForm').action = '{{ route('report')  }}';
       document.getElementById('report_type').value = 'item_report';
+      document.getElementById('reported_id').value = '{{ $newsItem->post_id }}';
       document.getElementById('reportTitle').textContent = 'Report all authors';
       document.getElementById('reportModal').classList.remove('hidden');
   }
