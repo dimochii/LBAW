@@ -40,7 +40,8 @@
       </div>
       <div class="px-4 py-4 bg-pastelGreen  flex flex-col">
         <div class="text-2xl text-[#F4F2ED]/[.8] mb-auto">news/topics ratio</div>
-        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED] mb-auto"> {{ round($newsCount / $topicsCount, 2) }} </div>
+        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED] mb-auto"> {{ round($newsCount / $topicsCount, 2)
+          }} </div>
       </div>
 
     </div>
@@ -113,17 +114,17 @@
     <tbody class="divide-y divide-gray-200">
       @foreach($data as $item)
       <tr class="hover:bg-gray-50 transition-colors">
-        <td class="px-4 py-4 whitespace-nowrap" data-sort>{{ $item->post_id }}</td>
+        <td class="px-4 py-4 whitespace-nowrap">{{ $item->post_id }}</td>
         <td class="px-4 py-4">
           <a class="prose" href="{{ $item->url }}">{{ $item->news_url }}
           </a>
         </td>
         <td
           class="px-4 py-4 break-all max-w-[16rem] overflow-hidden whitespace-nowrap text-ellipsis hover:overflow-auto hover:whitespace-normal hover:text-wrap hover:max-w-prose transition-all">
-          <a class="flex items-center" href="{{ route('news.show',['post_id' => $item->post->id]) }}" data-sort>
+          <a class="flex items-center" href="{{ route('news.show',['post_id' => $item->post->id]) }}">
             {{ $item->post->title }}
         </td>
-        <td data-sort
+        <td
           class="px-4 py-4 break-all max-w-[24rem] overflow-hidden whitespace-nowrap text-ellipsis hover:overflow-auto hover:whitespace-normal hover:text-wrap hover:max-w-prose transition-all">
           {{ $item->post->content }}
         </td>
@@ -151,18 +152,21 @@
     class="w-full bg-white border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
     <thead class="bg-gray-100">
       <tr>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
+        <th
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
           data-type="number">ID</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer" 
+        <th
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
           data-type="string">Title</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
+        <th
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
           data-type="string">Content</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           upvotes/downvotes</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           threads</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200"
-          >status</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
+          status</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           delete</th>
       </tr>
@@ -170,14 +174,14 @@
     <tbody class="divide-y divide-gray-200">
       @foreach($data as $topic)
       <tr class="hover:bg-gray-50 transition-colors">
-        <td class="px-4 py-4 whitespace-nowrap" data-sort>{{ $topic->post_id }}</td>
+        <td class="px-4 py-4 whitespace-nowrap">{{ $topic->post_id }}</td>
 
         <td
           class="px-4 py-4 break-all max-w-[16rem] overflow-hidden whitespace-nowrap text-ellipsis hover:overflow-auto hover:whitespace-normal hover:text-wrap hover:max-w-prose transition-all">
-          <a class="flex items-center" href="{{ route('topic.show',['post_id' => $topic->post->id]) }}" data-sort>
+          <a class="flex items-center" href="{{ route('topic.show',['post_id' => $topic->post->id]) }}">
             {{ $topic->post->title }}
         </td>
-        <td data-sort
+        <td
           class="px-4 py-4 break-all max-w-[24rem] overflow-hidden whitespace-nowrap text-ellipsis hover:overflow-auto hover:whitespace-normal hover:text-wrap hover:max-w-prose transition-all">
           {{ $topic->post->content }}
         </td>
@@ -188,14 +192,46 @@
         <td class="px-4 py-4">
           {{ $topic->post->comments->count() }}
         </td>
-        <td class="px-4 py-4">
+        <td class="px-4 py-4 relative">
           {{-- <span
             class="{{ $topic->status ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100' }} text-sm border rounded-full px-3 py-1 font-bold">
             {{ $topic->status ? 'Approved' : 'Rejected' }}
           </span> --}}
-          <span
-            class=" bg-orange-200 text-orange-500 text-sm border rounded-full px-3 py-1 font-bold whitespace-nowrap" >Waiting
-            Approval</span>
+          <input type="checkbox" id="status-{{$topic->post->id}}" class="hidden peer">
+          <label for="status-{{$topic->post->id}}">
+            @if ($topic->status->value === 'pending')
+            <span
+              class="cursor-pointer bg-orange-200 text-orange-500 text-sm border rounded-full px-3 py-1 font-bold whitespace-nowrap">
+              Waiting Approval
+            </span>
+            @elseif ($topic->status->value === 'accepted')
+            <span class="text-green-600 bg-green-100 text-sm border rounded-full px-3 py-1 font-bold">
+              Approved
+            </span>
+            @elseif ($topic->status->value === 'rejected')
+            <span class="text-red-600 bg-red-100 text-sm border rounded-full px-3 py-1 font-bold">
+              Rejected
+            </span>
+            @else
+            <span class="text-gray-600 bg-gray-100 text-sm border rounded-full px-3 py-1 font-bold">
+              Unknown Status
+            </span>
+            @endif
+          </label>
+          @if ($topic->status->value === 'pending')
+          <div
+            class="z-50 transition-all absolute left-5 top-12 invisible peer-checked:visible opacity-0 peer-checked:opacity-100 bg-[#F4F2ED] text-[#3C3D37] border border-[#3C3D37] rounded shadow-lg min-w-28">
+            <div class="ml-2 py-1  font-light text-gray-400">status</div>
+            <ul class=" text-sm *:rounded flex flex-col *:cursor-pointer">
+              <li id="accept-{{$topic->post->id}}" class="py-1 px-4 hover:bg-green-200 hover:text-green-500">
+                Approve
+              </li>
+              <li id="reject-{{$topic->post->id}}" class="py-1 px-4 hover:bg-red-200 hover:text-red-500 ">
+                Reject
+              </li>
+            </ul>
+          </div>
+          @endif
         </td>
         <td class="px-4 py-4">
           <button name="delete-button"
@@ -219,6 +255,8 @@
     const tableBody = table.querySelector('tbody');
     const rows = tableBody.querySelectorAll('tr');
     const headers = table.querySelectorAll('th');
+    const accept = document.querySelectorAll('li[id^="accept-"]')
+    const reject = document.querySelectorAll('li[id^="reject-"]')
 
     // Initialize directions array after the table headers are loaded
     const directions = Array.from(headers).map(function (header) {
@@ -300,23 +338,107 @@
                 if (dataType) {
                     const cellText = cell.textContent.toLowerCase();
                     if (cellText.includes(queryLower)) {
-                        rowVisible = true; // If any cell matches, show the row
+                        rowVisible = true;
                     }
                 }
             });
 
-            // Show or hide the row based on whether it matched the query
             row.style.display = rowVisible ? '' : 'none';
         });
     }
 
-    // Assign click listeners to column headers for sorting
-    headers.forEach(function (header, index) {
-        if (header.hasAttribute('data-type')) {
-            header.addEventListener('click', function () {
-                sortColumn(index);
-            });
+    /* 
+     ($topic->status->value === 'accepted')
+            <span class="text-green-600 bg-green-100 text-sm border rounded-full px-3 py-1 font-bold">
+              Approved
+            </span>
+            ($topic->status->value === 'rejected')
+            <span class="text-red-600 bg-red-100 text-sm border rounded-full px-3 py-1 font-bold">
+              Rejected
+            </span>
+    */
+    
+    function acceptTopic(id) {
+      fetch(`/topic/${id}/accept`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+      })
+      .then(response => response.json()) 
+      .then(data => {
+        if (data.status === 'ok') {
+          console.log('Topic accepted successfully');
+          const label = document.querySelector(`label[for="status-${id}"`)
+          const input = document.getElementById(`status-${id}`)
+          input.checked = false
+          label.innerHTML = 
+          `
+          <span class="text-green-600 bg-green-100 text-sm border rounded-full px-3 py-1 font-bold">
+              Approved
+          </span>
+          `
+        } else {
+          console.error('Failed to accept the topic');
         }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+
+    function rejectTopic(id) {
+      fetch(`/topic/${id}/reject`, {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 
+        }      
+      })
+      .then(response => response.json()) 
+      .then(data => {
+        if (data.status === 'ok') {
+          console.log('Topic rejected successfully');
+          const label = document.querySelector(`label[for="status-${id}"`)
+          const input = document.getElementById(`status-${id}`)
+          input.checked = false
+          label.innerHTML = 
+          `
+          <span class="text-red-600 bg-red-100 text-sm border rounded-full px-3 py-1 font-bold">
+              Rejected
+          </span>
+          `
+          
+        } else {
+          console.error('Failed to reject the topic')
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error)
+      });
+    }
+
+    accept.forEach((ele,  index) => {      
+      const parsedId = ele.id.split('-')[1]
+      ele.addEventListener('click', () => {
+        acceptTopic(parsedId);
+      });
+    })
+
+    reject.forEach((ele,  index) => {      
+      const parsedId = ele.id.split('-')[1]
+      ele.addEventListener('click', () => {
+        rejectTopic(parsedId);
+      });
+    })
+    
+    headers.forEach(function (header, index) {
+      if (header.hasAttribute('data-type')) {
+          header.addEventListener('click', function () {
+              sortColumn(index);
+          });
+      }
     })
 
     searchInput.addEventListener('input', function () {

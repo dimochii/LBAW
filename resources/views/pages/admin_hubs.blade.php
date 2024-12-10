@@ -63,10 +63,6 @@
   </div>
 </div>
 
-
-
-
-
 <div class="">
   <table
     class="w-full bg-white border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
@@ -84,7 +80,8 @@
         <th
           class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
           data-type="number">Readers</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200"
+          data-type="string">
           privacy</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           Delete</th>
@@ -107,9 +104,10 @@
         <td class="px-4 py-4 whitespace-nowrap" data-sort>{{ $hub->followers->count() }}</td>
 
         <td class="px-4 py-4">
-          <span
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $hub->is_private ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
-            @if($hub->is_private)
+
+          <div data-route="{{$hub->id}}"
+            class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $hub->privacy ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+            @if($hub->privacy)
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -125,7 +123,7 @@
             </svg>
             Public
             @endif
-          </span>
+          </div>
         </td>
 
         <td class="px-4 py-4">
@@ -150,6 +148,7 @@
     const tableBody = table.querySelector('tbody');
     const rows = tableBody.querySelectorAll('tr');
     const headers = table.querySelectorAll('th');
+    const privacies = tableBody.querySelectorAll('[data-route]')
 
     // Initialize directions array after the table headers are loaded
     const directions = Array.from(headers).map(function (header) {
@@ -241,7 +240,61 @@
         });
     }
 
-    // Assign click listeners to column headers for sorting
+    function updatePrivacy(element) {
+      const routeID = element.getAttribute('data-route')
+      
+      fetch(`/hub/${routeID}/privacy`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') 
+        }
+        })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error. Status: ${response.status}`)
+          }
+          return response.json()
+      })
+      .then(data => {
+        if (data.success) {
+            if (data.privacy == 'Private')
+            {
+              element.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Private`
+              element.classList =  'cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full bg-red-100 text-red-700'
+            } else if (data.privacy == 'Public')
+            {
+              element.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              <path d="M7 11h10"></path>
+              </svg>
+              Public
+              `
+              element.classList = 'cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full bg-green-100 text-green-700'
+            }
+        }  
+      })
+      .catch(error => {
+          console.error('Error updating privacy', error)
+      });
+
+    }
+
+    privacies.forEach(function (element) {
+      element.addEventListener('click', function () {
+        updatePrivacy(element)
+      })
+    })
+
     headers.forEach(function (header, index) {
         if (header.hasAttribute('data-type')) {
             header.addEventListener('click', function () {

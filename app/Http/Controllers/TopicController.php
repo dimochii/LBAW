@@ -149,4 +149,22 @@ class TopicController extends Controller
         ]);
         return redirect()->route('news')->with('success', 'Topic updated successfully');
     }
+
+    public function accept($id)
+    {
+      $topicItem = Topic::with('post')->where('post_id', $id)->firstOrFail();
+      $topicItem->status = TopicStatus::Accepted->value;
+      $topicItem->save();
+
+      return response()->json(['status' => 'ok'], 200);
+    }
+
+    public function reject($id)
+    {
+      $topicItem = Topic::with('post')->where('post_id', $id)->firstOrFail();
+      $topicItem->status = TopicStatus::Rejected->value;
+      $topicItem->save();
+
+      return response()->json(['status' => 'ok'], 200);
+    }
 }

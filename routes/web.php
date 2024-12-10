@@ -127,8 +127,18 @@ Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.sh
 //editing
 Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topics.edit');
 Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('auth')->name('topics.update');
+Route::post('/topic/{post_id}/accept', [TopicController::class, 'accept'])->middleware('auth')->name('topics.accept');
+Route::post('/topic/{post_id}/reject', [TopicController::class, 'reject'])->middleware('auth')->name('topics.reject');
 
-
+Route::middleware('auth')->group(function () {
+  Route::controller(AdminController::class)->group( function () {
+    Route::get('/admin', 'overview')->name('admin.overview');
+    Route::get('/admin/users', 'users')->name('admin.users');
+    Route::get('/admin/hubs', 'hubs')->name('admin.hubs');
+    Route::get('/admin/posts', 'posts')->name('admin.posts');
+    Route::get('/admin/reports', 'reports')->name('admin.reports');
+  });
+});
 
 //Posts
 //creation
@@ -143,11 +153,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/bestof', 'bestof')->name('bestof');
-    Route::get('/admin', [AdminController::class, 'overview'])->name('admin.overview');
-    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
-    Route::get('/admin/hubs', [AdminController::class, 'hubs'])->name('admin.hubs');
-    Route::get('/admin/posts', [AdminController::class, 'posts'])->name('admin.posts');
-    Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
+    
     Route::get('/moderator', [ModeratorController::class, 'show'])->name('user.moderator');
     Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
