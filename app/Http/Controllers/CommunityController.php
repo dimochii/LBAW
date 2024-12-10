@@ -9,138 +9,140 @@ use Illuminate\Support\Facades\Cache;
 
 class CommunityController extends Controller
 {
-    public function createHub()
-    {
-        return view('pages.create_hub');
+  public function createHub()
+  {
+    return view('pages.create_hub');
+  }
+
+  public function create(Request $request)
+  {
+    $request->validate([
+      'name' => 'required|string|max:255|unique:communities',
+      'description' => 'required|string|max:1000',
+      'privacy' => 'required|in:public,private',
+      'image_id' => 'nullable|integer|exists:images,id',
+      'moderators' => 'nullable|array',
+      'moderators.*' => 'exists:authenticated_users,id'
+    ]);
+
+    $community = Community::create([
+      'name' => $request->name,
+      'description' => $request->description,
+      'privacy' => $request->privacy === 'private',
+      'image_id' => $request->image_id,
+      'creation_date' => now(),
+    ]);
+
+    $community->moderators()->attach(Auth::user()->id);
+
+    if ($request->has('moderators')) {
+      $community->moderators()->attach($request->moderators);
     }
 
-    public function create(Request $request) {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:communities',
-            'description' => 'required|string|max:1000',
-            'privacy' => 'required|in:public,private',
-            'image_id' => 'nullable|integer|exists:images,id',
-            'moderators' => 'nullable|array',
-            'moderators.*' => 'exists:authenticated_users,id'
-        ]);
-    
-        $community = Community::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'privacy' => $request->privacy === 'private', 
-            'image_id' => $request->image_id,
-            'creation_date' => now(), 
-        ]);
-    
-        $community->moderators()->attach(Auth::user()->id);
-    
-        if ($request->has('moderators')) {
-            $community->moderators()->attach($request->moderators);
-        }
-    
-        return response()->json([
-            'message' => 'Community created successfully',
-            'community' => $community,
-        ], 201);
+    return response()->json([
+      'message' => 'Community created successfully',
+      'community' => $community,
+    ], 201);
+  }
+
+  public function destroy($id)
+  {
+    // Find the community by ID
+    $community = Community::findOrFail($id);
+    if (!($this->authorize('isAdmin') || $this->authorize('isCommunityAdmin', $community))) {
+      abort(403, 'Unauthorized action.');
     }
 
-    public function destroy($id)
-    {
-        // Find the community by ID
-        $community = Community::findOrFail($id);
-        if (!($this->authorize('isAdmin') || $this->authorize('isCommunityAdmin', $community))) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // Check if the community has any posts
-        if ($community->posts()->exists()) {
-            // If the community has posts, prevent deletion
-            return redirect()->back()->with('error', 'Cannot delete a community that has posts.');
-        }
-
-        // If no posts exist, delete the community
-        $community->delete();
-
-        // Redirect back with a success message
-        return redirect()->back()->with('success', 'deleted community.');
+    // Check if the community has any posts
+    if ($community->posts()->exists()) {
+      // If the community has posts, prevent deletion
+      return redirect()->back()->with('error', 'Cannot delete a community that has posts.');
     }
 
+    // If no posts exist, delete the community
+    $community->delete();
+
+    // Redirect back with a success message
+    return redirect()->back()->with('success', 'deleted community.');
+  }
 
 
-    public function show($id)
-    {
-    
-        // Carregar comunidade com posts e autores (com o relacionamento correto)
-        $community = Community::with(['posts.authors', 'posts.votes', 'posts.comments'])->find($id);
 
-        // Verificar se a comunidade existe
-        if (!$community) {
-            abort(404, 'Community not found');
-        }
+  public function show($id)
+  {
 
-        //dar cache à comunidade ao id the cache
-        $this->cacheRecentHub($community->id,$community->name);
+    // Carregar comunidade com posts e autores (com o relacionamento correto)
+    $community = Community::with(['posts.authors', 'posts.votes', 'posts.comments'])->find($id);
 
-        // Mapeando os posts da comunidade
-        $posts = $community->posts->map(function ($post) {
-            // Contagem de upvotes e downvotes diretamente da tabela de votos
-            $upvotes = $post->votes->where('upvote', true)->count();
-            $downvotes = $post->votes->where('upvote', false)->count();
-        
-            return [
-                'id' => $post->id,
-                'title' => $post->title,
-                'content' => $post->content,
-                'authors_list' => $post->authors->pluck('name')->join(', '), 
-                'created_at' => $post->created_at,
-                'score' => $upvotes - $downvotes, 
-                'comments_count' => $post->comments->count(), 
-                'news' => $post->news,  // Add the related news
-                'topic' => $post->topic,
-            ];
-        });
-
-        $newsPosts = $community->posts->filter(function ($post) {
-            return !is_null($post['news']);
-        });
-
-        $topicPosts = $community->posts->filter(function ($post) {
-            return !is_null($post['topic']);
-        });
-        $posts_count = $posts ->count();
-        $followers_count = $community->followers()->count();
-
-        $user = Auth::user();
-        if($user) {
-        $is_following = $community->followers()
-            ->where('authenticated_user_id', $user->id) 
-            ->exists();
-        }
-        else {$is_following = false;}
-
-        return view('pages.hub', [
-            'community' => $community,
-           // 'posts' => $posts,
-            'newsPosts'=> $newsPosts,
-            'topicPosts'=> $topicPosts,
-            'is_following' => $is_following,
-            'posts_count' => $posts_count,
-            'followers_count' => $followers_count
-        ]);
+    // Verificar se a comunidade existe
+    if (!$community) {
+      abort(404, 'Community not found');
     }
 
+    //dar cache à comunidade ao id the cache
+    $this->cacheRecentHub($community->id, $community->name);
 
-    private function cacheRecentHub($communityId, $communityName)
-    {
-        $userId = Auth::check() ? Auth::user()->id : null; // Check if the user is authenticated
+    // Mapeando os posts da comunidade
+    $posts = $community->posts->map(function ($post) {
+      // Contagem de upvotes e downvotes diretamente da tabela de votos
+      $upvotes = $post->votes->where('upvote', true)->count();
+      $downvotes = $post->votes->where('upvote', false)->count();
+
+      return [
+        'id' => $post->id,
+        'title' => $post->title,
+        'content' => $post->content,
+        'authors_list' => $post->authors->pluck('name')->join(', '),
+        'created_at' => $post->created_at,
+        'score' => $upvotes - $downvotes,
+        'comments_count' => $post->comments->count(),
+        'news' => $post->news,  // Add the related news
+        'topic' => $post->topic,
+      ];
+    });
+
+    $newsPosts = $community->posts->filter(function ($post) {
+      return !is_null($post['news']);
+    });
+
+    $topicPosts = $community->posts->filter(function ($post) {
+      return !is_null($post['topic']);
+    });
+    $posts_count = $posts->count();
+    $followers_count = $community->followers()->count();
+
+    $user = Auth::user();
+    if ($user) {
+      $is_following = $community->followers()
+        ->where('authenticated_user_id', $user->id)
+        ->exists();
+    } else {
+      $is_following = false;
+    }
+
+    return view('pages.hub', [
+      'community' => $community,
+      // 'posts' => $posts,
+      'newsPosts' => $newsPosts,
+      'topicPosts' => $topicPosts,
+      'is_following' => $is_following,
+      'posts_count' => $posts_count,
+      'followers_count' => $followers_count
+    ]);
+  }
+
+
+  private function cacheRecentHub($communityId, $communityName)
+  {
+    $userId = Auth::check() ? Auth::user()->id : null; // Check if the user is authenticated
     $cacheKey = $userId ? "recent_hubs:{$userId}" : "recent_hubs:guest";
 
     $hubData = ['id' => $communityId, 'name' => $communityName];
 
     // Fetch recent hubs from cache (use session for guests)
-    $recentHubs = $userId 
-        ? Cache::get($cacheKey, []) 
-        : session()->get($cacheKey, []);
+    $recentHubs = $userId
+      ? Cache::get($cacheKey, [])
+      : session()->get($cacheKey, []);
 
     // Remove the hub if it already exists
     $recentHubs = array_filter($recentHubs, fn($hub) => $hub['id'] !== $communityId);
@@ -152,115 +154,121 @@ class CommunityController extends Controller
     $recentHubs = array_slice($recentHubs, 0, 4);
 
     if ($userId) {
-        // Store in cache for authenticated users
-        Cache::put($cacheKey, $recentHubs, now()->addHours(12));
+      // Store in cache for authenticated users
+      Cache::put($cacheKey, $recentHubs, now()->addHours(12));
     } else {
-        // Store in session for guests
-        session()->put($cacheKey, $recentHubs);
+      // Store in session for guests
+      session()->put($cacheKey, $recentHubs);
     }
-    }
+  }
 
 
-    public function updatePrivacy(Request $request, $id)
-    {
-        $community = Community::findOrFail($id);
+  public function updatePrivacy($id)
+  {
+    $community = Community::findOrFail($id);
 
-        $this->authorize('updatePrivacy', $community);
+    $this->authorize('updatePrivacy', $community);
 
-        $privacy = $request->input('privacy');
-
-        if ($privacy === 'private') {
-            $community->privacy = true; 
-        } elseif ($privacy === 'public') {
-            $community->privacy = false; 
-        }
-
-        $community->save();
-
-        return redirect()->back();
+    // Update the privacy status
+    if ($community->privacy) {
+      $community->privacy = false;
+    } else {
+      $community->privacy = true;
     }
 
-    // Armazenar uma nova comunidade
-    
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:communities',
-            'description' => 'required|string|max:1000',
-            'privacy' => 'required|in:public,private',
-            'image_id' => 'nullable|integer|exists:images,id',
-            'moderators' => 'nullable|array',
-            'moderators.*' => 'exists:authenticated_users,id'
-        ]);
+    $community->save();
 
-        $community = Community::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'privacy' => $request->privacy === 'private',
-            'image_id' => $request->image_id,
-            'creation_date' => now(),
-        ]);
+    // Return a JSON response
+    return response()->json([
+      'success' => true,
+      'privacy' => $community->privacy ? 'Private' : 'Public',
 
-        // Associar o usuário autenticado como moderador
-        $authUser = Auth::user(); 
-        $community->moderators()->attach($authUser->id);
+    ]);
+  }
 
-        return redirect()->route('news')->with('success', 'Community created successfully!');
+  // Armazenar uma nova comunidade
+
+  public function store(Request $request)
+  {
+    $request->validate([
+      'name' => 'required|string|max:255|unique:communities',
+      'description' => 'required|string|max:1000',
+      'privacy' => 'required|in:public,private',
+      'image_id' => 'nullable|integer|exists:images,id',
+      'moderators' => 'nullable|array',
+      'moderators.*' => 'exists:authenticated_users,id'
+    ]);
+
+    $community = Community::create([
+      'name' => $request->name,
+      'description' => $request->description,
+      'privacy' => $request->privacy === 'private',
+      'image_id' => $request->image_id,
+      'creation_date' => now(),
+    ]);
+
+    // Associar o usuário autenticado como moderador
+    $authUser = Auth::user();
+    $community->moderators()->attach($authUser->id);
+
+    return redirect()->route('news')->with('success', 'Community created successfully!');
+  }
+
+  public function join($id)
+  {
+    $community = Community::findOrFail($id);
+    if (!auth()->user()->communities()->where('community_id', $id)->exists()) {
+      auth()->user()->communities()->attach($id);
+      return redirect()->back()->with('success', 'Successfully joined the community!');
     }
 
-    public function join($id)
-    {
-        $community = Community::findOrFail($id);
-        if (!auth()->user()->communities()->where('community_id', $id)->exists()) {
-            auth()->user()->communities()->attach($id);
-            return redirect()->back()->with('success', 'Successfully joined the community!');
-        }
-        
-        return redirect()->back()->with('error', 'You are already following this community.');
+    return redirect()->back()->with('error', 'You are already following this community.');
+  }
+
+  public function leave($id)
+  {
+    $community = Community::findOrFail($id);
+    if (auth()->user()->communities()->where('community_id', $id)->exists()) {
+      auth()->user()->communities()->detach($id);
+      return redirect()->back()->with('success', 'Successfully left the community!');
     }
 
-    public function leave($id)
-    {
-        $community = Community::findOrFail($id);
-        if (auth()->user()->communities()->where('community_id', $id)->exists()) {
-            auth()->user()->communities()->detach($id);
-            return redirect()->back()->with('success', 'Successfully left the community!');
-        }
-        
-        return redirect()->back()->with('error', 'You are not following this community.');
+    return redirect()->back()->with('error', 'You are not following this community.');
+  }
+
+  public function index(Request $request)
+  {
+    $sortBy = $request->get('sort_by', 'name');
+    $order = $request->get('order', 'asc');
+
+    $communities = Community::withCount('followers')
+      ->orderBy($sortBy, $order)
+      ->paginate(12);
+
+    return view('pages.hubs', compact('communities', 'sortBy', 'order'));
+  }
+
+  public function getFollowers($id)
+  {
+    $community = Community::findOrFail($id);
+    $user = Auth::user();
+    if ($user) {
+      $is_following = $community->followers()
+        ->where('authenticated_user_id', $user->id)
+        ->exists();
+    } else {
+      $is_following = false;
     }
+    $followers = $community->followers()->get();
 
-    public function index(Request $request) {
-        $sortBy = $request->get('sort_by', 'name'); 
-        $order = $request->get('order', 'asc'); 
+    return view('pages.hub_followers', [
+      'community' => $community,
+      'followers' => $followers,
+      'is_following' => $is_following
+    ]);
+  }
 
-        $communities = Community::withCount('followers')
-            ->orderBy($sortBy, $order)
-            ->paginate(12);
-
-        return view('pages.hubs', compact('communities', 'sortBy', 'order'));
-    }
-
-    public function getFollowers($id)
-    {
-        $community = Community::findOrFail($id);
-        $user = Auth::user();
-        if($user) {
-        $is_following = $community->followers()
-            ->where('authenticated_user_id', $user->id) 
-            ->exists();
-        }
-        else {$is_following = false;}
-        $followers = $community->followers()->get();
-
-        return view('pages.hub_followers', [
-            'community' => $community,
-            'followers'=> $followers,
-            'is_following' => $is_following
-        ]);
-    }
-
-    /*
+  /*
     public function apply(Request $request, $id)
     {
         $community = Community::find($id);
@@ -285,5 +293,4 @@ class CommunityController extends Controller
 
         return response()->json(['message' => 'Your application to join the community has been submitted']);
     }*/
-
 }
