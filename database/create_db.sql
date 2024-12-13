@@ -292,10 +292,6 @@ AFTER INSERT ON user_followers
 FOR EACH ROW
 EXECUTE FUNCTION follow_create_notification_trigger();
 
-
-
-
--- Step 1: Insert images
 INSERT INTO images (path) VALUES
 ('images/user1.jpg'),
 ('images/user2.jpg'),
@@ -498,627 +494,309 @@ INSERT INTO images (path) VALUES
 ('images/user199.jpg'),
 ('images/user200.jpg');
 
-
--- Step 2: Insert Users into authenticateduser
-INSERT INTO authenticated_users (name, username, email, password, birth_date, description, is_admin, image_id)
-VALUES
-('Anonymous', 'Anonymous', 'anonymous@example.com', '$2y$10$FLtQvBMa8TZpNeHMG1EnTu8QbbEZe8e2GJbzqfSdnQyht4ozH1zRa', '1000-01-01', 'Anonymous.', FALSE, 1),
-('Bob Johnson', 'bob', 'bob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1988-02-02', 'Loves to share news.', FALSE, 2),
-('Charlie Brown', 'charlie', 'charlie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1992-03-03', 'Tech enthusiast.', FALSE, 3),
-('Diana Prince', 'diana', 'diana@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1985-04-04', 'Avid reader and commenter.',TRUE, 4),
-('Edward Elric', 'edward', 'edward@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1994-05-05', 'Anime and manga lover.', FALSE, 5),
-('Fiona Gallagher', 'fiona', 'fiona@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1991-06-06', 'Loves traveling and photography.', FALSE, 6),
-('George Martin', 'george', 'george@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1975-07-07', 'Fantasy writer and fan.', FALSE, 7),
-('Hannah Montana', 'hannah', 'hannah@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1998-08-08', 'Pop culture enthusiast.', FALSE, 8),
-('Ian Malcolm', 'ian', 'ian@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1980-09-09', 'Dinosaur expert and scientist.', FALSE, 9),
-('Jack Sparrow', 'jack', 'jack@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1980-10-10', 'Pirate captain and adventurer.', FALSE, 10),
-('Katherine Pierce', 'katherine', 'katherine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1993-11-11', 'Mystery novel lover.', FALSE, 11),
-('Liam Neeson', 'liam', 'liam@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1982-12-12', 'Film and theater enthusiast.', FALSE, 12),
-('Monica Geller', 'monica', 'monica@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1980-01-13', 'Chef and cleanliness freak.', FALSE, 13),
-('Nina Williams', 'nina', 'nina@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1979-02-14', 'Martial artist and game developer.', FALSE, 14),
-('Oscar Wilde', 'oscar', 'oscar@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1854-03-15', 'Famous playwright and poet.', FALSE, 15),
-('Penny Lane', 'penny', 'penny@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1992-04-16', 'Music lover and singer.', FALSE, 16),
-('Quentin Tarantino', 'quentin', 'quentin@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1963-05-17', 'Director and screenwriter.', FALSE, 17),
-('Rachel Green', 'rachel', 'rachel@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1988-06-18', 'Fashion enthusiast.', FALSE, 18),
-('Steve Rogers', 'steve', 'steve@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1922-07-19', 'Super soldier and leader.', FALSE, 19),
-('Tony Stark', 'tony', 'tony@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1970-08-20', 'Inventor and philanthropist.', FALSE, 20),
-('Ursula K. Le Guin', 'ursula', 'ursula@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1929-09-21', 'Renowned fantasy author.', FALSE, 21),
-('Victor Frankenstein', 'victor', 'victor@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1794-10-22', 'Scientist and creator.', FALSE, 22),
-('Will Turner', 'will', 'will@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1985-11-23', 'Blacksmith and pirate.', FALSE, 23),
-('Xena Warrior', 'xena', 'xena@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1985-12-24', 'Warrior princess and leader.', FALSE, 24),
-('Yoda', 'yoda', 'yoda@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '896-01-25', 'Jedi Master and wise mentor.', FALSE, 25),
-('Zorro', 'zorro', 'zorro@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1840-02-26', 'Masked hero and protector.', FALSE, 26),
-('Albus Dumbledore', 'albus', 'albus@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1881-03-27', 'Headmaster of Hogwarts.', FALSE, 27),
-('Bella Swan', 'bella', 'bella@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1987-04-28', 'Vampire and werewolf enthusiast.', FALSE, 28),
-('Clark Kent', 'clark', 'clark@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1985-05-29', 'Journalist and superhero.', FALSE, 29),
-('Darth Vader', 'darth', 'darth@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1941-06-30', 'Sith Lord and father figure.', FALSE, 30),
-('Elliot Alderson', 'elliot', 'elliot@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1992-07-31', 'Cybersecurity engineer.', FALSE, 31),
-('Frodo Baggins', 'frodo', 'frodo@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1968-08-01', 'Ring bearer and adventurer.', FALSE, 32),
-('Gandalf the Grey', 'gandalf', 'gandalf@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1000-09-02', 'Wielder of magic and wisdom.', FALSE, 33),
-('Homer Simpson', 'homer', 'homer@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1956-10-03', 'Loves donuts and family.', FALSE, 34),
-('Icarus', 'icarus', 'icarus@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '2000-11-04', 'Aspiring inventor and dreamer.', FALSE, 35),
-('Jules Winnfield', 'jules', 'jules@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1971-12-05', 'Professional hitman with a passion.', FALSE, 36),
-('Katniss Everdeen', 'katniss', 'katniss@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1990-01-06', 'Revolutionary and survivor.', FALSE, 37),
-('Lara Croft', 'lara', 'lara@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1975-02-07', 'Adventurer and archaeologist.', FALSE, 38),
-('Marty McFly', 'marty', 'marty@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1968-03-08', 'Time traveler and teenager.', FALSE, 39),
-('Nancy Drew', 'nancy', 'nancy@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1980-04-09', 'Famous detective and sleuth.', FALSE, 40),
-('Oliver Twist', 'oliver', 'oliver@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1837-05-10', 'Orphan and survivor.', FALSE, 41),
-('Pikachu', 'pikachu', 'pikachu@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1996-06-11', 'Electric mouse and companion.', TRUE, 42),
-('Quasimodo', 'quasimodo', 'quasimodo@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1460-07-12', 'Bell-ringer and misunderstood.', FALSE, 43),
-('R2-D2', 'r2d2', 'r2d2@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1932-08-13', 'Astromech droid and hero.', FALSE, 44),
-('SpongeBob SquarePants', 'spongebob', 'spongebob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1986-09-14', 'Underwater fry cook and optimist.', FALSE, 45),
-('Thor Odinson', 'thor', 'thor@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1965-10-15', 'God of thunder and hero.', FALSE, 46),
-('Ultron', 'ultron', 'ultron@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '2015-11-16', 'A.I. villain with a complex.', FALSE, 47),
-('Violet Parr', 'violet', 'violet@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '2000-12-17', 'Superhero with force fields.', FALSE, 48),
-('Wolverine', 'wolverine', 'wolverine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1882-01-18', 'Mutant and fighter.', FALSE, 49),
-('X-Men', 'xmen', 'xmen@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1963-02-19', 'Superhero team with various powers.', FALSE, 50);
-
--- Step 3: Insert Communities
+-- Insert communities
 INSERT INTO communities (name, description, privacy, image_id) VALUES
-('Tech community', 'A place for tech enthusiasts to share knowledge.', FALSE, 1),
-('Book Lovers', 'A community for book lovers.', TRUE, 2),
-('Anime Fans', 'Discuss your favorite anime and manga.', FALSE, 3),
-('Travel Enthusiasts', 'Share your travel stories and tips.', TRUE, 4),
-('Fantasy Writers', 'A place for aspiring fantasy authors.', FALSE, 5),
-('Culinary Artists', 'Share recipes and cooking tips.', TRUE, 6),
-('Movie Buffs', 'Discuss films and series.', FALSE, 7),
-('Fitness Fanatics', 'Share fitness tips and motivation.', TRUE, 8),
-('Game Developers', 'A community for game creation discussions.', FALSE, 9),
-('Nature Lovers', 'Share your nature photography and stories.', TRUE, 10),
-('Music Producers', 'A community for aspiring and professional music producers.', FALSE, 11),
-('History Buffs', 'Explore and discuss historical events and figures.', TRUE, 12),
-('Sports Fans', 'A place to talk about your favorite sports and teams.', FALSE, 13),
-('Pet Lovers', 'Share tips and stories about pets.', TRUE, 14),
-('Science Geeks', 'Discuss recent scientific discoveries and theories.', FALSE, 15),
-('Art Enthusiasts', 'Share and critique artwork.', TRUE, 16),
-('DIY Creators', 'Tips and tricks for do-it-yourself projects.', FALSE, 17),
-('Environment Advocates', 'Discussions on environmental conservation and activism.', TRUE, 18),
-('Coding Wizards', 'A space for developers to share coding tips.', FALSE, 19),
-('Health Gurus', 'Tips for leading a healthy lifestyle.', TRUE, 20),
-('Car Enthusiasts', 'Share knowledge and stories about cars.', FALSE, 21),
-('Photography Experts', 'A community to discuss photography tips and gear.', TRUE, 22),
-('Board Game Lovers', 'Discuss strategies and reviews of board games.', FALSE, 23),
-('Startup Founders', 'A place for entrepreneurs to share insights.', TRUE, 24),
-('Comedy Enthusiasts', 'Share jokes and discuss stand-up acts.', FALSE, 25),
-('Space Enthusiasts', 'Discuss astronomy and space exploration.', TRUE, 26),
-('Language Learners Hub', 'Share tips and resources for learning new languages.', FALSE, 27),
-('Mental Health Community', 'Support and resources for mental health awareness.', TRUE, 28),
-('Fashion Innovators', 'A community to discuss fashion trends and designs.', FALSE, 29),
-('Tech Reviewers', 'Discuss the latest gadgets and technologies.', TRUE, 30),
-('Urban Gardeners Club', 'Tips for gardening in urban spaces.', FALSE, 31),
-('Philosophy Minds', 'Discuss philosophical ideas and theories.', TRUE, 32),
-('Volunteer Network', 'A place for volunteers to connect and share experiences.', FALSE, 33),
-('Hiking Enthusiasts', 'Share hiking trails and experiences.', TRUE, 34),
-('E-Sports Fans', 'Discuss e-sports teams and tournaments.', FALSE, 35),
-('Creative Writers Network', 'Share and critique creative writing pieces.', TRUE, 36),
-('Meditation Circle', 'Discuss meditation techniques and benefits.', FALSE, 37),
-('Classic Car Enthusiasts', 'Share and discuss classic car collections.', TRUE, 38),
-('Cryptocurrency Experts', 'Discuss trends and tips in cryptocurrency.', FALSE, 39),
-('Parenting Community', 'Share advice and stories about parenting.', TRUE, 40),
-('Martial Arts Practitioners', 'Discuss techniques and training.', FALSE, 41),
-('Remote Work Hub', 'Tips and support for working remotely.', TRUE, 42),
-('Guitar Players', 'A community for guitar players of all levels.', FALSE, 43),
-('Chess Enthusiasts', 'Discuss strategies and famous matches.', TRUE, 44),
-('Wildlife Advocates', 'Discuss efforts to protect wildlife.', FALSE, 45),
-('Cycling Fans', 'Share cycling routes and tips.', TRUE, 46),
-('Interior Designers', 'Discuss home decoration and design ideas.', FALSE, 47),
-('Economics Enthusiasts', 'Share resources and discuss economic theories.', TRUE, 48),
-('Film Makers Guild', 'A space for filmmakers to share tips and ideas.', FALSE, 49),
-('Astronomy Lovers', 'Discuss celestial events and phenomena.', TRUE, 50),
-('Yoga Community', 'Share yoga techniques and benefits.', FALSE, 51),
-('Comic Book Enthusiasts', 'Discuss your favorite comics and graphic novels.', TRUE, 52),
-('Social Justice Warriors', 'Discuss social issues and activism.', FALSE, 53),
-('Gardening Beginners', 'Tips and support for starting a garden.', TRUE, 54),
-('Piano Enthusiasts', 'A community for pianists to share tips.', FALSE, 55),
-('Vintage Collectors', 'Share your vintage collections and stories.', TRUE, 56),
-('Outdoor Adventurers', 'Discuss camping and outdoor activities.', FALSE, 57),
-('Political Enthusiasts', 'Discuss current political events.', TRUE, 58),
-('Baking Enthusiasts', 'Share baking tips and recipes.', FALSE, 59),
-('Homebrewing Experts', 'Tips and tricks for brewing your own drinks.', TRUE, 60),
-('AI Innovators', 'Discuss advancements in artificial intelligence.', FALSE, 61),
-('Surfing Enthusiasts', 'Share surfing tips and experiences.', TRUE, 62),
-('Classic Movie Fans', 'Discuss your favorite classic films.', FALSE, 63),
-('Cosplay Artists', 'Share tips and showcase your cosplay.', TRUE, 64),
-('Adventure Travelers', 'Discuss extreme travel experiences.', TRUE, 66),
-('Science Fiction Enthusiasts', 'Discuss sci-fi books and movies.', FALSE, 67),
-('Pet Trainers Group', 'Share pet training tips and techniques.', TRUE, 68),
-('Mountain Climbers', 'Share experiences and tips for climbing.', FALSE, 69),
-('Beach Enthusiasts', 'Discuss your favorite beach destinations.', TRUE, 70),
-('K-Pop Community', 'Discuss your favorite K-Pop groups and music.', FALSE, 71),
-('Digital Art Hub', 'Share digital art and techniques.', TRUE, 72),
-('Entrepreneurs Network', 'Discuss ideas and challenges for startups.', FALSE, 73),
-('Board Gamers Circle', 'Discuss your favorite board games and strategies.', TRUE, 74),
-('Cat Lovers Club', 'Share stories and tips about cats.', FALSE, 75),
-('Movie Directors', 'Discuss filmmaking and production tips.', TRUE, 76),
-('Skiing Enthusiasts', 'Share skiing tips and destinations.', FALSE, 77),
-('Drone Hobbyists', 'Discuss drone flying tips and experiences.', TRUE, 78),
-('Vegan Community', 'Share vegan recipes and tips.', FALSE, 79),
-('Graphic Designers', 'Discuss design tools and techniques.', TRUE, 80),
-('Bird Watching Enthusiasts', 'Share birdwatching tips and sightings.', FALSE, 81),
-('Sculptors Network', 'Discuss sculpting techniques and share work.', TRUE, 82),
-('Fiction Writers Hub', 'Share your fictional works and critique.', FALSE, 83),
-('Sneaker Collectors Group', 'Discuss your sneaker collections.', TRUE, 84),
-('Robotics Enthusiasts', 'Discuss and share robotics projects.', FALSE, 91),
-('Fishing Fans', 'Tips and stories about fishing experiences.', TRUE, 92),
-('Drone Experts', 'A community for drone hobbyists.', FALSE, 93),
-('Aquarium Enthusiasts', 'Share tips and setups for aquariums.', TRUE, 94),
-('Horror Movie Fans', 'Discuss your favorite horror films.', FALSE, 95),
-('Landscape Photographers', 'Share and discuss landscape photography.', TRUE, 96),
-('Tattoo Artists', 'Discuss techniques and showcase tattoos.', FALSE, 97),
-('Mobile Gamers Hub', 'Discuss mobile games and tips.', TRUE, 98),
-('Home Improvement Gurus', 'Tips for improving your home.', FALSE, 99),
-('Virtual Reality Fans', 'Discuss VR games and technology.', TRUE, 100),
-('Ask Me Anything', 'A space for unique Q&A sessions.', TRUE, 101),
-('Life Pro Tips', 'Tips for improving everyday life.', FALSE, 102),
-('Explain Like I’m Five', 'Complex ideas explained simply.', TRUE, 103),
-('Today I Learned', 'Share interesting facts you learned.', FALSE, 104),
-('Shower Thoughts', 'Unique and quirky thoughts.', TRUE, 105),
-('Wholesome Memes', 'Feel-good memes for everyone.', FALSE, 106),
-('DIY Projects', 'Creative do-it-yourself ideas.', TRUE, 107),
-('Productivity Hacks', 'Tips for getting things done efficiently.', FALSE, 108),
-('Space Exploration', 'Discussions about the universe.', TRUE, 109),
-('World News', 'Stay updated on global news.', FALSE, 110),
-('Food Porn', 'Delicious food photography.', TRUE, 111),
-('Art Critique', 'Get constructive feedback on your art.', FALSE, 112),
-('Ask a Historian', 'Historical questions answered by experts.', TRUE, 113),
-('Casual Conversations', 'Relaxed discussions on any topic.', FALSE, 114),
-('Gaming Memes', 'Funny content for gamers.', TRUE, 115),
-('Minimalism', 'Discuss simple and clutter-free living.', FALSE, 116),
-('Sustainable Living', 'Tips for eco-friendly living.', TRUE, 117),
-('Data Is Beautiful', 'Visualizations of interesting data.', FALSE, 118),
-('Personal Finance', 'Advice for managing your money.', TRUE, 119),
-('Learn Programming', 'Resources and tips for coders.', FALSE, 120),
-('Astronomy', 'Explore the stars and galaxies.', TRUE, 121),
-('Casual Photography', 'Share and discuss everyday photos.', FALSE, 122),
-('Parenting Tips', 'Support and advice for parents.', TRUE, 123),
-('Fitness Progress', 'Share fitness achievements.', FALSE, 124),
-('Political Humor', 'Jokes and memes about politics.', TRUE, 125),
-('Startup Ideas', 'Discuss innovative business concepts.', FALSE, 126),
-('Language Exchange', 'Practice new languages with others.', TRUE, 127),
-('Investing 101', 'Advice for new investors.', FALSE, 128),
-('Cryptocurrency News', 'Stay updated on crypto trends.', TRUE, 129),
-('Creative Writing Prompts', 'Ideas to inspire your writing.', FALSE, 130),
-('Meme Economy', 'Buy, sell, and trade memes.', TRUE, 131),
-('Crafting Enthusiasts', 'Discuss crafts and DIY projects.', FALSE, 132),
-('Futurology', 'Discuss the future of humanity.', TRUE, 133),
-('Hairstyling Tips', 'Advice and tutorials for great hair.', FALSE, 134),
-('Urban Exploration', 'Explore abandoned or hidden places.', TRUE, 135),
-('Pet Care', 'Tips for taking care of your pets.', FALSE, 136),
-('Wild Camping', 'Share camping experiences and tips.', TRUE, 137),
-('Guitar Tutorials', 'Lessons for guitar players.', FALSE, 138),
-('World Building', 'Create and discuss fictional worlds.', TRUE, 139),
-('Rare Puppers', 'Share adorable dog photos.', FALSE, 140),
-('Tech Support', 'Help for solving tech problems.', TRUE, 141),
-('Bad Jokes', 'So bad they’re funny.', FALSE, 142),
-('Hiking Trails', 'Discover and share hiking locations.', TRUE, 143),
-('Urban Legends', 'Discuss myths and legends.', FALSE, 144),
-('Photography Challenges', 'Participate in themed photo contests.', TRUE, 145),
-('Tech Gadgets', 'Reviews and discussions on gadgets.', FALSE, 146),
-('Movie Reviews', 'Share your thoughts on films.', TRUE, 147),
-('Classic Literature', 'Discuss timeless books.', FALSE, 148),
-('Geography Nerds', 'Share and discuss maps.', TRUE, 149),
-('Skincare Tips', 'Discuss routines and products.', FALSE, 150),
-('Board Game Designers', 'Create and test board games.', TRUE, 151),
-('Astronomy Events', 'Updates on celestial happenings.', FALSE, 152),
-('Mental Health Tips', 'Share resources and advice.', TRUE, 153),
-('Seasonal Recipes', 'Cook seasonal and festive dishes.', FALSE, 154),
-('Extreme Weather Fans', 'Share storm and weather stories.', TRUE, 155),
-('Bird Photography', 'Share stunning bird photos.', FALSE, 156),
-('Handwriting Help', 'Improve your handwriting skills.', TRUE, 157),
-('Riddle Lovers', 'Solve and share riddles.', FALSE, 158),
-('Plant Identification', 'Help identify mysterious plants.', TRUE, 159),
-('Home Automation', 'Discuss smart home tech.', FALSE, 160),
-('Alien Theories', 'Speculate about extraterrestrial life.', TRUE, 161),
-('Philosophy 101', 'Discuss beginner philosophical ideas.', FALSE, 162),
-('Wilderness Survival', 'Share survival tips and gear.', TRUE, 163),
-('Car Maintenance Tips', 'DIY tips for car upkeep.', FALSE, 164),
-('Knitting & Crochet', 'Share patterns and projects.', TRUE, 165),
-('Vintage Electronics', 'Discuss retro gadgets.', FALSE, 166),
-('Minimalist Design', 'Tips for simple and effective design.', TRUE, 167),
-('Home Renovations', 'Tips for improving your house.', FALSE, 168),
-('Stand-up Comedy', 'Share jokes and funny clips.', TRUE, 169),
-('Trail Runners', 'Discuss trail running gear and tips.', FALSE, 170),
-('Martial Arts Theory', 'Debate techniques and philosophy.', TRUE, 171),
-('Cooking Experiments', 'Share your culinary trials.', FALSE, 172),
-('K-Pop Dance Covers', 'Discuss and share dance covers.', TRUE, 173),
-('Sustainable Fashion', 'Talk about eco-friendly clothing.', FALSE, 174),
-('Classic Music Enthusiasts', 'Discuss classical music works.', TRUE, 175),
-('Origami Artists', 'Share folds and designs.', FALSE, 176),
-('Sketch Artists', 'Discuss tools and techniques.', TRUE, 177),
-('Comedy Sketches', 'Share and create humorous sketches.', FALSE, 178),
-('AI Generated Art', 'Discuss and share AI art.', TRUE, 179),
-('Book Club Picks', 'Vote on and discuss books.', FALSE, 180),
-('Coding Challenges', 'Sharpen your programming skills.', TRUE, 181),
-('Archaeology Fans', 'Discuss ancient discoveries.', FALSE, 182),
-('Chess Tournaments', 'Share games and results.', TRUE, 183),
-('Landscape Painting', 'Showcase and discuss techniques.', FALSE, 184),
-('Fantasy Maps', 'Create and critique fictional maps.', TRUE, 185),
-('Roller Coaster Fans', 'Discuss and share thrill rides.', FALSE, 186),
-('Beach Photography', 'Share stunning beach shots.', TRUE, 187),
-('Meditation Techniques', 'Explore and share practices.', FALSE, 188),
-('Quilting Enthusiasts', 'Discuss patterns and fabrics.', TRUE, 189),
-('Stock Market Insights', 'Analyze and discuss stock trends.', FALSE, 190),
-('Magic Tricks', 'Learn and share magic tips.', TRUE, 191),
-('Food Science', 'Explore the science of cooking.', FALSE, 192),
-('Space Missions', 'Discuss recent space exploration.', TRUE, 193),
-('Jazz Music Fans', 'Share your favorite jazz pieces.', FALSE, 194),
-('Aquascaping', 'Create stunning underwater worlds.', TRUE, 195),
-('Minimal Wardrobe', 'Tips for simplifying clothing.', FALSE, 196),
-('Candle Making', 'Discuss techniques and designs.', TRUE, 197),
-('Speedrunning', 'Discuss and share gaming records.', FALSE, 198),
-('3D Printing', 'Share tips and designs.', TRUE, 199),
-('Graphic Novel Fans', 'Discuss and share favorite comics.', FALSE, 200);
+('AnimeFans', 'A community for anime enthusiasts', FALSE, 11),
+('Superheroes', 'All about comic book and movie superheroes', FALSE, 12),
+('Mythology', 'Exploring myths and legends from around the world', FALSE, 13),
+('TechTalk', 'Discussions about technology and innovations', FALSE, 14),
+('AnimeTheories', 'Deep dive into anime plot theories and discussions', FALSE, 15),
+('SciFiEnthusiasts', 'A community for science fiction lovers', FALSE, 26),
+('MysteryLovers', 'Discussing detective novels and crime stories', FALSE, 27),
+('FilmBuffs', 'All about cinema and movie discussions', FALSE, 28),
+('GamingWorld', 'Video game discussions and reviews', FALSE, 29),
+('LiteratureClub', 'Book discussions and literary analysis', FALSE, 30);
 
--- Step 4: Insert posts
+-- Insert authenticated users
+INSERT INTO authenticated_users (
+    name, username, email, password, reputation, 
+    is_suspended, birth_date, description, is_admin, image_id
+) VALUES
+-- Anonymous user (special case)
+('Anonymous', 'anonymous', 'anonymous@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+0, FALSE, '1990-01-01', 'System anonymous user', FALSE, 1),
+
+-- Admins
+('Tiago Monteiro', 'tiago_admin', 'tiago@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+100, FALSE, '1985-05-15', 'Site Administrator', TRUE, 1),
+
+('Vasco Costa', 'vasco_admin', 'vasco@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+100, FALSE, '1990-03-20', 'Senior Site Administrator', TRUE, 1),
+
+('Teresa Mascarenhas', 'teresa_admin', 'teresa@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+100, FALSE, '1988-11-10', 'Community Management Admin', TRUE, 1),
+
+('Diana Nunes', 'diana_admin', 'diana@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+100, FALSE, '1992-07-25', 'Content Moderation Admin', TRUE, 1),
+
+-- Regular users
+('Naruto Uzumaki', 'dattebayo', 'naruto@konoha.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+50, FALSE, '1997-10-10', 'Future Hokage', FALSE, 51),
+
+('Goku Son', 'saiyan_warrior', 'goku@dragonball.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+75, FALSE, '1984-04-05', 'Protector of Earth', FALSE, 52),
+
+('Sherlock Holmes', 'consulting_detective', 'sherlock@221b.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+90, FALSE, '1854-01-06', 'The world only consulting detective', FALSE, 53),
+
+('Elsa Arendelle', 'ice_queen', 'elsa@frozen.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+60, FALSE, '1991-12-21', 'Queen of Arendelle', FALSE, 54),
+
+('Peter Parker', 'spidey', 'peter@dailybugle.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+80, FALSE, '1995-08-15', 'Friendly neighborhood Spider-Man', FALSE, 55),
+
+('Bob Johnson', 'bob', 'bob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+40, FALSE, '1988-02-02', 'Loves to share news.', FALSE, 2),
+
+('Charlie Brown', 'charlie', 'charlie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+45, FALSE, '1992-03-03', 'Tech enthusiast.', FALSE, 3),
+
+('Diana Prince', 'diana', 'diana@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+85, FALSE, '1985-04-04', 'Avid reader and commenter.', FALSE, 4),
+
+('Edward Elric', 'edward', 'edward@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+70, FALSE, '1994-05-05', 'Anime and manga lover.', FALSE, 5),
+
+('Fiona Gallagher', 'fiona', 'fiona@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+55, FALSE, '1991-06-06', 'Loves traveling and photography.', FALSE, 6),
+
+('George Martin', 'george', 'george@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+95, FALSE, '1975-07-07', 'Fantasy writer and fan.', FALSE, 7),
+
+('Hannah Montana', 'hannah', 'hannah@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+60, FALSE, '1998-08-08', 'Pop culture enthusiast.', FALSE, 8),
+
+('Ian Malcolm', 'ian', 'ian@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+75, FALSE, '1980-09-09', 'Dinosaur expert and scientist.', FALSE, 9),
+
+('Jack Sparrow', 'jack', 'jack@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+65, FALSE, '1980-10-10', 'Pirate captain and adventurer.', FALSE, 10),
+
+('Katherine Pierce', 'katherine', 'katherine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+50, FALSE, '1993-11-11', 'Mystery novel lover.', FALSE, 11),
+('Liam Neeson', 'liam', 'liam@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1982-12-12', 'Film and theater enthusiast.', FALSE, 12),
+('Monica Geller', 'monica', 'monica@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1980-01-13', 'Chef and cleanliness freak.', FALSE, 13),
+('Nina Williams', 'nina', 'nina@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1979-02-14', 'Martial artist and game developer.', FALSE, 14),
+('Oscar Wilde', 'oscar', 'oscar@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1854-03-15', 'Famous playwright and poet.', FALSE, 15),
+('Penny Lane', 'penny', 'penny@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1992-04-16', 'Music lover and singer.', FALSE, 16),
+('Quentin Tarantino', 'quentin', 'quentin@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1963-05-17', 'Director and screenwriter.', FALSE, 17),
+('Rachel Green', 'rachel', 'rachel@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'1988-06-18', 'Fashion enthusiast.', FALSE, 18),
+('Steve Rogers', 'steve', 'steve@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1922-07-19', 'Super soldier and leader.', FALSE, 19),
+('Tony Stark', 'tony', 'tony@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1970-08-20', 'Inventor and philanthropist.', FALSE, 20),
+('Ursula K. Le Guin', 'ursula', 'ursula@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1929-09-21', 'Renowned fantasy author.', FALSE, 21),
+('Victor Frankenstein', 'victor', 'victor@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1794-10-22', 'Scientist and creator.', FALSE, 22),
+('Will Turner', 'will', 'will@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1985-11-23', 'Blacksmith and pirate.', FALSE, 23),
+('Xena Warrior', 'xena', 'xena@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1985-12-24', 'Warrior princess and leader.', FALSE, 24),
+('Yoda', 'yoda', 'yoda@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'896-01-25', 'Jedi Master and wise mentor.', FALSE, 25),
+('Zorro', 'zorro', 'zorro@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1840-02-26', 'Masked hero and protector.', FALSE, 26),
+('Albus Dumbledore', 'albus', 'albus@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'1881-03-27', 'Headmaster of Hogwarts.', FALSE, 27),
+('Bella Swan', 'bella', 'bella@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1987-04-28', 'Vampire and werewolf enthusiast.', FALSE, 28),
+('Clark Kent', 'clark', 'clark@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1985-05-29', 'Journalist and superhero.', FALSE, 29),
+('Darth Vader', 'darth', 'darth@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1941-06-30', 'Sith Lord and father figure.', FALSE, 30),
+('Elliot Alderson', 'elliot', 'elliot@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'1992-07-31', 'Cybersecurity engineer.', FALSE, 31),
+('Frodo Baggins', 'frodo', 'frodo@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1968-08-01', 'Ring bearer and adventurer.', FALSE, 32),
+('Gandalf the Grey', 'gandalf', 'gandalf@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'1000-09-02', 'Wielder of magic and wisdom.', FALSE, 33),
+('Homer Simpson', 'homer', 'homer@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1956-10-03', 'Loves donuts and family.', FALSE, 34),
+('Icarus', 'icarus', 'icarus@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'2000-11-04', 'Aspiring inventor and dreamer.', FALSE, 35),
+('Jules Winnfield', 'jules', 'jules@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1971-12-05', 'Professional hitman with a passion.', FALSE, 36),
+('Katniss Everdeen', 'katniss', 'katniss@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1990-01-06', 'Revolutionary and survivor.', FALSE, 37),
+('Lara Croft', 'lara', 'lara@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1975-02-07', 'Adventurer and archaeologist.', FALSE, 38),
+('Marty McFly', 'marty', 'marty@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1968-03-08', 'Time traveler and teenager.', FALSE, 39),
+('Nancy Drew', 'nancy', 'nancy@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1980-04-09', 'Famous detective and sleuth.', FALSE, 40),
+('Oliver Twist', 'oliver', 'oliver@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'1837-05-10', 'Orphan and survivor.', FALSE, 41),
+('Pikachu', 'pikachu', 'pikachu@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1996-06-11', 'Electric mouse and companion.', TRUE, 42),
+('Quasimodo', 'quasimodo', 'quasimodo@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1460-07-12', 'Bell-ringer and misunderstood.', FALSE, 43),
+('R2-D2', 'r2d2', 'r2d2@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1932-08-13', 'Astromech droid and hero.', FALSE, 44),
+('SpongeBob SquarePants', 'spongebob', 'spongebob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1986-09-14', 'Underwater fry cook and optimist.', FALSE, 45),
+('Thor Odinson', 'thor', 'thor@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'1965-10-15', 'God of thunder and hero.', FALSE, 46),
+('Ultron', 'ultron', 'ultron@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'2015-11-16', 'A.I. villain with a complex.', FALSE, 47),
+('Violet Parr', 'violet', 'violet@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '2000-12-17', 'Superhero with force fields.', FALSE, 48),
+('Wolverine', 'wolverine', 'wolverine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1882-01-18', 'Mutant and fighter.', FALSE, 49),
+('X-Men', 'xmen', 'xmen@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1963-02-19', 'Superhero team with various powers.', FALSE, 50);
+
+
+
+-- Insert posts
 INSERT INTO posts (title, content, community_id) VALUES
-('The Rise of AI', 'Artificial Intelligence is revolutionizing the world.', 1),
-('Must-Read Books of 2024', 'Here are some books you shouldn’t miss this year.', 2),
-('Top Anime of the Season', 'Let’s discuss the best anime airing this season.', 3),
-('Travel Tips for 2024', 'Best destinations to visit next year.', 4),
-('Building a Fantasy World', 'Tips for world-building in fantasy fiction.', 5),
-('Cooking Healthy Meals', 'Share your best healthy recipes.', 6),
-('Upcoming Movies in 2024', 'What films are you excited about?', 7),
-('Staying Fit During Winter', 'Winter workouts to keep you healthy.', 8),
-('Game Development Basics', 'How to get started with game development.', 9),
-('Wildlife Photography Tips', 'Capture nature beautifully.', 10),
-('AI in Everyday Life', 'How AI is simplifying our daily routines.', 1),
-('Underrated Books to Check Out', 'Hidden literary gems you might have missed.', 2),
-('Classic Anime That Still Shine', 'Timeless anime worth revisiting.', 3),
-('Budget-Friendly Travel Hacks', 'Explore the world without breaking the bank.', 4),
-('Creating Believable Characters', 'Bring your fantasy worlds to life with relatable characters.', 5),
-('Quick and Healthy Breakfast Ideas', 'Start your day with these simple, nutritious recipes.', 6),
-('Anticipated Sequels of 2024', 'Movie sequels everyone is looking forward to.', 7),
-('Staying Motivated to Exercise in the Cold', 'Tips to beat winter laziness and stay active.', 8),
-('The Best Tools for Aspiring Game Developers', 'Essential software and resources for beginners.', 9),
-('Photographing Wildlife in Challenging Conditions', 'How to capture stunning shots in tough environments.', 10);
+('Top 10 Anime Fights of All Time', 'A comprehensive list of the most epic battles in anime history...', 1),
+('The Science Behind Dragon Ball Power Levels', 'An in-depth analysis of power scaling in Dragon Ball universe...', 1),
+('Mythology and Modern Storytelling', 'How ancient myths continue to inspire contemporary narratives...', 3),
+('Emerging Tech Trends in 2024', 'A look at the most promising technological innovations...', 4),
+('Naruto: Chakra System Explained', 'A detailed breakdown of how chakra works in the Naruto universe...', 1),
+('Superhero Origin Stories Comparison', 'Comparing the backstories of different iconic superheroes...', 2),
+('Quantum Computing Breakthroughs', 'Recent advancements in quantum computing technology...', 4),
+('Anime Character Psychological Profiles', 'Deep psychological analysis of complex anime characters...', 5),
+('The Evolution of Detective Fiction', 'Tracing the development of detective stories through history...', 3),
+('Web Development Frameworks Comparison', 'An objective look at modern web development technologies...', 4),
+('The Art of Storytelling in Fantasy Novels', 'An exploration of narrative techniques in modern fantasy writing...', 3),
+('Dinosaur Research: Past and Future', 'A comprehensive look at paleontological discoveries and future prospects...', 4),
+('Pirate Legends and Historical Accuracy', 'Separating myth from reality in pirate narratives...', 3),
+('Pop Culture Trends of the Decade', 'Analyzing the most significant pop culture moments...', 5),
+('Technology and Scientific Innovation', 'How modern science is changing our understanding of the world...', 4),
+('Star Wars vs Star Trek: An Epic Comparison', 'A deep dive into two of the most iconic sci-fi franchises...', 6),
+('Best Detective Novels of the 21st Century', 'Exploring groundbreaking mystery literature...', 7),
+('Indie Film Festival Highlights', 'Showcasing hidden gems from recent independent film festivals...', 8),
+('Next-Gen Gaming Technologies', 'Exploring the future of video game development...', 9),
+('Classic Literature Reimagined', 'How modern authors reinterpret classic works...', 10),
+('Space Exploration Documentary Review', 'An in-depth look at recent space documentaries...', 6),
+('The Psychology of Detective Characters', 'Analyzing complex protagonists in mystery fiction...', 7),
+('Cinematography Techniques in Modern Cinema', 'Breaking down innovative filming methods...', 8),
+('eSports: The Future of Competitive Gaming', 'Exploring the rise of professional gaming...', 9),
+('Magical Realism in Contemporary Literature', 'Examining the genre''s evolution and impact...', 10);
 
-
--- Step 5: Insert comments
-INSERT INTO comments (content, creation_date, authenticated_user_id, post_id) VALUES
-('Great insights! I totally agree with you.', CURRENT_TIMESTAMP, 1, 1),
-('I can’t wait to read these books!', CURRENT_TIMESTAMP, 2, 2),
-('Anime has really evolved over the years.', CURRENT_TIMESTAMP, 3, 3),
-('Looking forward to discussing more on this!', CURRENT_TIMESTAMP, 1, 3),
-('Awesome travel tips!', CURRENT_TIMESTAMP, 4, 4),
-('Delicious! I want to try this recipe.', CURRENT_TIMESTAMP, 5, 5),
-('So many good movies coming up!', CURRENT_TIMESTAMP, 2, 6),
-('Let’s keep each other motivated!', CURRENT_TIMESTAMP, 3, 7),
-('Game dev is so much fun!', CURRENT_TIMESTAMP, 4, 8),
-('Nature is so beautiful!', CURRENT_TIMESTAMP, 5, 9);
-
--- Child Comment 1
-INSERT INTO comments (content, creation_date, authenticated_user_id, post_id, parent_comment_id)
-VALUES ('I agree with your point about sustainable practices!', CURRENT_TIMESTAMP, 2, 1, 1);
-
--- Child Comment 2
-INSERT INTO comments (content, creation_date, authenticated_user_id, post_id, parent_comment_id)
-VALUES ('This is a great discussion, I have some thoughts too.', CURRENT_TIMESTAMP, 3, 1, 1);
-
--- Child Comment 3 (nested reply to Child Comment 1)
-INSERT INTO comments (content, creation_date, authenticated_user_id, post_id, parent_comment_id)
-VALUES ('I think we need more focus on local community efforts.', CURRENT_TIMESTAMP, 4, 1, 11);
-
-INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
-(1, 1, FALSE),  -- Anonymous - The Rise of AI
-(2, 2, FALSE),  -- Bob Johnson - Must-Read Books of 2024
-(3, 3, FALSE),  -- Charlie Brown - Top Anime of the Season
-(4, 4, FALSE),  -- Diana Prince - Travel Tips for 2024
-(5, 5, FALSE),  -- Edward Elric - Building a Fantasy World
-(6, 6, FALSE),  -- Fiona Gallagher - Cooking Healthy Meals
-(7, 7, FALSE),  -- George Martin - Upcoming Movies in 2024
-(8, 8, FALSE),  -- Hannah Montana - Staying Fit During Winter
-(9, 9, FALSE),  -- Ian Malcolm - Game Development Basics
-(10, 10, FALSE), -- Jack Sparrow - Wildlife Photography Tips
-(11, 1, FALSE),  -- Katherine Pierce - The Rise of AI
-(12, 2, FALSE),  -- Liam Neeson - Must-Read Books of 2024
-(13, 3, FALSE),  -- Monica Geller - Top Anime of the Season
-(14, 4, FALSE),  -- Nina Williams - Travel Tips for 2024
-(15, 5, FALSE),  -- Oscar Wilde - Building a Fantasy World
-(16, 6, FALSE),  -- Penny Lane - Cooking Healthy Meals
-(17, 7, FALSE),  -- Quentin Tarantino - Upcoming Movies in 2024
-(18, 8, FALSE),  -- Rachel Green - Staying Fit During Winter
-(19, 9, FALSE),  -- Steve Rogers - Game Development Basics
-(20, 10, FALSE),  -- Tony Stark - Wildlife Photography Tips
-(21, 1, FALSE),  -- Ursula K. Le Guin - The Rise of AI
-(22, 2, FALSE),  -- Victor Frankenstein - Must-Read Books of 2024
-(23, 3, FALSE),  -- Will Turner - Top Anime of the Season
-(24, 4, FALSE),  -- Xena Warrior - Travel Tips for 2024
-(25, 5, FALSE),  -- Yoda - Building a Fantasy World
-(26, 6, FALSE),  -- Zorro - Cooking Healthy Meals
-(27, 7, FALSE),  -- Albus Dumbledore - Upcoming Movies in 2024
-(28, 8, FALSE),  -- Bella Swan - Staying Fit During Winter
-(29, 9, FALSE),  -- Clark Kent - Game Development Basics
-(30, 10, FALSE),  -- Darth Vader - Wildlife Photography Tips
-(31, 1, FALSE),  -- Elliot Alderson - The Rise of AI
-(32, 2, FALSE),  -- Frodo Baggins - Must-Read Books of 2024
-(33, 3, FALSE),  -- Gandalf the Grey - Top Anime of the Season
-(34, 4, FALSE),  -- Homer Simpson - Travel Tips for 2024
-(35, 5, FALSE),  -- Icarus - Building a Fantasy World
-(36, 6, FALSE),  -- Jules Winnfield - Cooking Healthy Meals
-(37, 7, FALSE),  -- Katniss Everdeen - Upcoming Movies in 2024
-(38, 8, FALSE),  -- Lara Croft - Staying Fit During Winter
-(39, 9, FALSE),  -- Marty McFly - Game Development Basics
-(40, 10, FALSE),  -- Nancy Drew - Wildlife Photography Tips
-(41, 1, FALSE),  -- Oliver Twist - The Rise of AI
-(42, 2, TRUE),   -- Pikachu - Must-Read Books of 2024 (Pinned)
-(43, 3, FALSE),  -- Quasimodo - Top Anime of the Season
-(44, 4, FALSE),  -- R2-D2 - Travel Tips for 2024
-(45, 5, FALSE),  -- SpongeBob SquarePants - Building a Fantasy World
-(46, 6, FALSE),  -- Thor Odinson - Cooking Healthy Meals
-(47, 7, FALSE),  -- Ultron - Upcoming Movies in 2024
-(48, 8, FALSE),  -- Violet Parr - Staying Fit During Winter
-(49, 9, FALSE),  -- Wolverine - Game Development Basics
-(50, 10, FALSE); -- X-Men - Wildlife Photography Tips
-
--- Step 6: Insert votes
--- Each user votes for some posts and comments
-INSERT INTO votes (upvote, authenticated_user_id) VALUES(TRUE, 1), 
-(FALSE, 2), 
-(TRUE, 3),
-(TRUE, 4),
-(FALSE, 5),
-(TRUE, 6),
-(FALSE, 7),
-(TRUE, 8),
-(FALSE, 9),
-(TRUE, 10),
-(TRUE, 11),
-(FALSE, 12),
-(TRUE, 13),
-(FALSE, 14),
-(TRUE, 15),
-(FALSE, 16),
-(TRUE, 17),
-(FALSE, 18),
-(TRUE, 19),
-(FALSE, 20),
-(TRUE, 21),
-(FALSE, 22),
-(TRUE, 23),
-(FALSE, 24),
-(TRUE, 25),
-(FALSE, 26),
-(TRUE, 27),
-(FALSE, 28),
-(TRUE, 29),
-(FALSE, 30),
-(TRUE, 31),
-(FALSE, 32),
-(TRUE, 33),
-(FALSE, 34),
-(TRUE, 35),
-(FALSE, 36),
-(TRUE, 37),
-(FALSE, 38),
-(TRUE, 39),
-(FALSE, 40),
-(TRUE, 41),
-(FALSE, 42),
-(TRUE, 43),
-(FALSE, 44),
-(TRUE, 45),
-(FALSE, 46),
-(TRUE, 47),
-(FALSE, 48),
-(TRUE, 49),
-(FALSE, 50);
-
--- Step 7: Link votes to posts
-INSERT INTO post_votes (vote_id, post_id) VALUES(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 1),
-(7, 2),
-(8, 3),
-(9, 4),
-(10, 5),
-(11, 1),
-(12, 2),
-(13, 3),
-(14, 4),
-(15, 5),
-(16, 1),
-(17, 2),
-(18, 3),
-(19, 4),
-(20, 5),
-(21, 1),
-(22, 2),
-(23, 3),
-(24, 4),
-(25, 5),
-(26, 1),
-(27, 2),
-(28, 3),
-(29, 4),
-(30, 5),
-(31, 1),
-(32, 2),
-(33, 3),
-(34, 4),
-(35, 5),
-(36, 1),
-(37, 2),
-(38, 3),
-(39, 4),
-(40, 5),
-(41, 1),
-(42, 2),
-(43, 3),
-(44, 4),
-(45, 5),
-(46, 1),
-(47, 2),
-(48, 3),
-(49, 4),
-(50, 5);
-
--- Step 8: Insert comments votes
-INSERT INTO comment_votes (vote_id, comment_id) VALUES(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5);
-
--- Step 9: Insert topics
-INSERT INTO topics (post_id, review_date, status) VALUES(1, CURRENT_TIMESTAMP, 'pending'),
-(11, CURRENT_TIMESTAMP, 'accepted'),
-(12, CURRENT_TIMESTAMP, 'rejected'),
-(13, CURRENT_TIMESTAMP, 'pending'),
-(14, CURRENT_TIMESTAMP, 'accepted'),
-(15, CURRENT_TIMESTAMP, 'pending'),
-(16, CURRENT_TIMESTAMP, 'accepted'),
-(17, CURRENT_TIMESTAMP, 'pending'),
-(18, CURRENT_TIMESTAMP, 'rejected'),
-(19, CURRENT_TIMESTAMP, 'accepted');
-
--- Step 10: Insert news
-INSERT INTO news (post_id, news_url) VALUES(1, 'http://example.com/news1'),
-(2, 'http://example.com/news2'),
-(3, 'http://example.com/news3'),
-(4, 'http://example.com/news4'),
-(5, 'http://example.com/news5'),
-(6, 'http://example.com/news6'),
-(7, 'http://example.com/news7'),
-(8, 'http://example.com/news8'),
-(9, 'http://example.com/news9'),
-(10, 'http://example.com/news10');
-
--- Step 11: Insert notifications
-INSERT INTO notifications (is_read, authenticated_user_id) VALUES(FALSE, 1),
-(FALSE, 2),
-(TRUE, 3),
-(FALSE, 4),
-(TRUE, 5),
-(FALSE, 6),
-(TRUE, 7),
-(FALSE, 8),
-(TRUE, 9),
-(FALSE, 10),
-(FALSE, 11),
-(TRUE, 12),
-(FALSE, 13),
-(TRUE, 14),
-(FALSE, 15),
-(TRUE, 16),
-(FALSE, 17),
-(TRUE, 18),
-(FALSE, 19),
-(TRUE, 20),
-(FALSE, 21),
-(TRUE, 22),
-(FALSE, 23),
-(TRUE, 24),
-(FALSE, 25),
-(TRUE, 26),
-(FALSE, 27),
-(TRUE, 28),
-(FALSE, 29),
-(TRUE, 30),
-(FALSE, 31),
-(TRUE, 32),
-(FALSE, 33),
-(TRUE, 34),
-(FALSE, 35),
-(TRUE, 36),
-(FALSE, 37),
-(TRUE, 38),
-(FALSE, 39),
-(TRUE, 40),
-(FALSE, 41),
-(TRUE, 42),
-(FALSE, 43),
-(TRUE, 44),
-(FALSE, 45),
-(TRUE, 46),
-(FALSE, 47),
-(TRUE, 48),
-(FALSE, 49),
-(TRUE, 50);
-
-INSERT INTO reports (reported_id, reason, report_date, is_open, report_type, authenticated_user_id) VALUES
--- User Reports
-(2,'User is spamming the community with irrelevant content', '2024-01-15 10:30:00', true, 'user_report', 1),
-(3,'Harassment and inappropriate messages', '2024-01-16 14:20:00', false, 'user_report', 2),
-(4,'Multiple accounts used for vote manipulation', '2024-01-17 09:15:00', true, 'user_report', 3),
-(5,'Impersonating another user', '2024-01-18 16:45:00', true, 'user_report', 4),
-(6,'Spreading misinformation', '2024-01-19 11:25:00', false, 'user_report', 5),
-
--- Comment Reports
-(2,'Hate speech in comment', '2024-01-20 13:10:00', true, 'comment_report', 6),
-(3,'Spam comment with malicious links', '2024-01-21 15:30:00', false, 'comment_report', 7),
-(4,'Harassment in comment section', '2024-01-22 17:45:00', true, 'comment_report', 8),
-(5,'Off-topic and inflammatory comments', '2024-01-23 09:20:00', false, 'comment_report', 9),
-(6,'Personal information shared in comment', '2024-01-24 14:15:00', true, 'comment_report', 10),
-
--- Item (Post) Reports
-(2,'Copyright violation in post', '2024-01-25 10:45:00', true, 'item_report', 11),
-(3,'Misleading news article', '2024-01-26 16:30:00', false, 'item_report', 12),
-(4,'Inappropriate content in post', '2024-01-27 11:20:00', true, 'item_report', 13),
-(5,'Duplicate post spam', '2024-01-28 13:40:00', false, 'item_report', 14),
-(6,'False information in news post', '2024-01-29 15:55:00', true, 'item_report', 15),
-
--- Topic Reports
-(2,'Topic violates community guidelines', '2024-01-30 12:25:00', true, 'topic_report', 16),
-(3,'Inappropriate topic title', '2024-02-01 14:35:00', false, 'topic_report', 17),
-(4,'Topic contains sensitive material', '2024-02-02 16:50:00', true, 'topic_report', 18),
-(5,'Topic promotes harmful behavior', '2024-02-03 09:30:00', false, 'topic_report', 19),
-(6,'Topic contains personal attacks', '2024-02-04 11:45:00', true, 'topic_report', 20);
-
-INSERT INTO user_followers (follower_id, followed_id) VALUES 
-(2, 3), (3, 4), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (12, 13), (14, 15), (16, 17), (18, 19), (19, 20), (21, 22), (23, 24), (25, 26), (27, 28), (29, 30), (31, 32), (33, 34), (35, 36), (37, 38), (39, 40), (41, 42), (43, 44), (45, 46), (47, 48), (49, 50);
-
-
-
-INSERT INTO follow_notifications (notification_id, follower_id) VALUES(1, 2),
-(2, 3),
-(3, 4),
-(4, 5),
-(5, 6),
-(6, 7),
-(7, 8),
-(8, 9),
-(9, 10),
-(10, 1),
-(11, 1),
-(12, 2),
-(13, 3),
-(14, 4),
-(15, 5),
-(16, 6),
-(17, 7),
-(18, 8),
-(19, 9),
-(20, 10);
-
-INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
--- Tech community
-(3, 1), (4, 1), (5, 1), (31, 1), 
--- Book Lovers
-(4, 2), (18, 2), (29, 2), (40, 2),
--- Anime Fans
-(5, 3), (42, 3), (44, 3), (36, 3),
--- Travel Enthusiasts
-(6, 4), (10, 4), (43, 4), (33, 4),
--- Fantasy Writers
-(7, 5), (21, 5), (38, 5), (15, 5),
--- Culinary Artists
-(13, 6), (9, 6), (26, 6), (45, 6),
--- Movie Buffs
-(17, 7), (1, 7), (27, 7), (19, 7),
--- Fitness Fanatics
-(8, 8), (34, 8), (30, 8), (48, 8),
--- Game Developers
-(14, 9), (25, 9), (3, 9), (49, 9),
--- Nature Lovers
-(6, 10), (20, 10), (33, 10), (44, 10);
-
-
-INSERT INTO community_moderators (authenticated_user_id, community_id) 
+INSERT INTO news (post_id, news_url)
 VALUES 
-(1, 1),  -- User 1 is a moderator of community 1
-(2, 1);  -- User 2 is also a moderator of community 1
+(4, 'https://example.com/tech-trends-2024'),
+(6, 'https://example.com/superhero-origins'),
+(7, 'https://example.com/quantum-computing'),
+(10, 'https://example.com/web-dev-frameworks'),
+(12, 'https://example.com/dinosaur-research'),
+(15, 'https://example.com/science-innovation'),
+(16, 'https://example.com/star-wars-star-trek'),
+(18, 'https://example.com/indie-film-festival'),
+(19, 'https://example.com/next-gen-gaming'),
+(21, 'https://example.com/space-exploration-doc');
 
-INSERT INTO favorite_posts(authenticated_user_id, post_id) VALUES (1,5);
+-- Insert into Topics table (topics awaiting review)
+INSERT INTO topics (post_id, status, review_date)
+VALUES 
+(1, 'pending', CURRENT_TIMESTAMP),
+(2, 'pending', CURRENT_TIMESTAMP),
+(3, 'accepted', CURRENT_TIMESTAMP),
+(5, 'pending', CURRENT_TIMESTAMP),
+(8, 'accepted', CURRENT_TIMESTAMP),
+(9, 'pending', CURRENT_TIMESTAMP),
+(11, 'accepted', CURRENT_TIMESTAMP),
+(13, 'pending', CURRENT_TIMESTAMP),
+(14, 'accepted', CURRENT_TIMESTAMP),
+(17, 'pending', CURRENT_TIMESTAMP),
+(20, 'accepted', CURRENT_TIMESTAMP),
+(22, 'pending', CURRENT_TIMESTAMP),
+(23, 'accepted', CURRENT_TIMESTAMP),
+(24, 'pending', CURRENT_TIMESTAMP),
+(25, 'accepted', CURRENT_TIMESTAMP);
+
+-- Link authors to posts
+INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
+(6, 1, FALSE),
+(7, 2, TRUE),
+(8, 3, FALSE),
+(9, 4, FALSE),
+(6, 5, TRUE),
+(10, 6, FALSE),
+(9, 7, TRUE),
+(6, 8, FALSE),
+(8, 9, TRUE),
+(9, 10, FALSE),
+(16, 11, FALSE),
+(17, 12, TRUE),
+(18, 13, FALSE),
+(5, 14, TRUE),
+(6, 15, FALSE),
+(24, 16, FALSE),  -- Liam Neeson
+(25, 17, TRUE),   -- Monica Geller
+(26, 18, FALSE), -- Nina Williams
+(27, 19, TRUE),  -- Oscar Wilde
+(28, 20, FALSE), -- Penny Lane
+(29, 21, TRUE),  -- Quentin Tarantino
+(30, 22, FALSE), -- Rachel Green
+(31, 23, TRUE),  -- Steve Rogers
+(32, 24, FALSE), -- Tony Stark
+(33, 25, TRUE);  -- Ursula K. Le Guin
+
+-- Insert votes
+INSERT INTO votes (upvote, authenticated_user_id) VALUES
+(TRUE, 6), (TRUE, 7), (TRUE, 8), (TRUE, 9), (TRUE, 10),
+(FALSE, 6), (FALSE, 7), (FALSE, 8), (FALSE, 9), (FALSE, 10),
+(TRUE, 16), (TRUE, 17), (TRUE, 18), (TRUE, 5), (TRUE, 6),
+(FALSE, 16), (FALSE, 17), (FALSE, 18), (FALSE, 5), (FALSE, 6),
+(TRUE, 24), (TRUE, 25), (TRUE, 26), (TRUE, 27), (TRUE, 28),
+(FALSE, 24), (FALSE, 25), (FALSE, 26), (FALSE, 27), (FALSE, 28);
+
+-- Link votes to posts
+INSERT INTO post_votes (vote_id, post_id) 
+SELECT v.id, p.id 
+FROM votes v, posts p 
+WHERE p.id > 15;
+
+
+-- Insert comments
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('Great article about anime fights!', 7, 1, NULL),
+('I disagree with some of these rankings', 8, 1, 1),
+('Fascinating breakdown of chakra', 9, 5, NULL),
+('Your analysis is spot on!', 10, 5, 3),
+('Interesting tech trends', 6, 4, NULL),
+('Fascinating insights into fantasy writing!', 5, 11, NULL),
+('As a scientist, this dinosaur research is intriguing', 4, 12, NULL),
+('Love the historical perspective on pirates', 3, 13, NULL),
+('Great breakdown of pop culture trends', 2, 14, NULL),
+('Thought-provoking take on technological innovation', 17, 15, NULL),
+('Fascinating sci-fi comparison!', 35, 16, NULL),
+('Some great points about detective novels', 36, 17, NULL),
+('Loved the indie film insights', 37, 18, NULL),
+('Gaming tech is evolving so fast', 38, 19, NULL),
+('Brilliant take on modern literature', 39, 20, NULL),
+('Detailed breakdown of space documentaries', 40, 21, NULL),
+('Psychological analysis is spot on', 41, 22, NULL),
+('Cinematography techniques are mind-blowing', 42, 23, NULL),
+('eSports is definitely the future', 43, 24, NULL),
+('Magical realism continues to amaze', 44, 25, NULL);
+
+-- Insert comment votes
+INSERT INTO comment_votes (vote_id, comment_id)
+SELECT v.id, c.id 
+FROM votes v, comments c 
+WHERE c.id > 10;
+
+-- Insert community followers
+INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
+(6, 1), (6, 2), 
+(7, 1), (7, 4),
+(8, 3), (8, 4),
+(9, 3), (9, 5),
+(10, 2), (10, 4),
+(16, 4), (16, 5),
+(17, 3), (17, 4),
+(18, 3), (18, 5),
+(22, 2), (22, 4),
+(23, 3), (23, 5),
+(34, 6), (35, 6),  -- SciFi Enthusiasts
+(36, 7), (37, 7),  -- Mystery Lovers
+(38, 8), (39, 8),  -- Film Buffs
+(40, 9), (41, 9),  -- Gaming World
+(42, 10), (43, 10);  -- Literature Club
+
+-- Insert user followers
+INSERT INTO user_followers (follower_id, followed_id) VALUES
+(6, 7), (7, 6), 
+(8, 9), (9, 8),
+(10, 6), (6, 10),
+(16, 17), (17, 16),
+(18, 19), (19, 18),
+(22, 23), (23, 22),
+(24, 25), (25, 24),
+(26, 27), (27, 26),
+(28, 29), (29, 28),
+(30, 31), (31, 30),
+(32, 33), (33, 32);
+
+
+-- Optional: Add some community moderators
+INSERT INTO community_moderators (authenticated_user_id, community_id) VALUES
+(6, 1),  -- Naruto moderates Anime Fans
+(7, 4),  -- Goku moderates Tech Talk
+(8, 3),  -- Sherlock moderates Mythology
+(21, 3),  -- George Martin moderates Mythology
+(23, 4),  -- Ian Malcolm moderates Tech Talk
+(24, 6),   -- Liam Neeson moderates SciFi Enthusiasts
+(25, 7),   -- Monica Geller moderates Mystery Lovers
+(26, 8),   -- Nina Williams moderates Film Buffs
+(27, 9),   -- Oscar Wilde moderates Gaming World
+(28, 10);  -- Penny Lane moderates Literature Club
+
+-- Optional: Add some favorite posts
+INSERT INTO favorite_posts (authenticated_user_id, post_id) VALUES
+(6, 2), (7, 5), (8, 3), (9, 7), (10, 6),(16, 12), (17, 15), (18, 11), (22, 13), (23, 14),
+(24, 16), (25, 17), (26, 18), (27, 19), (28, 20),
+(29, 21), (30, 22), (31, 23), (32, 24), (33, 25);
