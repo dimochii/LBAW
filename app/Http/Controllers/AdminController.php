@@ -280,12 +280,6 @@ class AdminController extends Controller
         ]
       ])
       ->options([
-        "plugins" => [
-          "title" => [
-            "display" => true,
-            "text" => "Posts Analysis"
-          ]
-        ],
         "scales" => [
           "y" => [
             "beginAtZero" => true,
@@ -304,28 +298,137 @@ class AdminController extends Controller
 
     return $chart;
   }
+
+  private function pieChartUsersSuspended()
+  {
+
+    $suspendedUsers = AuthenticatedUser::where('is_suspended', true)->count();
+    $normalUsers = AuthenticatedUser::where('is_suspended', false)->count();
+
+
+    $data = [$suspendedUsers, $normalUsers];
+    $labels = ['Suspended Users', 'Normal Users'];
+    $backgroundColor = ['#C96868', '#7EACB5'];
+
+    $chart = Chartjs::build()
+      ->name('userStatusChart')
+      ->type('pie')
+      ->size(['width' => 400, 'height' => 400])
+      ->labels($labels)
+      ->datasets([
+        [
+          "data" => $data,
+          "backgroundColor" => $backgroundColor
+        ]
+      ])
+      ->options([
+        "responsive" => true,
+        "plugins" => [
+          "legend" => [
+            "display" => false // Hide legend
+          ],
+        ]
+      ]);
+
+    return $chart;
+  }
+
+
   public function overview()
   {
-    $users = AuthenticatedUser::all();
-    $hubs = Community::all();
-    $news = News::all();
-    $topics = Topic::all();
+
     $chartHubs = $this->newCommunitiesChart();
     $chartUsers = $this->newUsersChart();
     $chartReports = $this->newReportsChart();
     $postsPDay = $this->postsPerDayChart();
     $comboPosts = $this->postsComboChart();
 
+    $latestNews = News::latest('post_id')->take(5)->get();
+    $latestTopic = Topic::latest('post_id')->take(5)->get();
+    $pieSuspended = $this->pieChartUsersSuspended();
+
+    $startDate = Carbon::now()->subDays(13);
+    $endDate = Carbon::now();
+
+    $hottestPosts = Post::withCount('votes', 'comments')
+      ->where('creation_date', '>=', $startDate)
+      ->take(10)
+      ->get();
+
+    $hottestPosts = $hottestPosts->map(function ($post) {
+      $post->total_engagement = $post->votes_count + $post->comments_count;
+      return $post;
+    })->sortByDesc('total_engagement');
+
+    $topUsers = AuthenticatedUser::withCount('followers', 'authoredPosts')->orderBy('followers_count', 'desc')->take(5)->get();
+    $topHubs = Community::withCount('followers')->orderBy('followers_count', 'desc')->take(5)->get();
+    
+    $userCount = AuthenticatedUser::all()->count();
+    $activeUserCount = DB::table('authenticated_users')
+      ->leftJoin('authors', 'authenticated_users.id', '=', 'authors.authenticated_user_id')
+      ->leftJoin('posts', 'authors.post_id', '=', 'posts.id')
+      ->leftJoin('comments', 'authenticated_users.id', '=', 'comments.authenticated_user_id')
+      ->where(function ($query) {
+        $query->where('posts.creation_date', '>=', Carbon::now()->subDays(30))
+          ->orWhere('comments.creation_date', '>=', Carbon::now()->subDays(30));
+      })
+      // Exclude suspended users
+      ->where('authenticated_users.is_suspended', false)
+      // Get distinct users who have either posted a comment or authored a post
+      ->distinct()
+      ->count('authenticated_users.id');
+
+    $hubCount = Community::all()->count();
+    $activeHubCount = DB::table('communities')
+      ->join('posts', 'communities.id', '=', 'posts.community_id')
+      ->where('posts.creation_date', '>', $startDate)
+      ->select('communities.id', 'communities.name', 'communities.description')
+      ->groupBy('communities.id')
+      ->get()
+      ->count();
+
+    $pendingReports = Report::where('is_open', true)->count();
+
+    $newTopicsCount = Topic::whereHas('post', function ($query) use ($startDate) {
+      $query->whereDate('creation_date', '>', $startDate);
+    })->get()->count();
+
+    $newNewsCount = News::whereHas('post', function ($query) use ($startDate) {
+      $query->whereDate('creation_date', '>', $startDate);
+    })->get()->count();
+
+    $postsCount = Post::all()->count();
+    $newPosts = $newNewsCount + $newTopicsCount;
+
+    $mostReportedUsers = Report::select('authenticated_user_id', DB::raw('COUNT(*) as report_count'))
+    ->groupBy('authenticated_user_id')
+    ->orderByDesc('report_count')
+    ->take(5)
+    ->with('user')
+    ->get();
+
     return view('pages.admin', compact(
-      'users',
-      'hubs',
-      'news',
-      'topics',
+      'pieSuspended',
+      'topUsers',
+      'topHubs',
+      'latestNews',
+      'latestTopic',
+      'hottestPosts',
       'chartHubs',
       'chartUsers',
       'chartReports',
       'postsPDay',
-      'comboPosts'
+      'comboPosts',
+      'startDate',
+      'endDate',
+      'newPosts',
+      'activeHubCount',
+      'activeUserCount',
+      'pendingReports',
+      'userCount',
+      'hubCount',
+      'postsCount',
+      'mostReportedUsers',
     ));
   }
 
@@ -340,13 +443,9 @@ class AdminController extends Controller
 
     $suspendedUserCount = AuthenticatedUser::where('is_suspended', true)->count();
     $activeUserCount = DB::table('authenticated_users')
-      // Join authors table to get users who have authored posts in the last 30 days
       ->leftJoin('authors', 'authenticated_users.id', '=', 'authors.authenticated_user_id')
-      // Join posts table to get posts' creation date for filtering
       ->leftJoin('posts', 'authors.post_id', '=', 'posts.id')
-      // Join comments table to get users who have posted comments in the last 30 days
       ->leftJoin('comments', 'authenticated_users.id', '=', 'comments.authenticated_user_id')
-      // Filter by posts or comments created in the last 30 days
       ->where(function ($query) {
         $query->where('posts.creation_date', '>=', Carbon::now()->subDays(30))
           ->orWhere('comments.creation_date', '>=', Carbon::now()->subDays(30));
@@ -446,161 +545,159 @@ class AdminController extends Controller
 
   public function reports()
   {
-      // Define the date range for the past 14 days
-      $date_span = Carbon::now()->subDays(13);
-      $startDate = now()->subDays(13)->toFormattedDateString();
-      $endDate = now()->toFormattedDateString();
+    // Define the date range for the past 14 days
+    $date_span = Carbon::now()->subDays(13);
+    $startDate = now()->subDays(13)->toFormattedDateString();
+    $endDate = now()->toFormattedDateString();
 
-      // Fetch all reports
-      $reports = Report::all();
+    // Fetch all reports
+    $reports = Report::all();
 
-      // Total reports
-      $totalReports = $reports->count();
+    // Total reports
+    $totalReports = $reports->count();
 
-      // New reports in the last 14 days
-      $newReports = Report::whereDate('report_date', '>', $date_span)->count();
+    // New reports in the last 14 days
+    $newReports = Report::whereDate('report_date', '>', $date_span)->count();
 
-      // Resolved reports (using 'status' to indicate resolved reports)
-      $resolvedReports = Report::where('is_open', false)->count(); // Assuming resolved reports are closed (is_open = false)
+    // Resolved reports (using 'status' to indicate resolved reports)
+    $resolvedReports = Report::where('is_open', false)->count(); // Assuming resolved reports are closed (is_open = false)
 
-      // Pending reports
-      $pendingReports = Report::where('is_open', true)->count(); // Pending reports are those still open
+    // Pending reports
+    $pendingReports = Report::where('is_open', true)->count(); // Pending reports are those still open
 
-      // Generate charts
-      $chartReports = $this->newReportsChart();
-      $statusChart = $this->reportsStatusChart();
+    // Generate charts
+    $chartReports = $this->newReportsChart();
+    $statusChart = $this->reportsStatusChart();
 
-      return view('pages.admin_reports', compact(
-          'reports',
-          'totalReports',
-          'newReports',
-          'resolvedReports',
-          'pendingReports',
-          'startDate',
-          'endDate',
-          'chartReports',
-          'statusChart'
-      ));
+    return view('pages.admin_reports', compact(
+      'reports',
+      'totalReports',
+      'newReports',
+      'resolvedReports',
+      'pendingReports',
+      'startDate',
+      'endDate',
+      'chartReports',
+      'statusChart'
+    ));
   }
 
 
 
   private function newReportsChart()
   {
-      // Define the date range for the past 14 days
-      $startDate = now()->subDays(13)->startOfDay();
-      $endDate = now()->endOfDay();
+    // Define the date range for the past 14 days
+    $startDate = now()->subDays(13)->startOfDay();
+    $endDate = now()->endOfDay();
 
-      // Fetch the data for new reports
-      $data = Report::select(DB::raw('DATE(report_date) as report_date'), DB::raw('COUNT(*) as new_reports'))
-          ->whereBetween('report_date', [$startDate, $endDate])
-          ->groupBy('report_date')
-          ->orderBy('report_date', 'asc')
-          ->get();
+    // Fetch the data for new reports
+    $data = Report::select(DB::raw('DATE(report_date) as report_date'), DB::raw('COUNT(*) as new_reports'))
+      ->whereBetween('report_date', [$startDate, $endDate])
+      ->groupBy('report_date')
+      ->orderBy('report_date', 'asc')
+      ->get();
 
-      // Generate a list of dates for the last 14 days
-      $labels = collect();
-      for ($date = $startDate->copy(); $date <= $endDate; $date->addDay()) {
-          $labels->push($date->toDateString());
-      }
+    // Generate a list of dates for the last 14 days
+    $labels = collect();
+    for ($date = $startDate->copy(); $date <= $endDate; $date->addDay()) {
+      $labels->push($date->toDateString());
+    }
 
-      // Map the counts to the corresponding dates
-      $counts = $labels->map(function ($date) use ($data) {
-          return $data->firstWhere('report_date', $date)?->new_reports ?? 0;
-      });
+    // Map the counts to the corresponding dates
+    $counts = $labels->map(function ($date) use ($data) {
+      return $data->firstWhere('report_date', $date)?->new_reports ?? 0;
+    });
 
-      // Build the chart
-      $chart = Chartjs::build()
-          ->name('newReportsChart')
-          ->type('line')
-          ->size(['width' => 400, 'height' => 200])
-          ->labels($labels->toArray())
-          ->datasets([
-              [
-                  "label" => "New Reports",
-                  "backgroundColor" => "rgba(255, 159, 64, 0.2)",
-                  "borderColor" => "rgba(255, 159, 64, 1)",
-                  "pointBorderColor" => "rgba(255, 159, 64, 1)",
-                  "pointBackgroundColor" => "rgba(255, 159, 64, 1)",
-                  "pointHoverBackgroundColor" => "#fff",
-                  "pointHoverBorderColor" => "rgba(255, 159, 64, 1)",
-                  "data" => $counts->toArray(),
-                  "fill" => false,
-              ]
-          ])
-          ->options([
-              "scales" => [
-                  "y" => [
-                      "beginAtZero" => true,
-                      "ticks" => [
-                          "stepSize" => 1, // Ensure integer-only y-axis
-                      ],
-                  ],
-                  "x" => [
-                      "type" => "time",
-                      "time" => [
-                          "unit" => "day",
-                      ],
-                  ],
-              ],
-          ]);
+    // Build the chart
+    $chart = Chartjs::build()
+      ->name('newReportsChart')
+      ->type('line')
+      ->size(['width' => 400, 'height' => 200])
+      ->labels($labels->toArray())
+      ->datasets([
+        [
+          "label" => "New Reports",
+          "backgroundColor" => "rgba(255, 159, 64, 0.2)",
+          "borderColor" => "rgba(255, 159, 64, 1)",
+          "pointBorderColor" => "rgba(255, 159, 64, 1)",
+          "pointBackgroundColor" => "rgba(255, 159, 64, 1)",
+          "pointHoverBackgroundColor" => "#fff",
+          "pointHoverBorderColor" => "rgba(255, 159, 64, 1)",
+          "data" => $counts->toArray(),
+          "fill" => false,
+        ]
+      ])
+      ->options([
+        "scales" => [
+          "y" => [
+            "beginAtZero" => true,
+            "ticks" => [
+              "stepSize" => 1, // Ensure integer-only y-axis
+            ],
+          ],
+          "x" => [
+            "type" => "time",
+            "time" => [
+              "unit" => "day",
+            ],
+          ],
+        ],
+      ]);
 
-      return $chart;
+    return $chart;
   }
 
   private function reportsStatusChart()
   {
-      // Fetch data for report statuses based on the 'is_open' field
-      $statuses = Report::select('is_open', DB::raw('COUNT(*) as count'))
-          ->groupBy('is_open')
-          ->pluck('count', 'is_open');
+    // Fetch data for report statuses based on the 'is_open' field
+    $statuses = Report::select('is_open', DB::raw('COUNT(*) as count'))
+      ->groupBy('is_open')
+      ->pluck('count', 'is_open');
 
-      // Map the 'is_open' values to the status labels
-      $labels = ['Pending', 'Resolved'];
-      $counts = [
-          $statuses->get(true, 0),  // Pending reports (open)
-          $statuses->get(false, 0), // Resolved reports (closed)
-      ];
+    // Map the 'is_open' values to the status labels
+    $labels = ['Pending', 'Resolved'];
+    $counts = [
+      $statuses->get(true, 0),  // Pending reports (open)
+      $statuses->get(false, 0), // Resolved reports (closed)
+    ];
 
-      // Build the chart
-      $chart = Chartjs::build()
-          ->name('reportsStatusChart')
-          ->type('doughnut')
-          ->size(['width' => 400, 'height' => 200])
-          ->labels($labels)
-          ->datasets([
-              [
-                  "label" => "Report Statuses",
-                  "backgroundColor" => ["rgba(75, 192, 192, 0.2)", "rgba(255, 99, 132, 0.2)"],
-                  "borderColor" => ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)"],
-                  "data" => $counts,
-              ]
-          ])
-          ->options([
-              "plugins" => [
-                  "title" => [
-                      "display" => true,
-                      "text" => "Report Statuses"
-                  ]
-              ],
-              "scales" => [
-                  "y" => [
-                      "beginAtZero" => true,
-                      "ticks" => [
-                          "stepSize" => 1 // Ensures integer-only y-axis
-                      ]
-                  ],
-                  "x" => [
-                      "type" => "time",
-                      "time" => [
-                          "unit" => "day"
-                      ]
-                  ]
-              ]
-          ]);
+    // Build the chart
+    $chart = Chartjs::build()
+      ->name('reportsStatusChart')
+      ->type('doughnut')
+      ->size(['width' => 400, 'height' => 200])
+      ->labels($labels)
+      ->datasets([
+        [
+          "label" => "Report Statuses",
+          "backgroundColor" => ["rgba(75, 192, 192, 0.2)", "rgba(255, 99, 132, 0.2)"],
+          "borderColor" => ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)"],
+          "data" => $counts,
+        ]
+      ])
+      ->options([
+        "plugins" => [
+          "title" => [
+            "display" => true,
+            "text" => "Report Statuses"
+          ]
+        ],
+        "scales" => [
+          "y" => [
+            "beginAtZero" => true,
+            "ticks" => [
+              "stepSize" => 1 // Ensures integer-only y-axis
+            ]
+          ],
+          "x" => [
+            "type" => "time",
+            "time" => [
+              "unit" => "day"
+            ]
+          ]
+        ]
+      ]);
 
-      return $chart;
+    return $chart;
   }
-
-
 }
