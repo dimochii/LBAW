@@ -145,7 +145,7 @@
         <span class="font-medium text-xl">{{ $user->user->name }}</span>
         <span class="text-[#3C3D37]/[.6] group-hover:text-[#F4F2ED]/[.6]">{{ '@' . $user->user->username }}</span>
       </div>
-      <span class="ml-auto mr-8">{{$user->report_count}}</span>
+      <span class="ml-auto mr-8">{{$user->report_count}} reports</span>
     </a>
     @endforeach
   </div>
