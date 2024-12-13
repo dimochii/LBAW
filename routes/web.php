@@ -73,14 +73,14 @@ Route::controller(RegisterController::class)->group(function () {
 
 //Authenticated User
 //profile
-Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
+Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->middleware('auth')->name('user.profile');
 //edit profile
-Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->name('user.edit');
-Route::post('/users/{id}/update', [AuthenticatedUserController::class, 'update'])->name('user.update');
-Route::post('/users/{id}', [AuthenticatedUserController::class, 'destroy'])->name('user.destroy');
-Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->name('user.profile');
-Route::get('/users/{user}/profile', [AuthenticatedUserController::class, 'show'])->name('user.profile');
-Route::get('/users/{user}/profile/favorites', [AuthenticatedUserController::class, 'favorites']);
+Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->middleware('auth')->name('user.edit');
+Route::post('/users/{id}/update', [AuthenticatedUserController::class, 'update'])->middleware('auth')->name('user.update');
+Route::post('/users/{id}', [AuthenticatedUserController::class, 'destroy'])->middleware('auth')->name('user.destroy');
+Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->middleware('auth')->name('user.profile');
+Route::get('/users/{user}/profile', [AuthenticatedUserController::class, 'show'])->middleware('auth')->name('user.profile');
+Route::get('/users/{user}/profile/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
 
 
 
@@ -98,8 +98,8 @@ Route::delete('/users/{id}', [AuthenticatedUserController::class, 'deletemyaccou
 //admin
 Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware('auth');
 Route::post('/users/{id}/unsuspend',[AuthenticatedUserController::class,'unsuspend'])->middleware('auth');
-Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite']);
-Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite']);
+Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite'])->middleware('auth');
+Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
 
 
 
@@ -111,13 +111,13 @@ Route::get('/news', [NewsController::class, 'list'])->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments'])->name('post.comments');
 
-Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->name('comments.store');
+Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware('auth')->name('comments.update');
 
 //upvote & downvote
-Route::post('/news/{post_id}/upvote', [PostController::class, 'upvote'])->name('news.upvote');
-Route::post('/news/{post_id}/downvote', [PostController::class, 'downvote'])->name('news.downvote');
-Route::post('/news/{post_id}/voteupdate', [PostController::class, 'voteUpdate'])->name('news.voteupdate');
+Route::post('/news/{post_id}/upvote', [PostController::class, 'upvote'])->middleware('auth')->name('news.upvote');
+Route::post('/news/{post_id}/downvote', [PostController::class, 'downvote'])->middleware('auth')->name('news.downvote');
+Route::post('/news/{post_id}/voteupdate', [PostController::class, 'voteUpdate'])->middleware('auth')->name('news.voteupdate');
 
 //editing
 Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware('auth')->name('news.edit');
@@ -155,11 +155,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/bestof', 'bestof')->name('bestof');
     
-    Route::get('/moderator', [ModeratorController::class, 'show'])->name('user.moderator');
-    Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
-    Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
-    Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
-    Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->name('users.remove_admin');
+    Route::get('/moderator', [ModeratorController::class, 'show'])->middleware('auth')->name('user.moderator');
+    Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->middleware('auth')->name('users.suspend');
+    Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->middleware('auth')->name('users.unsuspend');
+    Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->middleware('auth')->name('users.make_admin');
+    Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->middleware('auth')->name('users.remove_admin');
   });
 
   // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
@@ -184,7 +184,7 @@ Route::middleware('auth')->group(function () {
 Route::post('/hubs/destroy', [CommunityController::class, 'destroy'])->middleware('auth')->name('communities.destroy');
 
 Route::post('/hubs', [CommunityController::class, 'store'])->middleware('auth')->name('communities.store');
-Route::get('/all-hubs', [CommunityController::class, 'index'])->name('communities.index');
+Route::get('/all-hubs', [CommunityController::class, 'index'])->middleware('auth')->name('communities.index');
 
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
@@ -205,7 +205,7 @@ Route::get('/notifications', [NotificationController::class, 'show'])
     ->middleware('auth')
     ->name('notifications.show');
     //mark as read
-Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->middleware('auth')->name('notifications.markAsRead');
 
 // Recover password
 
