@@ -9,7 +9,7 @@
         <a class="flex items-center"
           href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
         
-          <img src="{{ asset('images/hub' . $newsItem->post->community->image_id . '.jpg') }}" 
+          <img src="{{ asset($newsItem->post->community->image->path) }}" 
         
             class="size-8 rounded-full ring-2  ring-white">
           <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
@@ -170,7 +170,7 @@
         @foreach($newsItem->post->authors->take(4) as $author)
           <a href="{{ route('user.profile', $author->id) }}" class="group">
             <img 
-              src="{{ asset('images/user' . $author->image_id . '.jpg') }}" 
+              src="{{ asset($author->image->path) }}" 
               alt="{{ $author->name }}" 
               class="w-10 h-10 border-2 border-white rounded-full "
             >
@@ -206,7 +206,7 @@
           if(Auth::check()) {$image_id = Auth::user()->image_id;}
           else { $image_id = 1;}
         @endphp
-        <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}" class="size-8 rounded-full ">
+        <img src="{{ asset(Auth::user()->image->path ) }}" class="size-8 rounded-full ">
       </a>
       <span class=" px-2 text-xl font-light">start a thread</span>
     </div>
@@ -558,7 +558,7 @@
       anchor.className = 'group';
 
       const img = document.createElement('img');
-      img.src = `{{ asset('images/user' . ':image_id' . '.jpg') }}`.replace(':image_id', author.image_id);
+      img.src = `{{ asset('images/user' . ':image_id' . '.jpg') }}`.replace(':image_id', author.image_id);//nao sei mudar nisto :(, depois voltar
       img.alt = author.name;
       img.className = 'w-10 h-10 border-2 border-white rounded-full dark:border-gray-800';
 

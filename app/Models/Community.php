@@ -13,9 +13,9 @@ class Community extends Model
     const UPDATED_AT = null; // we only want the created_at
     protected $fillable = ['name', 'description', 'creation_date', 'privacy', 'image_id'];
 
-    public function image() 
+    public function image()
     {
-        return $this->hasOne(Image::class);
+        return $this->belongsTo(Image::class, 'image_id', 'id');  
     }
 
     public function posts() 
