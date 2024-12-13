@@ -6,7 +6,7 @@
     @if($community)
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:px-8">
         <div class="flex items-start gap-6">
-            <img src="{{ asset('images/hub' . $community->image_id . '.jpg') }}" 
+            <img src="{{ asset( $community->image->path ) }}" 
                  onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                  alt="Community Image" 
                  class="rounded-full  h-32 w-32">
@@ -16,6 +16,7 @@
     <h1 class="tracking-tighter font-medium text-6xl">/{{ $community->name }}</h1>
 
     <!-- Form for Privacy Toggle -->
+
     <form action="{{ route('communities.update.privacy', $community) }}" method="POST" class="inline-flex items-center gap-2">
         @csrf
         @method('POST')
@@ -106,12 +107,13 @@
                          class="w-full h-full object-cover">
                 </div>
                 <span class="text-sm text-gray-700">{{ $moderator['username'] }}</span> 
+                
             </div>
             </a>
             @endforeach
         </div>
     </div>
-
+    
     <!-- Posts Section -->
     <div>
         <!-- Posts Grid -->

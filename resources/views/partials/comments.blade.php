@@ -2,7 +2,7 @@
   <div class="flex flex-row mt-5">
     <div class="size-8 rounded-full ">
       <a href="">
-        <img src="{{ asset('images/user' . $comment->user->image_id . '.jpg') }}" class="size-8 rounded-full">
+        <img src="{{ asset($comment->user->image->path) }}" class="size-8 rounded-full">
       </a>
 
       <a href="#c-{{ $comment->id }}"
@@ -18,7 +18,11 @@
           <span>•</span>
           <span class="underline-effect cursor-pointer group-open/details-{{ $comment ->id }}:before:content-['hide']">
             <button 
-             onclick=reportComment()>
+             onclick="  document.getElementById('reportForm').action = '{{ route('report') }}';
+                        document.getElementById('report_type').value = 'comment_report';
+                        document.getElementById('reported_id').value = '{{ $comment->id }}';
+                        document.getElementById('reportTitle').textContent = 'Report {{ $comment->user->username }}\'s comment  ';
+                        document.getElementById('reportModal').classList.remove('hidden');">
               Report Comment
             </button>
           </span>
@@ -103,12 +107,3 @@
 
 
 
-<script>
-  function reportComment() {
-    document.getElementById('reportForm').action = '{{ route('report') }}';
-    document.getElementById('report_type').value = 'comment_report';
-    document.getElementById('reported_id').value = '{{ $comment->id }}';
-    document.getElementById('reportTitle').textContent = 'Report {{ $comment->user->username }}\'s comment  ';
-    document.getElementById('reportModal').classList.remove('hidden');
-  }
-</script>

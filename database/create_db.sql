@@ -496,7 +496,19 @@ INSERT INTO images (path) VALUES
 ('images/user197.jpg'),
 ('images/user198.jpg'),
 ('images/user199.jpg'),
-('images/user200.jpg');
+('images/user200.jpg'),
+('images/hub1.jpg'),
+('images/hub2.jpg'),
+('images/hub3.jpg'),
+('images/hub4.jpg'),
+('images/hub5.jpg'),
+('images/hub6.jpg'),
+('images/hub7.jpg'),
+('images/hub8.jpg'),
+('images/hub9.jpg'),
+('images/hub10.jpg');
+
+
 
 
 -- Step 2: Insert Users into authenticateduser
@@ -555,16 +567,16 @@ VALUES
 
 -- Step 3: Insert Communities
 INSERT INTO communities (name, description, privacy, image_id) VALUES
-('Tech community', 'A place for tech enthusiasts to share knowledge.', FALSE, 1),
-('Book Lovers', 'A community for book lovers.', TRUE, 2),
-('Anime Fans', 'Discuss your favorite anime and manga.', FALSE, 3),
-('Travel Enthusiasts', 'Share your travel stories and tips.', TRUE, 4),
-('Fantasy Writers', 'A place for aspiring fantasy authors.', FALSE, 5),
-('Culinary Artists', 'Share recipes and cooking tips.', TRUE, 6),
-('Movie Buffs', 'Discuss films and series.', FALSE, 7),
-('Fitness Fanatics', 'Share fitness tips and motivation.', TRUE, 8),
-('Game Developers', 'A community for game creation discussions.', FALSE, 9),
-('Nature Lovers', 'Share your nature photography and stories.', TRUE, 10),
+('Tech community', 'A place for tech enthusiasts to share knowledge.', FALSE, 201),
+('Book Lovers', 'A community for book lovers.', TRUE, 202),
+('Anime Fans', 'Discuss your favorite anime and manga.', FALSE, 203),
+('Travel Enthusiasts', 'Share your travel stories and tips.', TRUE, 204),
+('Fantasy Writers', 'A place for aspiring fantasy authors.', FALSE, 205),
+('Culinary Artists', 'Share recipes and cooking tips.', TRUE, 206),
+('Movie Buffs', 'Discuss films and series.', FALSE, 207),
+('Fitness Fanatics', 'Share fitness tips and motivation.', TRUE, 208),
+('Game Developers', 'A community for game creation discussions.', FALSE, 209),
+('Nature Lovers', 'Share your nature photography and stories.', TRUE, 210),
 ('Music Producers', 'A community for aspiring and professional music producers.', FALSE, 11),
 ('History Buffs', 'Explore and discuss historical events and figures.', TRUE, 12),
 ('Sports Fans', 'A place to talk about your favorite sports and teams.', FALSE, 13),
