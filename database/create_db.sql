@@ -799,6 +799,7 @@ INSERT INTO communities (name, description, privacy, image_id) VALUES
 ('MobileGamersHub', 'Discuss mobile games and tips.', TRUE, 98),
 ('HomeImprovementGurus', 'Tips for improving your home.', FALSE, 99),
 ('VirtualRealityFans', 'Discuss VR games and technology.', TRUE, 100),
+
 ('AskMeAnything', 'A space for unique Q&A sessions.', TRUE, 101),
 ('LifeProTips', 'Tips for improving everyday life.', FALSE, 102),
 ('ExplainLikeI’mFive', 'Complex ideas explained simply.', TRUE, 103),
@@ -901,16 +902,16 @@ INSERT INTO authenticated_users (
 
 -- Admins
 ('Tiago Monteiro', 'tiago_admin', 'tiago@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-100, FALSE, '1985-05-15', 'Site Administrator', TRUE, 1),
+100, FALSE, '1985-05-15', 'Site Administrator', TRUE, 59),
 
 ('Vasco Costa', 'vasco_admin', 'vasco@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-100, FALSE, '1990-03-20', 'Senior Site Administrator', TRUE, 1),
+100, FALSE, '1990-03-20', 'Senior Site Administrator', TRUE, 60),
 
 ('Teresa Mascarenhas', 'teresa_admin', 'teresa@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-100, FALSE, '1988-11-10', 'Community Management Admin', TRUE, 1),
+100, FALSE, '1988-11-10', 'Community Management Admin', TRUE, 61),
 
 ('Diana Nunes', 'diana_admin', 'diana@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-100, FALSE, '1992-07-25', 'Content Moderation Admin', TRUE, 1),
+100, FALSE, '1992-07-25', 'Content Moderation Admin', TRUE, 62),
 
 -- Regular users
 ('Naruto Uzumaki', 'dattebayo', 'naruto@konoha.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
@@ -998,7 +999,49 @@ INSERT INTO authenticated_users (
 ('X-Men', 'xmen', 'xmen@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1963-02-19', 'Superhero team with various powers.', FALSE, 50),
 ('Bondrewd', 'bondrewd', 'bondrewd@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 10000, FALSE, '2017-07-7', 'A ruthless and manipulative White Whistle Delver with a twisted obsession with the Abyss, elevators and fur.', FALSE, 56), --user 60
 ('Nanachi', 'nanachi', 'nanachi@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '2017-07-7', 'A compassionate and fluffy elevator hater.', FALSE, 57),
-('Prushka', 'prushka', 'prushka@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '2017-07-7', 'A kind-hearted and courageous girl who was adopted by Bondrewd.', FALSE, 58);
+('Prushka', 'prushka', 'prushka@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '2017-07-7', 'A kind-hearted and courageous girl who was adopted by Bondrewd.', FALSE, 58),
+
+('Geralt of Rivia', 'geralt', 'geralt@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1163-09-01', 'A mutated monster hunter known as The Witcher.', FALSE, 63),
+('Yennefer of Vengerberg', 'yennefer', 'yennefer@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1173-05-03', 'A powerful sorceress seeking redemption.', FALSE, 64),
+('Wednesday Addams', 'wednesday', 'wednesday@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '2007-10-13', 'A brilliant and darkly humorous student of Nevermore Academy.', FALSE, 65),
+('Joe Goldberg', 'joe', 'joe@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1987-06-18', 'A charismatic yet dangerously obsessive bookseller.', FALSE, 66),
+('Eleven', 'eleven', 'eleven@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1971-03-24', 'A telekinetic girl with a mysterious past.', FALSE, 67),
+('Jim Hopper', 'hopper', 'hopper@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1965-04-21', 'A protective sheriff in Hawkins.', FALSE, 68),
+('BoJack Horseman', 'bojack', 'bojack@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1964-01-02', 'A washed-up sitcom star struggling with identity.', FALSE, 69),
+('Nairobi', 'nairobi', 'nairobi@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1982-12-12', 'A bold and resourceful member of the heist team.', FALSE, 70),
+('Michael Wheeler', 'mike', 'mike@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1971-04-07', 'A loyal friend and leader of a group of kids in Hawkins.', FALSE, 71),
+('Ruth Langmore', 'ruth', 'ruth@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1995-03-26', 'A tough and determined member of a criminal enterprise.', FALSE, 72),
+('Otis Milburn', 'otis', 'otis@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '2004-07-01', 'A socially awkward teen turned unofficial therapist.', FALSE, 73),
+('Maeve Wiley', 'maeve', 'maeve@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '2004-09-12', 'A brilliant and fiercely independent student.', FALSE, 74),
+('Marienne Bellamy', 'marienne', 'marienne@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1985-02-20', 'A librarian with a deep connection to literature.', FALSE, 75),
+('Simon Basset', 'simon', 'simon@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1783-08-05', 'The dashing Duke of Hastings.', FALSE, 76),
+('Luther Hargreeves', 'luther', 'luther@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1989-11-05', 'An enhanced leader of the Umbrella Academy.', FALSE, 77),
+('Klaus Hargreeves', 'klaus', 'klaus@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1989-12-13', 'A troubled medium who can speak to the dead.', FALSE, 78),
+('Beth Harmon', 'beth', 'beth@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1948-11-09', 'A chess prodigy navigating her genius and addiction.', FALSE, 79),
+('Tokyo', 'tokyo', 'tokyo@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1989-07-07', 'A passionate and unpredictable heist team member.', FALSE, 80),
+('Dustin Henderson', 'dustin', 'dustin@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1971-05-29', 'A quirky and clever member of the Hawkins kids.', FALSE, 81),
+('The Professor', 'professor', 'professor@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '1976-02-27', 'The mastermind behind the heist in Money Heist.', FALSE, 82),
+
+('Mickey Mouse', 'mickey', 'mickey@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 100, FALSE, '1928-11-18', 'The cheerful and adventurous mouse who started it all.', FALSE, 83),
+('Minnie Mouse', 'minnie', 'minnie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 95, FALSE, '1928-11-18', 'Mickey’s sweetheart with a charming and fashionable personality.', FALSE, 84),
+('Donald Duck', 'donald', 'donald@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 80, FALSE, '1934-06-09', 'The quick-tempered but lovable duck with a heart of gold.', FALSE, 85),
+('Goofy Goof', 'goofy', 'goofy@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 70, FALSE, '1932-05-25', 'A clumsy but well-meaning friend to Mickey and the gang.', FALSE, 86),
+('Daisy Duck', 'daisy', 'daisy@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 85, FALSE, '1940-01-09', 'Donald’s sophisticated and sassy girlfriend.', FALSE, 87),
+('Pluto', 'pluto', 'pluto@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 60, FALSE, '1930-09-05', 'Mickey’s loyal and playful pet dog.', FALSE, 88),
+('Scrooge McDuck', 'scrooge', 'scrooge@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 150, FALSE, '1947-12-19', 'A wealthy and adventurous Scottish duck with a penchant for treasure.', FALSE, 89),
+('Huey Duck', 'huey', 'huey@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 50, FALSE, '1947-12-19', 'The smart and resourceful eldest triplet.', FALSE, 90),
+('Dewey Duck', 'dewey', 'dewey@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 50, FALSE, '1947-12-19', 'The bold and curious middle triplet.', FALSE, 91),
+('Louie Duck', 'louie', 'louie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 50, FALSE, '1947-12-19', 'The laid-back and clever youngest triplet.', FALSE, 92),
+('Belle', 'belle', 'belle@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 120, FALSE, '1991-11-22', 'A kind and intelligent young woman with a love for books.', FALSE, 93),
+('Beast', 'beast', 'beast@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 90, FALSE, '1991-11-22', 'A cursed prince with a gruff exterior but a kind heart.', FALSE, 94),
+('Aladdin', 'aladdin', 'aladdin@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 95, FALSE, '1992-11-25', 'A street-smart dreamer with a heart of gold.', FALSE, 95),
+('Jasmine', 'jasmine', 'jasmine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 100, FALSE, '1992-11-25', 'A spirited princess who seeks freedom and true love.', FALSE, 96),
+('Genie', 'genie', 'genie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 200, FALSE, '1992-11-25', 'A hilarious and magical wish-granting entity.', FALSE, 97),
+('Ariel', 'ariel', 'ariel@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 110, FALSE, '1989-11-17', 'A curious mermaid who dreams of life on land.', FALSE, 98),
+('Sebastian', 'sebastian', 'sebastian@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 80, FALSE, '1989-11-17', 'A loyal crab with a knack for music and keeping Ariel safe.', FALSE, 99),
+('Violet Evergarden', 'viorettu', 'violet@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 60, FALSE, '1989-11-17', 'A strong soldier now looking to fill letters with feelings.', FALSE, 100);
+
+
 
 
 
