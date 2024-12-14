@@ -7,7 +7,7 @@
     <div class="px-8 py-4 w-1/2 flex flex-col grow">
       <div class="flex items-center h-8 relative">
       <a class="flex items-center" href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
-        <img src="{{ asset($topicItem->post->community->image->path) }}" 
+        <img src="{{ asset($topicItem->post->community->image->path ?? '/images/default.jpg') }}" 
         class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
         <span class="text-2xl font-light underline-effect">h/{{ $topicItem->post->community->name ?? 'Unknown Community' }}</span>
       </a>
@@ -154,7 +154,7 @@
       @foreach($topicItem->post->authors as $index => $author)
       <a href="{{ route('user.profile', $author->id) }}"
         class="transition-all transform col-start-1 row-start-1 ml-[{{ $index * 14 }}px] group-hover:ml-[{{$index * 36}}px]">
-        <img src="{{ asset($author->image->path) }}" 
+        <img src="{{ asset($author->image->path ?? '/images/default.jpg') }}" 
           class="max-w-full rounded-3xl min-w-[32px] w-[32px]">
       </a>
       @endforeach
@@ -180,7 +180,8 @@
           if(Auth::check()) {$image_id = Auth::user()->image_id;}
           else { $image_id = 1;}
         @endphp
-        <img src="{{ asset(Auth::user()->image->path) }}" class="size-8 rounded-full ">
+        <img src="{{ asset(Auth::user()->image->path  ?? '/images/default.jpg') }}" 
+        class="size-8 rounded-full ">
       </a>
       <span class="text-xl font-light">start a thread</span>
     </div>

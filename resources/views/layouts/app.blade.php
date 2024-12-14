@@ -154,9 +154,8 @@
             <a href="{{ route('user.profile', Auth::user()->id) }}"
               class="block pr-8 py-2 text-gray-700 hover:bg-gray-100 border-b border-gray-200">
               <div class="flex items-center px-4 py-3">
-                <img src="{{ asset(Auth::user()->image->path) }}"
-                onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
-                  class="size-10 rounded-full " />
+                <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}"
+                  class="size-10 rounded-full" />
                 <div>
                   <div class=" px-2 font-medium text-gray-900 pr-6">{{ Auth::user()->name }}</div>
                   <div class="text-gray-500 text-sm">View profile</div>
