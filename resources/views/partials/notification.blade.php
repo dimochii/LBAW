@@ -16,7 +16,7 @@
 
                    <!-- Community Avatar -->
                    <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                        <img src="{{ asset($notification->postNotification->post->community->image->path)}}"
+                        <img src="{{ asset($notification->postNotification->post->community->image->path ?? '/images/default.jpg')}}"
                              alt="{{ $notification->postNotification->post->community->name }}"
                              class="w-full h-full object-cover">
                     </div>
@@ -30,7 +30,7 @@
                    onclick="markAsRead({{ $notification->id }})"
                    class="flex items-center hover:text-blue-600 transition-colors">
                    <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                        <img src="{{ asset($notification->commentNotification->comment->user->image->path)}}" 
+                        <img src="{{ asset($notification->commentNotification->comment->user->image->path ?? '/images/default.jpg')}}" 
                              alt="{{ $notification->commentNotification->comment->user->username }}"
                              class="w-full h-full object-cover">
                     </div> 
@@ -47,7 +47,7 @@
                    onclick="markAsRead({{ $notification->id }})"
                    class="flex items-center hover:text-blue-600 transition-colors">
                     <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                        <img src="{{ asset($notification->upvoteNotification->vote->user->image->path)}}"                             alt="{{ $notification->upvoteNotification->vote->user->username }}"
+                        <img src="{{ asset($notification->upvoteNotification->vote->user->image->path ?? '/images/default.jpg')}}"                             alt="{{ $notification->upvoteNotification->vote->user->username }}"
                              class="w-full h-full object-cover">
                     </div>
                     {{ $notification->upvoteNotification->vote->user->username }} upvoted: 
@@ -59,7 +59,7 @@
                    onclick="markAsRead({{ $notification->id }})"
                    class="flex items-center hover:text-blue-600 transition-colors">
                     <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                        <img src="{{ asset($notification->followNotification->follower->image->path)}}"
+                        <img src="{{ asset($notification->followNotification->follower->image->path ?? '/images/default.jpg')}}"
                              alt="{{ $notification->followNotification->follower->name }}"
                              class="w-full h-full object-cover">
                     </div>
