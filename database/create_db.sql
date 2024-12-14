@@ -2194,7 +2194,7 @@ INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id
 INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
 ('You can’t go wrong with animes like "Attack on Titan" and "Fullmetal Alchemist".', 14, 3, NULL),
 ('"Made in Abyss" is one of my all-time favorites! The soundtrack alone is iconic.', 60, 3, 37),
-('I agree! The music really enhances the experience of the show.', 39, 3, 38);
+('I agree! The music really enhances the experience of the show.', 5, 3, 38);
 
 -- Comments for the post "Budget-Friendly Travel Hacks" (post_id 4)
 INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
@@ -2218,7 +2218,7 @@ INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id
 INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
 ('I can’t wait for "Title of Sequel". The first movie was incredible.', 49, 7, NULL),
 ('Same! The sequel has so much potential. I hope they don’t ruin it.', 50, 7, 49),
-('Let’s hope they live up to expectations. The trailer was promising!', 51, 7, 50);
+('Let’s hope they live up to expectations. The trailer was promising!', 51, 7, 50); --51
 
 -- Comments for posts 51 to 60
 INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
@@ -2242,7 +2242,7 @@ INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id
 ('Portraits with natural light have always been my favorite. Any tips for shooting outdoors?', 36, 59, 48),
 ('I’m planning a trip to a secret beach this year! Hope to find a place as peaceful as the one in your post.', 41, 60, NULL),
 ('Beaches like these make for the best vacations. Hopefully, the crowds stay away!', 7, 60, 41);
-
+--20
 -- Comments for posts 61 to 70
 INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
 ('I never realized how impactful social media could be on mental health until recently.', 29, 61, NULL),
