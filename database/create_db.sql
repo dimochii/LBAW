@@ -1181,16 +1181,16 @@ INSERT INTO posts (title, content, community_id) VALUES
 
 INSERT INTO news (post_id, news_url)
 VALUES 
-(1, 'http://example.com/news2'),
-(2, 'http://example.com/news2'),
-(3, 'http://example.com/news3'),
-(4, 'http://example.com/news4'),
-(5, 'http://example.com/news5'),
-(6, 'http://example.com/news6'),
-(7, 'http://example.com/news7'),
-(8, 'http://example.com/news8'),
-(9, 'http://example.com/news9'),
-(10, 'http://example.com/news10'),
+(1, 'https://www.emergingtechbrew.com/stories/2024/12/13/small-business-ai-amex-census'),
+(2, 'https://www.nytimes.com/2024/12/03/books/best-books-2024.html'),
+(3, 'https://animecorner.me/summer-2024-anime-of-the-season-rankings/'),
+(4, 'https://www.kplctv.com/video/2024/12/14/watching-your-wallet-winter-travel-tips/'),
+(5, 'https://culturefly.co.uk/dee-benson-on-creating-a-magical-fantasy-world/'),
+(6, 'https://www.womenshealthmag.com/food/a63013707/high-protein-meal-prep-manual-review/'),
+(7, 'https://www.forbes.com/sites/travisbean/2024/12/14/the-top-10-roundup-netflixs-most-popular-movies-in-2024/'),
+(8, 'https://www.theguardian.com/lifeandstyle/2024/nov/10/in-for-the-chill-five-useful-tips-to-help-you-stay-fit-in-the-winter'),
+(9, 'https://www.designrush.com/agency/blockchain-development-companies/trends/blockchain-game-development'),
+(10, 'https://www.timeout.pt/lisboa/pt/noticias/em-imagens-os-vencedores-dos-comedy-wildlife-photography-awards-2024-121424'),
 
 (24, 'https://www2.deloitte.com/us/en/insights/focus/tech-trends.html'),
 (26, 'https://gamerant.com/hollywood-done-superhero-origin-stories/'),
@@ -1204,41 +1204,41 @@ VALUES
 (46, 'https://thedirect.com/article/made-in-abyss-season-3-confirmed-details'),
 
 
-(23, 'www.example.com'), -- The Rise of Indie Video Games
-(41, 'www.example.com'), -- The History of Martial Arts
-(47, 'www.example.com'), -- Tips for Interior Lighting Design
-(51, 'www.example.com'), -- Yoga Poses for Stress Relief
-(52, 'www.example.com'),
-(53, 'www.example.com'),
-(55, 'www.example.com'),
-(57, 'www.example.com'),
-(65, 'www.example.com'),
-(66, 'www.example.com'), --30
-(68, 'www.example.com'),
-(69, 'www.example.com'),
-(71, 'www.example.com'),
-(75, 'www.example.com'),
-(77, 'www.example.com'),
-(83, 'www.example.com'),
-(60, 'www.example.com'), -- Tips for Brewing Craft Beer at Home
-(61, 'www.example.com'), -- How AI is Reshaping the Job Market
-(78, 'www.example.com'), -- Drone Photography Tips
-(91, 'www.example.com'), -- Advancements in Robotics
-(95, 'www.example.com'), 
-(96, 'www.example.com'),
-(97, 'www.example.com'),
-(98, 'www.example.com'),
-(100, 'www.example.com'), --45
-(101, 'www.example.com'),
-(102, 'www.example.com'),
-(103, 'www.example.com'),
-(104, 'www.example.com'),
-(105, 'www.example.com'),
-(106, 'www.example.com'),
-(107, 'www.example.com'),
-(108, 'www.example.com'),
-(109, 'www.example.com'),
-(110, 'www.example.com'); --55
+(23, 'https://www.timesnownews.com/lifestyle/books/features/how-mythology-and-folklore-shape-modern-storytelling-article-110905765'), -- The Rise of Indie Video Games
+(41, 'https://www.nasa.gov/news-release/nasas-planetary-protection-review-addresses-changing-reality-of-space-exploration/'), -- The History of Martial Arts
+(47, 'https://radiocastelobranco.sapo.pt/docente-do-ipcb-participa-em-conferencia-sobre-tecnologia-blockchain-e-chatgpt/'), -- Tips for Interior Lighting Design
+(51, 'https://www.sportskeeda.com/us/k-pop/what-fantastic-year-k-pop-fans-celebrate-dazed-reveals-top-50-k-pop-songs-2024-featuring-stray-kids-bts-rm-jin'), -- Yoga Poses for Stress Relief
+(52, 'https://www.zdnet.com/home-and-office/the-7-tech-gadgets-i-couldnt-live-without-in-2024/'),
+(53, 'https://www.nytimes.com/2024/11/11/books/review/vintage-crime-reissued-novels-fiction.html'),
+(55, 'https://reactormag.com/some-of-reactors-best-articles-about-fiction-reading-and-writing-in-2024/'),
+(57, 'https://realestate.usnews.com/real-estate/articles/how-to-prepare-for-a-home-renovation'),
+(65, 'https://www.terra.com.br/vida-e-estilo/saude/especialista-recomenda-yoga-no-combate-ao-stress,5c9403ab333beeb976460907c426181avbabg7e5.html'),
+(66, 'https://www.kinship.com/pet-behavior'), --30
+(68, 'https://variety.com/gallery/best-cosplay-of-comic-con/'),
+(69, 'https://www.theguardian.com/thefilter/2024/dec/11/best-family-board-games'),
+(71, 'https://www.gearnews.com/essential-guitar-techniques-mastering-what-you-need-to-know/'),
+(75, 'https://govciomedia.com/ai-unmanned-systems-are-transforming-power-navy-secretary-says/'),
+(77, 'https://www.aa.com.tr/en/life/digital-nomadism-redefines-work-and-travel-across-the-globe/3400753'),
+(83, 'https://news.hamlethub.com/redding-connecticut/meditation-for-beginners-1732565170444'),
+(60, 'https://esgnews.com/top-7-sustainable-travel-tips-for-winter-holiday/'), -- Tips for Brewing Craft Beer at Home
+(61, 'https://www.simplilearn.com/tutorials/programming-tutorial/coding-for-beginners'), -- How AI is Reshaping the Job Market
+(78, 'https://www.nytimes.com/2024/12/06/books/review/best-science-fiction-fantasy-books-2024.html'), -- Drone Photography Tips
+(91, 'https://www.chess.com/article/view/book-review-mastering-the-chess-openings'), -- Advancements in Robotics
+(95, 'https://www.weforum.org/impact/clean-energy-in-emerging-markets/'), 
+(96, 'https://www.livemint.com/mint-lounge/ideas/how-to-raise-children-in-the-digital-age-111667911752992.html'),
+(97, 'https://www.realsimple.com/food-recipes/recipe-collections-favorites/healthy-meals/easy-vegan-recipes'),
+(98, 'https://www.backstage.com/magazine/article/become-film-director-3080/'),
+(100, 'https://mymodernmet.com/famous-sculptures-art-history/'), --45
+(101, 'https://www.nerdwallet.com/article/travel/saving-money-on-travel-tricks'),
+(102, 'https://www.smithsonianmag.com/arts-culture/the-psychology-behind-superhero-origin-stories-4015776/'),
+(103, 'https://gulfbusiness.com/fun-things-to-do-at-dubai-fitness-challenge-2024/'),
+(104, 'https://chatelaine.com/food/drinks/homebrew-beer-tips/'),
+(105, 'https://defenders.org/blog/2024/12/how-best-protect-wildlife-of-pacific-northwest-forest-0'),
+(106, 'https://arstechnica.com/culture/2024/11/flour-water-salt-github-the-bread-code-is-a-sourdough-baking-framework/'),
+(107, 'https://clairehennessy.substack.com/p/advent-scribbles-daily-december-writing?utm_campaign=post&utm_medium=web'),
+(108, 'https://timesofmalta.com/article/science-fiction-catalyst-tomorrow-technology.1091552'),
+(109, 'https://www.mk.co.kr/en/culture/11123415'),
+(110, 'https://www.backpacker.com/gear/gear-backpackers-editors-loved-in-2024/'); --55
 
 -- Insert into Topics table (topics awaiting review)
 INSERT INTO topics (post_id, status, review_date)

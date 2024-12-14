@@ -206,15 +206,7 @@
           if(Auth::check()) {$image_id = Auth::user()->image_id;}
           else { $image_id = 1;}
         @endphp
-<<<<<<< HEAD
-        @if (Auth::check())
-        <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}" class="size-8 rounded-full ">
-        @else
-        <img src="{{ asset('images/user' . '0' . '.jpg') }}" class="size-8 rounded-full ">
-        @endif
-=======
         <img src="{{ asset(Auth::user()->image->path ) }}" class="size-8 rounded-full ">
->>>>>>> db83130e22923be31f992d3d986ca5b7e7c83f6a
       </a>
       <span class=" px-2 text-xl font-light">start a thread</span>
     </div>
