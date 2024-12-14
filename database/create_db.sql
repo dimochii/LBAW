@@ -1039,7 +1039,7 @@ INSERT INTO authenticated_users (
 ('Genie', 'genie', 'genie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 200, FALSE, '1992-11-25', 'A hilarious and magical wish-granting entity.', FALSE, 97),
 ('Ariel', 'ariel', 'ariel@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 110, FALSE, '1989-11-17', 'A curious mermaid who dreams of life on land.', FALSE, 98),
 ('Sebastian', 'sebastian', 'sebastian@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 80, FALSE, '1989-11-17', 'A loyal crab with a knack for music and keeping Ariel safe.', FALSE, 99),
-('Violet Evergarden', 'viorettu', 'violet@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 60, FALSE, '1989-11-17', 'A strong soldier now looking to fill letters with feelings.', FALSE, 100);
+('Violet Evergarden', 'viorettu', 'violetevergarden@example.com', '$2y$10$BPqmTy3x20LFhZOytOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 60, FALSE, '1989-11-17', 'A strong soldier now looking to fill letters with feelings.', FALSE, 100);
 
 
 
