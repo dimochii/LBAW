@@ -1068,7 +1068,7 @@ INSERT INTO posts (title, content, community_id) VALUES
 ('Anticipated Sequels of 2024', 'Movie sequels everyone is looking forward to.', 7),
 ('Staying Motivated to Exercise in the Cold', 'Tips to beat winter laziness and stay active.', 8),
 ('The Best Tools for Aspiring Game Developers', 'Essential software and resources for beginners.', 9),
-('Photographing Wildlife in Challenging Conditions', 'How to capture stunning shots in tough environments.', 10),
+('Photographing Wildlife in Challenging Conditions', 'How to capture stunning shots in tough environments.', 10),--20
 
 ('Top 10 Anime Fights of All Time', 'A comprehensive list of the most epic battles in anime history...', 1),
 ('The Science Behind Dragon Ball Power Levels', 'An in-depth analysis of power scaling in Dragon Ball universe...', 1),
@@ -1095,10 +1095,91 @@ INSERT INTO posts (title, content, community_id) VALUES
 ('Cinematography Techniques in Modern Cinema', 'Breaking down innovative filming methods...', 8),
 ('eSports: The Future of Competitive Gaming', 'Exploring the rise of professional gaming...', 9),
 ('Magical Realism in Contemporary Literature', 'Examining the genre''s evolution and impact...', 10),
-('New season confirmed', 'Next season coming up!', 11);
+('New season confirmed', 'Next season coming up!', 11), --46
+
+('Understanding Blockchain', 'A beginner-friendly introduction to blockchain technology.', 39),
+('Top 10 Anime Villains', 'Discussing the most iconic antagonists in anime history.', 1),
+('Hidden Beaches You Need to Visit', 'Explore secret beach destinations for your next vacation.', 70),
+('How to Start a Home Garden', 'Easy steps for beginners to start gardening at home.', 54),
+('K-Pop Trends of 2024', 'What’s new in the K-Pop world this year?', 71),
+('Must-Have Gadgets for 2024', 'Top tech gadgets that are making waves.', 30),
+('Classic Detective Stories Worth Reading', 'Dive into the best classic mystery novels.', 7),
+('The Future of VR Gaming', 'How virtual reality is transforming gaming.', 98),
+('Tips for Writing Sci-Fi Novels', 'Advice for creating compelling science fiction stories.', 67),
+('Best Cars for Off-Road Adventures', 'Explore the top off-road vehicles of the year.', 21),
+('Tips for DIY Home Renovations', 'Simple DIY projects to transform your space.', 99),
+('Exploring Mythical Creatures', 'How mythical creatures vary across cultures.', 3),
+('Tips for Capturing Stunning Portraits', 'Portrait photography essentials.', 22),
+('Eco-Friendly Travel Tips', 'How to reduce your carbon footprint while traveling.', 4),
+('How to Get Started with Coding', 'Beginner’s guide to programming.', 19),
+('The History of Jazz Music', 'Exploring the roots and evolution of jazz.', 11),
+('Hiking Trails for Beginners', 'Top beginner-friendly hiking spots.', 34),
+('Space Exploration Milestones', 'A timeline of humanity’s journey into space.', 26),
+('Yoga Poses for Stress Relief', 'Best yoga techniques to reduce stress.', 51),
+('How to Train Your Pet', 'Effective training tips for dogs and cats.', 68),
+('Exploring Surrealism in Art', 'A deep dive into surrealist techniques and history.', 80),
+('Best Cosplays of the Year', 'Showcasing outstanding cosplay creations.', 64),
+('Top Board Games for Strategy Lovers', 'A guide to the best strategic board games.', 74),
+('Guitar Techniques for Beginners', 'Essential skills for new guitar players.', 43),
+('Mental Health and Social Media', 'The impact of social media on mental well-being.', 28),
+('Anticipated Sci-Fi Movies of 2024', 'What to expect in the world of science fiction cinema.', 67),
+('Drone Photography Tips', 'How to take breathtaking shots with drones.', 78),
+('Healthy Eating on a Budget', 'Tips for eating well without overspending.', 20),
+('Advancements in Robotics', 'Recent breakthroughs in robotics technology.', 91),
+('Beach Safety Tips for Families', 'How to stay safe while enjoying the beach.', 70),
+('Traveling as a Digital Nomad', 'Tips for working remotely while exploring the world.', 42),
+('Best Books for Fantasy Lovers', 'Top picks for fans of the fantasy genre.', 5),
+('The Rise of Indie Video Games', 'Exploring the indie gaming scene.', 9),
+('How to Plan a Startup', 'Step-by-step guide for aspiring entrepreneurs.', 73),
+('Environmental Conservation Success Stories', 'Celebrating achievements in conservation efforts.', 18),
+('Essential Tools for Digital Artists', 'Top tools and software for digital art creation.', 72),
+('Meditation for Beginners', 'Tips to start your meditation journey.', 37),
+('The Science Behind Horror Movies', 'Why we love to be scared.', 95),
+('Best Practices for Urban Gardening', 'Grow plants effectively in small spaces.', 31),
+('How AI is Reshaping the Job Market', 'The impact of artificial intelligence on careers.', 61),
+('The Role of Philosophy in Modern Society', 'Why philosophical discussions matter today.', 32),
+('Best Cameras for Wildlife Photography', 'Top gear recommendations for nature photography.', 22),
+('Understanding Cryptocurrencies', 'An overview of popular cryptocurrencies in 2024.', 39),
+('The Benefits of Volunteer Work', 'How volunteering can transform communities.', 33),
+('How to Master Chess Openings', 'Strategies to dominate your next chess match.', 44),
+('Tips for Interior Lighting Design', 'How to use lighting to enhance your home.', 47),
+('The History of Martial Arts', 'Tracing the roots of popular martial arts styles.', 41),
+('Best Sci-Fi Books of All Time', 'Top science fiction novels everyone should read.', 67),
+('The Future of Renewable Energy', 'Innovative solutions in green energy.', 18),
+('Parenting Tips for the Digital Age', 'Raising kids in a technology-driven world.', 40),
+('Top Vegan Recipes for Beginners', 'Easy and delicious plant-based meals.', 79),
+('How to Get Into Film Directing', 'Steps to kickstart your filmmaking journey.', 76),
+('Upcoming Astronomy Events in 2024', 'Don’t miss these celestial phenomena.', 50),
+('Famous Classical Sculptures', 'Exploring iconic sculptures from history.', 82),
+('How to Save Money While Traveling', 'Budgeting tips for globetrotters.', 4),
+('The Psychology of Superheroes', 'Why we love superhero stories.', 2),
+('Fitness Challenges to Try in 2024', 'Fun ways to stay active and motivated.', 8),
+('Tips for Brewing Craft Beer at Home', 'A beginner’s guide to homebrewing.', 60),
+('How to Protect Wildlife Habitats', 'Simple steps to support conservation.', 45),
+('The Art of Baking Bread', 'Techniques for perfect homemade bread.', 59),
+('Creative Writing Prompts', 'Ideas to spark your next story.', 36),
+('Why Science Fiction Inspires Innovation', 'The connection between sci-fi and real-world technology.', 6),
+('Exploring the World of Miniature Gaming', 'A guide to tabletop miniatures.', 23),
+('The Best Hiking Gear for 2024', 'Must-have equipment for your next adventure.', 34), --110
+('How to Spot Rare Birds', 'Tips for beginner birdwatchers.', 81),
+('Exploring the Deep Ocean', 'What lies beneath the surface?', 11),
+('Essential Skills for Aspiring Entrepreneurs', 'What you need to succeed as a startup founder.', 24),
+('Top Beaches for Surfing', 'The best spots to catch waves this year.', 62),
+('Writing Historical Fiction', 'Tips for weaving history into your stories.', 48),
+('The Art of Stand-Up Comedy', 'What makes a great comedian?', 25),
+('How to Start a Fitness Journey', 'Advice for beginners in fitness.', 20),
+('Exploring Classic Films of the 20th Century', 'Must-watch movies from the golden era of cinema.', 63),
+('The Impact of AI on Creative Arts', 'How artificial intelligence is influencing art.', 72),
+('Best Biking Trails Around the World', 'Top cycling routes for adventure seekers.', 46),
+('The Evolution of Horror Films', 'Tracing the history of the horror genre.', 95),
+('How to Build a Successful Online Business', 'Tips for digital entrepreneurship.', 42),
+('Sustainable Fashion Trends', 'How to make eco-friendly choices in fashion.', 29),
+('Tips for Writing Detective Novels', 'Crafting compelling mysteries.', 7),
+('The Future of Space Exploration', 'Upcoming missions and innovations.', 26); --125
 
 INSERT INTO news (post_id, news_url)
 VALUES 
+(1, 'http://example.com/news2'),
 (2, 'http://example.com/news2'),
 (3, 'http://example.com/news3'),
 (4, 'http://example.com/news4'),
@@ -1118,25 +1199,59 @@ VALUES
 (36, 'https://observador.pt/especiais/star-trek-vs-star-wars-esta-e-a-verdadeira-guerra-das-estrelas/'),
 (38, 'https://expresso.pt/blitz/2024-08-08-mais-um-agosto-mais-um-vodafone-paredes-de-coura-o-espirito-e-a-musica-de-um-festival-indie-a9cbdf2b'),
 (39, 'https://www.ign.com/videos/the-most-next-gen-games-of-2024-next-gen-console-watch'),
-(46, 'https://thedirect.com/article/made-in-abyss-season-3-confirmed-details');
+(46, 'https://thedirect.com/article/made-in-abyss-season-3-confirmed-details'),
+
+
+(23, 'www.example.com'), -- The Rise of Indie Video Games
+(41, 'www.example.com'), -- The History of Martial Arts
+(47, 'www.example.com'), -- Tips for Interior Lighting Design
+(51, 'www.example.com'), -- Yoga Poses for Stress Relief
+(52, 'www.example.com'),
+(53, 'www.example.com'),
+(55, 'www.example.com'),
+(57, 'www.example.com'),
+(65, 'www.example.com'),
+(66, 'www.example.com'), --30
+(68, 'www.example.com'),
+(69, 'www.example.com'),
+(71, 'www.example.com'),
+(75, 'www.example.com'),
+(77, 'www.example.com'),
+(83, 'www.example.com'),
+(60, 'www.example.com'), -- Tips for Brewing Craft Beer at Home
+(61, 'www.example.com'), -- How AI is Reshaping the Job Market
+(78, 'www.example.com'), -- Drone Photography Tips
+(91, 'www.example.com'), -- Advancements in Robotics
+(95, 'www.example.com'), 
+(96, 'www.example.com'),
+(97, 'www.example.com'),
+(98, 'www.example.com'),
+(100, 'www.example.com'), --45
+(101, 'www.example.com'),
+(102, 'www.example.com'),
+(103, 'www.example.com'),
+(104, 'www.example.com'),
+(105, 'www.example.com'),
+(106, 'www.example.com'),
+(107, 'www.example.com'),
+(108, 'www.example.com'),
+(109, 'www.example.com'),
+(110, 'www.example.com'); --55
 
 -- Insert into Topics table (topics awaiting review)
 INSERT INTO topics (post_id, status, review_date)
 VALUES 
 (11, 'accepted', CURRENT_TIMESTAMP),
-(12, 'rejected', CURRENT_TIMESTAMP),
+(12, 'accepted', CURRENT_TIMESTAMP),
 (13, 'pending', CURRENT_TIMESTAMP),
 (14, 'accepted', CURRENT_TIMESTAMP),
 (15, 'pending', CURRENT_TIMESTAMP),
 (16, 'accepted', CURRENT_TIMESTAMP),
 (17, 'pending', CURRENT_TIMESTAMP),
-(18, 'rejected', CURRENT_TIMESTAMP),
-(19, 'accepted', CURRENT_TIMESTAMP),
+(18, 'accepted', CURRENT_TIMESTAMP),
+(19, 'accepted', CURRENT_TIMESTAMP), --9
 
-(21, 'pending', CURRENT_TIMESTAMP),
-(22, 'pending', CURRENT_TIMESTAMP),
-(23, 'accepted', CURRENT_TIMESTAMP),
-(25, 'pending', CURRENT_TIMESTAMP),
+(25, 'accepted', CURRENT_TIMESTAMP),
 (28, 'accepted', CURRENT_TIMESTAMP),
 (29, 'pending', CURRENT_TIMESTAMP),
 (31, 'accepted', CURRENT_TIMESTAMP),
@@ -1146,8 +1261,58 @@ VALUES
 (40, 'accepted', CURRENT_TIMESTAMP),
 (42, 'pending', CURRENT_TIMESTAMP),
 (43, 'accepted', CURRENT_TIMESTAMP),
-(44, 'pending', CURRENT_TIMESTAMP),
-(45, 'accepted', CURRENT_TIMESTAMP);
+(44, 'pending', CURRENT_TIMESTAMP), --20
+(45, 'accepted', CURRENT_TIMESTAMP), 
+(49, 'accepted', CURRENT_TIMESTAMP),
+(56, 'accepted', CURRENT_TIMESTAMP),
+(58, 'accepted', CURRENT_TIMESTAMP),
+(84, 'accepted', CURRENT_TIMESTAMP),
+(85, 'accepted', CURRENT_TIMESTAMP),
+(86, 'accepted', CURRENT_TIMESTAMP),
+(87, 'accepted', CURRENT_TIMESTAMP),
+(88, 'accepted', CURRENT_TIMESTAMP),
+(89, 'rejected', CURRENT_TIMESTAMP),
+(90, 'rejected', CURRENT_TIMESTAMP),
+(92, 'pending', CURRENT_TIMESTAMP),
+(93, 'pending', CURRENT_TIMESTAMP),
+(94, 'pending', CURRENT_TIMESTAMP), --34
+
+(20, 'accepted', CURRENT_TIMESTAMP),          -- Healthy Eating on a Budget
+(21, 'accepted', CURRENT_TIMESTAMP),                  -- Best Cars for Off-Road Adventures
+(22, 'accepted', CURRENT_TIMESTAMP),                 -- Tips for Capturing Stunning Portraits
+(48, 'accepted', CURRENT_TIMESTAMP),                     -- Writing Historical Fiction
+(50, 'accepted', CURRENT_TIMESTAMP),                   -- Upcoming Astronomy Events in 2024
+(54, 'accepted', CURRENT_TIMESTAMP),                   -- How to Start a Home Garden
+(59, 'accepted', CURRENT_TIMESTAMP),          -- The Art of Baking Bread
+(62, 'accepted', CURRENT_TIMESTAMP),       -- Top Beaches for Surfing
+(63, 'accepted', CURRENT_TIMESTAMP),               -- Exploring Classic Films of the 20th Century
+(64, 'accepted', CURRENT_TIMESTAMP),                     -- Best Cosplays of the Year
+(67, 'accepted', CURRENT_TIMESTAMP),             -- Tips for Writing Sci-Fi Novels
+(70, 'accepted', CURRENT_TIMESTAMP),                      -- Beach Safety Tips for Families
+(72, 'accepted', CURRENT_TIMESTAMP),                 -- Essential Tools for Digital Artists
+(73, 'accepted', CURRENT_TIMESTAMP),                    -- How to Plan a Startup
+(74, 'accepted', CURRENT_TIMESTAMP),                 -- Top Board Games for Strategy Lovers
+(76, 'accepted', CURRENT_TIMESTAMP), --50          -- How to Get Into Film Directing
+(79, 'accepted', CURRENT_TIMESTAMP),             -- Top Vegan Recipes for Beginners
+(80, 'accepted', CURRENT_TIMESTAMP),             -- Exploring Surrealism in Art
+(81, 'accepted', CURRENT_TIMESTAMP),                -- How to Spot Rare Birds
+(82, 'accepted', CURRENT_TIMESTAMP),        -- Famous Classical Sculptures
+(99, 'accepted', CURRENT_TIMESTAMP),  --55          -- Tips for DIY Home Renovations
+(111, 'accepted', CURRENT_TIMESTAMP), 
+(112, 'accepted', CURRENT_TIMESTAMP), 
+(113, 'accepted', CURRENT_TIMESTAMP), 
+(114, 'accepted', CURRENT_TIMESTAMP), 
+(115, 'accepted', CURRENT_TIMESTAMP), 
+(116, 'pending', CURRENT_TIMESTAMP),
+(117, 'pending', CURRENT_TIMESTAMP),
+(118, 'pending', CURRENT_TIMESTAMP),
+(119, 'pending', CURRENT_TIMESTAMP),
+(120, 'pending', CURRENT_TIMESTAMP),
+(121, 'rejected', CURRENT_TIMESTAMP),
+(122, 'rejected', CURRENT_TIMESTAMP),
+(123, 'rejected', CURRENT_TIMESTAMP),
+(124, 'rejected', CURRENT_TIMESTAMP),
+(125, 'rejected', CURRENT_TIMESTAMP); --70
 
 -- Link authors to posts
 INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
