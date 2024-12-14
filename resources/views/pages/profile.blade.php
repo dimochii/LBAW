@@ -238,12 +238,24 @@
         @endif
         @elseif ($activeTab === 'hubs')
         @if ($user->communities->count() > 0)
-        <ul class="divide-y divide-gray-300">
+        <ul class="divide-y divide-black divide-4">
             @foreach ($user->communities as $community)
-                <li class="py-4 flex items-center justify-between">
+                <li class="py-4 flex items-center justify-between hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper" >
                     <a href="{{ route('communities.show', $community->id) }}" 
-                       class="text-lg font-medium text-blue-600 hover:text-blue-800 transition-colors duration-300">
-                        {{ $community->name }}
+                       class="text-lg font-medium  transition-colors duration-300">
+                       <div class="px-4 flex items-center space-x-4">
+                          <img src="{{ asset($community->image->path) }}"
+                              onerror="**this**.onerror=null;**this**.src='https*:***//www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
+                              alt="{{ $community->name }}"
+                              class="rounded-full size-20 grayscale hover:grayscale-0 transition-all duration-300 ease-in-out">
+                          
+                          <div class="flex-1 break-words">
+                              <h2 class="font-medium break-all">h/{{ $community->name }}</h2>
+                              <p class="text-sm  whitespace-normal">
+                                  {{ $community->description }}
+                              </p>
+                          </div>
+                      </div>
                     </a>
                     @if ($community->moderators->pluck('id')->contains($user->id))
                         <span class="px-3 py-1 text-sm font-semibold text-white bg-pastelGreen rounded-full">
@@ -256,11 +268,7 @@
 
     @endif
 @endif
-
   </div>
-
-
-
 <script>
   function reportProfile() {
     document.getElementById('reportForm').action = '{{ route('report') }}';
