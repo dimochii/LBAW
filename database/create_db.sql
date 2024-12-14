@@ -496,16 +496,210 @@ INSERT INTO images (path) VALUES
 
 -- Insert communities
 INSERT INTO communities (name, description, privacy, image_id) VALUES
-('AnimeFans', 'A community for anime enthusiasts', FALSE, 11),
-('Superheroes', 'All about comic book and movie superheroes', FALSE, 12),
-('Mythology', 'Exploring myths and legends from around the world', FALSE, 13),
-('TechTalk', 'Discussions about technology and innovations', FALSE, 14),
-('AnimeTheories', 'Deep dive into anime plot theories and discussions', FALSE, 15),
-('SciFiEnthusiasts', 'A community for science fiction lovers', FALSE, 26),
-('MysteryLovers', 'Discussing detective novels and crime stories', FALSE, 27),
-('FilmBuffs', 'All about cinema and movie discussions', FALSE, 28),
-('GamingWorld', 'Video game discussions and reviews', FALSE, 29),
-('LiteratureClub', 'Book discussions and literary analysis', FALSE, 30);
+('AnimeFans', 'A community for anime enthusiasts', FALSE, 3),
+('Superheroes', 'All about comic book and movie superheroes', FALSE, 3),
+('Mythology', 'Exploring myths and legends from around the world', FALSE, 4),
+('TechTalk', 'Discussions about technology and innovations', FALSE, 1),
+('AnimeTheories', 'Deep dive into anime plot theories and discussions', FALSE, 6),
+('SciFiEnthusiasts', 'A community for science fiction lovers', FALSE, 7),
+('MysteryLovers', 'Discussing detective novels and crime stories', FALSE, 8),
+('FilmBuffs', 'All about cinema and movie discussions', FALSE, 9),
+('GamingWorld', 'Video game discussions and reviews', FALSE, 10),
+('LiteratureClub', 'Book discussions and literary analysis', FALSE, 11),
+('AbyssLovers', 'Community for abyss and elevator enthusiasts', TRUE, 2),
+
+('Book Lovers', 'A community for book lovers.', TRUE, 2),
+('Travel Enthusiasts', 'Share your travel stories and tips.', TRUE, 4),
+('Fantasy Writers', 'A place for aspiring fantasy authors.', FALSE, 5),
+('Culinary Artists', 'Share recipes and cooking tips.', TRUE, 6),
+('Movie Buffs', 'Discuss films and series.', FALSE, 7),
+('Fitness Fanatics', 'Share fitness tips and motivation.', TRUE, 8),
+('Game Developers', 'A community for game creation discussions.', FALSE, 9),
+('Nature Lovers', 'Share your nature photography and stories.', TRUE, 10),
+('Music Producers', 'A community for aspiring and professional music producers.', FALSE, 11),
+('History Buffs', 'Explore and discuss historical events and figures.', TRUE, 12),
+('Sports Fans', 'A place to talk about your favorite sports and teams.', FALSE, 13),
+('Pet Lovers', 'Share tips and stories about pets.', TRUE, 14),
+('Science Geeks', 'Discuss recent scientific discoveries and theories.', FALSE, 15),
+('Art Enthusiasts', 'Share and critique artwork.', TRUE, 16),
+('DIY Creators', 'Tips and tricks for do-it-yourself projects.', FALSE, 17),
+('Environment Advocates', 'Discussions on environmental conservation and activism.', TRUE, 18),
+('Coding Wizards', 'A space for developers to share coding tips.', FALSE, 19),
+('Health Gurus', 'Tips for leading a healthy lifestyle.', TRUE, 20),
+('Car Enthusiasts', 'Share knowledge and stories about cars.', FALSE, 21),
+('Photography Experts', 'A community to discuss photography tips and gear.', TRUE, 22),
+('Board Game Lovers', 'Discuss strategies and reviews of board games.', FALSE, 23),
+('Startup Founders', 'A place for entrepreneurs to share insights.', TRUE, 24),
+('Comedy Enthusiasts', 'Share jokes and discuss stand-up acts.', FALSE, 25),
+('Space Enthusiasts', 'Discuss astronomy and space exploration.', TRUE, 26),
+('Language Learners Hub', 'Share tips and resources for learning new languages.', FALSE, 27),
+('Mental Health Community', 'Support and resources for mental health awareness.', TRUE, 28),
+('Fashion Innovators', 'A community to discuss fashion trends and designs.', FALSE, 29),
+('Tech Reviewers', 'Discuss the latest gadgets and technologies.', TRUE, 30),
+('Urban Gardeners Club', 'Tips for gardening in urban spaces.', FALSE, 31),
+('Philosophy Minds', 'Discuss philosophical ideas and theories.', TRUE, 32),
+('Volunteer Network', 'A place for volunteers to connect and share experiences.', FALSE, 33),
+('Hiking Enthusiasts', 'Share hiking trails and experiences.', TRUE, 34),
+('E-Sports Fans', 'Discuss e-sports teams and tournaments.', FALSE, 35),
+('Creative Writers Network', 'Share and critique creative writing pieces.', TRUE, 36),
+('Meditation Circle', 'Discuss meditation techniques and benefits.', FALSE, 37),
+('Classic Car Enthusiasts', 'Share and discuss classic car collections.', TRUE, 38),
+('Cryptocurrency Experts', 'Discuss trends and tips in cryptocurrency.', FALSE, 39),
+('Parenting Community', 'Share advice and stories about parenting.', TRUE, 40),
+('Martial Arts Practitioners', 'Discuss techniques and training.', FALSE, 41),
+('Remote Work Hub', 'Tips and support for working remotely.', TRUE, 42),
+('Guitar Players', 'A community for guitar players of all levels.', FALSE, 43),
+('Chess Enthusiasts', 'Discuss strategies and famous matches.', TRUE, 44),
+('Wildlife Advocates', 'Discuss efforts to protect wildlife.', FALSE, 45),
+('Cycling Fans', 'Share cycling routes and tips.', TRUE, 46),
+('Interior Designers', 'Discuss home decoration and design ideas.', FALSE, 47),
+('Economics Enthusiasts', 'Share resources and discuss economic theories.', TRUE, 48),
+('Film Makers Guild', 'A space for filmmakers to share tips and ideas.', FALSE, 49),
+('Astronomy Lovers', 'Discuss celestial events and phenomena.', TRUE, 50),
+('Yoga Community', 'Share yoga techniques and benefits.', FALSE, 51),
+('Comic Book Enthusiasts', 'Discuss your favorite comics and graphic novels.', TRUE, 52),
+('Social Justice Warriors', 'Discuss social issues and activism.', FALSE, 53),
+('Gardening Beginners', 'Tips and support for starting a garden.', TRUE, 54),
+('Piano Enthusiasts', 'A community for pianists to share tips.', FALSE, 55),
+('Vintage Collectors', 'Share your vintage collections and stories.', TRUE, 56),
+('Outdoor Adventurers', 'Discuss camping and outdoor activities.', FALSE, 57),
+('Political Enthusiasts', 'Discuss current political events.', TRUE, 58),
+('Baking Enthusiasts', 'Share baking tips and recipes.', FALSE, 59),
+('Homebrewing Experts', 'Tips and tricks for brewing your own drinks.', TRUE, 60),
+('AI Innovators', 'Discuss advancements in artificial intelligence.', FALSE, 61),
+('Surfing Enthusiasts', 'Share surfing tips and experiences.', TRUE, 62),
+('Classic Movie Fans', 'Discuss your favorite classic films.', FALSE, 63),
+('Cosplay Artists', 'Share tips and showcase your cosplay.', TRUE, 64),
+('Adventure Travelers', 'Discuss extreme travel experiences.', TRUE, 66),
+('Science Fiction Enthusiasts', 'Discuss sci-fi books and movies.', FALSE, 67),
+('Pet Trainers Group', 'Share pet training tips and techniques.', TRUE, 68),
+('Mountain Climbers', 'Share experiences and tips for climbing.', FALSE, 69),
+('Beach Enthusiasts', 'Discuss your favorite beach destinations.', TRUE, 70),
+('K-Pop Community', 'Discuss your favorite K-Pop groups and music.', FALSE, 71),
+('Digital Art Hub', 'Share digital art and techniques.', TRUE, 72),
+('Entrepreneurs Network', 'Discuss ideas and challenges for startups.', FALSE, 73),
+('Board Gamers Circle', 'Discuss your favorite board games and strategies.', TRUE, 74),
+('Cat Lovers Club', 'Share stories and tips about cats.', FALSE, 75),
+('Movie Directors', 'Discuss filmmaking and production tips.', TRUE, 76),
+('Skiing Enthusiasts', 'Share skiing tips and destinations.', FALSE, 77),
+('Drone Hobbyists', 'Discuss drone flying tips and experiences.', TRUE, 78),
+('Vegan Community', 'Share vegan recipes and tips.', FALSE, 79),
+('Graphic Designers', 'Discuss design tools and techniques.', TRUE, 80),
+('Bird Watching Enthusiasts', 'Share birdwatching tips and sightings.', FALSE, 81),
+('Sculptors Network', 'Discuss sculpting techniques and share work.', TRUE, 82),
+('Fiction Writers Hub', 'Share your fictional works and critique.', FALSE, 83),
+('Sneaker Collectors Group', 'Discuss your sneaker collections.', TRUE, 84),
+('Robotics Enthusiasts', 'Discuss and share robotics projects.', FALSE, 91),
+('Fishing Fans', 'Tips and stories about fishing experiences.', TRUE, 92),
+('Drone Experts', 'A community for drone hobbyists.', FALSE, 93),
+('Aquarium Enthusiasts', 'Share tips and setups for aquariums.', TRUE, 94),
+('Horror Movie Fans', 'Discuss your favorite horror films.', FALSE, 95),
+('Landscape Photographers', 'Share and discuss landscape photography.', TRUE, 96),
+('Tattoo Artists', 'Discuss techniques and showcase tattoos.', FALSE, 97),
+('Mobile Gamers Hub', 'Discuss mobile games and tips.', TRUE, 98),
+('Home Improvement Gurus', 'Tips for improving your home.', FALSE, 99),
+('Virtual Reality Fans', 'Discuss VR games and technology.', TRUE, 100),
+('Ask Me Anything', 'A space for unique Q&A sessions.', TRUE, 101),
+('Life Pro Tips', 'Tips for improving everyday life.', FALSE, 102),
+('Explain Like I’m Five', 'Complex ideas explained simply.', TRUE, 103),
+('Today I Learned', 'Share interesting facts you learned.', FALSE, 104),
+('Shower Thoughts', 'Unique and quirky thoughts.', TRUE, 105),
+('Wholesome Memes', 'Feel-good memes for everyone.', FALSE, 106),
+('DIY Projects', 'Creative do-it-yourself ideas.', TRUE, 107),
+('Productivity Hacks', 'Tips for getting things done efficiently.', FALSE, 108),
+('Space Exploration', 'Discussions about the universe.', TRUE, 109),
+('World News', 'Stay updated on global news.', FALSE, 110),
+('Food Porn', 'Delicious food photography.', TRUE, 111),
+('Art Critique', 'Get constructive feedback on your art.', FALSE, 112),
+('Ask a Historian', 'Historical questions answered by experts.', TRUE, 113),
+('Casual Conversations', 'Relaxed discussions on any topic.', FALSE, 114),
+('Gaming Memes', 'Funny content for gamers.', TRUE, 115),
+('Minimalism', 'Discuss simple and clutter-free living.', FALSE, 116),
+('Sustainable Living', 'Tips for eco-friendly living.', TRUE, 117),
+('Data Is Beautiful', 'Visualizations of interesting data.', FALSE, 118),
+('Personal Finance', 'Advice for managing your money.', TRUE, 119),
+('Learn Programming', 'Resources and tips for coders.', FALSE, 120),
+('Astronomy', 'Explore the stars and galaxies.', TRUE, 121),
+('Casual Photography', 'Share and discuss everyday photos.', FALSE, 122),
+('Parenting Tips', 'Support and advice for parents.', TRUE, 123),
+('Fitness Progress', 'Share fitness achievements.', FALSE, 124),
+('Political Humor', 'Jokes and memes about politics.', TRUE, 125),
+('Startup Ideas', 'Discuss innovative business concepts.', FALSE, 126),
+('Language Exchange', 'Practice new languages with others.', TRUE, 127),
+('Investing 101', 'Advice for new investors.', FALSE, 128),
+('Cryptocurrency News', 'Stay updated on crypto trends.', TRUE, 129),
+('Creative Writing Prompts', 'Ideas to inspire your writing.', FALSE, 130),
+('Meme Economy', 'Buy, sell, and trade memes.', TRUE, 131),
+('Crafting Enthusiasts', 'Discuss crafts and DIY projects.', FALSE, 132),
+('Futurology', 'Discuss the future of humanity.', TRUE, 133),
+('Hairstyling Tips', 'Advice and tutorials for great hair.', FALSE, 134),
+('Urban Exploration', 'Explore abandoned or hidden places.', TRUE, 135),
+('Pet Care', 'Tips for taking care of your pets.', FALSE, 136),
+('Wild Camping', 'Share camping experiences and tips.', TRUE, 137),
+('Guitar Tutorials', 'Lessons for guitar players.', FALSE, 138),
+('World Building', 'Create and discuss fictional worlds.', TRUE, 139),
+('Rare Puppers', 'Share adorable dog photos.', FALSE, 140),
+('Tech Support', 'Help for solving tech problems.', TRUE, 141),
+('Bad Jokes', 'So bad they’re funny.', FALSE, 142),
+('Hiking Trails', 'Discover and share hiking locations.', TRUE, 143),
+('Urban Legends', 'Discuss myths and legends.', FALSE, 144),
+('Photography Challenges', 'Participate in themed photo contests.', TRUE, 145),
+('Tech Gadgets', 'Reviews and discussions on gadgets.', FALSE, 146),
+('Movie Reviews', 'Share your thoughts on films.', TRUE, 147),
+('Classic Literature', 'Discuss timeless books.', FALSE, 148),
+('Geography Nerds', 'Share and discuss maps.', TRUE, 149),
+('Skincare Tips', 'Discuss routines and products.', FALSE, 150),
+('Board Game Designers', 'Create and test board games.', TRUE, 151),
+('Astronomy Events', 'Updates on celestial happenings.', FALSE, 152),
+('Mental Health Tips', 'Share resources and advice.', TRUE, 153),
+('Seasonal Recipes', 'Cook seasonal and festive dishes.', FALSE, 154),
+('Extreme Weather Fans', 'Share storm and weather stories.', TRUE, 155),
+('Bird Photography', 'Share stunning bird photos.', FALSE, 156),
+('Handwriting Help', 'Improve your handwriting skills.', TRUE, 157),
+('Riddle Lovers', 'Solve and share riddles.', FALSE, 158),
+('Plant Identification', 'Help identify mysterious plants.', TRUE, 159),
+('Home Automation', 'Discuss smart home tech.', FALSE, 160),
+('Alien Theories', 'Speculate about extraterrestrial life.', TRUE, 161),
+('Philosophy 101', 'Discuss beginner philosophical ideas.', FALSE, 162),
+('Wilderness Survival', 'Share survival tips and gear.', TRUE, 163),
+('Car Maintenance Tips', 'DIY tips for car upkeep.', FALSE, 164),
+('Knitting & Crochet', 'Share patterns and projects.', TRUE, 165),
+('Vintage Electronics', 'Discuss retro gadgets.', FALSE, 166),
+('Minimalist Design', 'Tips for simple and effective design.', TRUE, 167),
+('Home Renovations', 'Tips for improving your house.', FALSE, 168),
+('Stand-up Comedy', 'Share jokes and funny clips.', TRUE, 169),
+('Trail Runners', 'Discuss trail running gear and tips.', FALSE, 170),
+('Martial Arts Theory', 'Debate techniques and philosophy.', TRUE, 171),
+('Cooking Experiments', 'Share your culinary trials.', FALSE, 172),
+('K-Pop Dance Covers', 'Discuss and share dance covers.', TRUE, 173),
+('Sustainable Fashion', 'Talk about eco-friendly clothing.', FALSE, 174),
+('Classic Music Enthusiasts', 'Discuss classical music works.', TRUE, 175),
+('Origami Artists', 'Share folds and designs.', FALSE, 176),
+('Sketch Artists', 'Discuss tools and techniques.', TRUE, 177),
+('Comedy Sketches', 'Share and create humorous sketches.', FALSE, 178),
+('AI Generated Art', 'Discuss and share AI art.', TRUE, 179),
+('Book Club Picks', 'Vote on and discuss books.', FALSE, 180),
+('Coding Challenges', 'Sharpen your programming skills.', TRUE, 181),
+('Archaeology Fans', 'Discuss ancient discoveries.', FALSE, 182),
+('Chess Tournaments', 'Share games and results.', TRUE, 183),
+('Landscape Painting', 'Showcase and discuss techniques.', FALSE, 184),
+('Fantasy Maps', 'Create and critique fictional maps.', TRUE, 185),
+('Roller Coaster Fans', 'Discuss and share thrill rides.', FALSE, 186),
+('Beach Photography', 'Share stunning beach shots.', TRUE, 187),
+('Meditation Techniques', 'Explore and share practices.', FALSE, 188),
+('Quilting Enthusiasts', 'Discuss patterns and fabrics.', TRUE, 189),
+('Stock Market Insights', 'Analyze and discuss stock trends.', FALSE, 190),
+('Magic Tricks', 'Learn and share magic tips.', TRUE, 191),
+('Food Science', 'Explore the science of cooking.', FALSE, 192),
+('Space Missions', 'Discuss recent space exploration.', TRUE, 193),
+('Jazz Music Fans', 'Share your favorite jazz pieces.', FALSE, 194),
+('Aquascaping', 'Create stunning underwater worlds.', TRUE, 195),
+('Minimal Wardrobe', 'Tips for simplifying clothing.', FALSE, 196),
+('Candle Making', 'Discuss techniques and designs.', TRUE, 197),
+('Speedrunning', 'Discuss and share gaming records.', FALSE, 198),
+('3D Printing', 'Share tips and designs.', TRUE, 199),
+('Graphic Novel Fans', 'Discuss and share favorite comics.', FALSE, 200);
+
 
 -- Insert authenticated users
 INSERT INTO authenticated_users (
@@ -612,12 +806,38 @@ INSERT INTO authenticated_users (
 ('Ultron', 'ultron', 'ultron@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE,'2015-11-16', 'A.I. villain with a complex.', FALSE, 47),
 ('Violet Parr', 'violet', 'violet@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '2000-12-17', 'Superhero with force fields.', FALSE, 48),
 ('Wolverine', 'wolverine', 'wolverine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1882-01-18', 'Mutant and fighter.', FALSE, 49),
-('X-Men', 'xmen', 'xmen@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1963-02-19', 'Superhero team with various powers.', FALSE, 50);
+('X-Men', 'xmen', 'xmen@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1963-02-19', 'Superhero team with various powers.', FALSE, 50),
+('Bondrewd', 'bondrewd', 'bondrewd@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 10000, FALSE, '2017-07-7', 'A ruthless and manipulative White Whistle Delver with a twisted obsession with the Abyss, elevators and fur.', FALSE, 56),
+('Nanachi', 'nanachi', 'nanachi@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '2017-07-7', 'A compassionate and fluffy elevator hater.', FALSE, 57),
+('Prushka', 'prushka', 'prushka@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 0, FALSE, '2017-07-7', 'A kind-hearted and courageous girl who was adopted by Bondrewd.', FALSE, 58);
+
+
 
 
 
 -- Insert posts
 INSERT INTO posts (title, content, community_id) VALUES
+('The Rise of AI', 'Artificial Intelligence is revolutionizing the world.', 1),
+('Must-Read Books of 2024', 'Here are some books you shouldn’t miss this year.', 2),
+('Top Anime of the Season', 'Let’s discuss the best anime airing this season.', 3),
+('Travel Tips for 2024', 'Best destinations to visit next year.', 4),
+('Building a Fantasy World', 'Tips for world-building in fantasy fiction.', 5),
+('Cooking Healthy Meals', 'Share your best healthy recipes.', 6),
+('Upcoming Movies in 2024', 'What films are you excited about?', 7),
+('Staying Fit During Winter', 'Winter workouts to keep you healthy.', 8),
+('Game Development Basics', 'How to get started with game development.', 9),
+('Wildlife Photography Tips', 'Capture nature beautifully.', 10),
+('AI in Everyday Life', 'How AI is simplifying our daily routines.', 1),
+('Underrated Books to Check Out', 'Hidden literary gems you might have missed.', 2),
+('Classic Anime That Still Shine', 'Timeless anime worth revisiting.', 3),
+('Budget-Friendly Travel Hacks', 'Explore the world without breaking the bank.', 4),
+('Creating Believable Characters', 'Bring your fantasy worlds to life with relatable characters.', 5),
+('Quick and Healthy Breakfast Ideas', 'Start your day with these simple, nutritious recipes.', 6),
+('Anticipated Sequels of 2024', 'Movie sequels everyone is looking forward to.', 7),
+('Staying Motivated to Exercise in the Cold', 'Tips to beat winter laziness and stay active.', 8),
+('The Best Tools for Aspiring Game Developers', 'Essential software and resources for beginners.', 9),
+('Photographing Wildlife in Challenging Conditions', 'How to capture stunning shots in tough environments.', 10),
+
 ('Top 10 Anime Fights of All Time', 'A comprehensive list of the most epic battles in anime history...', 1),
 ('The Science Behind Dragon Ball Power Levels', 'An in-depth analysis of power scaling in Dragon Ball universe...', 1),
 ('Mythology and Modern Storytelling', 'How ancient myths continue to inspire contemporary narratives...', 3),
@@ -635,74 +855,151 @@ INSERT INTO posts (title, content, community_id) VALUES
 ('Technology and Scientific Innovation', 'How modern science is changing our understanding of the world...', 4),
 ('Star Wars vs Star Trek: An Epic Comparison', 'A deep dive into two of the most iconic sci-fi franchises...', 6),
 ('Best Detective Novels of the 21st Century', 'Exploring groundbreaking mystery literature...', 7),
-('Indie Film Festival Highlights', 'Showcasing hidden gems from recent independent film festivals...', 8),
+('Indie Music Festival Highlights', 'Showcasing hidden gems from recent independent songs...', 8),
 ('Next-Gen Gaming Technologies', 'Exploring the future of video game development...', 9),
 ('Classic Literature Reimagined', 'How modern authors reinterpret classic works...', 10),
 ('Space Exploration Documentary Review', 'An in-depth look at recent space documentaries...', 6),
 ('The Psychology of Detective Characters', 'Analyzing complex protagonists in mystery fiction...', 7),
 ('Cinematography Techniques in Modern Cinema', 'Breaking down innovative filming methods...', 8),
 ('eSports: The Future of Competitive Gaming', 'Exploring the rise of professional gaming...', 9),
-('Magical Realism in Contemporary Literature', 'Examining the genre''s evolution and impact...', 10);
+('Magical Realism in Contemporary Literature', 'Examining the genre''s evolution and impact...', 10),
+('New season confirmed', 'Next season coming up!', 11);
 
 INSERT INTO news (post_id, news_url)
 VALUES 
-(4, 'https://example.com/tech-trends-2024'),
-(6, 'https://example.com/superhero-origins'),
-(7, 'https://example.com/quantum-computing'),
-(10, 'https://example.com/web-dev-frameworks'),
-(12, 'https://example.com/dinosaur-research'),
-(15, 'https://example.com/science-innovation'),
-(16, 'https://example.com/star-wars-star-trek'),
-(18, 'https://example.com/indie-film-festival'),
-(19, 'https://example.com/next-gen-gaming'),
-(21, 'https://example.com/space-exploration-doc');
+(2, 'http://example.com/news2'),
+(3, 'http://example.com/news3'),
+(4, 'http://example.com/news4'),
+(5, 'http://example.com/news5'),
+(6, 'http://example.com/news6'),
+(7, 'http://example.com/news7'),
+(8, 'http://example.com/news8'),
+(9, 'http://example.com/news9'),
+(10, 'http://example.com/news10'),
+
+(24, 'https://www2.deloitte.com/us/en/insights/focus/tech-trends.html'),
+(26, 'https://gamerant.com/hollywood-done-superhero-origin-stories/'),
+(27, 'https://www.forbes.com/sites/ansellindner/2024/12/12/googles-quantum-computing-leap-what-it-means-for-bitcoins-security/'),
+(30, 'https://www.statista.com/statistics/1124699/worldwide-developer-survey-most-used-frameworks-web/'),
+(32, 'https://www.korea.net/NewsFocus/Society/view?articleId=262982'),
+(35, 'https://sdg.iisd.org/events/8th-g-stic-conference/'),
+(36, 'https://observador.pt/especiais/star-trek-vs-star-wars-esta-e-a-verdadeira-guerra-das-estrelas/'),
+(38, 'https://expresso.pt/blitz/2024-08-08-mais-um-agosto-mais-um-vodafone-paredes-de-coura-o-espirito-e-a-musica-de-um-festival-indie-a9cbdf2b'),
+(39, 'https://www.ign.com/videos/the-most-next-gen-games-of-2024-next-gen-console-watch'),
+(46, 'https://thedirect.com/article/made-in-abyss-season-3-confirmed-details');
 
 -- Insert into Topics table (topics awaiting review)
 INSERT INTO topics (post_id, status, review_date)
 VALUES 
-(1, 'pending', CURRENT_TIMESTAMP),
-(2, 'pending', CURRENT_TIMESTAMP),
-(3, 'accepted', CURRENT_TIMESTAMP),
-(5, 'pending', CURRENT_TIMESTAMP),
-(8, 'accepted', CURRENT_TIMESTAMP),
-(9, 'pending', CURRENT_TIMESTAMP),
 (11, 'accepted', CURRENT_TIMESTAMP),
+(12, 'rejected', CURRENT_TIMESTAMP),
 (13, 'pending', CURRENT_TIMESTAMP),
 (14, 'accepted', CURRENT_TIMESTAMP),
+(15, 'pending', CURRENT_TIMESTAMP),
+(16, 'accepted', CURRENT_TIMESTAMP),
 (17, 'pending', CURRENT_TIMESTAMP),
-(20, 'accepted', CURRENT_TIMESTAMP),
+(18, 'rejected', CURRENT_TIMESTAMP),
+(19, 'accepted', CURRENT_TIMESTAMP),
+
+(21, 'pending', CURRENT_TIMESTAMP),
 (22, 'pending', CURRENT_TIMESTAMP),
 (23, 'accepted', CURRENT_TIMESTAMP),
-(24, 'pending', CURRENT_TIMESTAMP),
-(25, 'accepted', CURRENT_TIMESTAMP);
+(25, 'pending', CURRENT_TIMESTAMP),
+(28, 'accepted', CURRENT_TIMESTAMP),
+(29, 'pending', CURRENT_TIMESTAMP),
+(31, 'accepted', CURRENT_TIMESTAMP),
+(33, 'pending', CURRENT_TIMESTAMP),
+(34, 'accepted', CURRENT_TIMESTAMP),
+(37, 'pending', CURRENT_TIMESTAMP),
+(40, 'accepted', CURRENT_TIMESTAMP),
+(42, 'pending', CURRENT_TIMESTAMP),
+(43, 'accepted', CURRENT_TIMESTAMP),
+(44, 'pending', CURRENT_TIMESTAMP),
+(45, 'accepted', CURRENT_TIMESTAMP);
 
 -- Link authors to posts
 INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
-(6, 1, FALSE),
-(7, 2, TRUE),
-(8, 3, FALSE),
-(9, 4, FALSE),
-(6, 5, TRUE),
-(10, 6, FALSE),
-(9, 7, TRUE),
-(6, 8, FALSE),
-(8, 9, TRUE),
-(9, 10, FALSE),
-(16, 11, FALSE),
-(17, 12, TRUE),
-(18, 13, FALSE),
-(5, 14, TRUE),
-(6, 15, FALSE),
-(24, 16, FALSE),  -- Liam Neeson
-(25, 17, TRUE),   -- Monica Geller
-(26, 18, FALSE), -- Nina Williams
-(27, 19, TRUE),  -- Oscar Wilde
-(28, 20, FALSE), -- Penny Lane
-(29, 21, TRUE),  -- Quentin Tarantino
-(30, 22, FALSE), -- Rachel Green
-(31, 23, TRUE),  -- Steve Rogers
-(32, 24, FALSE), -- Tony Stark
-(33, 25, TRUE);  -- Ursula K. Le Guin
+(6, 21, FALSE),
+(7, 22, TRUE),
+(8, 23, FALSE),
+(9, 24, FALSE),
+(6, 25, TRUE),
+(10, 26, FALSE),
+(9, 27, TRUE),
+(6, 28, FALSE),
+(8, 29, TRUE),
+(9, 30, FALSE),
+(16, 31, FALSE),
+(17, 32, TRUE),
+(18, 33, FALSE),
+(5, 34, TRUE),
+(6, 35, FALSE),
+(24, 36, FALSE),  -- Liam Neeson
+(25, 37, TRUE),   -- Monica Geller
+(26, 38, FALSE), -- Nina Williams
+(27, 39, TRUE),  -- Oscar Wilde
+(28, 40, FALSE), -- Penny Lane
+(29, 41, TRUE),  -- Quentin Tarantino
+(30, 42, FALSE), -- Rachel Green
+(31, 43, TRUE),  -- Steve Rogers
+(32, 44, FALSE), -- Tony Stark
+(33, 45, TRUE),  -- Ursula K. Le Guin
+(62, 46, FALSE),
+(61, 46, FALSE),
+(60, 46, FALSE),
+(1, 1, FALSE),  -- Anonymous - The Rise of AI
+(2, 2, FALSE),  -- Bob Johnson - Must-Read Books of 2024
+(3, 3, FALSE),  -- Charlie Brown - Top Anime of the Season
+(4, 4, FALSE),  -- Diana Prince - Travel Tips for 2024
+(5, 5, FALSE),  -- Edward Elric - Building a Fantasy World
+(6, 6, FALSE),  -- Fiona Gallagher - Cooking Healthy Meals
+(7, 7, FALSE),  -- George Martin - Upcoming Movies in 2024
+(8, 8, FALSE),  -- Hannah Montana - Staying Fit During Winter
+(9, 9, FALSE),  -- Ian Malcolm - Game Development Basics
+(10, 10, FALSE), -- Jack Sparrow - Wildlife Photography Tips
+(11, 1, FALSE),  -- Katherine Pierce - The Rise of AI
+(12, 2, FALSE),  -- Liam Neeson - Must-Read Books of 2024
+(13, 3, FALSE),  -- Monica Geller - Top Anime of the Season
+(14, 4, FALSE),  -- Nina Williams - Travel Tips for 2024
+(15, 5, FALSE),  -- Oscar Wilde - Building a Fantasy World
+(16, 6, FALSE),  -- Penny Lane - Cooking Healthy Meals
+(17, 7, FALSE),  -- Quentin Tarantino - Upcoming Movies in 2024
+(18, 8, FALSE),  -- Rachel Green - Staying Fit During Winter
+(19, 9, FALSE),  -- Steve Rogers - Game Development Basics
+(20, 10, FALSE),  -- Tony Stark - Wildlife Photography Tips
+(21, 1, FALSE),  -- Ursula K. Le Guin - The Rise of AI
+(22, 2, FALSE),  -- Victor Frankenstein - Must-Read Books of 2024
+(23, 3, FALSE),  -- Will Turner - Top Anime of the Season
+(24, 4, FALSE),  -- Xena Warrior - Travel Tips for 2024
+(25, 5, FALSE),  -- Yoda - Building a Fantasy World
+(26, 6, FALSE),  -- Zorro - Cooking Healthy Meals
+(27, 7, FALSE),  -- Albus Dumbledore - Upcoming Movies in 2024
+(28, 8, FALSE),  -- Bella Swan - Staying Fit During Winter
+(29, 9, FALSE),  -- Clark Kent - Game Development Basics
+(30, 10, FALSE),  -- Darth Vader - Wildlife Photography Tips
+(31, 1, FALSE),  -- Elliot Alderson - The Rise of AI
+(32, 2, FALSE),  -- Frodo Baggins - Must-Read Books of 2024
+(33, 3, FALSE),  -- Gandalf the Grey - Top Anime of the Season
+(34, 4, FALSE),  -- Homer Simpson - Travel Tips for 2024
+(35, 5, FALSE),  -- Icarus - Building a Fantasy World
+(36, 6, FALSE),  -- Jules Winnfield - Cooking Healthy Meals
+(37, 7, FALSE),  -- Katniss Everdeen - Upcoming Movies in 2024
+(38, 8, FALSE),  -- Lara Croft - Staying Fit During Winter
+(39, 9, FALSE),  -- Marty McFly - Game Development Basics
+(40, 10, FALSE),  -- Nancy Drew - Wildlife Photography Tips
+(41, 1, FALSE),  -- Oliver Twist - The Rise of AI
+(42, 2, TRUE),   -- Pikachu - Must-Read Books of 2024 (Pinned)
+(43, 3, FALSE),  -- Quasimodo - Top Anime of the Season
+(44, 4, FALSE),  -- R2-D2 - Travel Tips for 2024
+(45, 5, FALSE),  -- SpongeBob SquarePants - Building a Fantasy World
+(46, 6, FALSE),  -- Thor Odinson - Cooking Healthy Meals
+(47, 7, FALSE),  -- Ultron - Upcoming Movies in 2024
+(48, 8, FALSE),  -- Violet Parr - Staying Fit During Winter
+(49, 9, FALSE),  -- Wolverine - Game Development Basics
+(50, 10, FALSE); -- X-Men - Wildlife Photography Tips
+
+
+
 
 -- Insert votes
 INSERT INTO votes (upvote, authenticated_user_id) VALUES
@@ -741,7 +1038,9 @@ INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id
 ('Psychological analysis is spot on', 41, 22, NULL),
 ('Cinematography techniques are mind-blowing', 42, 23, NULL),
 ('eSports is definitely the future', 43, 24, NULL),
-('Magical realism continues to amaze', 44, 25, NULL);
+('Magical realism continues to amaze', 44, 25, NULL),
+('Amazing, cant wait!', 57, 26, NULL),
+('Same!!', 58, 26, 20);
 
 -- Insert comment votes
 INSERT INTO comment_votes (vote_id, comment_id)
@@ -765,7 +1064,8 @@ INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
 (36, 7), (37, 7),  -- Mystery Lovers
 (38, 8), (39, 8),  -- Film Buffs
 (40, 9), (41, 9),  -- Gaming World
-(42, 10), (43, 10);  -- Literature Club
+(42, 10), (43, 10),  -- Literature Club
+(56, 11),(57, 11), (58, 11);
 
 -- Insert user followers
 INSERT INTO user_followers (follower_id, followed_id) VALUES
@@ -779,7 +1079,10 @@ INSERT INTO user_followers (follower_id, followed_id) VALUES
 (26, 27), (27, 26),
 (28, 29), (29, 28),
 (30, 31), (31, 30),
-(32, 33), (33, 32);
+(32, 33), (33, 32),
+(58, 57), (58, 56),
+(56, 57), (57, 56),
+(2, 3), (3, 4), (5, 6), (7, 8),(9, 10), (10, 11), (12, 13), (14, 15), (19, 20), (21, 22), (23, 24), (25, 26), (27, 28), (29, 30), (31, 32), (33, 34), (35, 36), (37, 38), (39, 40), (41, 42), (43, 44), (45, 46), (47, 48), (49, 50);
 
 
 -- Optional: Add some community moderators
@@ -793,7 +1096,8 @@ INSERT INTO community_moderators (authenticated_user_id, community_id) VALUES
 (25, 7),   -- Monica Geller moderates Mystery Lovers
 (26, 8),   -- Nina Williams moderates Film Buffs
 (27, 9),   -- Oscar Wilde moderates Gaming World
-(28, 10);  -- Penny Lane moderates Literature Club
+(28, 10),  -- Penny Lane moderates Literature Club
+(60, 11);
 
 -- Optional: Add some favorite posts
 INSERT INTO favorite_posts (authenticated_user_id, post_id) VALUES
