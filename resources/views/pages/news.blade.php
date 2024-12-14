@@ -8,8 +8,8 @@
     {{ session('success') }}
   </div>
   @endif
-
-  @php
+<div class = "divide-y-2 divide-black border-b-2 border-black">
+@php
         $activeTab = request()->query('tab', 'News'); // Default to 'News'
       @endphp
 
@@ -43,6 +43,7 @@
     @endif
 
   @endif
+</div>
 
   <script>
     document.getElementById('content-type-selector').addEventListener('change', function () {
