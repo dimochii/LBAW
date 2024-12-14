@@ -2070,51 +2070,6 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 
 
 
--- Insert votes
-DO $$
-DECLARE
-    user_id INT;
-    vote_count INT;
-    is_upvote BOOLEAN;
-BEGIN
-    -- Generate 5000 random votes for 100 users
-    FOR vote_count IN 1..5000 LOOP
-        -- Assign a random user ID between 1 and 100
-        user_id := (SELECT FLOOR(RANDOM() * 100 + 1)::INT);
-
-        -- Randomize vote type (upvote or downvote)
-        is_upvote := (RANDOM() < 0.5);
-
-        -- Insert vote
-        INSERT INTO votes (upvote, authenticated_user_id)
-        VALUES (is_upvote, user_id);
-    END LOOP;
-END $$;
-
--- Insert random post_votes, ensuring each post gets between 5 and 50 votes
-DO $$
-DECLARE
-    post_id INT;
-    vote_id INT;
-    num_votes INT;
-    vote_offset INT := 1; -- Keeps track of the vote_id offset for linking
-BEGIN
-    -- For each post (1 to 125), assign random votes
-    FOR post_id IN 1..125 LOOP
-        -- Generate a random number of votes for the post (between 5 and 50)
-        num_votes := (SELECT FLOOR(RANDOM() * 46 + 5)::INT);
-
-        -- Insert post_votes for this post
-        FOR vote_id IN vote_offset..(vote_offset + num_votes - 1) LOOP
-            INSERT INTO post_votes (vote_id, post_id)
-            VALUES (vote_id, post_id);
-        END LOOP;
-
-        -- Update the vote offset to skip used votes
-        vote_offset := vote_offset + num_votes;
-    END LOOP;
-END $$;
-
 
 
 -- Insert comments
@@ -2289,12 +2244,73 @@ INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id
 ('The timeline of space exploration is so fascinating. We’ve come so far in just a few decades.', 13, 79, 14),
 ('I’m all in for eco-friendly travel. I love that this article focuses on reducing our carbon footprint!', 36, 80, NULL);
 
+DO $$
+DECLARE
+    user_id INT;
+    vote_count INT;
+    is_upvote BOOLEAN;
+BEGIN
+    -- Generate 10,000 random votes for 100 users
+    FOR vote_count IN 1..10000 LOOP
+        -- Assign a random user ID between 1 and 100
+        user_id := (SELECT FLOOR(RANDOM() * 100 + 1)::INT);
 
--- Insert comment votes
-INSERT INTO comment_votes (vote_id, comment_id)
-SELECT v.id, c.id 
-FROM votes v, comments c 
-WHERE c.id > 10;
+        -- Randomize vote type (80% upvote, 20% downvote)
+        is_upvote := (RANDOM() < 0.8);
+
+        -- Insert vote
+        INSERT INTO votes (upvote, authenticated_user_id)
+        VALUES (is_upvote, user_id);
+    END LOOP;
+END $$;
+
+-- Insert random post_votes, ensuring each post gets between 5 and 50 votes
+DO $$
+DECLARE
+    post_id INT;
+    vote_id INT;
+    num_votes INT;
+    vote_offset INT := 1; -- Keeps track of the vote_id offset for linking
+BEGIN
+    -- For each post (1 to 125), assign random votes
+    FOR post_id IN 1..125 LOOP
+        -- Generate a random number of votes for the post (between 5 and 50)
+        num_votes := (SELECT FLOOR(RANDOM() * 46 + 5)::INT);
+
+        -- Insert post_votes for this post
+        FOR vote_id IN vote_offset..(vote_offset + num_votes - 1) LOOP
+            INSERT INTO post_votes (vote_id, post_id)
+            VALUES (vote_id, post_id);
+        END LOOP;
+
+        -- Update the vote offset to skip used votes
+        vote_offset := vote_offset + num_votes;
+    END LOOP;
+END $$;
+
+-- Insert random comment_votes, ensuring each comment gets between 1 and 30 votes
+DO $$
+DECLARE
+    comment_id INT;
+    vote_id INT;
+    num_votes INT;
+    vote_offset INT := (SELECT MAX(id) FROM post_votes) + 1; -- Start after the last post_vote ID
+BEGIN
+    -- For each comment (1 to 111), assign random votes
+    FOR comment_id IN 1..111 LOOP
+        -- Generate a random number of votes for the comment (between 1 and 30)
+        num_votes := (SELECT FLOOR(RANDOM() * 30 + 1)::INT);
+
+        -- Insert comment_votes for this comment
+        FOR vote_id IN vote_offset..(vote_offset + num_votes - 1) LOOP
+            INSERT INTO comment_votes (vote_id, comment_id)
+            VALUES (vote_id, comment_id);
+        END LOOP;
+
+        -- Update the vote offset to skip used votes
+        vote_offset := vote_offset + num_votes;
+    END LOOP;
+END $$;
 
 -- Insert community followers
 INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
