@@ -2,7 +2,7 @@
   <div class="flex flex-row mt-5">
     <div class="size-8 rounded-full ">
       <a href="">
-        <img src="{{ asset($comment->user->image->path) }}" class="size-8 rounded-full">
+        <img src="{{ asset($comment->user->image->path ?? '/images/default.jpg') }}" class="size-8 rounded-full">
       </a>
 
       <a href="#c-{{ $comment->id }}"

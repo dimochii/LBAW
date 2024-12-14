@@ -9,7 +9,7 @@
         <a class="flex items-center"
           href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
         
-          <img src="{{ asset($newsItem->post->community->image->path) }}" 
+          <img src="{{ asset($newsItem->post->community->image->path ?? '/images/default.jpg') }}" 
         
             class="size-8 rounded-full ring-2  ring-white">
           <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
@@ -170,7 +170,7 @@
         @foreach($newsItem->post->authors->take(4) as $author)
           <a href="{{ route('user.profile', $author->id) }}" class="group">
             <img 
-              src="{{ asset($author->image->path) }}" 
+              src="{{ asset($author->image->path ?? '/images/default.jpg') }}" 
               alt="{{ $author->name }}" 
               class="w-10 h-10 border-2 border-white rounded-full "
             >
@@ -206,7 +206,8 @@
           if(Auth::check()) {$image_id = Auth::user()->image_id;}
           else { $image_id = 1;}
         @endphp
-        <img src="{{ asset(Auth::user()->image->path ) }}" class="size-8 rounded-full ">
+        <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}"
+        class="size-8 rounded-full ">
       </a>
       <span class=" px-2 text-xl font-light">start a thread</span>
     </div>
