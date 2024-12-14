@@ -154,7 +154,7 @@
             <a href="{{ route('user.profile', Auth::user()->id) }}"
               class="block pr-8 py-2 text-gray-700 hover:bg-gray-100 border-b border-gray-200">
               <div class="flex items-center px-4 py-3">
-                <img src="{{ asset('images/user' . Auth::user()->image_id . '.jpg') }}"
+                <img src="{{ asset(Auth::user()->image->path) }}"
                 onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                   class="size-10 rounded-full " />
                 <div>
@@ -301,7 +301,7 @@
         <!-- Hubs Section -->
         <div class="p-4 border-b-2 border-black">
           <div class="flex flex-wrap items-start gap-3">
-            <img src="{{ asset('images/hub' . $community->image_id . '.jpg') }}" 
+            <img src="{{ asset($community->image->path) }}" 
                  onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                  alt="Community Image"
                  class="rounded-full  size-20" >

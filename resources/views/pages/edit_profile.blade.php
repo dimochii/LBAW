@@ -45,7 +45,7 @@
         <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data" 
               class="grid grid-cols-1 md:grid-cols-2 gap-12">
             @csrf
-            @method('PUT')
+            @method('POST')
 
             {{-- Left Column --}}
             <div class="space-y-8">
@@ -56,9 +56,7 @@
                         {{-- Current Image Preview --}}
                         <div class="ring-2 ring-black rounded-full p-1 transition-transform duration-300 group-hover:scale-105">
                             @if ($user->image_id)
-                                <img src="{{ asset('images/' . $user->image_id . '.jpg') }}" 
-                                     alt="Current Profile" 
-                                     class="h-24 w-24 rounded-full object-cover">
+                            <img src="{{ asset($user->image->path) }}" alt="Current Profile" class="h-24 w-24 rounded-full object-cover">
                             @else
                                 <div class="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
                                     <span class="text-3xl font-light text-gray-500">{{ substr($user->name, 0, 1) }}</span>
@@ -80,6 +78,9 @@
                                     <p class="mt-2 text-lg font-light text-gray-600">Click to upload new image</p>
                                 </div>
                             </label>
+                            <div id="imagePreview" class="mt-4">
+                                <!-- Image preview will appear here -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,7 +88,6 @@
                 {{-- Basic Information --}}
                 <div class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
                     <h3 class="text-2xl font-medium">Basic Information</h3>
-                    
                     {{-- Name --}}
                     <div>
                         <label for="name" class="block text-lg font-light">Name</label>
@@ -154,15 +154,6 @@
                 </div>
             </div>
 
-            <div class="md:col-span-2 flex justify-start">
-                <form method="POST" action="{{ url('/deletemyaccount') }}">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white btn btn-primary">
-                        <span>delete my account</span>
-                    </button>
-                </form>
-            </div>
             {{-- Submit Button --}}
             <div class="md:col-span-2 flex justify-end">
                 <button type="submit" 
@@ -181,4 +172,21 @@
         </form>
     </div>
 </div>
+
+<script>
+    function updateImagePreview(event) {
+        const previewContainer = document.getElementById('imagePreview');
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewContainer.innerHTML = `<img src="${e.target.result}" alt="Image Preview" class="h-24 w-24 rounded-full object-cover">`;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.innerHTML = '';
+        }
+    }
+</script>
+
 @endsection

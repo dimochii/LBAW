@@ -13,10 +13,13 @@ class Image extends Model
     protected $fillable = ['path'];
 
     public function community() {
-        return $this->belongsTo(Community::class);
+        return $this->belongsTo(Community::class,'image_id','id');  
     }
 
-    public function authenticatedUser() {
-        return $this->belongsTo(AuthenticatedUser::class);
+    public function authenticatedUser()
+    {
+        return $this->hasOne(AuthenticatedUser::class, 'image_id', 'id');  
     }
+
+
 }

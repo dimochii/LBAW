@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Community;
+use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -14,36 +15,6 @@ class CommunityController extends Controller
     return view('pages.create_hub');
   }
 
-  public function create(Request $request)
-  {
-    $request->validate([
-      'name' => 'required|string|max:255|unique:communities',
-      'description' => 'required|string|max:1000',
-      'privacy' => 'required|in:public,private',
-      'image_id' => 'nullable|integer|exists:images,id',
-      'moderators' => 'nullable|array',
-      'moderators.*' => 'exists:authenticated_users,id'
-    ]);
-
-    $community = Community::create([
-      'name' => $request->name,
-      'description' => $request->description,
-      'privacy' => $request->privacy === 'private',
-      'image_id' => $request->image_id,
-      'creation_date' => now(),
-    ]);
-
-    $community->moderators()->attach(Auth::user()->id);
-
-    if ($request->has('moderators')) {
-      $community->moderators()->attach($request->moderators);
-    }
-
-    return response()->json([
-      'message' => 'Community created successfully',
-      'community' => $community,
-    ], 201);
-  }
 
   public function destroy($id)
   {
@@ -187,32 +158,64 @@ class CommunityController extends Controller
   }
 
   // Armazenar uma nova comunidade
-
   public function store(Request $request)
   {
-    $request->validate([
-      'name' => 'required|string|max:255|unique:communities',
-      'description' => 'required|string|max:1000',
-      'privacy' => 'required|in:public,private',
-      'image_id' => 'nullable|integer|exists:images,id',
-      'moderators' => 'nullable|array',
-      'moderators.*' => 'exists:authenticated_users,id'
-    ]);
+      $request->validate([
+          'name' => 'required|string|max:255|unique:communities',
+          'description' => 'required|string|max:1000',
+          'privacy' => 'required|in:public,private',
+          'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048', // added more formats
+          'moderators' => 'nullable|array',
+          'moderators.*' => 'exists:authenticated_users,id'
+      ]);
+  
+      $image_id = null;
+      if ($request->hasFile('image')) {
+          $file = $request->file('image');
+  
+          // Generate a random value for the filename
+          $randomValue = uniqid(); 
+  
+          // Get the file extension dynamically (jpeg, png, gif, etc.)
+          $extension = $file->extension(); 
+  
+          // Construct the filename with the dynamic extension
+          $filename = 'hub' . $randomValue . '.' . $extension; 
+  
+          // Move the uploaded file to the 'images' directory in the base path
+          $file->move(base_path('images'), $filename);
+  
+          // Create the image record in the database
+          $image = Image::create([
+              'path' => 'images/' . $filename 
+          ]);
+  
+          // Get the image_id from the created image record
+          $image_id = $image->id; 
+      }
+  
+      // Create the community
+      $community = Community::create([
+          'name' => $request->name,
+          'description' => $request->description,
+          'privacy' => $request->privacy === 'private',
+          'image_id' => $image_id, // Set the image_id if there is an image
+          'creation_date' => now(),
+      ]);
+  
+      // Attach the authenticated user as the moderator
+      $community->moderators()->attach(Auth::user()->id);
+  
+      // If there are additional moderators, attach them as well
+      if ($request->has('moderators')) {
+          $community->moderators()->attach($request->moderators);
+      }
+  
+      return redirect()->route('communities.show', ['id' => $community->id]);
+    }
+  
 
-    $community = Community::create([
-      'name' => $request->name,
-      'description' => $request->description,
-      'privacy' => $request->privacy === 'private',
-      'image_id' => $request->image_id,
-      'creation_date' => now(),
-    ]);
-
-    // Associar o usuário autenticado como moderador
-    $authUser = Auth::user();
-    $community->moderators()->attach($authUser->id);
-
-    return redirect()->route('news')->with('success', 'Community created successfully!');
-  }
+  
 
   public function join($id)
   {

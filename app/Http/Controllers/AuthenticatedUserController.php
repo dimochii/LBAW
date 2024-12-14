@@ -6,6 +6,7 @@ use App\Models\AuthenticatedUser;
 use App\Models\Post;
 use App\Models\News;
 use App\Models\Topic;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -101,56 +102,68 @@ class AuthenticatedUserController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
+{
+    if (Auth::user()->id != $id) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
 
-        if (Auth::user()->id != $id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+    $user = AuthenticatedUser::findOrFail($id);
 
-        $user = AuthenticatedUser::findOrFail($id);
-
-
-        $validatedData = $request->validate([
-            'name' => 'nullable|string|max:255',
-            'username' => 'nullable|string|max:255|unique:authenticated_users,username,' . $user->id,
-            'email' => 'nullable|email|max:255|unique:authenticated_users,email,' . $user->id,
-            'birth_date' => 'nullable|date|before:today',
-            'description' => 'nullable|string',
-            'password' => 'nullable|string|min:8|confirmed',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    $validatedData = $request->validate([
+        'name' => 'nullable|string|max:255',
+        'username' => 'nullable|string|max:255|unique:authenticated_users,username,' . $user->id,
+        'email' => 'nullable|email|max:255|unique:authenticated_users,email,' . $user->id,
+        'birth_date' => 'nullable|date|before:today',
+        'description' => 'nullable|string',
+        'password' => 'nullable|string|min:8|confirmed',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+
         if (!empty($validatedData['name'])) {
-            $user->name = $validatedData['name'];
-        }
-        if (!empty($validatedData['username'])) {
-            $user->username = $validatedData['username'];
-        }
-        if (!empty($validatedData['email'])) {
-            $user->email = $validatedData['email'];
-        }
-        if (!empty($validatedData['birth_date'])) {
-            $user->birth_date = $validatedData['birth_date'];
-        }
-        if (!empty($validatedData['description'])) {
-            $user->description = $validatedData['description'];
-        }
-
-        if (!empty($validatedData['password'])) {
-            $user->password = Hash::make($validatedData['password']);
-        }
-
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images'), $filename);
-            $user->image_id = $filename; 
-        }
-
-        $user->save();
-
-        return redirect()->route('user.profile', $user->id)->with('success', 'Profile updated successfully!');
+        $user->name = $validatedData['name'];
     }
+    if (!empty($validatedData['username'])) {
+        $user->username = $validatedData['username'];
+    }
+    if (!empty($validatedData['email'])) {
+        $user->email = $validatedData['email'];
+    }
+    if (!empty($validatedData['birth_date'])) {
+        $user->birth_date = $validatedData['birth_date'];
+    }
+    if (!empty($validatedData['description'])) {
+        $user->description = $validatedData['description'];
+    }
+
+    if (!empty($validatedData['password'])) {
+        $user->password = Hash::make($validatedData['password']);
+    }
+
+    // Handle image (or other file) update
+    if ($request->hasFile('image')) {
+
+        $file = $request->file('image');
+        $newFileId = uniqid();
+        $extension = $file->getClientOriginalExtension(); 
+        $newFilename = 'user' . $newFileId . '.' . $extension;
+
+        if ($user->image_id) {
+            $existingImage = Image::find($user->image_id);
+            if ($existingImage && file_exists(base_path('images/' . $existingImage->path))) {
+                unlink(base_path('images/' . $existingImage->path)); 
+            }
+        }
+
+        $file->move(base_path('images'), $newFilename);
+        $image = Image::firstOrCreate(['path' => 'images/' . $newFilename]); 
+        $user->image_id = $image->id;
+    }
+    $user->save();
+    return redirect()->route('user.profile', $user->id)->with('success', 'Profile updated successfully!');
+    }
+
+
 
 
     public function destroy($id)

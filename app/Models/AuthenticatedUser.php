@@ -35,8 +35,9 @@ class AuthenticatedUser extends Authenticatable
 
     public function image()
     {
-        return $this->hasOne(Image::class);
+        return $this->belongsTo(Image::class, 'image_id', 'id');  
     }
+
 
     public function communities(): BelongsToMany
     {
