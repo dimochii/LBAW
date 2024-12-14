@@ -13,7 +13,7 @@ news = Bool
     <header class="flex items-center relative">
       <a class="flex items-center h-8"
         href="{{ route('communities.show', ['id' => $post->post->community->id ?? 'unknown']) }}">
-        <img src="{{ $post->post->community->image_id ? asset($post->post->community->image->path) : 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}" 
+        <img src="{{ $post->post->community->image_id ? asset($post->post->community->image->path) : 'images/groupdefault.jpg' }}" 
         onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
           class="size-8 rounded-full ">
 

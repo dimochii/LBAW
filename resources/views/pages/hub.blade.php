@@ -6,7 +6,7 @@
     @if($community)
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:px-8">
         <div class="flex items-start gap-6">
-            <img src="{{ asset( $community->image->path ) }}" 
+            <img src="{{ asset( $community->image->path ?? 'images/groupdefault.jpg') }}" 
                  onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                  alt="Community Image" 
                  class="rounded-full  h-32 w-32">

@@ -9,7 +9,7 @@
         <a class="flex items-center"
           href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
         
-          <img src="{{ asset($newsItem->post->community->image->path ?? '/images/default.jpg') }}" 
+          <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}" 
         
             class="size-8 rounded-full ring-2  ring-white">
           <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
