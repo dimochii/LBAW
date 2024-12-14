@@ -2071,45 +2071,224 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 
 
 -- Insert votes
-INSERT INTO votes (upvote, authenticated_user_id) VALUES
-(TRUE, 6), (TRUE, 7), (TRUE, 8), (TRUE, 9), (TRUE, 10),
-(FALSE, 6), (FALSE, 7), (FALSE, 8), (FALSE, 9), (FALSE, 10),
-(TRUE, 16), (TRUE, 17), (TRUE, 18), (TRUE, 5), (TRUE, 6),
-(FALSE, 16), (FALSE, 17), (FALSE, 18), (FALSE, 5), (FALSE, 6),
-(TRUE, 24), (TRUE, 25), (TRUE, 26), (TRUE, 27), (TRUE, 28),
-(FALSE, 24), (FALSE, 25), (FALSE, 26), (FALSE, 27), (FALSE, 28);
+DO $$
+DECLARE
+    user_id INT;
+    vote_count INT;
+    is_upvote BOOLEAN;
+BEGIN
+    -- Generate 5000 random votes for 100 users
+    FOR vote_count IN 1..5000 LOOP
+        -- Assign a random user ID between 1 and 100
+        user_id := (SELECT FLOOR(RANDOM() * 100 + 1)::INT);
 
--- Link votes to posts
-INSERT INTO post_votes (vote_id, post_id) 
-SELECT v.id, p.id 
-FROM votes v, posts p 
-WHERE p.id > 15;
+        -- Randomize vote type (upvote or downvote)
+        is_upvote := (RANDOM() < 0.5);
+
+        -- Insert vote
+        INSERT INTO votes (upvote, authenticated_user_id)
+        VALUES (is_upvote, user_id);
+    END LOOP;
+END $$;
+
+-- Insert random post_votes, ensuring each post gets between 5 and 50 votes
+DO $$
+DECLARE
+    post_id INT;
+    vote_id INT;
+    num_votes INT;
+    vote_offset INT := 1; -- Keeps track of the vote_id offset for linking
+BEGIN
+    -- For each post (1 to 125), assign random votes
+    FOR post_id IN 1..125 LOOP
+        -- Generate a random number of votes for the post (between 5 and 50)
+        num_votes := (SELECT FLOOR(RANDOM() * 46 + 5)::INT);
+
+        -- Insert post_votes for this post
+        FOR vote_id IN vote_offset..(vote_offset + num_votes - 1) LOOP
+            INSERT INTO post_votes (vote_id, post_id)
+            VALUES (vote_id, post_id);
+        END LOOP;
+
+        -- Update the vote offset to skip used votes
+        vote_offset := vote_offset + num_votes;
+    END LOOP;
+END $$;
+
 
 
 -- Insert comments
+-- Comments for the post "The Rise of AI" (post_id 1)
 INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
-('Great article about anime fights!', 7, 1, NULL),
-('I disagree with some of these rankings', 8, 1, 1),
-('Fascinating breakdown of chakra', 9, 5, NULL),
-('Your analysis is spot on!', 10, 5, 3),
-('Interesting tech trends', 6, 4, NULL),
-('Fascinating insights into fantasy writing!', 5, 11, NULL),
-('As a scientist, this dinosaur research is intriguing', 4, 12, NULL),
-('Love the historical perspective on pirates', 3, 13, NULL),
-('Great breakdown of pop culture trends', 2, 14, NULL),
-('Thought-provoking take on technological innovation', 17, 15, NULL),
-('Fascinating sci-fi comparison!', 35, 16, NULL),
-('Some great points about detective novels', 36, 17, NULL),
-('Loved the indie film insights', 37, 18, NULL),
-('Gaming tech is evolving so fast', 38, 19, NULL),
-('Brilliant take on modern literature', 39, 20, NULL),
-('Detailed breakdown of space documentaries', 40, 21, NULL),
-('Psychological analysis is spot on', 41, 22, NULL),
-('Cinematography techniques are mind-blowing', 42, 23, NULL),
-('eSports is definitely the future', 43, 24, NULL),
-('Magical realism continues to amaze', 44, 25, NULL),
-('Amazing, cant wait!', 57, 26, NULL),
-('Same!!', 58, 26, 20);
+('I think AI is definitely the future! But it does raise a lot of ethical questions.', 1, 1, NULL),
+('Agreed, especially when it comes to job displacement. It’s a big concern.', 2, 1, 1),
+('AI is already revolutionizing industries, but it’s not without its problems.', 3, 1, NULL);
+
+-- Comments for the post "Must-Read Books of 2024" (post_id 2)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I’m really looking forward to the new book by Haruki Murakami!', 4, 2, NULL),
+('Which one are you talking about? I didn’t know he had a new release!', 5, 2, 4),
+('I think "Harry Potter and the Philosophers Stone" should be on this list, it’s amazing!', 6, 2, NULL);
+
+-- Comments for the post "Top Anime of the Season" (post_id 3)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I’m loving the new season of Re:Zero!', 7, 3, NULL),
+('I haven’t started watching that one yet. Is it worth it?', 8, 3, 7),
+('You should give it a try! The animation and story are top-notch this season.', 9, 3, 8);
+
+-- Comments for the post "Travel Tips for 2024" (post_id 4)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I’ve been thinking about visiting Japan next year. Any tips?', 10, 4, NULL),
+('Japan is a fantastic destination! Try visiting Kyoto for a mix of culture and nature.', 11, 4, 10),
+('If you go, make sure to visit the temples! They are breathtaking.', 12, 4, 11);
+
+-- Comments for the post "Building a Fantasy World" (post_id 5)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('Great tips! One thing I focus on is creating a rich history for my world.', 13, 5, NULL),
+('History is key! It helps create a sense of depth and realism in the world.', 14, 5, 13),
+('Absolutely, without a believable history, the world feels flat.', 15, 5, 14);
+
+-- Comments for the post "Cooking Healthy Meals" (post_id 6)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('Does anyone have a good recipe for a healthy breakfast smoothie?', 16, 6, NULL),
+('I have a great one! Mix spinach, banana, almond milk, and some chia seeds!', 17, 6, 16),
+('That sounds delicious! I’m going to try it tomorrow morning.', 18, 6, 17);
+
+-- Comments for the post "Upcoming Movies in 2024" (post_id 7)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I can’t wait for the next superhero movie! It looks epic.', 19, 7, NULL),
+('The superhero genre is definitely dominating the market right now.', 20, 7, 19),
+('I’m more excited for the horror flicks coming out this year, though.', 21, 7, NULL);
+
+-- Comments for the post "Staying Fit During Winter" (post_id 8)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I find it really hard to stay motivated when it’s so cold outside.', 22, 8, NULL),
+('Try indoor workouts like yoga or Pilates! They keep me active through the winter.', 23, 8, 22),
+('Great idea! I’ll start with yoga and see how it goes.', 24, 8, 23);
+
+-- Comments for the post "Game Development Basics" (post_id 9)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I’ve been wanting to start game development for a while now. Any beginner resources?', 25, 9, NULL),
+('You should definitely check out Unity! It’s beginner-friendly and has tons of tutorials.', 26, 9, 25),
+('I second that! Unity’s community is really supportive, too.', 27, 9, 26);
+
+-- Comments for the post "Wildlife Photography Tips" (post_id 10)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('What’s the best camera for wildlife photography? I’m looking to upgrade.', 28, 10, NULL),
+('I recommend the Canon EOS R5. It’s excellent for wildlife with fast autofocus.', 29, 10, 28),
+('The R5 is a beast! I’ve used it for bird photography and it’s amazing.', 30, 10, 29);
+
+-- Comments for the post "AI in Everyday Life" (post_id 1)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I use AI for everyday tasks like shopping recommendations and scheduling.', 31, 1, NULL),
+('Same here! It’s convenient, but I do worry about privacy sometimes.', 32, 1, 31),
+('That’s a valid concern. AI is great, but the data collection can be a bit unsettling.', 33, 1, 32);
+
+-- Comments for the post "Underrated Books to Check Out" (post_id 2)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I’ve heard a lot about "Title of Book" lately. It’s supposed to be really good.', 34, 2, NULL),
+('It really is! It’s one of those hidden gems that didn’t get the attention it deserved.', 35, 2, 34),
+('I’ll check it out. Thanks for the recommendation!', 36, 2, 35);
+
+-- Comments for the post "Classic Anime That Still Shine" (post_id 3)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('You can’t go wrong with animes like "Attack on Titan" and "Fullmetal Alchemist".', 14, 3, NULL),
+('"Made in Abyss" is one of my all-time favorites! The soundtrack alone is iconic.', 60, 3, 37),
+('I agree! The music really enhances the experience of the show.', 39, 3, 38);
+
+-- Comments for the post "Budget-Friendly Travel Hacks" (post_id 4)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('Anyone got tips for saving money while traveling to Europe?', 40, 4, NULL),
+('Try staying in hostels or using Airbnb to cut down on accommodation costs!', 41, 4, 40),
+('Also, consider cooking your own meals instead of eating out all the time.', 42, 4, 41);
+
+-- Comments for the post "Creating Believable Characters" (post_id 5)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('It’s all about giving your characters flaws. Perfect characters are often boring.', 43, 5, NULL),
+('I completely agree. Flaws make characters feel real and relatable.', 44, 5, 43),
+('And don’t forget about backstory! It adds depth and motivation to their actions.', 45, 5, 44);
+
+-- Comments for the post "Quick and Healthy Breakfast Ideas" (post_id 6)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I love oatmeal with fruit! It’s filling and nutritious.', 46, 6, NULL),
+('Oatmeal is great! You can also add a bit of honey for sweetness.', 47, 6, 46),
+('I like to throw some nuts in mine for extra protein.', 48, 6, 47);
+
+-- Comments for the post "Anticipated Sequels of 2024" (post_id 7)
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I can’t wait for "Title of Sequel". The first movie was incredible.', 49, 7, NULL),
+('Same! The sequel has so much potential. I hope they don’t ruin it.', 50, 7, 49),
+('Let’s hope they live up to expectations. The trailer was promising!', 51, 7, 50);
+
+-- Comments for posts 51 to 60
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('K-Pop has definitely evolved this year!', 5, 51, NULL),
+('I’m loving the new trends. The fashion aspect is so cool!', 6, 51, 5),
+('These gadgets are a game-changer, can’t wait to try some of them!', 10, 52, NULL),
+('The VR tech is truly next level, can’t wait to experience it in games.', 9, 52, NULL),
+('I still haven’t read enough detective stories from this list! Adding them to my list.', 3, 53, NULL),
+('Some of the older ones are classics, but I’m really excited about the new mysteries.', 7, 53, 3),
+('The future of VR gaming looks so exciting, especially with the advancements in graphics!', 2, 54, NULL),
+('I can’t wait for the new VR titles coming out. It’s amazing how immersive the experience is getting.', 8, 54, 2),
+('Thanks for the tips! I’ve been wanting to try writing sci-fi for a while now.', 15, 55, NULL),
+('World-building in sci-fi is so intricate. How do you balance science with storytelling?', 11, 55, 15),
+('I love how off-road vehicles are getting more powerful each year!', 23, 56, NULL),
+('Great list! Looking forward to seeing these vehicles in action.', 40, 56, 23),
+('These DIY home renovations are a lifesaver. I’m starting a new project this weekend!', 28, 57, NULL),
+('I tried one of the projects last week—totally transformed my living room!', 34, 57, 28),
+('Mythical creatures are fascinating, especially how different cultures interpret them.', 22, 58, NULL),
+('Do you think any real-world creatures have inspired these myths?', 33, 58, 22),
+('Portrait photography is an art! I love experimenting with lighting to get that perfect shot.', 48, 59, NULL),
+('Portraits with natural light have always been my favorite. Any tips for shooting outdoors?', 36, 59, 48),
+('I’m planning a trip to a secret beach this year! Hope to find a place as peaceful as the one in your post.', 41, 60, NULL),
+('Beaches like these make for the best vacations. Hopefully, the crowds stay away!', 7, 60, 41);
+
+-- Comments for posts 61 to 70
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('I never realized how impactful social media could be on mental health until recently.', 29, 61, NULL),
+('It’s tough to disconnect sometimes, especially when everyone is online all the time.', 42, 61, 29),
+('Brewing craft beer at home is so rewarding, I love experimenting with new flavors!', 3, 62, NULL),
+('I’ve been trying a lot of new recipes. It’s fun to see what works and what doesn’t!', 18, 62, 3),
+('AI and automation are definitely changing the job market. Exciting but a little scary!', 11, 63, NULL),
+('The balance between human workers and AI will be interesting to watch unfold.', 21, 63, 11),
+('Meditation has helped me a lot with stress relief. Starting with small sessions made a huge difference.', 25, 64, NULL),
+('I agree! Even five minutes a day can make a difference for mental clarity.', 38, 64, 25),
+('The history of jazz is so rich. I’m definitely going to dive into more classic records!', 9, 65, NULL),
+('Jazz is timeless! Some of those old-school records still sound amazing today.', 4, 65, 9),
+('Starting a fitness journey has been one of the best decisions I’ve made this year.', 8, 66, NULL),
+('The hardest part is just getting started, but once you do, it feels great.', 16, 66, 8),
+('These classic films really shaped modern cinema. Some of the best movies ever made are from this era.', 17, 67, NULL),
+('Such an interesting comparison! I’m a Star Wars fan, but I can appreciate Star Trek’s unique style.', 3, 67, 17),
+('How AI is reshaping the creative arts is mind-blowing. It’ll be interesting to see where it goes.', 10, 68, NULL),
+('As a photographer, I’m already experimenting with AI-assisted editing. It’s a new world!', 41, 68, 10),
+('This article about biking trails has me ready to plan my next adventure!', 24, 69, NULL),
+('These trails look incredible! I can’t wait to hit the road this summer.', 39, 69, 24),
+('Sustainable fashion is the way forward. Glad to see more eco-friendly options available.', 2, 70, NULL),
+('I’ve started switching to sustainable brands. It’s a small step, but it makes a difference!', 5, 70, 2);
+
+-- Comments for posts 71 to 80
+INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
+('This post about detective novels has me so excited to read more! I need new material.', 30, 71, NULL),
+('Mystery novels are my favorite! Have you read anything by Agatha Christie?', 26, 71, 30),
+('Space exploration is so exciting! I love hearing about all the new advancements.', 18, 72, NULL),
+('I can’t wait to see where space technology takes us in the next decade.', 34, 72, 18),
+('Building a successful online business requires patience, but it’s worth the effort!', 5, 73, NULL),
+('It’s amazing how much you can accomplish with the right tools and mindset.', 22, 73, 5),
+('I love that this is all about digital entrepreneurship. It’s a new era of business!', 6, 73, 22),
+('The psychology of superheroes is so fascinating! I wonder what draws us to these characters.', 50, 74, NULL),
+('I think it’s their human qualities that make them relatable, even though they have superpowers.', 45, 74, 50),
+('These hiking gear recommendations are fantastic. I definitely need to invest in better boots!', 12, 75, NULL),
+('The right gear makes all the difference when hiking. I can’t wait for my next trail adventure!', 20, 75, 12),
+('I’d love to hear more about how technology and scientific innovation are changing everything.', 31, 76, NULL),
+('Science is evolving so quickly, it’s hard to keep up sometimes, but it’s exciting!', 19, 76, 31),
+('How to train your pet has been so helpful! My dog is finally learning some tricks.', 8, 77, NULL),
+('Training my cat, on the other hand, is a challenge, but I’m working on it!', 21, 77, 8),
+('These insights into photography are so useful. I’m going to try some of these tips for my next shoot.', 27, 78, NULL),
+('Drone photography is so cool. I’d love to get my hands on one of these gadgets!', 15, 78, 27),
+('This article on space exploration milestones is so inspiring. Space is the final frontier!', 14, 79, NULL),
+('The timeline of space exploration is so fascinating. We’ve come so far in just a few decades.', 13, 79, 14),
+('I’m all in for eco-friendly travel. I love that this article focuses on reducing our carbon footprint!', 36, 80, NULL);
+
 
 -- Insert comment votes
 INSERT INTO comment_votes (vote_id, comment_id)
