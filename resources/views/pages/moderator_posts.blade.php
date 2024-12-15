@@ -1,10 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.moderator')
 
 @section('content')
-
-<head>
-  <script defer src="{{ asset('js/app.js') }}"></script>
-</head>
 {{-- <div class="flex-1 bg-pastelRed h-12 flex items-center pl-2 md:pl-4 relative">
   <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -21,27 +17,27 @@
       <h1 class=" tracking-tight font-medium text-5xl">posts <span
           class="text-2xl tracking-normal opacity-60">manage</span>
       </h1>
-      <span class="ml-auto text-sm tracking-normal opacity-60 mt-auto">{{$startDate}} -> {{$endDate}}</span>
+      <span class="ml-auto text-sm tracking-normal opacity-60 mt-auto">{{$startDate->toFormattedDateString()}} ->
+        {{$endDate->toFormattedDateString()}}</span>
     </div>
     <div class="grid grid-cols-3">
       <div class="px-4 py-4 bg-pastelRed border-black border-r-2 flex flex-col">
         <div class="text-2xl text-[#F4F2ED]/[.8] mb-auto">news</div>
-        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED] mb-auto">{{ $newsCount }}</div>
-        <div class="text-lg tracking-tight text-[#F4F2ED]/[.8] mb-auto">{{ $newNewsCount }} new news </div>
-
-
+        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED] mb-auto">{{$newsCount}}</div>
       </div>
       <div class="px-4 py-4 bg-pastelYellow border-black border-r-2 flex flex-col">
         <div class="text-2xl text-[#3C3D37]/[.8] mb-auto">topics</div>
-        <div class="text-6xl font-bold tracking-tighter text-[#3C3D37] mb-auto">{{ $topicsCount }}</div>
-        <div class="text-lg tracking-tight text-[#3C3D37]/[.8] mb-auto">{{ $newTopicsCount }} new topics </div>
-
-
+        <div class="text-6xl font-bold tracking-tighter text-[#3C3D37] mb-auto">{{$topicsCount}}</div>
       </div>
       <div class="px-4 py-4 bg-pastelGreen  flex flex-col">
         <div class="text-2xl text-[#F4F2ED]/[.8] mb-auto">news/topics ratio</div>
-        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED] mb-auto"> {{ round($newsCount / $topicsCount, 2)
-          }} </div>
+        <div class="text-6xl font-bold tracking-tighter text-[#F4F2ED] mb-auto">
+          @if($topicsCount > 0)
+          {{ round($newsCount / $topicsCount, 2) }}
+          @else
+          0
+          @endif
+        </div>
       </div>
 
     </div>
@@ -62,10 +58,10 @@
 
   <div class="w-[50%]">
     <div class="w-[600px] mx-auto p-4">
-      <x-chartjs-component :chart="$comboPosts" />
+      <x-chartjs-component :chart="$postsChart" />
     </div>
-
   </div>
+
 </div>
 
 <div class="border-b-2 border-black w-full font-light text-xl tracking-tighter">
@@ -74,11 +70,11 @@
     $activeTab = request()->query('tab', 'news');
     @endphp
     <nav class="max-w-7xl mx-auto px-6 flex flex-wrap gap-8 md:gap-8">
-      <a href="{{ url('/admin/posts?tab=news') }}"
+      <a href="{{ url('/hub/'. $id . '/moderation/posts?tab=news') }}"
         class="py-4 {{ $activeTab === 'news' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
         news
       </a>
-      <a href="{{ url('/admin/posts?tab=topics') }}"
+      <a href="{{ url('/hub/'. $id . '/moderation/posts?tab=topics') }}"
         class="py-4 {{ $activeTab === 'topics' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
         topics
       </a>
@@ -86,8 +82,9 @@
   </div>
 </div>
 
+
 @if ($activeTab == 'news')
-<div class="">
+<div class="w-full">
   <table
     class="w-full bg-white border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
     <thead class="bg-gray-100">
@@ -105,7 +102,8 @@
           data-type="string">Content</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           upvotes/downvotes</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 "
+          data-type="number">
           threads</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           delete</th>
@@ -116,7 +114,7 @@
       <tr class="hover:bg-gray-50 transition-colors">
         <td class="px-4 py-4 whitespace-nowrap">{{ $item->post_id }}</td>
         <td class="px-4 py-4">
-          <a class="prose" href="{{ $item->news_url }}">
+          <a class="prose " href="{{ $item->news_url }}">
             {{ Str::limit($item->news_url, 30) }}
           </a>
         </td>
@@ -147,7 +145,7 @@
     </tbody>
   </table>
 </div>
-@else
+@elseif ($activeTab == 'topics')
 <div class="">
   <table
     class="w-full bg-white border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
@@ -164,7 +162,8 @@
           data-type="string">Content</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           upvotes/downvotes</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200"
+          data-type="number">
           threads</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           status</th>

@@ -13,6 +13,10 @@
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
 
+  <link rel="apple-touch-icon" sizes="180x180" href="{{asset('images/apple-touch-icon.png')}}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{asset('images/favicon-32x32.png')}}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{asset('images/favicon-16x16.png')}}">
+
   <link rel="stylesheet" href={{ asset('css/app.css') }}>
   @vite('resources/css/app.css')
 
@@ -163,21 +167,23 @@
               </div>
             </a>
             @if(Auth::user()->is_admin)
-                <a href="{{ route('admin.overview', Auth::user()->id) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"  />
-                  </svg>
-                  Admin Options
-                </a>
-                @endif
-                @if(Auth::user()->moderatedCommunities()->exists())
-                <a href="{{ route('user.moderator', Auth::user()->id) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"  />
-                  </svg>
-                  Hub Options
-                </a>
-                @endif
+            <a href="{{ route('admin.overview', Auth::user()->id) }}"
+              class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+              <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+              </svg>
+              Admin Options
+            </a>
+            @endif
+            @if(Auth::user()->moderatedCommunities()->exists())
+            {{-- <a href="{{ route('user.moderator', Auth::user()->id) }}"
+              class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+              <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+              </svg>
+              Hub Options
+            </a> --}}
+            @endif
             <a href="{{ route('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
               <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -228,44 +234,46 @@
               </a>
             </div>
           </div>
-          
+
           @php
           $colors = ['green-500', 'blue-500', 'red-500', 'yellow-500'];
           $colorIndex = 0;
           @endphp
 
           <div class="py-4">
-              <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
-              <div class="space-y-1 *:transition-colors *:pl-6">
-                  @foreach ($recentHubs as $recent)
-                  <a href="/hub/{{ $recent['id'] }}" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
-                      <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div>
-                      <span>/{{ $recent['name'] }}</span>
-                  </a>
-                  @php
-                  $colorIndex = ($colorIndex + 1) % count($colors);
-                  @endphp
-                  @endforeach
-              </div>
+            <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
+            <div class="space-y-1 *:transition-colors *:pl-6">
+              @foreach ($recentHubs as $recent)
+              <a href="/hub/{{ $recent['id'] }}"
+                class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
+                <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div>
+                <span>/{{ $recent['name'] }}</span>
+              </a>
+              @php
+              $colorIndex = ($colorIndex + 1) % count($colors);
+              @endphp
+              @endforeach
+            </div>
           </div>
 
           <div class="py-4">
-              <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
-              <a href="{{ url('/hubs/create') }}"
-                class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
-                <span class="">+ create hub</span>
+            <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
+            <a href="{{ url('/hubs/create') }}"
+              class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
+              <span class="">+ create hub</span>
+            </a>
+            <div class="space-y-1 *:transition-colors *:pl-6">
+              @foreach ($userHubs as $hubs)
+              <a href="/hub/{{ $hubs['id'] }}"
+                class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
+                <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div>
+                <span>/{{ $hubs['name'] }}</span>
               </a>
-              <div class="space-y-1 *:transition-colors *:pl-6">
-                  @foreach ($userHubs as $hubs)
-                  <a href="/hub/{{ $hubs['id'] }}" class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
-                      <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div>
-                      <span>/{{ $hubs['name'] }}</span>
-                  </a>
-                  @php
-                  $colorIndex = ($colorIndex + 1) % count($colors);
-                  @endphp
-                  @endforeach
-              </div>
+              @php
+              $colorIndex = ($colorIndex + 1) % count($colors);
+              @endphp
+              @endforeach
+            </div>
           </div>
           <!-- Info Section -->
           <div class="py-4">
@@ -300,11 +308,9 @@
         <!-- Hubs Section -->
         <div class="p-4 border-b-2 border-black">
           <div class="flex flex-wrap items-start gap-3">
-            <img src="{{ asset($community->image->path) }}" 
-                onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
-                alt="Community Image"
-                class="rounded-full  size-20">
-          
+            <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}"
+              alt="Community Image" class="rounded-full  size-20">
+
             <div class="flex-1 break-words">
               <h2 class="font-medium break-all">/{{ $community->name }}</h2>
               <p class="text-sm text-gray-600 whitespace-normal">
