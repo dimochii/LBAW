@@ -8,9 +8,8 @@
       <div class="flex items-center h-8 relative">
         <a class="flex items-center"
           href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
-        
-          <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}" 
-        
+
+          <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
             class="size-8 rounded-full ring-2  ring-white">
           <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
             Community' }}</span>
@@ -36,20 +35,20 @@
             </svg>
           </label>
           @if (Auth::check() && Auth::user()->can('isAuthor', $newsItem->post))
-            @include('partials.options_dropdown', [
-                "options" => [
-                    'edit post' => route('news.edit', ['post_id' => $newsItem->post_id]),
-                    // 'delete post' => route() -> incluir rota para delete
-                ]
-            ])
-        @else
-            @include('partials.options_dropdown', [
-                "options" => [
-                    'report post' => "javascript:reportNews()"
-                ]
-            ])
-            @include('partials.report_box',['reported_id' =>$newsItem->post_id])
-        @endif
+          @include('partials.options_dropdown', [
+          "options" => [
+          'edit post' => route('news.edit', ['post_id' => $newsItem->post_id]),
+          // 'delete post' => route() -> incluir rota para delete
+          ]
+          ])
+          @else
+          @include('partials.options_dropdown', [
+          "options" => [
+          'report post' => "javascript:reportNews()"
+          ]
+          ])
+          @include('partials.report_box',['reported_id' =>$newsItem->post_id])
+          @endif
         </div>
 
       </div>
@@ -57,10 +56,10 @@
         <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
-      
-       <!--report first --> 
+
+      <!--report first -->
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
-        
+
         <div>
           <input id="favorite-{{$newsItem->post_id}}" type="checkbox" class="hidden peer/favorite" {{ Auth::check() &&
             Auth::user()->favouritePosts->contains($newsItem->post_id) ? 'checked' : '' }}
@@ -74,7 +73,7 @@
                 d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           </label>
-          
+
         </div>
 
         <div>
@@ -134,7 +133,7 @@
           </span>
           @if (count($newsItem->post->authors) === 1)
           <a data-name="authors" class="underline-effect">
-            {{ $newsItem->post->authors[0]->username  ?? 'Unknown' }}
+            {{ $newsItem->post->authors[0]->username ?? 'Unknown' }}
           </a>
           @else
           @include('partials.authors_dropdown', [
@@ -146,10 +145,7 @@
     </div>
     @if(!is_null($newsItem->image_url))
     <a href="{{ $newsItem->news_url ?? '#' }}" class="w-1/2 md:block hidden p-4">
-      
-      <img class=" object-cover  object-left w-full h-full"
-        src="{{ $newsItem->image_url }}"
-        alt="https://imagens.publico.pt/imagens.aspx/1955774?tp=UH&db=IMAGENS&type=JPG&share=1&o=BarraFacebook_Publico.png">
+      <img class=" object-cover  object-left w-full h-full" src="{{ $newsItem->image_url }}">
     </a>
     @endif
   </div>
@@ -158,8 +154,7 @@
   <div id="post-content" class="py-4 px-8 flex flex-col gap-4  flex-none">
     {{-- <div>
       <a class="flex items-center" href="">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-          class="size-8 rounded-full ">
+        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="size-8 rounded-full ">
         <span class="underline-effect">@anonymous</span>
       </a>
     </div> --}}
@@ -168,26 +163,22 @@
     <div id="contributors-container" class="flex items-center space-x-2">
       <div class="flex -space-x-4 rtl:space-x-reverse items-center transition-all" id="contributors-images">
         @foreach($newsItem->post->authors->take(4) as $author)
-          <a href="{{ route('user.profile', $author->id) }}" class="group">
-            <img 
-              src="{{ asset($author->image->path ?? '/images/default.jpg') }}" 
-              alt="{{ $author->name }}" 
-              class="w-10 h-10 border-2 border-white rounded-full "
-            >
-          </a>
+        <a href="{{ route('user.profile', $author->id) }}" class="group">
+          <img src="{{ asset($author->image->path ?? '/images/default.jpg') }}" alt="{{ $author->name }}"
+            class="w-10 h-10 border-2 border-white rounded-full ">
+        </a>
         @endforeach
         @if($newsItem->post->authors->count() > 4)
-          <button 
-            id="expand-button" 
-            class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-slate-600 border-2 border-white rounded-full hover:bg-gray-600"
-          >
-            +{{ $newsItem->post->authors->count() - 4 }}
-          </button>
+        <button id="expand-button"
+          class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-slate-600 border-2 border-white rounded-full hover:bg-gray-600">
+          +{{ $newsItem->post->authors->count() - 4 }}
+        </button>
         @endif
       </div>
     </div>
     <div class="text-sm text-gray-600">
-      contributors • {{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown date' }}
+      contributors • {{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown
+      date' }}
     </div>
 
     <div data-text="markdown"
@@ -202,12 +193,11 @@
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
       <a class="size-8 rounded-full" href="">
-      @php 
-          if(Auth::check()) {$image_id = Auth::user()->image_id;}
-          else { $image_id = 1;}
+        @php
+        if(Auth::check()) {$image_id = Auth::user()->image_id;}
+        else { $image_id = 1;}
         @endphp
-        <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}"
-        class="size-8 rounded-full ">
+        <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}" class="size-8 rounded-full ">
       </a>
       <span class=" px-2 text-xl font-light">start a thread</span>
     </div>
@@ -574,8 +564,8 @@
 
   </script>
 
-<script>
-  function reportNews() {
+  <script>
+    function reportNews() {
 
     const authors = @json($newsItem->post->authors->pluck('id')); 
       const form = document.getElementById('reportForm'); 
@@ -593,6 +583,6 @@
       document.getElementById('reportTitle').textContent = 'Report all authors';
       document.getElementById('reportModal').classList.remove('hidden');
   }
-</script>
+  </script>
 
   @endsection
