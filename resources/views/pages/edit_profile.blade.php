@@ -56,7 +56,7 @@
                         {{-- Current Image Preview --}}
                         <div class="ring-2 ring-black rounded-full p-1 transition-transform duration-300 group-hover:scale-105">
                             @if ($user->image_id)
-                            <img src="{{ asset($user->image->path ?? '/images/default.jpg') }}" alt="Current Profile" class="h-24 w-24 rounded-full object-cover">
+                            <img src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" alt="Current Profile" class="h-24 w-24 rounded-full object-cover">
                             @else
                                 <div class="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
                                     <span class="text-3xl font-light text-gray-500">{{ substr($user->name, 0, 1) }}</span>

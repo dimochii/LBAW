@@ -403,7 +403,8 @@ class AuthenticatedUserController extends Controller
             
             else {
     
-                $post->authors()->detach($user->id);
+                $post->authors()->detach($user->id); // Remove the current user from authors
+        $post->authors()->attach($deletedUserId); // Add the deleted user as an author
             }
         }
         //delete user notifications....

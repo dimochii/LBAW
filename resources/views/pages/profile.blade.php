@@ -3,13 +3,14 @@
 @section('content')
 <div class="min-h-screen">
   <div class="flex flex-row gap-8 p-8 border-b-2 border-black items-center relative min-w-32">
-  <img src="{{ asset($user->image->path ?? '/images/default.jpg') }}" alt="Profile Image" class="rounded-full ring-2 ring-black h-32 w-32">
+  <img src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" alt="Profile Image" class="rounded-full ring-2 ring-black h-32 w-32">
     <div class="h-full flex flex-col gap-4 flex-grow">
       <div class="flex-col flex">
         <div class="tracking-tighter font-medium text-6xl">{{ $user->name }}</div>
         <div>{{ '@' . $user->username }}</div>
         <div class="flex items-center mt-2">
         <div class="flex items-center mt-2">
+    @if ($user->id !== 1)
     <span class="font-bold text-lg">Reputation:</span>
     <div class="ml-4 flex items-center">
         {{-- Reputation Value with Dynamic Badge --}}
@@ -48,6 +49,7 @@
             </span>
         </div>
     </div>
+    @endif
 </div>
 </div>
     
@@ -56,10 +58,13 @@
         {{ $user->description }}
       </p>
     </div>
+
     <div class="flex flex-col items-end space-y-4">
+    @if (Auth::check() && Auth::user()->id !== $user->id && $user->id !== 1)
     <button onclick=reportProfile()>
     Report 
     </button>
+    @endif
     @include('partials.report_box',['reported_id' =>$user->id] )
 
 
@@ -75,7 +80,7 @@
         </a>
       </div>
 
-      @if (Auth::check() && Auth::user()->id !== $user->id)
+      @if (Auth::check() && Auth::user()->id !== $user->id && $user->id !== 1)
           @if ($isFollowing)
               <form action="{{ route('user.follow', $user->id) }}" method="POST" class="w-full">
                   @csrf
@@ -96,7 +101,7 @@
       @endif
 
       {{-- Edit Profile Button --}}
-      @if (Auth::check() && Auth::user()->can('editProfile', $user))
+      @if (Auth::check() && Auth::user()->can('editProfile', $user) && $user->id !== 1)
       <a href="{{ route('user.edit', $user->id) }}" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 text-sm underline">
         Edit Profile
       </a>
@@ -104,6 +109,7 @@
     </div>
   </div>
 
+  @if ($user->id !== 1)
   {{-- Navigation Tabs with Black Border --}}
   <div class="border-b-2 border-black w-full font-light text-xl tracking-tighter">
     <div class="w-full">
@@ -134,7 +140,7 @@
         </a>
       </nav>
     </div>
-  </div>
+  </div>             
 
   <div class="divide-y-2 divide-black border-b-2 border-black">
     @if ($activeTab === 'news')
@@ -223,7 +229,7 @@
 @endif
 
   </div>
-
+  @endif
 
 
 <script>
