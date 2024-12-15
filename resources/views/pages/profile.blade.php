@@ -270,18 +270,17 @@
                         </span>
                     @endif
                 </li>
-            @endforeach
+                @endforeach
         </ul>
 
     @endif
 @endif
+
   </div>
-<<<<<<< HEAD
-=======
   @endif
 
 
->>>>>>> 729c7f1ed79248ad0185ccf29f09de74cd7ed805
+</div>
 <script>
   function reportProfile() {
     document.getElementById('reportForm').action = '{{ route('report') }}';
