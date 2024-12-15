@@ -22,6 +22,11 @@ class PostController extends Controller
 {
   public function show($id)
   {
+    if(Auth::user()->is_suspended) {
+
+      return redirect()->route('news');
+    }
+
     $post = Post::findOrFail($id);
     if(!$post -> news()){return  redirect()->route('topic.show', $id);}
     else{return redirect()->route('news.show', $id);}
@@ -97,6 +102,11 @@ class PostController extends Controller
 
   public function createPost()
   {
+    if(Auth::user()->is_suspended) {
+
+      return redirect()->route('news');
+    }
+
     return view('pages.create_post');
   }
 

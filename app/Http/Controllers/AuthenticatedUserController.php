@@ -46,6 +46,11 @@ class AuthenticatedUserController extends Controller
 
     public function show($id)
     {
+        if(Auth::user()->is_suspended) {
+
+            return view('pages.suspension');
+        }
+
         $user = AuthenticatedUser::findOrFail($id);
         $followers = $user->followers;
         $following = $user->follows;
@@ -76,6 +81,11 @@ class AuthenticatedUserController extends Controller
 
     public function getFollowers($id)
     {
+        if(Auth::user()->is_suspended) {
+
+            return view('pages.suspension');
+        }
+
         $user = AuthenticatedUser::findOrFail($id);
         $followers = $user->followers;
 
@@ -84,6 +94,11 @@ class AuthenticatedUserController extends Controller
 
     public function getFollows($id)
     {
+        if(Auth::user()->is_suspended) {
+
+            return view('pages.suspension');
+        }
+
         $user = AuthenticatedUser::findOrFail($id);
         $following = $user->follows;
 
@@ -92,6 +107,11 @@ class AuthenticatedUserController extends Controller
 
     public function edit($id)
     {
+        if(Auth::user()->is_suspended) {
+
+            return view('pages.suspension');
+        }
+        
         $user = AuthenticatedUser::findOrFail($id);
 
         if (!$this->authorize('editProfile', $user)) {
@@ -104,7 +124,8 @@ class AuthenticatedUserController extends Controller
     }
 
     public function update(Request $request, $id)
-{
+    
+    {
     if (Auth::user()->id != $id) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
@@ -183,6 +204,11 @@ class AuthenticatedUserController extends Controller
 
     public function getCommunities($id)
     {
+        if(Auth::user()->is_suspended) {
+
+            return view('pages.suspension');
+        }
+
         $user = AuthenticatedUser::findOrFail($id);
         $communities = $user->communities;
 

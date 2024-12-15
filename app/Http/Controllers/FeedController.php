@@ -36,6 +36,10 @@ class FeedController extends Controller
   // Fetch posts from user's communities created in the last 72 hours, order them by vote quantity, caches values for 60mins
   public function home()
   {
+    if(Auth::user()->is_suspended) {
+
+      return view('pages.suspension');
+    }
 
     $cachedPosts = Cache::get('user_posts');
 
@@ -89,6 +93,11 @@ class FeedController extends Controller
   }
   public function global()
   {
+    if(Auth::user()->is_suspended) {
+
+      return view('pages.suspension');
+    }
+
     // Check if cached posts exist
     // $cachedPosts = Cache::get('popular_posts');
 
@@ -166,6 +175,12 @@ class FeedController extends Controller
 
   public function recent()
   {
+
+    if(Auth::user()->is_suspended) {
+
+      return view('pages.suspension');
+    }
+
     $authUser = Auth::user(); // For retrieving user-specific votes
 
     // Fetch posts from user's communities, sorted by creation date
@@ -221,12 +236,21 @@ class FeedController extends Controller
 
   public function aboutUs()
   {
+    if(Auth::user()->is_suspended) {
+
+      return view('pages.suspension');
+    }
+    
     return view('pages.about_us');
   }
 
   public function bestof()
   {
-      // 10 topics
+    if(Auth::user()->is_suspended) {
+
+      return view('pages.suspension');
+    }
+          // 10 topics
       $topTopics = Topic::select('topics.*')
           ->addSelect([
               'votes_count' => function ($query) {

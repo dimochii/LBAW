@@ -18,6 +18,11 @@ class CommunityController extends Controller
 {
   public function createHub()
   {
+    if(Auth::user()->is_suspended) {
+
+      return redirect()->route('news');
+    }
+    
     return view('pages.create_hub');
   }
 
@@ -138,6 +143,10 @@ class CommunityController extends Controller
 
   public function show($id)
   {
+    if(Auth::user()->is_suspended) {
+
+      return  redirect()->route('news');
+    }
 
     $community = Community::with(['posts', 'posts.authors', 'posts.votes', 'posts.comments'])
     ->findOrFail($id);
@@ -379,6 +388,11 @@ class CommunityController extends Controller
 
   public function index(Request $request)
   {
+    if(Auth::user()->is_suspended) {
+
+      return view('pages.suspension');
+    }
+    
     $sortBy = $request->get('sort_by', 'name');
     $order = $request->get('order', 'asc');
 

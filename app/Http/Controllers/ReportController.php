@@ -10,6 +10,11 @@ class ReportController extends Controller
 {
     public function show()
     {
+        if(Auth::user()->is_suspended) {
+
+            return redirect()->route('news');
+          }
+
         $user = Auth::user();
 
         //descomentar isto depois

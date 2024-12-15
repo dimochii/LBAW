@@ -16,6 +16,7 @@ class ModeratorController extends Controller
 {
   public function show(Request $request)
   {
+    
 
     $moderated_hubs = Auth::user()->moderatedCommunities;
 

@@ -20,28 +20,37 @@ class NewsController extends Controller
    */
   public function list()
   {
+    if(Auth::user()->is_suspended) {
 
-      $posts = Post::all();
-  
-        
-        $news = $posts->filter(function ($post) {
-          return !is_null($post['news']);
-        });
+      return view('pages.suspension');
 
-        $topics = $posts->filter(function ($post) {
-          return !is_null($post['topic']);
+      }
+    $posts = Post::all();
+
+      $news = $posts->filter(function ($post) {
+        return !is_null($post['news']);
       });
-  
-      return view('pages.news', [
-        'news' => $news,
-        'topics' => $topics
-      ]);
+
+      $topics = $posts->filter(function ($post) {
+        return !is_null($post['topic']);
+    });
+
+    return view('pages.news', [
+      'news' => $news,
+      'topics' => $topics
+    ]);
   }
   
 
 
   public function show($post_id)
   {
+
+    if(Auth::user()->is_suspended) {
+
+      return view('pages.suspension');
+      } 
+
     $newsItem = News::with('post.community')
       ->where('post_id', $post_id)
       ->firstOrFail();
@@ -98,6 +107,11 @@ class NewsController extends Controller
 
   public function edit($post_id)
   {
+    if(Auth::user()->is_suspended) {
+
+      return view('pages.suspension');
+    }
+
     $post = Post::findOrFail($post_id);
     $newsItem = News::with('post')->where('post_id', $post_id)->firstOrFail();
 

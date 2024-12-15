@@ -17,6 +17,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SideController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\SuspensionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PasswordResetController;
@@ -243,3 +244,4 @@ Route::get('/images/{filename}', function ($filename) {
 })->name('images.serve');
 
 // Left side bar
+
