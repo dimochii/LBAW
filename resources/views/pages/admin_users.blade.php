@@ -112,10 +112,15 @@
           >
         </td>
         <td class="px-4 py-4">
-          <button name="delete-button"
-            class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
-            delete
-          </button>
+          <form action="{{ route('admin.delete', ['id' => $user->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this account?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                    class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
+                Delete
+            </button>
+        </form>
+        
         </td>
       </tr>
       @endforeach
