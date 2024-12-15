@@ -175,7 +175,7 @@
         </form>
 
         <div class="md:col-span-2 flex justify-start">
-            <form method="POST" action="{{ route('user.delete') }}">
+            <form method="POST" action="{{ route('user.delete') }}" onsubmit="return confirm('Are you sure you want to delete your account?')">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white">
