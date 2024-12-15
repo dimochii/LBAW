@@ -62,6 +62,7 @@ class PostController extends Controller
 
     return $ogTags;
   }
+  
   private function notifyCommunityFollowers($communityId, $post)
   {
     $community = Community::find($communityId);

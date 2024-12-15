@@ -1,5 +1,3 @@
-@extends('layouts.moderator')
-
 @section('content')
 
 

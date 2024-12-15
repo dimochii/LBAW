@@ -39,7 +39,7 @@
 </div> --}}
 
 <div class="flex flex-row p-4">
-  <h1 class=" tracking-tight font-medium text-5xl">posts <span class="text-2xl tracking-normal opacity-60">manage</span>
+  <h1 class="font-medium text-5xl tracking-tighter">whatsUP <span class="text-2xl tracking-normal opacity-60">manage</span>
   </h1>
   <span class="ml-auto text-sm tracking-normal opacity-60 mt-auto">{{$startDate->toFormattedDateString()}} ->
     {{$endDate->toFormattedDateString()}}</span>
@@ -140,7 +140,7 @@
     @foreach ($mostReportedUsers as $user)    
     <a class="flex items-center gap-4 p-2 pl-8 group hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-colors"
       href="{{ route('user.profile', $user->user->id) }}">
-      <img src="{{ asset($user->user->image->path 'images/default.jpg') }}" class="rounded-full h-12 w-12">
+      <img src="{{ asset($user->user->image->path ?? 'images/default.jpg') }}" class="rounded-full h-12 w-12">
       <div class="break-all flex flex-col" data-sort>
         <span class="font-medium text-xl">{{ $user->user->name }}</span>
         <span class="text-[#3C3D37]/[.6] group-hover:text-[#F4F2ED]/[.6]">{{ '@' . $user->user->username }}</span>

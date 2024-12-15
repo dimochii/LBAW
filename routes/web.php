@@ -96,8 +96,8 @@ Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemy
 
 
 //admin
-Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware('auth');
-Route::post('/users/{id}/unsuspend',[AuthenticatedUserController::class,'unsuspend'])->middleware('auth');
+Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->middleware('auth');
+Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->middleware('auth');
 Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite']);
 Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite']);
 
@@ -132,7 +132,7 @@ Route::post('/topic/{post_id}/accept', [TopicController::class, 'accept'])->midd
 Route::post('/topic/{post_id}/reject', [TopicController::class, 'reject'])->middleware('auth')->name('topics.reject');
 
 Route::middleware('auth')->group(function () {
-  Route::controller(AdminController::class)->group( function () {
+  Route::controller(AdminController::class)->group(function () {
     Route::get('/admin', 'overview')->name('admin.overview');
     Route::get('/admin/users', 'users')->name('admin.users');
     Route::get('/admin/hubs', 'hubs')->name('admin.hubs');
@@ -154,8 +154,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/bestof', 'bestof')->name('bestof');
-    
-    Route::get('/moderator', [ModeratorController::class, 'show'])->name('user.moderator');
+
     Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
     Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
@@ -163,7 +162,7 @@ Route::middleware('auth')->group(function () {
   });
 
   // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
-  Route::get('/notifications', function() {
+  Route::get('/notifications', function () {
     return view('pages.admin');
   })->name('notifications');
 
@@ -171,7 +170,6 @@ Route::middleware('auth')->group(function () {
   Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
   });
-
 });
 
 
@@ -191,6 +189,15 @@ Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middlew
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
+Route::middleware('auth')->group(function () {
+  Route::controller(ModeratorController::class)->group(function () {
+    Route::get('/hub/{id}/moderation', 'overview')->name('moderation.overview');
+    Route::get('/hub/{id}/moderation/users', 'users')->name('moderation.users');
+    Route::get('/hub/{id}/moderation/posts', 'posts')->name('moderation.posts');
+    Route::get('/hub/{id}/moderation/reports', 'reports')->name('moderation.reports');
+  });
+});
+
 
 Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
 Route::post('/report', [ReportController::class, 'report'])->middleware('auth')->name('report');
@@ -202,9 +209,9 @@ Route::get('/hub/{id}/followers', [CommunityController::class, 'getFollowers'])-
 
 //Notifications
 Route::get('/notifications', [NotificationController::class, 'show'])
-    ->middleware('auth')
-    ->name('notifications.show');
-    //mark as read
+  ->middleware('auth')
+  ->name('notifications.show');
+//mark as read
 Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
 // Recover password
@@ -226,11 +233,10 @@ Route::get('/images/{filename}', function ($filename) {
   $extension = pathinfo($filename, PATHINFO_EXTENSION);
 
   if (!File::exists($path) || !in_array($extension, $allowedExtensions)) {
-      abort(404);
+    abort(404);
   }
 
   return response()->file($path);
 })->name('images.serve');
 
 // Left side bar
-
