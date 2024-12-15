@@ -132,7 +132,7 @@ Route::post('/topic/{post_id}/accept', [TopicController::class, 'accept'])->midd
 Route::post('/topic/{post_id}/reject', [TopicController::class, 'reject'])->middleware('auth')->name('topics.reject');
 
 Route::middleware('auth')->group(function () {
-  Route::controller(AdminController::class)->group( function () {
+  Route::controller(AdminController::class)->group(function () {
     Route::get('/admin', 'overview')->name('admin.overview');
     Route::get('/admin/users', 'users')->name('admin.users');
     Route::get('/admin/hubs', 'hubs')->name('admin.hubs');
@@ -154,16 +154,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/bestof', 'bestof')->name('bestof');
-    
-    Route::get('/moderator', [ModeratorController::class, 'show'])->middleware('auth')->name('user.moderator');
-    Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->middleware('auth')->name('users.suspend');
-    Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->middleware('auth')->name('users.unsuspend');
-    Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->middleware('auth')->name('users.make_admin');
-    Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->middleware('auth')->name('users.remove_admin');
+
+    Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
+    Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
+    Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
+    Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->name('users.remove_admin');
   });
 
   // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
-  Route::get('/notifications', function() {
+  Route::get('/notifications', function () {
     return view('pages.admin');
   })->name('notifications');
 
@@ -171,7 +170,6 @@ Route::middleware('auth')->group(function () {
   Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
   });
-
 });
 
 
@@ -194,6 +192,15 @@ Route::post('/hub/{community_id}/make_moderator/{user_id}', [ModeratorController
 Route::post('/hub/{community_id}/remove_moderator/{user_id}', [ModeratorController::class, 'removeModerator'])->middleware('auth')->name('users.remove_moderator');
 Route::delete('/hub/{community_id}/remove_follower/{user_id}', [ModeratorController::class, 'removeFollower'])->name('community.remove_follower');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
+
+Route::middleware('auth')->group(function () {
+  Route::controller(ModeratorController::class)->group(function () {
+    Route::get('/hub/{id}/moderation', 'overview')->name('moderation.overview');
+    Route::get('/hub/{id}/moderation/users', 'users')->name('moderation.users');
+    Route::get('/hub/{id}/moderation/posts', 'posts')->name('moderation.posts');
+    Route::get('/hub/{id}/moderation/reports', 'reports')->name('moderation.reports');
+  });
+});
 
 
 Route::get('/reports', [ReportController::class, 'show'])->middleware('auth');
@@ -233,11 +240,10 @@ Route::get('/images/{filename}', function ($filename) {
   $extension = pathinfo($filename, PATHINFO_EXTENSION);
 
   if (!File::exists($path) || !in_array($extension, $allowedExtensions)) {
-      abort(404);
+    abort(404);
   }
 
   return response()->file($path);
 })->name('images.serve');
 
 // Left side bar
-
