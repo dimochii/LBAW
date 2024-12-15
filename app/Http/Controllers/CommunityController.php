@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Community;
+use App\Models\CommunityFollowRequest;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CommunityController extends Controller
 {
@@ -42,20 +45,16 @@ class CommunityController extends Controller
   public function show($id)
   {
 
-    // Carregar comunidade com posts e autores (com o relacionamento correto)
-    $community = Community::with(['posts.authors', 'posts.votes', 'posts.comments'])->find($id);
+    $community = Community::with(['posts', 'posts.authors', 'posts.votes', 'posts.comments'])
+    ->findOrFail($id);
 
-    // Verificar se a comunidade existe
     if (!$community) {
       abort(404, 'Community not found');
     }
 
-    //dar cache à comunidade ao id the cache
     $this->cacheRecentHub($community->id, $community->name);
 
-    // Mapeando os posts da comunidade
     $posts = $community->posts->map(function ($post) {
-      // Contagem de upvotes e downvotes diretamente da tabela de votos
       $upvotes = $post->votes->where('upvote', true)->count();
       $downvotes = $post->votes->where('upvote', false)->count();
 
@@ -67,7 +66,7 @@ class CommunityController extends Controller
         'created_at' => $post->created_at,
         'score' => $upvotes - $downvotes,
         'comments_count' => $post->comments->count(),
-        'news' => $post->news,  // Add the related news
+        'news' => $post->news,  
         'topic' => $post->topic,
       ];
     });
@@ -217,16 +216,39 @@ class CommunityController extends Controller
 
   
 
-  public function join($id)
-  {
-    $community = Community::findOrFail($id);
-    if (!auth()->user()->communities()->where('community_id', $id)->exists()) {
-      auth()->user()->communities()->attach($id);
-      return redirect()->back()->with('success', 'Successfully joined the community!');
-    }
+    public function join($id) {
+      $community = Community::findOrFail($id);
+      $user = auth()->user();
 
-    return redirect()->back()->with('error', 'You are already following this community.');
+      if (!$community->privacy) {
+        if (!auth()->user()->communities()->where('community_id', $id)->exists()) {
+          auth()->user()->communities()->attach($id);
+          return redirect()->back()->with('success', 'Successfully joined the community!');
+        }
+        else {
+          return redirect()->back()->with('error', 'You are already following this community.');
+        }
+      }
+
+      if (CommunityFollowRequest::where('community_id', $id)
+        ->where('authenticated_user_id', auth()->user()->id)
+        ->where('request_status', 'pending')
+        ->exists()) {
+        return redirect()->back()->with('error', 'Você já fez uma solicitação para seguir esta comunidade.');
+      }
+
+      
+      $request= CommunityFollowRequest::create([
+          'authenticated_user_id' => $user->id,
+          'community_id' => $id,
+          'request_status' => 'pending',
+          'request_date' => now(),
+      ]);
+
+      return redirect()->back()->with('success', 'Sua solicitação foi enviada e está aguardando aprovação.');
   }
+
+
 
   public function leave($id)
   {
@@ -271,29 +293,29 @@ class CommunityController extends Controller
     ]);
   }
 
-  /*
-    public function apply(Request $request, $id)
-    {
-        $community = Community::find($id);
 
-        if (!$community) {
-            return response()->json(['message' => 'Community not found'], 404);
-        }
+  public function acceptFollowRequest($requestId) {
+      $request = CommunityFollowRequest::findOrFail($requestId);
+      $this->authorize('isCommunityAdmin', $request->community);
 
-        if ($community->privacy === 'private') {
-            return response()->json(['message' => 'You cannot directly join a private community'], 403);
-        }
+      $request->request_status = 'accepted';
+      $request->save();
 
-        $authUser = Auth::user();
-        $alreadyJoined = $community->followers()->where('authenticated_user_id', $authUser->id)->exists();
+      $request->community->followers()->attach($request->user_id);
 
-        if ($alreadyJoined) {
-            return response()->json(['message' => 'You are already a member of this community'], 400);
-        }
+      return redirect()->route('communities.manageFollowRequests', ['id' => $request->community_id])
+          ->with('success', 'Follow request accepted.');
+  }
 
-        // Adicionar o usuário à lista de seguidores da comunidade
-        $community->followers()->attach($authUser->id);
+  public function rejectFollowRequest($requestId) {
+      $request = CommunityFollowRequest::findOrFail($requestId);
+      $this->authorize('isCommunityAdmin', $request->community);
 
-        return response()->json(['message' => 'Your application to join the community has been submitted']);
-    }*/
+      $request->request_status = 'rejected';
+      $request->save();
+
+      return redirect()->route('communities.manageFollowRequests', ['id' => $request->community_id])
+          ->with('success', 'Follow request rejected.');
+  }
+
 }

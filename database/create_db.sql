@@ -3,6 +3,7 @@ CREATE SCHEMA lbaw2454;
 
 SET search_path TO lbaw2454;
 CREATE TYPE topic_status AS ENUM ('pending', 'accepted', 'rejected');
+CREATE TYPE request_status AS ENUM ('pending', 'accepted', 'rejected');
 CREATE TYPE report_type AS ENUM ('user_report', 'comment_report', 'item_report', 'topic_report');
 
 CREATE TABLE images (
@@ -181,6 +182,17 @@ CREATE TABLE community_followers (
     FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
     FOREIGN KEY (community_id) REFERENCES communities(id)
 );
+
+CREATE TABLE community_follow_requests (
+    id SERIAL PRIMARY KEY,
+    authenticated_user_id INT,
+    community_id INT,
+    request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    request_status request_status DEFAULT 'pending',
+    FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
+    FOREIGN KEY (community_id) REFERENCES communities(id)
+);
+
 
 CREATE TABLE authors (
     authenticated_user_id INT,

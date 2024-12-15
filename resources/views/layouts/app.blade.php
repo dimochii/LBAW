@@ -301,9 +301,9 @@
         <div class="p-4 border-b-2 border-black">
           <div class="flex flex-wrap items-start gap-3">
             <img src="{{ asset($community->image->path) }}" 
-                 onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
-                 alt="Community Image"
-                 class="rounded-full  size-20" >
+                onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
+                alt="Community Image"
+                class="rounded-full  size-20">
           
             <div class="flex-1 break-words">
               <h2 class="font-medium break-all">/{{ $community->name }}</h2>
@@ -320,36 +320,48 @@
                   <span class="ml-1">Following</span>
                 </div>
               </div>
+              
               <div>
-                @auth
-                @if($is_following)
-                <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                                  bg-[#F4F2ED] text-black border-2 border-black">
-                    unfollow -
-                  </button>
-                </form>
-                @else
-                <form action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
-                  @csrf
-                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                                  bg-black text-[#F4F2ED]">
-                    follow +
-                  </button>
-                </form>
-                @endif
-                @else
-                <a href="{{ route('login') }}" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                      bg-black text-[#F4F2ED]">
-                  follow +
-                </a>
-                @endauth
+              @auth
+                  @if($is_following)
+                      {{-- Estado: Seguindo --}}
+                      <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" 
+                                  class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                        bg-[#F4F2ED] text-black border-2 border-black">
+                              unfollow -
+                          </button>
+                      </form>
+                  @elseif($community->privacy && $community->followRequests->where('authenticated_user_id', Auth::user()->id)->where('request_status', 'pending')->count() > 0)
+                      <button class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                    bg-[#F4F2ED] text-gray-600 border-2 border-black cursor-not-allowed" disabled>
+                          request Pending
+                      </button>
+                  @else
+                      <form id="followForm" action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
+                          @csrf
+                          <button type="submit" 
+                                  class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                        bg-black text-[#F4F2ED]">
+                              follow +
+                          </button>
+                      </form>
+
+                  @endif
+              @else
+                  <a href="{{ route('login') }}" 
+                    class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                            bg-black text-[#F4F2ED]">
+                      follow +
+                  </a>
+              @endauth
               </div>
             </div>
           </div>
         </div>
+
 
         <!-- Moderators Section -->
         <div class="p-4">

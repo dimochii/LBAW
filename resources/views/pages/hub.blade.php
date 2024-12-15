@@ -88,12 +88,12 @@
             </div>
         </div>
     </div>
-    
-    @php
-        $activeTab = request()->query('tab', 'News'); // Default to 'News'
-      @endphp
-    @include('partials.news_topic_nav', ['url' => '/hub/' . $community->id])
-
+    <div class="divide-y-2 border-b-2 border-black">
+        @php
+            $activeTab = request()->query('tab', 'News'); // Default to 'News'
+        @endphp
+        @include('partials.news_topic_nav', ['url' => '/hub/' . $community->id])
+    </div>
 
     <!-- Posts Section -->
     <div>
