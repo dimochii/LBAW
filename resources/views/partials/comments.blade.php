@@ -12,7 +12,10 @@
       {{-- Comment Header --}}
       <summary class="list-none">
         <div class="px-2 text-sm mb-5">
-          <a href="#" class="underline-effect">{{ $comment->user->username }}</a>
+          <a href="{{ route('user.profile', ['user' => $comment->user->id]) }}" class="underline-effect">
+            {{ $comment->user->username }}
+          </a>
+
           <span>•</span>
           <span>{{ $comment->creation_date ? $comment->creation_date->diffForHumans() : '?' }}</span>
           <span>•</span>

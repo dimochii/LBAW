@@ -38,4 +38,15 @@ class Community extends Model
     {
         return $this->hasMany(CommunityFollowRequest::class, 'community_id');
     }
+    public function reports()
+{
+    return $this->hasManyThrough(
+        Report::class,       
+        Post::class,         
+        'community_id',      
+        'reported_id',      
+        'id',                
+        'id'                
+    );
+}
 }
