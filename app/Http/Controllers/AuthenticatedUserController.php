@@ -380,11 +380,7 @@ class AuthenticatedUserController extends Controller
     public function deletemyaccount() {
         $user = Auth::user();
         $deletedUserId = 1;     
-        $deletedUser = AuthenticatedUser::find($deletedUserId);
-    
-        if (!$deletedUser) {
-            return redirect('/news')->with('error', 'Unable to delete account: Deleted user does not exist.');
-        }
+        
         //Update votes --> deleted user
         if ($user->votes()->exists()) {
             $user->votes()->update(['authenticated_user_id' => $deletedUserId]);
@@ -422,7 +418,6 @@ class AuthenticatedUserController extends Controller
         }
 
 
-        //Replace other user notifications that have the user with deleted user:
         FollowNotification::where('follower_id', $user->id)
         ->update(['follower_id' => $deletedUserId]);
 
@@ -449,62 +444,63 @@ class AuthenticatedUserController extends Controller
         }
     
         $user = AuthenticatedUser::find($id);
+        $deletedUserId = 1;
         
-        // Check if the user exists
-        if (!$user) {
-            return redirect()->back()->with('error', 'User not found.');
-        }
-    
-        $deletedUserId = 1; // ID of the "deleted user"
-        $deletedUser = AuthenticatedUser::find($deletedUserId);
-        
-        // Check if the "deleted user" exists
-        if (!$deletedUser) {
-            return redirect('/news')->with('error', 'Unable to delete account: Deleted user does not exist.');
-        }
-    
-        // Reassign votes
-        foreach ($user->votes ?? [] as $vote) {
-            $vote->authenticated_user_id = $deletedUserId;
-            $vote->save();
-        }
-    
-        // Reassign comments
-        foreach ($user->comments ?? [] as $comment) {
-            $comment->authenticated_user_id = $deletedUserId;
-            $comment->save();
-        }
-    
-        // Reassign posts
-        foreach ($user->authoredPosts ?? [] as $post) {
-            $post->pivot->authenticated_user_id = $deletedUserId;
-            $post->pivot->save();
-        }
-    
-        // Reassign notifications
-        foreach ($user->notifications ?? [] as $notification) {
-            $notification->authenticated_user_id = $deletedUserId;
-            $notification->save();
+        //Update votes --> deleted user
+        if ($user->votes()->exists()) {
+            $user->votes()->update(['authenticated_user_id' => $deletedUserId]);
         }
 
-        // Detach user as a community moderator
-        foreach ($user->communities ?? [] as $community) {
-            if ($community->moderators->contains($user->id)) {
-                $community->moderators()->detach($user->id);
+        //Update comments --> deleted user
+        if ($user->comments()->exists()) {
+            $user->comments()->update(['authenticated_user_id' => $deletedUserId]);
+        }
+
+        //update post ---> solo writer --> deleted user// co-author ---> just remove
+        foreach ($user->authoredPosts as $post) {
+
+            $authorCount = $post->authors()->count();
+            if ($authorCount === 1) {
+                $post->update(['authenticated_user_id' => $deletedUserId]);
+            } 
+            
+            else {
+    
+                $post->authors()->detach($user->id); // Remove the current user from authors
+                $post->authors()->attach($deletedUserId); // Add the deleted user as an author
             }
         }
+
+        //delete user notifications....
+        if ($user->notifications()->exists()) {
+            $user->notifications()->update(['authenticated_user_id' => $deletedUserId]);
+        }
     
-        // Detach relationships
+        //erase reports with user.....
+        if ($user->reports()->exists()) {
+            $user->reports()->delete(); 
+        }
+        //erase suspensions with user...
+        if ($user->suspensions()->exists()) {
+            $user->suspensions()->delete(); 
+        }
+
+        FollowNotification::where('follower_id', $user->id)
+        ->update(['follower_id' => $deletedUserId]);
+
+        
+        $user->moderatedCommunities()->detach();
         $user->favouritePosts()->detach();
         $user->communities()->detach();
         $user->follows()->detach();
         $user->followers()->detach();
-    
-        // Delete the user
         $user->delete();
+        Auth::logout();
     
         return redirect('/news')->with('message', 'User account has been successfully deleted.');
+        
     }
+    
     public function getReputation($user)
     {
 
