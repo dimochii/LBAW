@@ -11,78 +11,77 @@
         <div class="flex items-center mt-2">
         <div class="flex items-center mt-2">
         <div class="flex items-center space-x-3 p-2 rounded-md border-2 border-black bg-white">
-    <div class="
-        {{ $reputation >= 1500 ? 'bg-[#FFE985] border-2 border-black' : 
-           ($reputation >= 1000 ? 'bg-[#A8D0E6] border-2 border-black' : 
-           ($reputation >= 500 ? 'bg-[#FFBD81] border-2 border-black' : 
-           ($reputation >= 100 ? 'bg-[#CE8BA3] border-2 border-black' : 
-           ($reputation >= 0 ? 'bg-gray-300 border-2 border-black' : 
-           'bg-[#D13343] border-2 border-black')))) }}
-        p-2 rounded-none">
-        
-        @if ($reputation >= 1500)
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
-        @elseif ($reputation >= 1000)
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="16" />
-                <line x1="8" y1="12" x2="16" y2="12" />
-            </svg>
-        @elseif ($reputation >= 500)
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                <line x1="12" y1="8" x2="12" y2="16" />
-                <line x1="8" y1="12" x2="16" y2="12" />
-            </svg>
-        @elseif ($reputation >= 100)
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-        @elseif ($reputation >= 0)
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <line x1="12" y1="2" x2="12" y2="22" />
-                <line x1="2" y1="12" x2="22" y2="12" />
-            </svg>
-        @else
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-            </svg>
-        @endif
-    </div>
+          <div class="
+              {{ $reputation >= 1500 ? 'bg-[#FFE985] border-2 border-black' : 
+                ($reputation >= 1000 ? 'bg-[#A8D0E6] border-2 border-black' : 
+                ($reputation >= 500 ? 'bg-[#FFBD81] border-2 border-black' : 
+                ($reputation >= 100 ? 'bg-[#CE8BA3] border-2 border-black' : 
+                ($reputation >= 0 ? 'bg-gray-300 border-2 border-black' : 
+                'bg-[#D13343] border-2 border-black')))) }}
+              p-2 rounded-none">
+              
+              @if ($reputation >= 1500)
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                  </svg>
+              @elseif ($reputation >= 1000)
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="16" />
+                      <line x1="8" y1="12" x2="16" y2="12" />
+                  </svg>
+              @elseif ($reputation >= 500)
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <line x1="12" y1="8" x2="12" y2="16" />
+                      <line x1="8" y1="12" x2="16" y2="12" />
+                  </svg>
+              @elseif ($reputation >= 100)
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+              @elseif ($reputation >= 0)
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <line x1="12" y1="2" x2="12" y2="22" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                  </svg>
+              @else
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                  </svg>
+              @endif
+          </div>
 
-    {{-- Reputation Details --}}
-    <div class="flex flex-col">
-        <div class="flex items-center space-x-2">
-            <span class="
-                {{ $reputation >= 1500 ? 'text-[#FFE985]' : 
-                   ($reputation >= 1000 ? 'text-[#A8D0E6]' : 
-                   ($reputation >= 500 ? 'text-[#FFBD81]' : 
-                   ($reputation >= 100 ? 'text-[#CE8BA3]' : 
-                   ($reputation >= 0 ? 'text-gray-900' : 'text-[#D13343]')))) }}
-                font-bold text-lg uppercase tracking-wide border-b-2 border-black">
-                {{ $reputation >= 1500 ? 'Legend' : 
-                   ($reputation >= 1000 ? 'Champion' : 
-                   ($reputation >= 500 ? 'Influencer' : 
-                   ($reputation >= 100 ? 'Contributor' : 
-                   ($reputation >= 0 ? 'Lurker' : 'Outcast')))) }}
-            </span>
+          <div class="flex flex-col">
+              <div class="flex items-center space-x-2">
+                  <span class="
+                      {{ $reputation >= 1500 ? 'text-[#FFE985]' : 
+                        ($reputation >= 1000 ? 'text-[#A8D0E6]' : 
+                        ($reputation >= 500 ? 'text-[#FFBD81]' : 
+                        ($reputation >= 100 ? 'text-[#CE8BA3]' : 
+                        ($reputation >= 0 ? 'text-gray-900' : 'text-[#D13343]')))) }}
+                      font-bold text-lg uppercase tracking-wide border-b-2 border-black">
+                      {{ $reputation >= 1500 ? 'Legend' : 
+                        ($reputation >= 1000 ? 'Champion' : 
+                        ($reputation >= 500 ? 'Influencer' : 
+                        ($reputation >= 100 ? 'Contributor' : 
+                        ($reputation >= 0 ? 'Lurker' : 'Outcast')))) }}
+                  </span>
 
-            {{-- Progression Arrow with Brutalist Style --}}
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 {{ $reputation >= 0 ? 'text-black' : 'text-black' }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                <polyline points="17 6 23 6 23 12" />
-            </svg>
-        </div>
-        
-        <span class="text-sm font-bold uppercase tracking-wide {{ $reputation >= 0 ? 'text-black' : 'text-[#D13343]' }}">
-            Reputation: {{ $reputation }}
-        </span>
-    </div>
-</div>
+                  {{-- Progression Arrow with Brutalist Style --}}
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 {{ $reputation >= 0 ? 'text-black' : 'text-black' }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                      <polyline points="17 6 23 6 23 12" />
+                  </svg>
+              </div>
+              
+              <span class="text-sm font-bold uppercase tracking-wide {{ $reputation >= 0 ? 'text-black' : 'text-[#D13343]' }}">
+                  Reputation: {{ $reputation }}
+              </span>
+          </div>
+      </div>
 </div>
 </div>
     
@@ -92,9 +91,15 @@
       </p>
     </div>
     <div class="flex flex-col items-end space-y-4">
-    <button onclick=reportProfile()>
-    Report 
-    </button>
+    @if (!Auth::user()->can('editProfile', $user) )
+      <button onclick=reportProfile()>
+        <svg class="ml-auto h-4 w-4 fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] z-0"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                <path class="cls-1"
+                  d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
+        </svg>
+      </button>
+    @endif
     @include('partials.report_box',['reported_id' =>$user->id] )
 
 

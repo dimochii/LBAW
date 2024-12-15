@@ -356,45 +356,25 @@
           <h3 class="text-sm font-medium text-gray-500 mb-3">moderators</h3>
           <div class="space-y-3">
             @php
-            // Busca moderadores do hub (simulação de chamada a um controlador ou modelo)
-            $moderators = $community->moderators ?? []; // Exemplo de busca
-            $defaultModerators = [
-            ['username' => '@admin', 'role' => 'Administrator', 'color' => 'bg-blue-500'],
-            ['username' => '@friends', 'role' => 'Moderator', 'color' => 'bg-green-500'],
-            ['username' => '@walkPro123', 'role' => 'Moderator', 'color' => 'bg-yellow-500'],
-            ];
-
-            $colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500',
-            'bg-orange-500'];
+            $moderators = $community->moderators ?? []; 
             @endphp
-
-            @if (count($moderators) > 0)
             @foreach ($moderators as $moderator)
-            @php
-            $moderatorColor = $moderator['color'] ?? $colors[array_rand($colors)];
-            @endphp
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 {{ $moderatorColor }} rounded-full flex-shrink-0"></div>
-              <div>
-                <p class="text-sm font-medium">{{ $moderator['name'] }}</p>
-                <p class="text-xs text-gray-500"><span>
-                  @
-                </span>{{ $moderator['username'] }}</p>
-              </div>
-            </div>
+              <a href="{{ route('user.profile', $moderator->id) }}" >
+              <div class="flex items-center space-x-2 py-2">
+                  <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
+                    <img src="{{ asset($moderator->image->path ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png') }}" 
+                        alt="{{ $moderator->username }}"
+                        class="w-full h-full object-cover">
+                </div>
+                <div>
+                  <p class="text-sm font-medium">{{ $moderator['name'] }}</p>
+                  <p class="text-xs text-gray-500"><span>
+                    @
+                  </span>{{ $moderator['username'] }}</p>
+                </div>
+                </div>
+              </a>
             @endforeach
-            @else
-            <!-- Default Moderators -->
-            @foreach ($defaultModerators as $moderator)
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 {{ $moderator['color'] }} rounded-full flex-shrink-0"></div>
-              <div>
-                <p class="text-sm font-medium">{{ $moderator['username'] }}</p>
-                <p class="text-xs text-gray-500">{{ $moderator['role'] }}</p>
-              </div>
-            </div>
-            @endforeach
-            @endif
           </div>
         </div>
 
