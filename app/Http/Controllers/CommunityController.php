@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Community;
+use App\Models\CommunityNotification;
 use App\Models\CommunityFollowRequest;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
@@ -245,6 +246,19 @@ class CommunityController extends Controller
           'request_date' => now(),
       ]);
 
+      foreach ($community->moderators as $moderator) {
+        $notification = Notification::create([
+            'is_read' => false,
+            'notification_date' => now(),
+            'authenticated_user_id' => $moderator->id, 
+        ]);
+
+        FollowNotification::create([
+            'notification_id' => $notification->id,
+            'authenticated_user_id' => $user->id, 
+        ]);
+    }
+
       return redirect()->back()->with('success', 'Sua solicitação foi enviada e está aguardando aprovação.');
   }
 
@@ -301,21 +315,30 @@ class CommunityController extends Controller
       $request->request_status = 'accepted';
       $request->save();
 
-      $request->community->followers()->attach($request->user_id);
+      $request->community->followers()->attach($request->authenticated_user_id);
 
-      return redirect()->route('communities.manageFollowRequests', ['id' => $request->community_id])
-          ->with('success', 'Follow request accepted.');
+      $notification = $request->notification;
+      $notification->is_read = true;
+      $notification->save();
+
+      return redirect()->back()->with('success', 'Follow request accepted.');
   }
+
 
   public function rejectFollowRequest($requestId) {
       $request = CommunityFollowRequest::findOrFail($requestId);
+
       $this->authorize('isCommunityAdmin', $request->community);
 
       $request->request_status = 'rejected';
       $request->save();
 
-      return redirect()->route('communities.manageFollowRequests', ['id' => $request->community_id])
-          ->with('success', 'Follow request rejected.');
+      $notification = $request->notification;
+      $notification->is_read = true;
+      $notification->save();
+
+      return redirect()->back()->with('success', 'Follow request rejected.');
   }
+
 
 }
