@@ -1,23 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div>
-    <!-- Hub Header -->
-    @if($community)
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:px-8">
-        <div class="flex items-start gap-6">
-            <img src="{{ asset( $community->image->path ?? 'images/groupdefault.jpg') }}" 
-                 onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
-                 alt="Community Image" 
-                 class="rounded-full  h-32 w-32">
-            <div>
-            <div class="flex items-center gap-2">
-    <!-- Community Name -->
-    <h1 class="tracking-tighter font-medium text-6xl">/{{ $community->name }}</h1>
+<div class="">
+  <!-- Hub Header -->
+  @if($community)
+  <div class="border-b-2 border-black max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:px-8">
+    <div class="flex items-start gap-6">
+      <img src="{{ asset( $community->image->path ?? 'images/groupdefault.jpg') }}"
+        onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
+        alt="Community Image" class="rounded-full  h-32 w-32">
+      <div>
+        <div class="flex items-center gap-2">
+          <!-- Community Name -->
+          <h1 class="tracking-tighter font-medium text-6xl">h/{{ $community->name }}</h1>
 
-    <!-- Form for Privacy Toggle -->
+          <!-- Form for Privacy Toggle -->
 
-    <form action="{{ route('communities.update.privacy', $community) }}" method="POST" class="inline-flex items-center gap-2">
+          <form action="{{ route('communities.update.privacy', $community) }}" method="POST" class="inline-flex items-center gap-2">
         @csrf
         @method('POST')
 
@@ -63,112 +62,121 @@
             @endif
             @endif
         </form>
-    </div>
+        </div>
 
-                <p class="text-gray-600 mt-2 text-sm">{{ $community->description }}</p>
-                <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                <a href="{{ route('community.followers', $community->id) }}" class="flex items-center gap-2">
-                    <div class="flex items-center gap-2">
-                        <span>{{ number_format($followers_count ?? 0, 0) }}</span>
-                        <span>Followers</span>
-                    </div
-                </a>
-                    <div class="flex items-center gap-2">
-                        <span>{{ number_format($posts_count ?? 0, 0) }}</span>
-                        <span>Posts</span>
-                    </div>
-                </div>
-
-                <!-- Sort by and + post button -->
-                <div class="flex items-center gap-4 mt-6">
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-600">sort by</span>
-                        <select name="sort" class="bg-transparent text-sm text-gray-900 font-medium focus:outline-none">
-                            <option value="newest">Newest</option>
-                            <option value="top">Top</option>
-                            <option value="trending">Trending</option>
-                        </select>
-                    </div>
-                    @auth
-                    @if($is_following)
-                    <a href="{{ route('post.create') }}"
-                       class="px-4 text-gray-600 text-sm font-medium underline-effect">
-                        + post
-                    </a>
-                    @endif
-                    @endauth
-                </div>
+        <p class="text-gray-600 mt-2 text-sm">{{ $community->description }}</p>
+        <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
+          <a href="{{ route('community.followers', $community->id) }}" class="flex items-center gap-2">
+            <div class="flex items-center gap-2">
+              <span>{{ number_format($followers_count ?? 0, 0) }}</span>
+              <span>Followers</span>
+            </div </a>
+            <div class="flex items-center gap-2">
+              <span>{{ number_format($posts_count ?? 0, 0) }}</span>
+              <span>Posts</span>
             </div>
         </div>
-    </div>
-    <div class="divide-y-2 border-b-2 border-black">
-        @php
-            $activeTab = request()->query('tab', 'News'); // Default to 'News'
-        @endphp
-        @include('partials.news_topic_nav', ['url' => '/hub/' . $community->id])
-    </div>
 
-    <!-- Posts Section -->
-    <div>
-        <!-- Posts Grid -->
-        @if ($activeTab === 'News')
-            @if ($newsPosts->count() > 0)
-                    @foreach ($newsPosts as $post)
-                    <div class="divide-y-2 border-b-2 border-black">
-                        @include('partials.post', [
-                            'news' => 'true',
-                            'item' => $post,
-                            'post' => $post->news,
-                        ])
-                    @endforeach
-                </div>
-            @endif
-
-
-            @elseif ($activeTab === 'Topics')
-            @if ($topicPosts->count() > 0)
-                @foreach ($topicPosts as $post)
-                <div class="divide-y-2 border-b-2 border-black">
-                @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
-                </div>
-                @endforeach
-                @endif
-
-        
-            @else
-            <div class="text-center py-12 bg-white rounded-xl shadow-sm">
-                <p class="text-gray-500">No posts available in this hub yet.</p>
-                @auth
-                @if($is_following)
-                <a href="{{ route('post.create', ['community_id' => $community->id]) }}" 
-                   class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white text-sm font-medium rounded-full hover:bg-blue-600 transition-colors duration-200">
-                    Create the first post
-                </a>
-                @endif
-                @endauth
-            </div>
-            @endif
-        
-
-        <!-- Pagination -->
-        @if(method_exists($community->posts, 'hasPages') && $community->posts->hasPages())
-        <div class="py-6">
-            {{ $community->posts->links() }}
+        <!-- Sort by and + post button -->
+        <div class="flex items-center gap-4 mt-6">
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-600">sort by</span>
+            <select name="sort" class="bg-transparent text-sm text-gray-900 font-medium focus:outline-none">
+              <option value="newest">Newest</option>
+              <option value="top">Top</option>
+              <option value="trending">Trending</option>
+            </select>
+          </div>
+          @auth
+          @if($is_following)
+          <a href="{{ route('post.create') }}" class="px-4 text-gray-600 text-sm font-medium underline-effect">
+            + post
+          </a>
+          @endif
+          @endauth
         </div>
-        @endif
+      </div>
     </div>
+  </div>
 
-    
+  @php
+  $activeTab = request()->query('tab', 'News'); // Default to 'News'
+  @endphp
+  {{-- @include('partials.news_topic_nav', ['url' => '/hub/' . $community->id]) --}}
 
-    @else
-    <div class="py-12 text-center">
-        <p class="text-gray-500 text-xl">Hub not found</p>
-        <a href="{{ route('home') }}" 
-           class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white text-sm font-medium rounded-full hover:bg-blue-600 transition-colors duration-200">
-            Return Home
+  <nav class="border-b-2 border-black w-full font-light text-xl tracking-tighter px-6 flex flex-wrap gap-4 md:gap-8">
+    <a href="{{ url('/hub/' . $community->id . '/?tab=news') }}"
+      class="py-4 relative group {{ $activeTab === 'news' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+      news
+    </a>
+    <a href="{{ url('/hub/' . $community->id . '/?tab=topics') }}"
+      class="py-4 relative group {{ $activeTab === 'topics' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+      topics
+    </a>
+
+    <a href="{{ url('/hub/' . $community->id . '/moderation') }}"
+      class="py-4 relative group {{ $activeTab === 'moderation' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+      moderation
+    </a>
+  </nav>
+
+  <!-- Posts Section -->
+  <div>
+    <!-- Posts Grid -->
+    <div class="divide-y-2 border-b-2 border-black divide-black">
+      @if ($activeTab === 'news')
+      @if ($newsPosts->count() > 0)
+      @foreach ($newsPosts as $post)
+      @include('partials.post', [
+      'news' => 'true',
+      'item' => $post,
+      'post' => $post->news,
+      ])
+      @endforeach
+      @endif
+
+
+      @elseif ($activeTab === 'topics')
+      @if ($topicPosts->count() > 0)
+      @foreach ($topicPosts as $post)
+      @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
+      @endforeach
+      @endif      
+
+      @else
+      <div class="text-center py-12 bg-white rounded-xl shadow-sm">
+        <p class="text-gray-500">No posts available in this hub yet.</p>
+        @auth
+        @if($is_following)
+        <a href="{{ route('post.create', ['community_id' => $community->id]) }}"
+          class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white text-sm font-medium rounded-full hover:bg-blue-600 transition-colors duration-200">
+          Create the first post
         </a>
+        @endif
+        @endauth
+      </div>
+      @endif
+    </div>
+
+    <!-- Pagination -->
+    @if(method_exists($community->posts, 'hasPages') && $community->posts->hasPages())
+    <div class="py-6">
+      {{ $community->posts->links() }}
     </div>
     @endif
+  </div>
+
+
+
+  @else
+  <div class="py-12 text-center">
+    <p class="text-gray-500 text-xl">Hub not found</p>
+    <a href="{{ route('home') }}"
+      class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white text-sm font-medium rounded-full hover:bg-blue-600 transition-colors duration-200">
+      Return Home
+    </a>
+  </div>
+  @endif
 </div>
 <script>
 

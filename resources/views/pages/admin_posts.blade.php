@@ -116,7 +116,8 @@
       <tr class="hover:bg-gray-50 transition-colors">
         <td class="px-4 py-4 whitespace-nowrap">{{ $item->post_id }}</td>
         <td class="px-4 py-4">
-          <a class="prose" href="{{ $item->url }}">{{ $item->news_url }}
+          <a class="prose" href="{{ $item->news_url }}">
+            {{ Str::limit($item->news_url, 30) }}
           </a>
         </td>
         <td
