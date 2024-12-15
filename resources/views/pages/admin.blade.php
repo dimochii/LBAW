@@ -96,7 +96,7 @@
     @foreach ($topUsers as $user)
     <a class="flex items-center gap-4 p-2 pl-8 group hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-colors"
       href="{{ route('user.profile', $user->id) }}">
-      <img src="{{ asset($user->image->path ?? 'images/default.jpg') }}" class="rounded-full h-12 w-12">
+      <img src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" class="rounded-full h-12 w-12">
       <div class="break-all flex flex-col" data-sort>
         <span class="font-medium text-xl">{{ $user->name }}</span>
         <span class="text-[#3C3D37]/[.6] group-hover:text-[#F4F2ED]/[.6]">{{ '@' . $user->username }}</span>
