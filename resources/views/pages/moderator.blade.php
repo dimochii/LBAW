@@ -87,3 +87,41 @@
 </div>
 
 @endsection
+
+
+<script>
+function toggleModerator(userId, communityId, isChecked) {
+    const action = isChecked ? 'make_moderator' : 'remove_moderator';
+    const confirmationMessage = isChecked
+        ? 'Are you sure you want to grant this user moderator privileges in this community?'
+        : 'Are you sure you want to revoke this user\'s moderator privileges in this community?';
+
+    if (confirm(confirmationMessage)) {
+        fetch(`/hub/${communityId}/${action}/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update moderator status.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            alert(error.message);
+            // Revert checkbox state if the request fails
+            document.getElementById(`moderator-checkbox-${userId}`).checked = !isChecked;
+        });
+    } else {
+        // Revert checkbox state if the user cancels the action
+        document.getElementById(`moderator-checkbox-${userId}`).checked = !isChecked;
+    }
+}
+</script>

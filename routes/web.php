@@ -189,6 +189,9 @@ Route::get('/all-hubs', [CommunityController::class, 'index'])->middleware('auth
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
+
+Route::post('/hub/{community_id}/make_moderator/{user_id}', [ModeratorController::class, 'makeModerator'])->middleware('auth')->name('users.make_moderator');
+Route::post('/hub/{community_id}/remove_moderator/{user_id}', [ModeratorController::class, 'removeModerator'])->middleware('auth')->name('users.remove_moderator');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
 

@@ -28,4 +28,41 @@ class ModeratorController extends Controller
          'moderated_hubs','selected_hub'
         ));
     }
+
+
+    public function  makeModerator($user_id, $community_id)
+    {
+
+        $community = Community::find($community_id);
+        $userToAdd = AuthenticatedUser::find($user_id);
+
+        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
+            return response()->json(['error' => 'You do not have permission to add a moderator to this community.'], 403);
+        }
+        if ($community->moderators->contains($userToAdd)) {
+            return response()->json(['error' => 'This user is already a moderator.'], 400);
+        }
+
+        $community->moderators()->attach($userToAdd);
+
+        return response()->json(['message' => 'User gained admin privileges successfully']);
+    }
+    
+    public function removeModerator($user_id, $community_id)
+    {
+        $community = Community::find($community_id);
+        $userToRemove = AuthenticatedUser::find($user_id);
+
+        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
+            return response()->json(['error' => 'You do not have permission to remove a moderator from this community.'], 403);
+        }
+
+        if (!$community->moderators->contains($userToRemove)) {
+            return response()->json(['error' => 'This user is not a moderator of the community.'], 400);
+        }
+
+        $community->moderators()->detach($userToRemove);
+
+        return response()->json(['message' => 'User has been removed as a moderator successfully.']);
+    }
 }
