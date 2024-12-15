@@ -31,7 +31,6 @@
                     <div class="bg-white border border-black rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl">
                         <div class="relative">
                             <div class="h-48 bg-lime-200 flex items-center justify-center relative overflow-hidden">
-                                <!-- Aqui adiciona a imagem da comunidade -->
                                 <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" 
                                      onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                                      alt="Community Image"
