@@ -827,11 +827,11 @@ INSERT INTO authenticated_users (
 100, FALSE, '1992-07-25', 'Content Moderation Admin', TRUE, 62),
 
 -- Regular users
-('Naruto Uzumaki', 'dattebayo', 'naruto@konoha.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 50, FALSE, '1997-10-10', 'Future Hokage', FALSE, 51),
-('Goku Son', 'saiyan_warrior', 'goku@dragonball.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 75, FALSE, '1984-04-05', 'Protector of Earth', FALSE, 52),
-('Sherlock Holmes', 'consulting_detective', 'sherlock@221b.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 90, FALSE, '1854-01-06', 'The world only consulting detective', FALSE, 53),
-('Elsa Arendelle', 'ice_queen', 'elsa@frozen.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 60, FALSE, '1991-12-21', 'Queen of Arendelle', FALSE, 54),
-('Peter Parker', 'spidey', 'peter@dailybugle.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 80, FALSE, '1995-08-15', 'Friendly neighborhood Spider-Man', FALSE, 55),
+('Naruto Uzumaki', 'dattebayo', 'naruto@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 50, FALSE, '1997-10-10', 'Future Hokage', FALSE, 51),
+('Goku Son', 'saiyan_warrior', 'goku@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 75, TRUE, '1984-04-05', 'Protector of Earth', FALSE, 52),
+('Sherlock Holmes', 'consulting_detective', 'sherlock@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 90, FALSE, '1854-01-06', 'The world only consulting detective', FALSE, 53),
+('Elsa Arendelle', 'ice_queen', 'elsa@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 60, FALSE, '1991-12-21', 'Queen of Arendelle', FALSE, 54),
+('Peter Parker', 'spidey', 'peter@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 80, FALSE, '1995-08-15', 'Friendly neighborhood Spider-Man', FALSE, 55),
 ('Bob Johnson', 'bob', 'bob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 40, FALSE, '1988-02-02', 'Loves to share news.', FALSE, 2),
 ('Charlie Brown', 'charlie', 'charlie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 45, FALSE, '1992-03-03', 'Tech enthusiast.', FALSE, 3),
 ('Diana Prince', 'diana', 'diana@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 85, FALSE, '1985-04-04', 'Avid reader and commenter.', FALSE, 4),
@@ -2958,4 +2958,107 @@ INSERT INTO favorite_posts (authenticated_user_id, post_id) VALUES
 (6, 2), (7, 5), (8, 3), (9, 7), (10, 6),(16, 12), (17, 15), (18, 11), (22, 13), (23, 14),
 (24, 16), (25, 17), (26, 18), (27, 19), (28, 20),
 (29, 21), (30, 22), (31, 23), (32, 24), (33, 25);
+
+
+--news
+INSERT INTO reports (reported_id, reason, is_open, report_type, authenticated_user_id) VALUES
+    (1, 'This article contains outdated information.', TRUE, 'item_report', 12),
+    (2, 'I find the content misleading.', FALSE, 'item_report', 7),
+    (3, 'The source seems unreliable.', TRUE, 'item_report', 45),
+    (4, 'The title is clickbait.', TRUE, 'item_report', 32),
+    (5, 'This post promotes harmful ideas.', FALSE, 'item_report', 58),
+    (6, 'The content violates community guidelines.', TRUE, 'item_report', 89),
+    (7, 'I think this post is offensive.', FALSE, 'item_report', 21),
+    (8, 'This post contains inappropriate language.', TRUE, 'item_report', 15),
+    (9, 'This content spreads misinformation.', FALSE, 'item_report', 77),
+    (10, 'I don’t agree with this post.', TRUE, 'item_report', 90),
+    (24, 'This content should be fact-checked.', FALSE, 'item_report', 61),
+    (26, 'This post is spam.', TRUE, 'item_report', 38),
+    (27, 'The article lacks proper sources.', FALSE, 'item_report', 5),
+    (30, 'I find this post offensive.', TRUE, 'item_report', 14),
+    (32, 'This content is inappropriate.', FALSE, 'item_report', 47),
+    (35, 'The post contains harmful information.', TRUE, 'item_report', 19),
+    (36, 'This post promotes a biased perspective.', FALSE, 'item_report', 66),
+    (38, 'The content is unsuitable for this platform.', TRUE, 'item_report', 9),
+    (39, 'I think this post violates the rules.', FALSE, 'item_report', 72),
+    (46, 'This post contains plagiarized content.', TRUE, 'item_report', 25);
+
+--topics
+INSERT INTO reports (reported_id, reason, is_open, report_type, authenticated_user_id) VALUES
+    (11, 'This topic is offensive.', TRUE, 'topic_report', 18),
+    (13, 'This content is spam.', FALSE, 'topic_report', 50),
+    (15, 'I don’t agree with this topic.', TRUE, 'topic_report', 74),
+    (17, 'The topic promotes harmful ideas.', FALSE, 'topic_report', 36),
+    (19, 'This post contains incorrect data.', TRUE, 'topic_report', 85),
+    (25, 'The topic is inappropriate.', FALSE, 'topic_report', 93),
+    (28, 'This topic spreads misinformation.', TRUE, 'topic_report', 40),
+    (29, 'I don’t agree with this topic.', FALSE, 'topic_report', 22),
+    (31, 'This topic contains offensive material.', TRUE, 'topic_report', 11),
+    (33, 'This content is spam.', FALSE, 'topic_report', 69),
+    (37, 'This topic violates the community rules.', TRUE, 'topic_report', 56),
+    (40, 'The topic should be fact-checked.', FALSE, 'topic_report', 81),
+    (42, 'This post promotes a biased view.', TRUE, 'topic_report', 62),
+    (44, 'This topic is poorly written.', FALSE, 'topic_report', 53),
+    (45, 'I think this topic is misleading.', TRUE, 'topic_report', 7),
+    (56, 'This topic lacks credibility.', FALSE, 'topic_report', 95),
+    (58, 'I find this topic offensive.', TRUE, 'topic_report', 28),
+    (84, 'This content spreads misinformation.', FALSE, 'topic_report', 33),
+    (85, 'This topic contains plagiarized content.', TRUE, 'topic_report', 46),
+    (86, 'This topic violates the rules.', FALSE, 'topic_report', 60);
+
+--users
+    INSERT INTO reports(reported_id, reason, is_open, report_type, authenticated_user_id) VALUES
+    (2, 'User is posting offensive content', TRUE, 'user_report', 8),
+    (2, 'User has been consistently disrespectful in comments', TRUE, 'user_report', 14),
+    (2, 'User is spreading misinformation', TRUE, 'user_report', 15),
+    (2, 'User has been involved in trolling and harassment', TRUE, 'user_report', 19),
+    (14, 'User is using hate speech in discussions', TRUE, 'user_report', 23),
+    (14, 'User has been violating community guidelines with inappropriate posts', TRUE, 'user_report', 30),
+    (6, 'User is spamming the forum with irrelevant content', TRUE, 'user_report', 31),
+    (6, 'User is bullying other members in private messages', TRUE, 'user_report', 33),
+    (7, 'User has been sharing explicit content without consent', TRUE, 'user_report', 36),
+    (8, 'User is repeatedly making offensive jokes', TRUE, 'user_report', 40),
+    (9, 'User is causing disruption in group discussions', TRUE, 'user_report', 42),
+    (10, 'User is impersonating others to cause harm', TRUE, 'user_report', 45),
+    (11, 'User is leaking personal information without permission', TRUE, 'user_report', 47),
+    (12, 'User has been using discriminatory language against a specific group', TRUE, 'user_report', 49),
+    (13, 'User is violating privacy by sharing sensitive details of others', TRUE, 'user_report', 51),
+    (14, 'User is making misleading and harmful statements in threads', TRUE, 'user_report', 55),
+    (15, 'User has been involved in aggressive behavior towards new users', TRUE, 'user_report', 57),
+    (16, 'User is posting defamatory content about other community members', TRUE, 'user_report', 60),
+    (17, 'User has been posting repetitive and irrelevant content', TRUE, 'user_report', 62),
+    (18, 'User is constantly engaging in online arguments', TRUE, 'user_report', 65),
+    (19, 'User is using multiple accounts to manipulate discussions', TRUE, 'user_report', 68),
+    (20, 'User is promoting harmful or unsafe practices', TRUE, 'user_report', 71);
+
+--comments
+INSERT INTO reports(reported_id, reason, is_open, report_type, authenticated_user_id) VALUES
+    (1, 'User is promoting offensive views in comments', TRUE, 'comment_report', 8),
+    (2, 'User is engaging in trolling behavior in response to comments', TRUE, 'comment_report', 14),
+    (3, 'User is making irrelevant or spammy comments', TRUE, 'comment_report', 15),
+    (4, 'User is causing unnecessary disruption in the discussion', TRUE, 'comment_report', 19),
+    (5, 'User is using inappropriate language in comments', TRUE, 'comment_report', 23),
+    (6, 'User is spamming comment sections with repeated statements', TRUE, 'comment_report', 30),
+    (7, 'User is providing misleading or false information', TRUE, 'comment_report', 31),
+    (8, 'User is using offensive humor in comments', TRUE, 'comment_report', 33),
+    (9, 'User is mocking or ridiculing other users in replies', TRUE, 'comment_report', 36),
+    (10, 'User is posting hateful or discriminatory remarks', TRUE, 'comment_report', 40),
+    (11, 'User is engaging in hostile behavior towards other users', TRUE, 'comment_report', 42),
+    (12, 'User is making baseless accusations in comments', TRUE, 'comment_report', 45),
+    (13, 'User is making harmful or offensive jokes in comments', TRUE, 'comment_report', 47),
+    (14, 'User is attempting to manipulate discussions with false claims', TRUE, 'comment_report', 49),
+    (15, 'User is promoting unsafe or harmful ideas in the comment section', TRUE, 'comment_report', 51),
+    (16, 'User is responding aggressively to simple questions', TRUE, 'comment_report', 55),
+    (17, 'User is consistently spamming irrelevant comments', TRUE, 'comment_report', 57),
+    (18, 'User is making inappropriate personal attacks against other users', TRUE, 'comment_report', 60),
+    (19, 'User is trying to derail the conversation with unrelated comments', TRUE, 'comment_report', 62),
+    (20, 'User is making statements that encourage harmful behavior', TRUE, 'comment_report', 65),
+    (21, 'User is repeatedly posting inflammatory comments', TRUE, 'comment_report', 68),
+    (22, 'User is flooding the comment section with negative feedback', TRUE, 'comment_report', 71),
+    (23, 'User is engaging in aggressive debate tactics', TRUE, 'comment_report', 73),
+    (24, 'User is sharing inappropriate or graphic content in the comments', TRUE, 'comment_report', 75),
+    (25, 'User is not contributing constructively to the discussion', TRUE, 'comment_report', 78),
+    (26, 'User is attempting to intimidate other users through comments', TRUE, 'comment_report', 80);
+
+
 

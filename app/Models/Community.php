@@ -32,4 +32,16 @@ class Community extends Model
     {
         return $this->belongsToMany(AuthenticatedUser::class, 'community_followers');
     }
+
+    public function reports()
+{
+    return $this->hasManyThrough(
+        Report::class,       
+        Post::class,         
+        'community_id',      
+        'reported_id',      
+        'id',                
+        'id'                
+    );
+}
 }
