@@ -50,10 +50,6 @@
             </div>
           </div> --}}
         </a>
-        <div class="p-4">
-          <h3 class="font-light text-gray-500 mb-2">moderation</h3>
-          <a href="{{route('moderation.overview', $id)}}" class="underline-effect ml-2">overview</a>
-        </div>
         <div>
           <h3 class="px-4 font-light text-gray-500 mb-2 mt-4 ">manage</h3>
           <div class="*:*:underline-effect *:px-4 gap-2 flex flex-col text-xl *:ml-2 pb-4">
@@ -61,10 +57,10 @@
               <span>users</span>
             </a>
             <a href="{{route('moderation.posts', $id)}}">
-              <span>hubs</span>
+              <span>posts</span>
             </a>
             <a href="{{route('moderation.reports', $id)}}">
-              <span>posts</span>
+              <span>reports</span>
             </a>
           </div>
         </div>
