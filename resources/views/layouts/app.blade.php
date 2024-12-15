@@ -300,7 +300,7 @@
         <!-- Hubs Section -->
         <div class="p-4 border-b-2 border-black">
           <div class="flex flex-wrap items-start gap-3">
-            <img src="{{ asset($community->image->path) }}" 
+            <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" 
                  onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                  alt="Community Image"
                  class="rounded-full  size-20" >

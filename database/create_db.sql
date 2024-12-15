@@ -696,12 +696,13 @@ INSERT INTO images (path) VALUES
 ('images/hub197.jpg'),
 ('images/hub198.jpg'),
 ('images/hub199.jpg'),
-('images/hub200.jpg');
-
+('images/hub200.jpg'),
+('images/default.jpg');
 
 -- Step 2: Insert Users into authenticateduser
 INSERT INTO authenticated_users (name, username, email, password, birth_date, description, is_admin, image_id)
 VALUES
+('Deleted User', 'Deleted', 'deleted@deleted.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1000-01-01', 'This account has been deleted', FALSE,401),
 ('Anonymous', 'Anonymous', 'anonymous@example.com', '$2y$10$FLtQvBMa8TZpNeHMG1EnTu8QbbEZe8e2GJbzqfSdnQyht4ozH1zRa', '1000-01-01', 'Anonymous.', FALSE, 1),
 ('Bob Johnson', 'bob', 'bob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1988-02-02', 'Loves to share news.', FALSE, 2),
 ('Charlie Brown', 'charlie', 'charlie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', '1992-03-03', 'Tech enthusiast.', FALSE, 3),

@@ -96,7 +96,7 @@
     @foreach ($topUsers as $user)
     <a class="flex items-center gap-4 p-2 pl-8 group hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-colors"
       href="{{ route('user.profile', $user->id) }}">
-      <img src="{{ asset('images/user' . $user->image_id . '.jpg') }}" class="rounded-full h-12 w-12">
+      <img src="{{ asset($user->image->path ?? 'images/default.jpg') }}" class="rounded-full h-12 w-12">
       <div class="break-all flex flex-col" data-sort>
         <span class="font-medium text-xl">{{ $user->name }}</span>
         <span class="text-[#3C3D37]/[.6] group-hover:text-[#F4F2ED]/[.6]">{{ '@' . $user->username }}</span>
@@ -115,7 +115,7 @@
 
     <a class="flex items-center gap-4 p-2 pl-8 group hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-colors"
       href="{{ route('communities.show', $hub->id) }}">
-      <img src="{{ asset('images/hub' . $hub->image_id . '.jpg') }}" class="rounded-full h-12 w-12">
+      <img src="{{ asset($hub->image->path ?? 'images/groupdefault.jpg') }}" class="rounded-full h-12 w-12">
       <div class="break-all flex flex-col" data-sort>
         <span class="font-medium text-xl">{{ 'h/' . $hub->name }}</span>
         <span class="text-[#3C3D37]/[.6] group-hover:text-[#F4F2ED]/[.6]">{{ $hub->description }}</span>
@@ -140,7 +140,7 @@
     @foreach ($mostReportedUsers as $user)    
     <a class="flex items-center gap-4 p-2 pl-8 group hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-colors"
       href="{{ route('user.profile', $user->user->id) }}">
-      <img src="{{ asset('images/user' . $user->user->image_id . '.jpg') }}" class="rounded-full h-12 w-12">
+      <img src="{{ asset($user->user->image->path 'images/default.jpg') }}" class="rounded-full h-12 w-12">
       <div class="break-all flex flex-col" data-sort>
         <span class="font-medium text-xl">{{ $user->user->name }}</span>
         <span class="text-[#3C3D37]/[.6] group-hover:text-[#F4F2ED]/[.6]">{{ '@' . $user->user->username }}</span>

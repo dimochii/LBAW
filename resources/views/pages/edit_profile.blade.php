@@ -154,15 +154,7 @@
                 </div>
             </div>
             
-            <div class="md:col-span-2 flex justify-start">
-                <form method="POST" action="{{ route('user.delete') }}">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white">
-                        <span>Delete My Account</span>
-                    </button>
-                </form>
-            </div>
+            
             
 
             {{-- Submit Button --}}
@@ -181,6 +173,18 @@
                 </button>
             </div>
         </form>
+
+        <div class="md:col-span-2 flex justify-start">
+            <form method="POST" action="{{ route('user.delete') }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white">
+                    <span>Delete My Account</span>
+                </button>
+            </form>
+        </div>
+
+
     </div>
 </div>
 
@@ -198,6 +202,11 @@
             previewContainer.innerHTML = '';
         }
     }
+    function submitDeleteForm() {
+
+        alert(1);
+    }
+
 </script>
 
 @endsection
