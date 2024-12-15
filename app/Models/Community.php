@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 class Community extends Model
@@ -33,6 +34,10 @@ class Community extends Model
         return $this->belongsToMany(AuthenticatedUser::class, 'community_followers');
     }
 
+    public function followRequests(): HasMany
+    {
+        return $this->hasMany(CommunityFollowRequest::class, 'community_id');
+    }
     public function reports()
 {
     return $this->hasManyThrough(

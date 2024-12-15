@@ -212,7 +212,10 @@ Route::get('/notifications', [NotificationController::class, 'show'])
     ->middleware('auth')
     ->name('notifications.show');
     //mark as read
-Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->middleware('auth')->name('notifications.markAsRead');
+Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+Route::patch('/notifications/accept-follow-request/{id}', [CommunityController::class, 'acceptFollowRequest'])->name('communities.acceptFollowRequest');
+Route::patch('/notifications/reject-follow-request/{id}', [CommunityController::class, 'rejectFollowRequest'])->name('communities.rejectFollowRequest');
+
 
 // Recover password
 

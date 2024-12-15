@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="divide-y-2 divide-black border-b-2 border-black">
   <!-- Display success message if exists -->
   @if(session('success'))
   <div class="alert alert-success">

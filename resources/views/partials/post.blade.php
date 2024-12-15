@@ -33,9 +33,30 @@ news = Bool
               d="M8,6.5A1.5,1.5,0,1,1,6.5,8,1.5,1.5,0,0,1,8,6.5ZM.5,8A1.5,1.5,0,1,0,2,6.5,1.5,1.5,0,0,0,.5,8Zm12,0A1.5,1.5,0,1,0,14,6.5,1.5,1.5,0,0,0,12.5,8Z" />
           </svg>
         </label>
-        @include('partials.options_dropdown', [
-        'options' => ['adeus' => '#'],
-        ])
+        @if (Auth::check() && Auth::user()->can('isAuthor', $post->post))
+            @if ($news)
+                @include('partials.options_dropdown', [
+                    "options" => [
+                        'edit post' => route('news.edit', ['post_id' => $post->post_id]),
+                        // 'delete post' => route() -> incluir rota para delete
+                    ]
+                ])
+            @else
+                @include('partials.options_dropdown', [
+                    "options" => [
+                        'edit post' => route('topics.edit', ['post_id' => $post->post_id])
+                    ]
+                ])
+            @endif
+        @else
+            @include('partials.options_dropdown', [
+                "options" => [
+                    'report post' => "javascript:reportNews()"
+                ]
+            ])
+            @include('partials.report_box', ['reported_id' => $post->post_id])
+        @endif
+
       </div>
     </header>
 
@@ -154,3 +175,45 @@ news = Bool
   </a>
   @endif
 </div>
+
+<script> 
+
+function reportNews() {
+
+const authors = @json($post->post->authors->pluck('id')); 
+  const form = document.getElementById('reportForm'); 
+  form.reset();
+  authors.forEach(authorId => {
+    const input = document.createElement('input'); 
+    input.type = 'hidden';
+    input.name = 'reported_user_id[]'; 
+    input.value = authorId; 
+    form.appendChild(input); 
+    });
+  document.getElementById('reportForm').action = '{{ route('report')  }}';
+  document.getElementById('report_type').value = 'item_report';
+  document.getElementById('reported_id').value = '{{ $post->post_id }}';
+  document.getElementById('reportTitle').textContent = 'Report all authors';
+  document.getElementById('reportModal').classList.remove('hidden');
+}
+
+function reportTopic() {
+      const authors = @json($post->post->authors->pluck('id')); 
+      const form = document.getElementById('reportForm'); 
+      form.reset();
+      authors.forEach(authorId => {
+        const input = document.createElement('input'); 
+       input.type = 'hidden';
+        input.name = 'reported_user_id[]'; 
+        input.value = authorId; 
+        form.appendChild(input); 
+        });
+      document.getElementById('reportForm').action = '{{ route('report') }}';
+      document.getElementById('report_type').value = 'topic_report';
+      document.getElementById('reported_id').value = '{{ $post->post_id }}';
+      document.getElementById('reportTitle').textContent = 'Report all authors';
+      document.getElementById('reportModal').classList.remove('hidden');
+      
+    }
+
+</script>
