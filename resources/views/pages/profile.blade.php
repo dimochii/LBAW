@@ -252,7 +252,7 @@
                        class="text-lg font-medium  transition-colors duration-300">
                        <div class="px-4 flex items-center space-x-4">
                           <img src="{{ asset($community->image->path) }}"
-                              onerror="**this**.onerror=null;**this**.src='https*:***//www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
+                            onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                               alt="{{ $community->name }}"
                               class="rounded-full size-20 grayscale hover:grayscale-0 transition-all duration-300 ease-in-out">
                           

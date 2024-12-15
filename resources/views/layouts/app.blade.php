@@ -300,17 +300,10 @@
         <!-- Hubs Section -->
         <div class="p-4 border-b-2 border-black">
           <div class="flex flex-wrap items-start gap-3">
-<<<<<<< HEAD
             <img src="{{ asset($community->image->path) }}" 
                 onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                 alt="Community Image"
                 class="rounded-full  size-20">
-=======
-            <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" 
-                 onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
-                 alt="Community Image"
-                 class="rounded-full  size-20" >
->>>>>>> 729c7f1ed79248ad0185ccf29f09de74cd7ed805
           
             <div class="flex-1 break-words">
               <h2 class="font-medium break-all">/{{ $community->name }}</h2>

@@ -35,7 +35,9 @@
                                 <header class="flex items-center relative">
                                     <a class="flex items-center h-8"
                                         href="{{ route('communities.show', ['id' => $topic->post->community->id ?? 'unknown']) }}">
-                                        <img src="{{ asset($topic->post->community->image->path ?? 'images/groupdefault.jpg') }}" alt="Community Image"
+                                        <img src="{{ asset($topic->post->community->image->path ?? 'images/groupdefault.jpg') }}" 
+                                        onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
+                                        alt="Community Image"
                                             class="size-8 rounded-full">
 
                                         <span class=" px-2 text-xl font-light underline-effect-light">
@@ -93,7 +95,9 @@
                                 <header class="flex items-center relative">
                                     <a class="flex items-center h-8"
                                         href="{{ route('communities.show', ['id' => $news->post->community->id ?? 'unknown']) }}">
-                                        <img src="{{ asset( $news->post->community->image->path ?? 'images/groupdefault.jpg') }}" alt="Community Image"
+                                        <img src="{{ asset( $news->post->community->image->path ?? 'images/groupdefault.jpg') }}" 
+                                        onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
+                                         alt="Community Image"
                                             class="size-8 rounded-full">
 
                                         <span class="px-2 text-xl font-light underline-effect-light">

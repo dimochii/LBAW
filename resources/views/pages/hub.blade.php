@@ -98,23 +98,26 @@
     <!-- Posts Section -->
     <div>
         <!-- Posts Grid -->
-        <div class="divide-y-2 border-b-2 border-black">
         @if ($activeTab === 'News')
             @if ($newsPosts->count() > 0)
                     @foreach ($newsPosts as $post)
+                    <div class="divide-y-2 border-b-2 border-black">
                         @include('partials.post', [
                             'news' => 'true',
                             'item' => $post,
                             'post' => $post->news,
                         ])
                     @endforeach
+                </div>
             @endif
 
 
             @elseif ($activeTab === 'Topics')
             @if ($topicPosts->count() > 0)
                 @foreach ($topicPosts as $post)
+                <div class="divide-y-2 border-b-2 border-black">
                 @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
+                </div>
                 @endforeach
                 @endif
 
@@ -132,7 +135,7 @@
                 @endauth
             </div>
             @endif
-        </div>
+        
 
         <!-- Pagination -->
         @if(method_exists($community->posts, 'hasPages') && $community->posts->hasPages())
