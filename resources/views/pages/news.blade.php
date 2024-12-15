@@ -8,10 +8,17 @@
     {{ session('success') }}
   </div>
   @endif
+<<<<<<< HEAD
+<div class = "divide-y-2 divide-black border-b-2 border-black">
+@php
+        $activeTab = request()->query('tab', 'News'); // Default to 'News'
+      @endphp
+=======
 
   @php
   $activeTab = request()->query('tab', 'News'); // Default to 'News'
   @endphp
+>>>>>>> 729c7f1ed79248ad0185ccf29f09de74cd7ed805
 
   @include('partials.news_topic_nav', ['url' => '/news/'])
 
@@ -42,6 +49,7 @@
   @endif
 
   @endif
+</div>
 
 
 </div>

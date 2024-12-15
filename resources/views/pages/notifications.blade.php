@@ -17,15 +17,15 @@
             @endphp
             <a href="{{ url('/notifications?tab=all') }}"
                class="py-4 relative group {{ $activeTab === 'all' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
-              All
+              all
             </a>
             <a href="{{ url('/notifications?tab=unread') }}"
                class="py-4 relative group {{ $activeTab === 'unread' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
-              Unread
+              unread
             </a>
             <a href="{{ url('/notifications?tab=read') }}"
                class="py-4 relative group {{ $activeTab === 'read' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
-              Read
+              read
             </a>
         </nav>
     </div>
