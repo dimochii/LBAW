@@ -3,7 +3,7 @@
 @section('content')
 <div class="min-h-screen">
   <div class="flex flex-row gap-8 p-8 border-b-2 border-black items-center relative min-w-32">
-  <img src="{{ asset($user->image->path ?? '/images/default.jpg') }}" alt="Profile Image" class="rounded-full ring-2 ring-black h-32 w-32">
+  <img src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" alt="Profile Image" class="rounded-full ring-2 ring-black h-32 w-32">
     <div class="h-full flex flex-col gap-4 flex-grow">
       <div class="flex-col flex">
         <div class="tracking-tighter font-medium text-6xl">{{ $user->name }}</div>

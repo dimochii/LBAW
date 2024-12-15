@@ -694,7 +694,8 @@ INSERT INTO images (path) VALUES
 ('images/hub197.jpg'),
 ('images/hub198.jpg'),
 ('images/hub199.jpg'),
-('images/hub200.jpg');
+('images/hub200.jpg'),
+('images/default.jpg');
 
 -- Insert communities
 INSERT INTO communities (name, description, privacy, image_id) VALUES
@@ -809,67 +810,38 @@ INSERT INTO authenticated_users (
     is_suspended, birth_date, description, is_admin, image_id
 ) VALUES
 -- Anonymous user (special case)
-('Anonymous', 'anonymous', 'anonymous@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-0, FALSE, '1990-01-01', 'System anonymous user', FALSE, 1),
+('Anonymous', 'anonymous', 'anonymous@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 
+0, FALSE, '1990-01-01', 'Deleted User', FALSE, 1),
 
 -- Admins
-('Tiago Monteiro', 'tiago_admin', 'tiago@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+('Tiago Monteiro', 'tiago_admin', 'tiago@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 
 100, FALSE, '1985-05-15', 'Site Administrator', TRUE, 59),
 
-('Vasco Costa', 'vasco_admin', 'vasco@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+('Vasco Costa', 'vasco_admin', 'vasco@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 
 100, FALSE, '1990-03-20', 'Senior Site Administrator', TRUE, 60),
 
-('Teresa Mascarenhas', 'teresa_admin', 'teresa@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+('Teresa Mascarenhas', 'teresa_admin', 'teresa@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 
 100, FALSE, '1988-11-10', 'Community Management Admin', TRUE, 61),
 
-('Diana Nunes', 'diana_admin', 'diana@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
+('Diana Nunes', 'diana_admin', 'diana@admin.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 
 100, FALSE, '1992-07-25', 'Content Moderation Admin', TRUE, 62),
 
 -- Regular users
-('Naruto Uzumaki', 'dattebayo', 'naruto@konoha.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-50, FALSE, '1997-10-10', 'Future Hokage', FALSE, 51),
-
-('Goku Son', 'saiyan_warrior', 'goku@dragonball.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-75, FALSE, '1984-04-05', 'Protector of Earth', FALSE, 52),
-
-('Sherlock Holmes', 'consulting_detective', 'sherlock@221b.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-90, FALSE, '1854-01-06', 'The world only consulting detective', FALSE, 53),
-
-('Elsa Arendelle', 'ice_queen', 'elsa@frozen.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-60, FALSE, '1991-12-21', 'Queen of Arendelle', FALSE, 54),
-
-('Peter Parker', 'spidey', 'peter@dailybugle.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-80, FALSE, '1995-08-15', 'Friendly neighborhood Spider-Man', FALSE, 55),
-
-('Bob Johnson', 'bob', 'bob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-40, FALSE, '1988-02-02', 'Loves to share news.', FALSE, 2),
-
-('Charlie Brown', 'charlie', 'charlie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-45, FALSE, '1992-03-03', 'Tech enthusiast.', FALSE, 3),
-
-('Diana Prince', 'diana', 'diana@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-85, FALSE, '1985-04-04', 'Avid reader and commenter.', FALSE, 4),
-
-('Edward Elric', 'edward', 'edward@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-70, FALSE, '1994-05-05', 'Anime and manga lover.', FALSE, 5),
-
-('Fiona Gallagher', 'fiona', 'fiona@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-55, FALSE, '1991-06-06', 'Loves traveling and photography.', FALSE, 6),
-
-('George Martin', 'george', 'george@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-95, FALSE, '1975-07-07', 'Fantasy writer and fan.', FALSE, 7),
-
-('Hannah Montana', 'hannah', 'hannah@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-60, FALSE, '1998-08-08', 'Pop culture enthusiast.', FALSE, 8),
-
-('Ian Malcolm', 'ian', 'ian@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-75, FALSE, '1980-09-09', 'Dinosaur expert and scientist.', FALSE, 9),
-
-('Jack Sparrow', 'jack', 'jack@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-65, FALSE, '1980-10-10', 'Pirate captain and adventurer.', FALSE, 10),
-
-('Katherine Pierce', 'katherine', 'katherine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfI', 
-50, FALSE, '1993-11-11', 'Mystery novel lover.', FALSE, 11),
+('Naruto Uzumaki', 'dattebayo', 'naruto@konoha.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 50, FALSE, '1997-10-10', 'Future Hokage', FALSE, 51),
+('Goku Son', 'saiyan_warrior', 'goku@dragonball.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 75, FALSE, '1984-04-05', 'Protector of Earth', FALSE, 52),
+('Sherlock Holmes', 'consulting_detective', 'sherlock@221b.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 90, FALSE, '1854-01-06', 'The world only consulting detective', FALSE, 53),
+('Elsa Arendelle', 'ice_queen', 'elsa@frozen.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 60, FALSE, '1991-12-21', 'Queen of Arendelle', FALSE, 54),
+('Peter Parker', 'spidey', 'peter@dailybugle.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 80, FALSE, '1995-08-15', 'Friendly neighborhood Spider-Man', FALSE, 55),
+('Bob Johnson', 'bob', 'bob@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 40, FALSE, '1988-02-02', 'Loves to share news.', FALSE, 2),
+('Charlie Brown', 'charlie', 'charlie@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 45, FALSE, '1992-03-03', 'Tech enthusiast.', FALSE, 3),
+('Diana Prince', 'diana', 'diana@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 85, FALSE, '1985-04-04', 'Avid reader and commenter.', FALSE, 4),
+('Edward Elric', 'edward', 'edward@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 70, FALSE, '1994-05-05', 'Anime and manga lover.', FALSE, 5),
+('Fiona Gallagher', 'fiona', 'fiona@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 55, FALSE, '1991-06-06', 'Loves traveling and photography.', FALSE, 6),
+('George Martin', 'george', 'george@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 95, FALSE, '1975-07-07', 'Fantasy writer and fan.', FALSE, 7),
+('Hannah Montana', 'hannah', 'hannah@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 60, FALSE, '1998-08-08', 'Pop culture enthusiast.', FALSE, 8),
+('Ian Malcolm', 'ian', 'ian@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 75, FALSE, '1980-09-09', 'Dinosaur expert and scientist.', FALSE, 9),
+('Jack Sparrow', 'jack', 'jack@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 65, FALSE, '1980-10-10', 'Pirate captain and adventurer.', FALSE, 10),
+('Katherine Pierce', 'katherine', 'katherine@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy', 50, FALSE, '1993-11-11', 'Mystery novel lover.', FALSE, 11),
 ('Liam Neeson', 'liam', 'liam@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1982-12-12', 'Film and theater enthusiast.', FALSE, 12),
 ('Monica Geller', 'monica', 'monica@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1980-01-13', 'Chef and cleanliness freak.', FALSE, 13),
 ('Nina Williams', 'nina', 'nina@example.com', '$2y$10$BPqmTy3x20LFhZOytOMToecjvIAOMnyJ4LmwY4ZQrKyLb3GWKIfIy',0, FALSE, '1979-02-14', 'Martial artist and game developer.', FALSE, 14),
@@ -1985,7 +1957,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 -- Insert comments
 -- Comments for the post "The Rise of AI" (post_id 1)
 INSERT INTO comments (content, authenticated_user_id, post_id, parent_comment_id) VALUES
-('I think AI is definitely the future! But it does raise a lot of ethical questions.', 1, 1, NULL),
+('I think AI is definitely the future! But it does raise a lot of ethical questions.', 3, 1, NULL),
 ('Agreed, especially when it comes to job displacement. It’s a big concern.', 2, 1, 1),
 ('AI is already revolutionizing industries, but it’s not without its problems.', 3, 1, NULL);
 
@@ -2163,7 +2135,7 @@ BEGIN
     -- Generate 10,000 random votes for 100 users
     FOR vote_count IN 1..10000 LOOP
         -- Assign a random user ID between 1 and 100
-        user_id := (SELECT FLOOR(RANDOM() * 100 + 1)::INT);
+        user_id := (SELECT FLOOR(RANDOM() * 99 + 2)::INT);
 
         -- Randomize vote type (80% upvote, 20% downvote)
         is_upvote := (RANDOM() < 0.8);
@@ -2358,7 +2330,6 @@ INSERT INTO community_followers (authenticated_user_id, community_id) VALUES
 (2, 1), -- User 2 follows 'AnimeFans'
 (3, 1), -- User 3 follows 'AnimeFans'
 (4, 1), -- User 4 follows 'AnimeFans'
-(1, 2), -- User 1 follows 'Superheroes'
 (5, 2), -- User 5 follows 'Superheroes'
 (6, 2), -- User 6 follows 'Superheroes'
 (7, 3), -- User 7 follows 'Mythology'
@@ -2831,14 +2802,14 @@ DECLARE
     num_followers INT;
 BEGIN
     -- For each user (1 to 100), assign random followers
-    FOR follower_id IN 1..100 LOOP
+    FOR follower_id IN 2..100 LOOP
         -- Determine how many users this user will follow (between 1 and 10)
         num_followers := (SELECT FLOOR(RANDOM() * 10 + 1)::INT);
 
-        FOR i IN 1..num_followers LOOP
+        FOR i IN 2..num_followers LOOP
             -- Randomly select a user to follow, ensuring it is not the same as the follower
             LOOP
-                followed_id := (SELECT FLOOR(RANDOM() * 100 + 1)::INT);
+                followed_id := (SELECT FLOOR(RANDOM() * 99 + 2)::INT);
                 EXIT WHEN followed_id <> follower_id;
             END LOOP;
 
