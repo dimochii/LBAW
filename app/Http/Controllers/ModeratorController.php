@@ -65,4 +65,22 @@ class ModeratorController extends Controller
 
         return response()->json(['message' => 'User has been removed as a moderator successfully.']);
     }
+
+    public function removeFollower($community_id, $user_id)
+    {
+        $community = Community::findOrFail($community_id);
+        $user = AuthenticatedUser::findOrFail($user_id);
+
+        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
+            return response()->json(['error' => 'You do not have permission to remove followers from this community.'], 403);
+        }
+
+        if (!$community->followers->contains($user)) {
+            return response()->json(['error' => 'This user is not a follower of the community.'], 400);
+        }
+
+        $community->followers()->detach($user);
+
+        return response()->json(['message' => 'Follower successfully removed from the community.']);
+    }
 }

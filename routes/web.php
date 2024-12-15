@@ -192,6 +192,7 @@ Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])-
 
 Route::post('/hub/{community_id}/make_moderator/{user_id}', [ModeratorController::class, 'makeModerator'])->middleware('auth')->name('users.make_moderator');
 Route::post('/hub/{community_id}/remove_moderator/{user_id}', [ModeratorController::class, 'removeModerator'])->middleware('auth')->name('users.remove_moderator');
+Route::delete('/hub/{community_id}/remove_follower/{user_id}', [ModeratorController::class, 'removeFollower'])->name('community.remove_follower');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
 
