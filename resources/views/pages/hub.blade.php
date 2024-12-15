@@ -106,7 +106,7 @@
       topics
     </a>
 
-    <a href="{{ url('/hub/' . $community->id . '/moderation') }}"
+    <a href="{{ route('moderation.overview', $community->id)  }}"
       class="py-4 relative group {{ $activeTab === 'moderation' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
       moderation
     </a>

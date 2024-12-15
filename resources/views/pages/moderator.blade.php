@@ -83,14 +83,14 @@
         <td class="px-4 py-4">
           <input id="admin-checkbox-{{ $user->id }}" type="checkbox" class="w-4 h-4 accent-blue-500"
             @if($hub->moderators->pluck('id')->contains($user->id)) checked @endif
-          onclick="toggleModerator({{ $user->id }},  $hub->id , this.checked)"
+          onclick="toggleModerator({{ $user->id }},  {{$id}} , this.checked)"
           >
         </td>
         
         <td class="px-4 py-4">
         <button name="remove-button"
     class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold"
-    onclick="removeFollower({{ $user->id }}, {{ $hub->id }})">
+    onclick="removeFollower({{ $user->id }}, {{ $id }})">
     unfollow
 </button>
         </td>
@@ -322,7 +322,7 @@ function removeFollower(userId, communityId) {
     const confirmationMessage = 'Are you sure you want to remove this user as a follower from the community?';
 
     if (confirm(confirmationMessage)) {
-        fetch(`/community/${communityId}/remove_follower/${userId}`, {
+        fetch(`/hub/${communityId}/remove_follower/${userId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

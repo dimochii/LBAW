@@ -141,6 +141,7 @@ Route::middleware('auth')->group(function () {
   });
 });
 
+
 //Posts
 //creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
