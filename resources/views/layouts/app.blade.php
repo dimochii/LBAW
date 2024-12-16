@@ -246,8 +246,8 @@
               @foreach ($recentHubs as $recent)
               <a href="/hub/{{ $recent['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
-                <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div>
-                <span>/{{ $recent['name'] }}</span>
+                {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
+                <span class="break-all">h/{{ $recent['name'] }}</span>
               </a>
               @php
               $colorIndex = ($colorIndex + 1) % count($colors);
@@ -256,24 +256,25 @@
             </div>
           </div>
 
-          <div class="py-4">
+          <div class="pt-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
-            <a href="{{ url('/hubs/create') }}"
-              class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
-              <span class="">+ create hub</span>
-            </a>
+
             <div class="space-y-1 *:transition-colors *:pl-6">
               @foreach ($userHubs as $hubs)
               <a href="/hub/{{ $hubs['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
-                <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div>
-                <span>/{{ $hubs['name'] }}</span>
+                {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
+                <span class="break-all">h/{{ $hubs['name'] }}</span>
               </a>
               @php
               $colorIndex = ($colorIndex + 1) % count($colors);
               @endphp
               @endforeach
             </div>
+            <a href="{{ url('/hubs/create') }}"
+              class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED] ">
+              <span class="">+ create hub</span>
+            </a>
           </div>
           <!-- Info Section -->
           <div class="py-4">
@@ -308,8 +309,8 @@
         <!-- Hubs Section -->
         <div class="p-4 border-b-2 border-black">
           <div class="flex flex-wrap items-start gap-3">
-            <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}"
-              alt="Community Image" class="rounded-full  size-20">
+            <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" alt="Community Image"
+              class="rounded-full  size-20">
 
             <div class="flex-1 break-words">
               <h2 class="font-medium break-all">/{{ $community->name }}</h2>
@@ -326,43 +327,42 @@
                   <span class="ml-1">Following</span>
                 </div>
               </div>
-              
-              <div>
-              @auth
-                  @if($is_following)
-                      {{-- Estado: Seguindo --}}
-                      <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
-                          @csrf
-                          @method('DELETE')
-                          <button type="submit" 
-                                  class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                        bg-[#F4F2ED] text-black border-2 border-black">
-                              unfollow -
-                          </button>
-                      </form>
-                  @elseif($community->privacy && $community->followRequests->where('authenticated_user_id', Auth::user()->id)->where('request_status', 'pending')->count() > 0)
-                      <button class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                    bg-[#F4F2ED] text-gray-600 border-2 border-black cursor-not-allowed" disabled>
-                          request Pending
-                      </button>
-                  @else
-                      <form id="followForm" action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
-                          @csrf
-                          <button type="submit" 
-                                  class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                        bg-black text-[#F4F2ED]">
-                              follow +
-                          </button>
-                      </form>
 
-                  @endif
-              @else
-                  <a href="{{ route('login') }}" 
-                    class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+              <div>
+                @auth
+                @if($is_following)
+                {{-- Estado: Seguindo --}}
+                <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                        bg-[#F4F2ED] text-black border-2 border-black">
+                    unfollow -
+                  </button>
+                </form>
+                @elseif($community->privacy && $community->followRequests->where('authenticated_user_id',
+                Auth::user()->id)->where('request_status', 'pending')->count() > 0)
+                <button class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                    bg-[#F4F2ED] text-gray-600 border-2 border-black cursor-not-allowed" disabled>
+                  request Pending
+                </button>
+                @else
+                <form id="followForm" action="{{ route('communities.join', $community->id) }}" method="POST"
+                  class="inline">
+                  @csrf
+                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                        bg-black text-[#F4F2ED]">
+                    follow +
+                  </button>
+                </form>
+
+                @endif
+                @else
+                <a href="{{ route('login') }}" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
                             bg-black text-[#F4F2ED]">
-                      follow +
-                  </a>
-              @endauth
+                  follow +
+                </a>
+                @endauth
               </div>
             </div>
           </div>
@@ -374,24 +374,24 @@
           <h3 class="text-sm font-medium text-gray-500 mb-3">moderators</h3>
           <div class="space-y-3">
             @php
-            $moderators = $community->moderators ?? []; 
+            $moderators = $community->moderators ?? [];
             @endphp
             @foreach ($moderators as $moderator)
-              <a href="{{ route('user.profile', $moderator->id) }}" >
+            <a href="{{ route('user.profile', $moderator->id) }}">
               <div class="flex items-center space-x-2 py-2">
-                  <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
-                    <img src="{{ asset($moderator->image->path ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png') }}" 
-                        alt="{{ $moderator->username }}"
-                        class="w-full h-full object-cover">
+                <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
+                  <img
+                    src="{{ asset($moderator->image->path ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png') }}"
+                    alt="{{ $moderator->username }}" class="w-full h-full object-cover">
                 </div>
                 <div>
                   <p class="text-sm font-medium">{{ $moderator['name'] }}</p>
                   <p class="text-xs text-gray-500"><span>
-                    @
-                  </span>{{ $moderator['username'] }}</p>
+                      @
+                    </span>{{ $moderator['username'] }}</p>
                 </div>
-                </div>
-              </a>
+              </div>
+            </a>
             @endforeach
           </div>
         </div>

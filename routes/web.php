@@ -36,7 +36,7 @@ use App\Http\Controllers\LeftController;
 
 // Home
 
-Route::redirect('/', '/news');
+Route::redirect('/', '/global');
 
 
 
@@ -147,21 +147,20 @@ Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
 Route::delete('/posts/delete/{id}', [PostController::class, 'delete'])->middleware('auth')->name('post.delete');
 
+Route::get('/global', [FeedController::class, 'global'])->name('global');
+
 Route::middleware('auth')->group(function () {
   Route::controller(FeedController::class)->group(function () {
     Route::get('/home', 'home')->name('home');
-    Route::get('/global', 'global')->name('global');
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/bestof', 'bestof')->name('bestof');
-
     Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
     Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
     Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->name('users.remove_admin');
   });
 
-  // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
   Route::get('/notifications', function () {
     return view('pages.admin');
   })->name('notifications');

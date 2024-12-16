@@ -15,39 +15,39 @@
   </div> --}}
 
   <!-- Check if there are any news items -->
-  
+
   @php
-        $activeTab = request()->query('tab', 'News'); // Default to 'News'
-      @endphp
+  $activeTab = request()->query('tab', 'News'); // Default to 'News'
+  @endphp
 
-    @include('partials.news_topic_nav', ['url' => '/recent/'])
-    @if ($activeTab === 'News')
-    @if($news->isEmpty())
-      <p>No news available.</p>
-    @else
-          @foreach($news as $post)
-            @include('partials.post', [
-            'news' => 'true',
-            'post' => $post->news,
-            'item' => $post,
-            ])
-          @endforeach
-        </div>
-    @endif
-    @elseif ($activeTab === 'Topics')
-    @if($topics->isEmpty())
-      <p>No topics available.</p>
-    @else
-          @foreach($topics as $post)
-            @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
-          @endforeach
-      </div>
-    @endif
-  @endif
+  @include('partials.news_topic_nav', ['url' => '/recent/'])
+  @if ($activeTab === 'News')
+  @if($news->isEmpty())
+  <p>No news available.</p>
+  @else
+  @foreach($news as $post)
+  @include('partials.post', [
+  'news' => 'true',
+  'post' => $post->news,
+  'item' => $post,
+  ])
+  @endforeach
+</div>
+@endif
+@elseif ($activeTab === 'Topics')
+@if($topics->isEmpty())
+<p>No topics available.</p>
+@else
+@foreach($topics as $post)
+@include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
+@endforeach
+</div>
+@endif
+@endif
 
 
-  <script>
-    const voteButtons = document.querySelectorAll("input[type='checkbox']");
+<script>
+  const voteButtons = document.querySelectorAll("input[type='checkbox']");
 
 voteButtons.forEach((button) => {
   
@@ -102,6 +102,8 @@ voteButtons.forEach((button) => {
     }
   });
 });
-  </script>
+
+
+</script>
 </div>
 @endsection
