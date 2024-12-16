@@ -367,8 +367,14 @@
                         <div class="flex mb-4">
                             <div class="w-1/2 pr-2">
                                 <h4 class="font-semibold mb-2">Markdown Input</h4>
-                                <textarea class="w-full h-40 p-2 border rounded font-mono text-sm" placeholder="Type your markdown here..."> Learn More</textarea>
+                                <textarea class="w-full h-40 p-2 border rounded font-mono text-sm" placeholder="Type your markdown here..."> 
+                                    # Welcome to Hubs!
+                                    This is a **collaborative** platform where we share *interesting* stories.
+                                    > Community drives innovation.
+                                    Learn More](#)
+                                </textarea>
                             </div>
+
                             <div class="w-1/2 pl-2">
                                 <h4 class="font-semibold mb-2">Live Preview</h4>
                                 <div id="markdown-preview" class="h-40 p-2 border rounded overflow-auto prose">
