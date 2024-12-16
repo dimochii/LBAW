@@ -64,6 +64,197 @@
         </div>
     </section>
 
+    <section class="border-b-2 border-t-2 border-black py-20 px-8">
+    <div class="container mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="font-medium text-6xl text-black mb-6">
+                Discover WhatsUp Features
+            </h2>
+            <p class="text-[#555555] font-light max-w-2xl mx-auto text-xl">
+                Explore the powerful tools that make WhatsUp your ultimate storytelling and community platform.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!--  News Discovery -->
+            <div class="border-2 border-black p-6">
+                <h3 class="text-3xl font-medium text-black mb-4">
+                    News Discovery
+                </h3>
+                <p class="text-[#555555] font-light leading-relaxed mb-6">
+                    Instantly fetch trending news with rich preview thumbnails. Explore curated content from diverse sources at your fingertips.
+                </p>
+                <!-- Image from a News Link -->
+                <div class="border-2 p-4 mb-4">
+                    <img src="https://via.placeholder.com/600x400" alt="News Example" class="w-full mb-4">
+                    <p class="font-semibold text-gray-700">Breaking News: Global Economy on the Rise!</p>
+                    <p class="text-sm text-gray-600">This is a preview of trending news about the global economic recovery...</p>
+                </div>
+            </div>
+
+            <!-- Community Connections -->
+            <div class="border-2 border-black p-6">
+                <h3 class="text-3xl font-medium text-black mb-4">
+                    Community Connections
+                </h3>
+                <p class="text-[#555555] font-light leading-relaxed mb-6">
+                    Create and join interest-based communities. Find your tribe, share passions, and expand your digital network.
+                </p>
+                <!--  Reddit-like Community Threads -->
+                <div class="border-2 border-black p-4 mb-4">
+                    <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-md mb-4">
+                        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
+                             alt="Community Image" class="rounded-full ring-2 ring-black h-36 w-36 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 object-cover">
+                        <div>
+                            <h4 class="text-xl font-semibold text-gray-800">h\Global Economy Discussions</h4>
+                            <p class="text-sm text-gray-600">A space to talk about the world's financial situation and its future...</p>
+                            <div class="flex items-center space-x-4 mt-4">
+                                <button class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
+                                        bg-black text-[#F4F2ED]">follow +</button>
+                                <span class="text-gray-600">1.2k followers</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Discussions  -->
+            <div class="border-2 border-black md:col-span-2 p-6">
+                <h3 class="text-3xl font-medium text-black mb-4">
+                    Interactive Discussions
+                </h3>
+                <p class="text-[#555555] font-light leading-relaxed mb-6">
+                    Engage deeply with rich commenting tools. Share insights, ask questions, and connect with like-minded individuals.
+                </p>
+                <section class="">
+                    <div class="container px-0 mx-auto sm:px-5">
+
+                        <div
+                            class="flex-col w-full py-4 mx-auto bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3">
+                            <div class="flex flex-row">
+                                <img class="object-cover w-12 h-12 border-2 border-gray-300 rounded-full" alt="Noob master's avatar"
+                                    src="https://images.unsplash.com/photo-1517070208541-6ddc4d3efbcb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&faces=1&faceindex=1&facepad=2.5&w=500&h=500&q=80">
+                                <div class="flex-col mt-1">
+                                    <div class="flex items-center flex-1 px-4 font-bold leading-tight">Noob master
+                                        <span class="ml-2 text-xs font-normal text-gray-500">2 weeks ago</span>
+                                    </div>
+                                    <div class="flex-1 px-2 ml-2 text-sm font-medium leading-loose text-gray-600">Wow!!! how was created this website?
+                                    </div>
+                                    <button class="inline-flex items-center px-1 pt-2 ml-1 flex-column">
+                                    <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M21,21H3L12,3Z" />
+                                            </svg>
+                                    <p> 22</p>
+                                    <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M21,21H3L12,3Z" />
+                                            </svg>
+                                    </button>
+                                    <button class="inline-flex items-center px-1 -ml-1 flex-column">
+                                    <svg
+                                        class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
+                                        viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <g id="Layer_2" data-name="Layer 2">
+                                        <g id="invisible_box" data-name="invisible box">
+                                            <rect width="48" height="48" fill="none" />
+                                            <rect width="48" height="48" fill="none" />
+                                        </g>
+                                        <g id="icons_Q2" data-name="icons Q2">
+                                            <path
+                                            d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
+                                        </g>
+                                        </g>
+                                    </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <hr class="my-2 ml-16 border-gray-200">
+                            <div class="flex flex-row pt-1 md-10 md:ml-16">
+                                <img class="w-12 h-12 border-2 border-gray-300 rounded-full" alt="Emily's avatar"
+                                    src="https://images.unsplash.com/photo-1581624657276-5807462d0a3a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&fit=facearea&faces=1&faceindex=1&facepad=2.5&w=500&h=500&q=80">
+                                <div class="flex-col mt-1">
+                                    <div class="flex items-center flex-1 px-4 font-bold leading-tight">Emily
+                                        <span class="ml-2 text-xs font-normal text-gray-500">5 days ago</span>
+                                    </div>
+                                    <div class="flex-1 px-2 ml-2 text-sm font-medium leading-loose text-gray-600">I love this! Can you
+                                        share the code?
+                                    </div>
+                                    <button class="inline-flex items-center px-1 pt-2 ml-1 flex-column">
+                                    <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M21,21H3L12,3Z" />
+                                            </svg>
+                                    <p> 10</p>
+                                    <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M21,21H3L12,3Z" />
+                                            </svg>
+                                    </button>
+                                    <button class="inline-flex items-center px-1 -ml-1 flex-column">
+                                    <svg
+                                        class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
+                                        viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <g id="Layer_2" data-name="Layer 2">
+                                        <g id="invisible_box" data-name="invisible box">
+                                            <rect width="48" height="48" fill="none" />
+                                            <rect width="48" height="48" fill="none" />
+                                        </g>
+                                        <g id="icons_Q2" data-name="icons Q2">
+                                            <path
+                                            d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
+                                        </g>
+                                        </g>
+                                    </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex-col w-full py-4 mx-auto mt-3 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3">
+                            <div class="flex flex-row md-10">
+                                <img class="w-12 h-12 border-2 border-gray-300 rounded-full" alt="Anonymous's avatar"
+                                    src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&faces=1&faceindex=1&facepad=2.5&w=500&h=500&q=80">
+                                <div class="flex-col mt-1">
+                                    <div class="flex items-center flex-1 px-4 font-bold leading-tight">Anonymous
+                                        <span class="ml-2 text-xs font-normal text-gray-500">3 days ago</span>
+                                    </div>
+                                    <div class="flex-1 px-2 ml-2 text-sm font-medium leading-loose text-gray-600">This website is so cool!
+                                    </div>
+                                    <button class="inline-flex items-center px-1 pt-2 ml-1 flex-column">
+                                    <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M21,21H3L12,3Z" />
+                                            </svg>
+                                    <p> 9</p>
+                                    <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M21,21H3L12,3Z" />
+                                            </svg>
+                                    </button>
+                                    <button class="inline-flex ">
+                                    <svg
+                                        class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
+                                        viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <g id="Layer_2" data-name="Layer 2">
+                                        <g id="invisible_box" data-name="invisible box">
+                                            <rect width="48" height="48" fill="none" />
+                                            <rect width="48" height="48" fill="none" />
+                                        </g>
+                                        <g id="icons_Q2" data-name="icons Q2">
+                                            <path
+                                            d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
+                                        </g>
+                                        </g>
+                                    </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+        </div>
+        </div>
+    </div>
+</section>
+
+
     <div class="bg-pastelBlue py-16 px-8 animate-fadeInUp divide-y-2 divide-black border-b-2 border-black">
         <div class="container mx-auto py-4">
             <h2 class=" py-4 mb-8 text-center tracking-tighter font-medium text-6xl">Markdown: Your Commenting Companion</h2>

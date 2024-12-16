@@ -8,7 +8,7 @@
     <div class="flex items-start gap-6">
       <img src="{{ asset( $community->image->path ?? 'images/groupdefault.jpg') }}"
         onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
-        alt="Community Image" class="rounded-full  h-32 w-32">
+        alt="Community Image" class="rounded-full ring-2 ring-black h-36 w-36 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 object-cover">
       <div>
         <div class="flex items-center gap-2">
           <!-- Community Name -->
@@ -149,7 +149,8 @@
         @auth
         @if($is_following)
         <a href="{{ route('post.create', ['community_id' => $community->id]) }}"
-          class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white text-sm font-medium rounded-full hover:bg-blue-600 transition-colors duration-200">
+          class="mt-4 inline-block px-11 py-3 bg-pastelBlue text-white text-sm font-medium rounded-full 
+          hover:bg-blue-600 transition-colors duration-200 border-2 border-black">
           Create the first post
         </a>
         @endif
