@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Community;
 use App\Models\Post;
+use App\Models\News;
+use App\Models\Topic;
 use App\Models\AuthenticatedUser;
 
 class SearchController extends Controller
@@ -43,7 +45,7 @@ class SearchController extends Controller
                          'name' => $post->title,
                          'content' => $post->content,
                          'community' => $post->community->name,
-                         'community_route' => url("/post/{$post->community->id}"),
+                         'community_route' => url("/post/{$post->id}"),
                      ];
                  });
 
@@ -54,7 +56,7 @@ class SearchController extends Controller
                               ->map(function($user) {
                                   return [
                                       'name' => $user->name,
-                                      'image' => $user->image_id ? asset("images/user{$user->image_id}.jpg") : null,
+                                      'image' => $user->image_id ? asset($user->image->path) : null,
                                       'route' => url("/users/{$user->id}/profile"),
                                   ];
                               });
