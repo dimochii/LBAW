@@ -549,35 +549,5 @@
     }
 }
 
-function removeFollower(userId, communityId) {
-    const confirmationMessage = 'Are you sure you want to remove this user as a follower from the community?';
-
-    if (confirm(confirmationMessage)) {
-        fetch(`/community/${communityId}/remove_follower/${userId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to remove follower.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert(data.message);
-
-            const followerRow = document.getElementById(`follower-row-${userId}`);
-            if (followerRow) {
-                followerRow.remove();
-            }
-        })
-        .catch(error => {
-            alert(error.message);
-        });
-    }
-}
 
 </script>

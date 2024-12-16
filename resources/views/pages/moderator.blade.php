@@ -83,7 +83,7 @@
         <td class="px-4 py-4">
           <input id="admin-checkbox-{{ $user->id }}" type="checkbox" class="w-4 h-4 accent-blue-500"
             @if($hub->moderators->pluck('id')->contains($user->id)) checked @endif
-          onclick="toggleModerator({{ $user->id }},  {{$hub->id}} , this.checked)"
+          onclick="toggleModerator({{ $user->id }}, {{$id}} , this.checked)"
           >
         </td>
         
@@ -235,7 +235,6 @@ function toggleModerator(user_id, community_id, isChecked) {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({})
         })
         .then(response => {
             if (!response.ok) {
@@ -255,35 +254,5 @@ function toggleModerator(user_id, community_id, isChecked) {
     }
 }
 
-function removeFollower(userId, communityId) {
-    const confirmationMessage = 'Are you sure you want to remove this user as a follower from the community?';
-
-    if (confirm(confirmationMessage)) {
-        fetch(`/hub/${communityId}/remove_follower/${userId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to remove follower.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert(data.message);
-
-            const followerRow = document.getElementById(`follower-row-${userId}`);
-            if (followerRow) {
-                followerRow.remove();
-            }
-        })
-        .catch(error => {
-            alert(error.message);
-        });
-    }
-}
 
 </script>

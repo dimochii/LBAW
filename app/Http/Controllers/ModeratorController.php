@@ -398,7 +398,7 @@ class ModeratorController extends Controller
 
   public function  makeModerator($user_id, $community_id)
     {
-        dd($user_id);
+        dd($user_id, $community_id);
         $community = Community::find($community_id);
         $userToAdd = AuthenticatedUser::find($user_id);
 
