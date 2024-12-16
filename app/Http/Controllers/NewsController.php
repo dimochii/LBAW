@@ -20,15 +20,18 @@ class NewsController extends Controller
    */
   public function list()
   {
-    $user = Auth::user();
 
-    if ($user->is_suspended) {
+    $user = Auth::user();
+    if($user != null) {
+      if ($user->is_suspended) {
         $suspensions = $user->suspensions; 
 
         return view('pages.suspension', [
             'suspensions' => $suspensions
         ]);
+      }
     }
+    
   
 
       $posts = Post::all();

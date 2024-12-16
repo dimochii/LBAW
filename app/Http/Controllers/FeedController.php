@@ -94,10 +94,14 @@ class FeedController extends Controller
   }
   public function global()
   {
-    if(Auth::user()->is_suspended) {
+    if(Auth::user() != null)
+    {
+      if(Auth::user()->is_suspended) {
 
-      return view('pages.suspension');
+        return view('pages.suspension');
+      }
     }
+    
     // Check if cached posts exist
     // $cachedPosts = Cache::get('popular_posts');
 
