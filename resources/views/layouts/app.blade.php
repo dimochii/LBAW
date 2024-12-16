@@ -309,7 +309,7 @@
         <div class="p-4 border-b-2 border-black">
           <div class="flex flex-wrap items-start gap-3">
             <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}"
-              alt="Community Image" class="rounded-full  size-20">
+              alt="Community Image" class="rounded-full ring-2 ring-black  size-20">
 
             <div class="flex-1 break-words">
               <h2 class="font-medium break-all">/{{ $community->name }}</h2>
@@ -318,19 +318,18 @@
               </p>
               <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
                 <div class="flex items-center shrink-0">
-                  <span>{{ $community->read_count }}</span>
-                  <span class="ml-1">Reading</span>
+                  <span>{{ number_format($followers_count ?? 0, 0) }}</span>
+                  <span class="ml-1">reading</span>
                 </div>
                 <div class="flex items-center shrink-0">
-                  <span>{{ $community->followers_count }}</span>
-                  <span class="ml-1">Following</span>
+                  <span>{{ number_format($posts_count ?? 0, 0) }}</span>
+                  <span class="ml-1">posts</span>
                 </div>
               </div>
               
               <div>
               @auth
                   @if($is_following)
-                      {{-- Estado: Seguindo --}}
                       <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
                           @csrf
                           @method('DELETE')

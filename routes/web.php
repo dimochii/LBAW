@@ -93,7 +93,7 @@ Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware('auth');
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware('auth');
 Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware('auth')->name('user.delete');
-
+Route::delete('deleteaccount/{id}',[AuthenticatedUserController::class,'deleteUserAccount'])->middleware('auth')->name('admin.delete');
 
 //admin
 Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware('auth');

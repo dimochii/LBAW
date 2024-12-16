@@ -46,6 +46,11 @@ class AuthenticatedUserController extends Controller
 
     public function show($id)
     {
+        if(Auth::user()->is_suspended) {
+
+            return view('pages.suspension');
+        }
+
         $user = AuthenticatedUser::findOrFail($id);
         $followers = $user->followers;
         $following = $user->follows;
@@ -76,6 +81,11 @@ class AuthenticatedUserController extends Controller
 
     public function getFollowers($id)
     {
+        if(Auth::user()->is_suspended) {
+
+            return view('pages.suspension');
+        }
+
         $user = AuthenticatedUser::findOrFail($id);
         $followers = $user->followers;
 
@@ -84,6 +94,10 @@ class AuthenticatedUserController extends Controller
 
     public function getFollows($id)
     {
+        if(Auth::user()->is_suspended) {
+
+            return view('pages.suspension');
+        }
         $user = AuthenticatedUser::findOrFail($id);
         $following = $user->follows;
 
@@ -92,6 +106,11 @@ class AuthenticatedUserController extends Controller
 
     public function edit($id)
     {
+        if(Auth::user()->is_suspended) {
+
+            return view('pages.suspension');
+        }
+        
         $user = AuthenticatedUser::findOrFail($id);
 
         if (!$this->authorize('editProfile', $user)) {
@@ -391,18 +410,19 @@ class AuthenticatedUserController extends Controller
         }
         //update post ---> solo writer --> deleted user// co-author ---> just remove
         foreach ($user->authoredPosts as $post) {
-
             $authorCount = $post->authors()->count();
             if ($authorCount === 1) {
                 $post->update(['authenticated_user_id' => $deletedUserId]);
+                $post->authors()->syncWithoutDetaching([$deletedUserId]); 
+                $post->authors()->detach($user->id); 
             } 
-            
+
             else {
-    
-                $post->authors()->detach($user->id); // Remove the current user from authors
-        $post->authors()->attach($deletedUserId); // Add the deleted user as an author
+                $post->authors()->detach($user); 
+                //$post->authors()->attach($deletedUser); // Add the deleted user as an author
             }
         }
+
         //delete user notifications....
         if ($user->notifications()->exists()) {
             $user->notifications()->update(['authenticated_user_id' => $deletedUserId]);
@@ -445,7 +465,8 @@ class AuthenticatedUserController extends Controller
     
         $user = AuthenticatedUser::find($id);
         $deletedUserId = 1;
-        
+        $deletedUser = AuthenticatedUser::find($deletedUserId);
+
         //Update votes --> deleted user
         if ($user->votes()->exists()) {
             $user->votes()->update(['authenticated_user_id' => $deletedUserId]);
@@ -458,18 +479,19 @@ class AuthenticatedUserController extends Controller
 
         //update post ---> solo writer --> deleted user// co-author ---> just remove
         foreach ($user->authoredPosts as $post) {
-
             $authorCount = $post->authors()->count();
             if ($authorCount === 1) {
                 $post->update(['authenticated_user_id' => $deletedUserId]);
+                $post->authors()->syncWithoutDetaching([$deletedUserId]); 
+                $post->authors()->detach($user->id); 
             } 
-            
+
             else {
-    
-                $post->authors()->detach($user->id); // Remove the current user from authors
-                $post->authors()->attach($deletedUserId); // Add the deleted user as an author
+                $post->authors()->detach($user); 
+                //$post->authors()->attach($deletedUser); // Add the deleted user as an author
             }
         }
+     
 
         //delete user notifications....
         if ($user->notifications()->exists()) {
@@ -495,9 +517,8 @@ class AuthenticatedUserController extends Controller
         $user->follows()->detach();
         $user->followers()->detach();
         $user->delete();
-        Auth::logout();
     
-        return redirect('/news')->with('message', 'User account has been successfully deleted.');
+        return redirect()->route('admin.users')->with('message', 'User account has been successfully deleted.');
         
     }
     
