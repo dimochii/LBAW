@@ -323,7 +323,7 @@ function removeFollower(userId, communityId) {
 
     if (confirm(confirmationMessage)) {
         fetch(`/hub/${communityId}/remove_follower/${userId}`, {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
