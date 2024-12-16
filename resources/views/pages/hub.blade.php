@@ -8,7 +8,7 @@
     <div class="flex items-start gap-6">
       <img src="{{ asset( $community->image->path ?? 'images/groupdefault.jpg') }}"
         onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
-        alt="Community Image" class="rounded-full  h-32 w-32">
+        alt="Community Image" class="rounded-full ring-2 ring-black h-36 w-36 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 object-cover">
       <div>
         <div class="flex items-center gap-2">
           <!-- Community Name -->
@@ -16,44 +16,52 @@
 
           <!-- Form for Privacy Toggle -->
 
-          <form action="{{ route('communities.update.privacy', $community) }}" method="POST"
-            class="inline-flex items-center gap-2">
-            @csrf
-            @method('POST')
+          <form action="{{ route('communities.update.privacy', $community) }}" method="POST" class="inline-flex items-center gap-2">
+        @csrf
+        @method('POST')
 
-
-            <!-- Current Privacy Badge -->
-            <span
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $community->privacy ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
-              @if($community->privacy)
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-              </svg>
-              private
-              @else
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                <path d="M7 11h10"></path>
-              </svg>
-              public
-              @endif
-            </span>
-
-            <!-- Dropdown for Privacy Selection -->
-            @if (Auth::check())
+        <!-- Dropdown for Privacy Selection -->
+         @if (Auth::check())
             @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || Auth::user()->is_admin)
-            <select name="privacy" id="privacy-dropdown" onchange="this.form.submit()"
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium border rounded-full {{ $community->privacy === 'private' ? 'border-red-300' : 'border-green-300' }} focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500">
-              <option value="public" {{ $community->privacy === 'public' ? 'selected' : '' }}>public</option>
-              <option value="private" {{ $community->privacy === 'private' ? 'selected' : '' }}>private</option>
-            </select>
+                <div data-route="{{$community->id}}"
+                    class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $community->privacy ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+                    @if($community->privacy)
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Private
+                    @else
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    <path d="M7 11h10"></path>
+                    </svg>
+                    Public
+                @endif
+            </div>
+            @else
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $community->privacy ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+                    @if($community->privacy)
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        private
+                    @else
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            <path d="M7 11h10"></path>
+                        </svg>
+                        public
+                    @endif
+                </span>
             @endif
             @endif
-          </form>
+        </form>
         </div>
 
         <p class="text-gray-600 mt-2 text-sm">{{ $community->description }}</p>
@@ -141,7 +149,8 @@
         @auth
         @if($is_following)
         <a href="{{ route('post.create', ['community_id' => $community->id]) }}"
-          class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white text-sm font-medium rounded-full hover:bg-blue-600 transition-colors duration-200">
+          class="mt-4 inline-block px-11 py-3 bg-pastelBlue text-white text-sm font-medium rounded-full 
+          hover:bg-blue-600 transition-colors duration-200 border-2 border-black">
           Create the first post
         </a>
         @endif
@@ -170,4 +179,63 @@
   </div>
   @endif
 </div>
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const privacies = document.querySelectorAll('[data-route]'); 
+
+    function updatePrivacy(element) {
+        const routeID = element.getAttribute('data-route');
+
+        fetch(`/hub/${routeID}/privacy`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error. Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                if (data.privacy === 'Private') {
+                    element.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Private`;
+                    element.classList = 'cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full bg-red-100 text-red-700';
+                } else if (data.privacy === 'Public') {
+                    element.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    <path d="M7 11h10"></path>
+                    </svg>
+                    Public`;
+                    element.classList = 'cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full bg-green-100 text-green-700';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error updating privacy', error);
+        });
+    }
+
+    privacies.forEach(function (element) {
+        element.addEventListener('click', function () {
+            updatePrivacy(element); 
+        });
+    });
+});
+
+    
+</script>
 @endsection
