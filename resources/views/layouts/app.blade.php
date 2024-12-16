@@ -319,12 +319,12 @@
               </p>
               <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
                 <div class="flex items-center shrink-0">
-                  <span>{{ $community->read_count }}</span>
-                  <span class="ml-1">Reading</span>
+                  <span>{{ number_format($followers_count ?? 0, 0) }}</span>
+                  <span class="ml-1">reading</span>
                 </div>
                 <div class="flex items-center shrink-0">
-                  <span>{{ $community->followers_count }}</span>
-                  <span class="ml-1">Following</span>
+                  <span>{{ number_format($posts_count ?? 0, 0) }}</span>
+                  <span class="ml-1">posts</span>
                 </div>
               </div>
 
