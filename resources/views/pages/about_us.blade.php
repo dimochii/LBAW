@@ -85,10 +85,85 @@
                     Instantly fetch trending news with rich preview thumbnails. Explore curated content from diverse sources at your fingertips.
                 </p>
                 <!-- Image from a News Link -->
-                <div class="border-2 p-4 mb-4">
-                    <img src="https://via.placeholder.com/600x400" alt="News Example" class="w-full mb-4">
-                    <p class="font-semibold text-gray-700">Breaking News: Global Economy on the Rise!</p>
-                    <p class="text-sm text-gray-600">This is a preview of trending news about the global economic recovery...</p>
+                <div class="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16 relative">
+                    <div class="grid grid-cols-1 sm:grid-cols-9 gap-10">
+
+                        <div class="sm:col-span-6 lg:col-span-5">
+                            <a href="#">
+                                <div class="h-56 bg-cover text-center overflow-hidden"
+                                    style="background-image: url('https://tailwindcss.com/img/card-left.jpg')"
+                                    title="Woman holding a mug">
+                                </div>
+                            </a>
+                            <div
+                                class="mt-3 bg-white rounded-b lg:rounded-b-none lg:rounded-r flex flex-col justify-between leading-normal">
+                                <div class="lg:pl-16">
+                                    <a href="#"
+                                        class="text-xs text-indigo-600 uppercase font-medium mb-3 flex items-center hover:text-gray-900 transition duration-500 ease-in-out">
+                                        Fashion
+                                    </a>
+                                    <a href="#"
+                                        class="text-gray-900 font-medium tracking-tight mb-2 hover:text-indigo-600 transition duration-500 ease-in-out">The
+                                        perfect summer sweater! </a>
+                                    <p class="text-gray-700 text-xs mt-2">
+                                    Discover the latest trends and stories from around the globe. Stay informed and engaged with our curated content, 
+                                    designed to bring you the most relevant and exciting news. Join our community and be part of the conversation.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-6 lg:col-span-4">
+                            <div class="flex items-start mb-3 pb-3">
+                                <a href="#" class="inline-block mr-3">
+                                    <div class="w-20 h-20 bg-cover bg-center"
+                                        style="background-image:url(https://media.gettyimages.com/photos/cristiano-ronaldo-of-juventus-fc-looks-dejected-during-the-uefa-of-picture-id1227967060?k=6&amp;m=1227967060&amp;s=612x612&amp;w=0&amp;h=cMSMlRyI6YAzcE_C2KgHGRLeVojHYoUhIvhwPBYv8f4=);">
+                                    </div>
+                                </a>
+                                <div class="text-sm">
+                                    <p class="text-gray-600 text-xs">Aug 18</p>
+                                    <a href="#" class="text-gray-900 font-medium tracking-tight hover:text-indigo-600 leading-none">Cristiano Ronaldo
+                                        of Juventus FC looks dejected during the...</a>
+                                </div>
+                            </div>
+                            <div class="flex items-start mb-3 pb-3">
+                                <a href="#" class="inline-block mr-3">
+                                    <div class="w-20 h-20 bg-cover bg-center"
+                                        style="background-image:url(https://media.gettyimages.com/photos/lionel-messi-and-marcandre-ter-stegen-of-fc-barcelona-waits-in-the-picture-id1266763488?k=6&amp;m=1266763488&amp;s=612x612&amp;w=0&amp;h=8vxz9HfQVfrff5N7d1lBVxtLamRQGK3J3lyHkUuuIiw=);">
+                                    </div>
+                                </a>
+                                <div class="text-sm w-2/3">
+                                    <p class="text-gray-600 text-xs">Jan 18</p>
+                                    <a href="#" class="text-gray-900 font-medium tracking-tight hover:text-indigo-600 leading-none">Barcelona v Bayern
+                                        Munich </a>
+                                </div>
+                            </div>
+                            <div class="flex items-start mb-3 pb-3">
+                                <a href="#" class="inline-block mr-3">
+                                    <div class="w-20 h-20 bg-cover bg-center"
+                                        style="background-image:url(https://media.gettyimages.com/photos/cristiano-ronaldo-of-juventus-fc-looks-dejected-during-the-uefa-of-picture-id1227967060?k=6&amp;m=1227967060&amp;s=612x612&amp;w=0&amp;h=cMSMlRyI6YAzcE_C2KgHGRLeVojHYoUhIvhwPBYv8f4=);">
+                                    </div>
+                                </a>
+                                <div class="text-sm">
+                                    <p class="text-gray-600 text-xs">Aug 18</p>
+                                    <a href="#" class="text-gray-900 font-medium tracking-tight hover:text-indigo-600 leading-none">Cristiano Ronaldo
+                                        of Juventus FC looks dejected during the...</a>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <a href="#" class="inline-block mr-3">
+                                    <div class="w-20 h-20 bg-cover bg-center"
+                                        style="background-image:url(https://media.gettyimages.com/photos/lionel-messi-of-fc-barcelona-looks-dejected-following-his-teams-in-picture-id1266341828?k=6&amp;m=1266341828&amp;s=612x612&amp;w=0&amp;h=FZi-bSrIlOEE01780h79GsbBYPqZo2l3aaCxoktWADY=);">
+                                    </div>
+                                </a>
+                                <div class="text-sm w-2/3">
+                                    <p class="text-gray-600 text-xs">July 23</p>
+                                    <a href="#" class="text-gray-900 font-medium tracking-tight hover:text-indigo-600 leading-none">Barcelona v Bayern
+                                        Munich - UEFA Champions League </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -151,7 +226,7 @@
                                     </button>
                                     <button class="inline-flex items-center px-1 -ml-1 flex-column">
                                     <svg
-                                        class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
+                                        class="cursor-pointer ml-4 h-5 min-w-5 transition-all ease-out  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
                                         viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                                         <g id="Layer_2" data-name="Layer 2">
                                         <g id="invisible_box" data-name="invisible box">
@@ -189,7 +264,7 @@
                                     </button>
                                     <button class="inline-flex items-center px-1 -ml-1 flex-column">
                                     <svg
-                                        class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
+                                        class="cursor-pointer ml-4 h-5 min-w-5  transition-all ease-out  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
                                         viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                                         <g id="Layer_2" data-name="Layer 2">
                                         <g id="invisible_box" data-name="invisible box">
@@ -229,7 +304,7 @@
                                     </button>
                                     <button class="inline-flex ">
                                     <svg
-                                        class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
+                                        class="cursor-pointer ml-4 h-5 min-w-5  transition-all ease-out  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
                                         viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                                         <g id="Layer_2" data-name="Layer 2">
                                         <g id="invisible_box" data-name="invisible box">
@@ -253,8 +328,6 @@
         </div>
     </div>
 </section>
-
-
     <div class="bg-pastelBlue py-16 px-8 animate-fadeInUp divide-y-2 divide-black border-b-2 border-black">
         <div class="container mx-auto py-4">
             <h2 class=" py-4 mb-8 text-center tracking-tighter font-medium text-6xl">Markdown: Your Commenting Companion</h2>
