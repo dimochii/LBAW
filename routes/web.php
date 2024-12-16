@@ -189,9 +189,9 @@ Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware(
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
 
-Route::post('/hub/{community_id}/make_moderator/{user_id}', [ModeratorController::class, 'makeModerator'])->middleware('auth')->name('users.make_moderator');
-Route::post('/hub/{community_id}/remove_moderator/{user_id}', [ModeratorController::class, 'removeModerator'])->middleware('auth')->name('users.remove_moderator');
-Route::post('/hub/{community_id}/remove_follower/{user_id}', [ModeratorController::class, 'removeFollower'])->name('community.remove_follower');
+Route::post('/users/{user_id}/{community_id}/make_moderator', [ModeratorController::class, 'makeModerator'])->middleware('auth')->name('users.make_moderator');
+Route::post('/users/{user_id}/{community_id}/remove_moderator', [ModeratorController::class, 'removeModerator'])->middleware('auth')->name('users.remove_moderator');
+Route::delete('/users/{user_id}/{community_id}/remove_follower', [ModeratorController::class, 'removeFollower'])->name('community.remove_follower');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
 Route::middleware('auth')->group(function () {

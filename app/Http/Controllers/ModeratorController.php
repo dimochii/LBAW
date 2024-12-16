@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Community;
 use App\Models\News;
 use App\Models\Topic;
+use App\Models\AuthenticatedUser;
 use Carbon\Carbon;
 use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
 use Illuminate\Http\Request;
@@ -397,7 +398,7 @@ class ModeratorController extends Controller
 
   public function  makeModerator($user_id, $community_id)
     {
-
+        dd($user_id);
         $community = Community::find($community_id);
         $userToAdd = AuthenticatedUser::find($user_id);
 
@@ -419,33 +420,16 @@ class ModeratorController extends Controller
         $userToRemove = AuthenticatedUser::find($user_id);
 
         if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
-            return response()->json(['error' => 'You do not have permission to remove a moderator from this community.'], 403);
+            return response()->view('errors.403', [], 403);
         }
 
         if (!$community->moderators->contains($userToRemove)) {
-            return response()->json(['error' => 'This user is not a moderator of the community.'], 400);
+            return response()->view('errors.400', [], 400);
         }
 
         $community->moderators()->detach($userToRemove);
 
-        return response()->json(['message' => 'User has been removed as a moderator successfully.']);
+        return redirect()->back()->with('success', 'User has been removed as a moderator successfully.');
     }
 
-    public function removeFollower($community_id, $user_id)
-    {
-        $community = Community::findOrFail($community_id);
-        $user = AuthenticatedUser::findOrFail($user_id);
-
-        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
-            return response()->json(['error' => 'You do not have permission to remove followers from this community.'], 403);
-        }
-
-        if (!$community->followers->contains($user)) {
-            return response()->json(['error' => 'This user is not a follower of the community.'], 400);
-        }
-
-        $community->followers()->detach($user);
-
-        return response()->json(['message' => 'Follower successfully removed from the community.']);
-    }
 }
