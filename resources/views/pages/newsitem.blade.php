@@ -540,9 +540,8 @@
     const contributorsContainer = document.getElementById('contributors-images');
     const authors = @json($newsItem->post->authors);
     
-    contributorsContainer.innerHTML = ''; // Limpa os itens existentes.
+    contributorsContainer.innerHTML = ''; 
     
-    // Adiciona todas as imagens lado a lado.
     authors.forEach(author => {
       const anchor = document.createElement('a');
       anchor.href = `{{ route('user.profile', ':id') }}`.replace(':id', author.id);
@@ -557,7 +556,6 @@
       contributorsContainer.appendChild(anchor);
     });
 
-    // Remove o botão "+" após expandir.
     this.remove();
   });
 

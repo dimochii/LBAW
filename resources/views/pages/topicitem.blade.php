@@ -8,8 +8,8 @@
       <div class="flex items-center h-8 relative">
       <a class="flex items-center" href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
         <img src="{{ asset($topicItem->post->community->image->path ?? 'images/groupdefault.jpg') }}" 
-        class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
-        <span class="text-2xl font-light underline-effect">h/{{ $topicItem->post->community->name ?? 'Unknown Community' }}</span>
+        class="size-8 rounded-full ring-2  ring-white">
+        <span class="text-2xl font-light underline-effect px-2">h/{{ $topicItem->post->community->name ?? 'Unknown Community' }}</span>
       </a>
      
         {{--
@@ -150,19 +150,27 @@
     </div> --}}
     {{-- ml-[{{ $index * 18 }}px] --}}
 
-    <div class="grid cursor-pointer group mr-auto gap-4 items-center">
-      @foreach($topicItem->post->authors as $index => $author)
-      <a href="{{ route('user.profile', $author->id) }}"
-        class="transition-all transform col-start-1 row-start-1 ml-[{{ $index * 14 }}px] group-hover:ml-[{{$index * 36}}px]">
-        <img src="{{ asset($author->image->path ?? '/images/default.jpg') }}" 
-          class="max-w-full rounded-3xl min-w-[32px] w-[32px]">
-      </a>
-      @endforeach
+    <div id="contributors-container" class="flex items-center space-x-2">
+      <div class="flex -space-x-4 rtl:space-x-reverse items-center transition-all" id="contributors-images">
+        @foreach($topicItem->post->authors->take(4) as $author)
+        <a href="{{ route('user.profile', $author->id) }}" class="group">
+          <img src="{{ asset($author->image->path ?? '/images/default.jpg') }}" alt="{{ $author->name }}"
+            class="w-10 h-10 border-2 border-white rounded-full ">
+        </a>
+        @endforeach
+        @if($topicItem->post->authors->count() > 4)
+        <button id="expand-button"
+          class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-slate-600 border-2 border-white rounded-full hover:bg-gray-600">
+          +{{ $topicItem->post->authors->count() - 4 }}
+        </button>
+        @endif
+      </div>
+    </div>
       <div class="col-start-2 row-start-1">
         contributors • {{$topicItem->post->creation_date ? $topicItem->post->creation_date->diffForHumans() : 'Unknown
         date'}}
       </div>
-    </div>
+ 
 
     <div data-text="markdown"
       class="break-words font-vollkorn max-w-[95%] prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded prose-code:text-[#4793AF]">
@@ -522,6 +530,29 @@
         console.error('Error while posting comment:', error);
       }
   })
+
+  document.getElementById('expand-button')?.addEventListener('click', function () {
+    const contributorsContainer = document.getElementById('contributors-images');
+    const authors = @json($topicItem->post->authors);
+    
+    contributorsContainer.innerHTML = ''; 
+    
+    authors.forEach(author => {
+      const anchor = document.createElement('a');
+      anchor.href = `{{ route('user.profile', ':id') }}`.replace(':id', author.id);
+      anchor.className = 'group';
+
+      const img = document.createElement('img');
+      img.src = `{{ asset('images/user' . ':image_id' . '.jpg') }}`.replace(':image_id', author.image_id);//nao sei mudar nisto :(, depois voltar
+      img.alt = author.name;
+      img.className = 'w-10 h-10 border-2 border-white rounded-full dark:border-gray-800';
+
+      anchor.appendChild(img);
+      contributorsContainer.appendChild(anchor);
+    });
+
+    this.remove();
+  });
 
 
   </script>
