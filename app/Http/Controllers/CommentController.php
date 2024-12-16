@@ -128,6 +128,99 @@ class CommentController extends Controller
             'comment' => $comment,
         ], 200);
     }
+
+    public function upvote($post_id, $comment_id)
+    {
+        $comment = Comment::findOrFail($comment_id);
+        $user = Auth::user();
+    
+        $existingVote = $comment->votes()->where('authenticated_user_id', $user->id)->first();
+    
+        if ($existingVote) {
+            if ($existingVote->upvote) {
+                return redirect()->back()->with('success', 'You have already upvoted this comment.');
+            }
+            $existingVote->update(['upvote' => true]);
+        } else {
+            $vote = Vote::create(['upvote' => true, 'authenticated_user_id' => $user->id]);
+            CommentVote::create([
+                'vote_id' => $vote->id,
+                'comment_id' => $comment->id,
+            ]);
+        }
+    
+        return redirect()->back()->with('success', 'Comment upvoted successfully.');
+    }
+
+    public function downvote($post_id, $comment_id)
+{
+    $comment = Comment::findOrFail($comment_id);
+    $user = Auth::user();
+
+    $existingVote = $comment->votes()->where('authenticated_user_id', $user->id)->first();
+
+    if ($existingVote) {
+        if (!$existingVote->upvote) {
+            return redirect()->back()->with('success', 'You have already downvoted this comment.');
+        }
+        $existingVote->update(['upvote' => false]);
+    } else {
+        $vote = Vote::create(['upvote' => false, 'authenticated_user_id' => $user->id]);
+        CommentVote::create([
+            'vote_id' => $vote->id,
+            'comment_id' => $comment->id,
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Comment downvoted successfully.');
+}
+
+public function voteUpdate(Request $request, $post_id, $comment_id)
+{
+    $comment = Comment::findOrFail($comment_id);
+    $user = Auth::user();
+    $voteType = $request->input('vote_type');
+
+    $existingVote = $comment->votes()->where('authenticated_user_id', $user->id)->first();
+    $newScore = $comment->upvotesCount()->count() - $comment->downvotesCount()->count();
+
+    if ($existingVote) {
+        if (($voteType === 'upvote' && $existingVote->upvote) || ($voteType === 'downvote' && !$existingVote->upvote)) {
+            // Remove the vote
+            $existingVote->commentVote()->delete();
+            $existingVote->delete();
+
+            $newScore += $existingVote->upvote ? -1 : 1;
+
+            return response()->json([
+                'status' => 'removed',
+                'message' => 'Vote removed successfully.',
+                'newScore' => $newScore
+            ]);
+        }
+
+        // Change the vote type
+        $existingVote->update(['upvote' => $voteType === 'upvote']);
+        $newScore += $voteType === 'upvote' ? 2 : -2;
+    } else {
+        // Add a new vote
+        $vote = Vote::create(['upvote' => $voteType === 'upvote', 'authenticated_user_id' => $user->id]);
+        CommentVote::create([
+            'vote_id' => $vote->id,
+            'comment_id' => $comment->id,
+        ]);
+
+        $newScore += $voteType === 'upvote' ? 1 : -1;
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'message' => $voteType === 'upvote' ? 'Comment upvoted successfully.' : 'Comment downvoted successfully.',
+        'newScore' => $newScore
+    ]);
+}
+
+
 }
 
 
