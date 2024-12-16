@@ -74,7 +74,7 @@ news = Bool
       @endif
       @else
       <a href="{{ route('topic.show',['post_id' => ($post->post->id)]) ?? '#' }}">
-        <p class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
+        <p class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">{{
           $post->post->title ?? 'No title available' }}</p>
       </a>
 

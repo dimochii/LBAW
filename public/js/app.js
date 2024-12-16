@@ -23,64 +23,75 @@ function addEventListeners() {
   if (cardCreator != null)
     cardCreator.addEventListener('submit', sendCreateCardRequest);
 
-      const voteButtons = document.querySelectorAll("input[type='checkbox']");
-
-voteButtons.forEach((button) => {
-  
-  button.addEventListener("change", async function () {
-    const postId = this.id.split("-")[0]; // Extract the post_id from the input's ID
-    const voteType = this.id.includes("upvote") ? "upvote" : "downvote";
-    const isChecked = this.checked;
-
-    try {
-      // Make an asynchronous request to update the vote
-      const response = await fetch(`/news/${postId}/voteupdate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-        },
-        body: JSON.stringify({
-          vote_type: voteType,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        console.log(data.vote === voteType)
-
-        // Update the score of the specific post
-        const scoreElement = document.getElementById(`${postId}-score`);
-        if (scoreElement) {
-          let newScore = data.newScore;
-
-          // If the score already contains a "k", don't modify it
-          if (!scoreElement.textContent.includes("k")) {
-            // If the current score doesn't have a "k", add the new score to it
-            let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, '')); // Get the current numerical score
-            newScore = currentScore + newScore; // Add the new score to the existing score
-            scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
-          }
-        }
-
-        if (data.vote === voteType) {          
-          this.checked = true
-        } else {
-          this.checked = false
-        }
-
-      } else {
-        console.error("Failed to update the vote:", await response.text());
-      }
-    } catch (error) {
-      console.error("Error while updating the vote:", error);
-    }
-  });
-});
+  const voteButtons = document.querySelectorAll("input[type='checkbox']");
+  voteButtons.forEach((button) => {
+    button.addEventListener("change", voteUpdate)
+  })
 
 }
 
+async function voteUpdate(e) {
+  const postId = e.target.id.split("-")[0];
+  const voteType = e.target.id.includes("upvote") ? "upvote" : "downvote";
+  const otherVote = document.getElementById(`${postId}-${voteType == "upvote" ? "downvote" : "upvote"}`)
+  console.log(otherVote)
+  console.log(e.target)
+
+  try {
+    const response = await fetch(`/news/${postId}/voteupdate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+      },
+      body: JSON.stringify({
+        vote_type: voteType,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      console.log(data.vote === voteType)
+
+      const scoreElement = document.getElementById(`${postId}-score`);
+      if (scoreElement) {
+        let newScore = data.newScore;
+        if (!scoreElement.textContent.includes("k")) {
+          let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, ''));
+          newScore = currentScore + newScore;
+          scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
+        }
+      }
+
+      if (data.vote === voteType) {
+        e.target.checked = true
+        otherVote.checked = false // exclusive
+      } else {
+        e.target.checked = false
+      }
+
+    } else {
+      console.error("Failed to update the vote:", await response.text());
+    }
+  } catch (error) {
+    console.error("Error while updating the vote:", error);
+  }
+}
+
+function shortNewsUrl() {
+  const regex = /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/;
+
+  const newsUrls = document.querySelectorAll('[data-content="news-url"]');
+
+  newsUrls.forEach(element => {
+    const url = element.textContent.trim();
+    const match = url.match(regex);
+    if (match && match[1]) {
+      element.textContent = `( ${match[1]} \u{1F855} )`;
+    }
+  });
+}
 
 function toggleDropdown() {
   const menuButton = document.getElementById('menu-button');
@@ -255,4 +266,5 @@ function createItem(item) {
   return new_item;
 }
 
-addEventListeners();
+addEventListeners()
+shortNewsUrl()

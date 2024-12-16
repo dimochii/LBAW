@@ -7,6 +7,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ config('app.name', 'Laravel') }}</title>
   <script defer src="{{ asset('js/layout.js') }}"></script>
+  <script defer src="{{ asset('js/app.js') }}"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -19,9 +20,6 @@
 
   <link rel="stylesheet" href={{ asset('css/app.css') }}>
   @vite('resources/css/app.css')
-
-  {{--
-  <link rel="stylesheet" href="{{ asset('css/build.css' )}}"> --}}
 </head>
 
 <body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">
@@ -242,12 +240,13 @@
 
           <div class="py-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">recent</h3>
-            <div class="space-y-1 *:transition-colors *:pl-6">
+            <div class="space-y-1 *:transition-colors *:pl-4">
               @foreach ($recentHubs as $recent)
               <a href="/hub/{{ $recent['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                 {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
-                <span class="break-all">h/{{ $recent['name'] }}</span>
+                <img src="{{asset('images/hub'.$recent['id'].'.jpg')}}" alt="{{$recent['name']}} image" class=" h-8 w-8 rounded-full">
+                <span class="break-all text-sm">h/{{ $recent['name'] }}</span>
               </a>
               @php
               $colorIndex = ($colorIndex + 1) % count($colors);
@@ -259,12 +258,13 @@
           <div class="pt-4">
             <h3 class="px-4 font-light text-gray-600 mb-1">hubs</h3>
 
-            <div class="space-y-1 *:transition-colors *:pl-6">
+            <div class="space-y-1 *:transition-colors *:pl-4">
               @foreach ($userHubs as $hubs)
               <a href="/hub/{{ $hubs['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                 {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
-                <span class="break-all">h/{{ $hubs['name'] }}</span>
+                <img src="{{asset('images/hub'.$hubs['id'].'.jpg')}}" alt="{{$hubs['name']}} image" class=" h-8 w-8 rounded-full">
+                <span class="break-all text-sm">h/{{ $hubs['name'] }}</span>
               </a>
               @php
               $colorIndex = ($colorIndex + 1) % count($colors);
