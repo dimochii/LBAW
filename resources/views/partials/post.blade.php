@@ -8,7 +8,7 @@ news = Bool
 --}}
 
 <div data-post="{{$post->post_id}}"
-  class="p-4 hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper h-full w-full flex {{ isset($img_left) && $img_left ? 'flex-row' : 'flex-row-reverse' }}">
+  class="p-4  hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition ease-out group/wrapper h-full w-full flex {{ isset($img_left) && $img_left ? 'flex-row' : 'flex-row-reverse' }}">
   <div class="h-full w-full flex-col flex gap-4">
     <header class="flex items-center relative">
       <a class="flex items-center h-8"
@@ -69,7 +69,7 @@ news = Bool
         {{ $post->post->title ?? 'No title available' }}</a>
 
       @if ($post->news_url)
-      <a href="{{$post->news_url}}" class="inline ml-2 text-sm lg:text-base text-gray-500 group-hover/wrapper:text-gray-300 underline-effect-light"
+      <a href="{{$post->news_url}}" class="inline ml-2 text-sm lg:text-base text-[#3C3D37]/[.7] group-hover/wrapper:text-gray-300 underline-effect-light"
         data-content="news-url">{{$post->news_url}}</a>
       @endif
       @else
@@ -170,7 +170,7 @@ news = Bool
   </div>
   @if(isset($img) && isset($img_left) && !is_null($post->image_url))
   <a href="{{ $post->news_url ?? '#' }}"
-    class="md:block hidden min-w-[50%] max-w-[50%] {{ $img_left ? 'ml-4' : 'mr-4' }}">
+    class="md:block hidden min-w-[40%] max-w-[40%] {{ $img_left ? 'ml-4' : 'mr-4' }}">
     <img class="object-cover object-left w-full h-full" src="{{ $post->image_url }}" alt="">
   </a>
   @endif
