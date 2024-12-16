@@ -39,10 +39,6 @@ use App\Http\Controllers\LeftController;
 Route::redirect('/', '/global');
 
 
-
-
-
-
 // API
 
 

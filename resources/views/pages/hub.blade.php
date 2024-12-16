@@ -100,7 +100,7 @@
   </div>
 
   @php
-  $activeTab = request()->query('tab', 'News'); // Default to 'News'
+  $activeTab = request()->query('tab', 'news'); // Default to 'News'
   @endphp
   {{-- @include('partials.news_topic_nav', ['url' => '/hub/' . $community->id]) --}}
 
