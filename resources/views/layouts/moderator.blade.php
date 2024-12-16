@@ -12,7 +12,9 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
-
+  <link rel="apple-touch-icon" sizes="180x180" href="{{asset('images/apple-touch-icon.png')}}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{asset('images/favicon-32x32.png')}}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{asset('images/favicon-16x16.png')}}">
   <link rel="stylesheet" href={{ asset('css/app.css') }}>
   @vite('resources/css/app.css')
   {{--
@@ -35,11 +37,13 @@
       </div>
       {{-- left bar --}}
       <div class="text-lg mb-auto divide-y-2 divide-black">
-        <a class="p-4 flex flex-col hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-all group" href="{{route('communities.show', $id)}}">
-          <img src=" {{ asset($hub->image->path ?? 'images/groupdefault.jpg') }} " alt="moderated hub image" class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37]">
+        <a class="p-4 flex flex-col hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-all group"
+          href="{{route('communities.show', $id)}}">
+          <img src=" {{ asset($hub->image->path ?? 'images/groupdefault.jpg') }} " alt="moderated hub image"
+            class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37]">
           <h1 class="mt-4 mb-1 font-medium tracking-tight text-xl">h/{{$hub->name}}</h1>
           <p class="text-sm font-light break-all tracking-tight"> {{ $hub->description }}</p>
-          {{-- <div class="flex flex-row justify-around *:flex *:flex-col *:items-center *:justify-center"> 
+          {{-- <div class="flex flex-row justify-around *:flex *:flex-col *:items-center *:justify-center">
             <div>
               <div>{{ $hub->followers_count }}</div>
               <div>ola</div>
@@ -64,7 +68,7 @@
             </a>
           </div>
         </div>
-        
+
       </div>
       {{-- footer --}}
 

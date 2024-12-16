@@ -83,15 +83,19 @@
         <td class="px-4 py-4">
           <input id="admin-checkbox-{{ $user->id }}" type="checkbox" class="w-4 h-4 accent-blue-500"
             @if($hub->moderators->pluck('id')->contains($user->id)) checked @endif
-          onclick="toggleMod({{ $user->id }}, $id, this.checked)"
+          onclick="toggleModerator({{ $user->id }}, {{$id}} , this.checked)"
           >
         </td>
         
         <td class="px-4 py-4">
-          <button name="remove-button"
-            class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
-            unfollow
-          </button>
+    <form action="{{ route('community.remove_follower',['user_id' => $user->id, 'community_id' => $id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to make this user unfollow the community?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                    class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
+                    Unfollow
+            </button>
+        </form>
         </td>
       </tr>
       @endforeach
@@ -213,73 +217,42 @@
     });
   })
 
-  function toggleSuspend(userId, isChecked) {
-        const action = isChecked ? 'suspend' : 'unsuspend';
-        const confirmationMessage = isChecked
-            ? 'Are you sure you want to suspend this user?'
-            : 'Are you sure you want to unsuspend this user?';
 
-        if (confirm(confirmationMessage)) {
-            fetch(`/users/${userId}/${action}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to update user status.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => {
-                alert(error.message);
-                // Revert checkbox state if the request fails
-                document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
-            });
-        } else {
-            // Revert checkbox state if the user cancels the action
-            document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
-        }
+
+
+function toggleModerator(user_id, community_id, isChecked) {
+    console.log('User ID:', user_id);
+    console.log('Hub ID:', community_id);
+    const action = isChecked ? 'make_moderator' : 'remove_moderator';
+    const confirmationMessage = isChecked
+        ? 'Are you sure you want to grant this user moderator privileges in this community?'
+        : 'Are you sure you want to revoke this user\'s moderator privileges in this community?';
+
+    if (confirm(confirmationMessage)) {
+        fetch(`/users/${user_id}/${community_id}/${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update moderator status.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            alert(error.message);
+            document.getElementById(`moderator-checkbox-${userId}`).checked = !isChecked;
+        });
+    } else {
+        document.getElementById(`moderator-checkbox-${userId}`).checked = !isChecked;
     }
+}
 
-    function toggleMod(userId, hubId, isChecked) {
-        const action = isChecked ? 'make_admin' : 'remove_admin';
-        const confirmationMessage = isChecked
-            ? 'Are you sure you want to grant this user admin privileges?'
-            : 'Are you sure you want to revoke this user\'s admin privileges?';
 
-        if (confirm(confirmationMessage)) {
-            fetch(`/users/${userId}/${action}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to update admin status.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => {
-                alert(error.message);
-                // Revert checkbox state if the request fails
-                document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
-            });
-        } else {
-            // Revert checkbox state if the user cancels the action
-            document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
-        }
-    }
 </script>

@@ -36,7 +36,7 @@ use App\Http\Controllers\LeftController;
 
 // Home
 
-Route::redirect('/', '/news');
+Route::redirect('/', '/global');
 
 
 
@@ -141,27 +141,27 @@ Route::middleware('auth')->group(function () {
   });
 });
 
+
 //Posts
 //creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware('auth')->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth')->name('post.store');
 Route::delete('/posts/delete/{id}', [PostController::class, 'delete'])->middleware('auth')->name('post.delete');
 
+Route::get('/global', [FeedController::class, 'global'])->name('global');
+
 Route::middleware('auth')->group(function () {
   Route::controller(FeedController::class)->group(function () {
     Route::get('/home', 'home')->name('home');
-    Route::get('/global', 'global')->name('global');
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/bestof', 'bestof')->name('bestof');
-
     Route::post('/users/{id}/suspend', [AuthenticatedUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{id}/unsuspend', [AuthenticatedUserController::class, 'unsuspend'])->name('users.unsuspend');
     Route::post('/users/{id}/make_admin', [AuthenticatedUserController::class, 'makeAdmin'])->name('users.make_admin');
     Route::post('/users/{id}/remove_admin', [AuthenticatedUserController::class, 'removeAdmin'])->name('users.remove_admin');
   });
 
-  // 'Route::get('/messages', [MessageController::class, 'index'])->name('messages');
   Route::get('/notifications', function () {
     return view('pages.admin');
   })->name('notifications');
@@ -187,6 +187,10 @@ Route::get('/all-hubs', [CommunityController::class, 'index'])->middleware('auth
 Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware('auth')->name('communities.join');
 Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware('auth')->name('communities.leave');
 Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware('auth')->name('communities.update.privacy');
+
+Route::post('/users/{user_id}/{community_id}/make_moderator', [ModeratorController::class, 'makeModerator'])->middleware('auth')->name('users.make_moderator');
+Route::post('/users/{user_id}/{community_id}/remove_moderator', [ModeratorController::class, 'removeModerator'])->middleware('auth')->name('users.remove_moderator');
+Route::delete('/users/{user_id}/{community_id}/remove_follower', [ModeratorController::class, 'removeFollower'])->name('community.remove_follower');
 //Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware('auth')->name('communities.apply');
 
 Route::middleware('auth')->group(function () {
