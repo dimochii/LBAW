@@ -398,20 +398,19 @@ class ModeratorController extends Controller
 
   public function  makeModerator($user_id, $community_id)
     {
-        dd($user_id, $community_id);
         $community = Community::find($community_id);
         $userToAdd = AuthenticatedUser::find($user_id);
 
         if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
-            return response()->json(['error' => 'You do not have permission to add a moderator to this community.'], 403);
+          return response()->view('errors.403', [], 403);
         }
         if ($community->moderators->contains($userToAdd)) {
-            return response()->json(['error' => 'This user is already a moderator.'], 400);
+          return response()->view('errors.400', [], 400);
         }
 
         $community->moderators()->attach($userToAdd);
 
-        return response()->json(['message' => 'User gained admin privileges successfully']);
+        return response()->json(['message' => 'User gained moderator privileges successfully']);
     }
     
     public function removeModerator($user_id, $community_id)
@@ -429,7 +428,7 @@ class ModeratorController extends Controller
 
         $community->moderators()->detach($userToRemove);
 
-        return redirect()->back()->with('success', 'User has been removed as a moderator successfully.');
+        return response()->json(['message' => 'User has been removed from moderator successfully.']);
     }
 
     public function removeFollower($user_id,$community_id)
