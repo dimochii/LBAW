@@ -22,7 +22,7 @@ class NewsController extends Controller
   {
     $user = Auth::user();
 
-    if ($user->is_suspended) {
+    if ($user && $user->is_suspended) {
         $suspensions = $user->suspensions; 
 
         return view('pages.suspension', [

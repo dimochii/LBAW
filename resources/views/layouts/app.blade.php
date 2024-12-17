@@ -245,7 +245,7 @@
               <a href="/hub/{{ $recent['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                 {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
-                <img src="{{asset('images/hub'.$recent['id'].'.jpg')}}" alt="{{$recent['name']}} image" class=" h-8 w-8 rounded-full">
+                <img src="{{asset($recent['image'])}}" alt="{{$recent['name']}} image" class=" h-8 w-8 rounded-full">
                 <span class="break-all text-sm">h/{{ $recent['name'] }}</span>
               </a>
               @php
@@ -263,7 +263,7 @@
               <a href="/hub/{{ $hubs['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                 {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
-                <img src="{{asset('images/hub'.$hubs['id'].'.jpg')}}" alt="{{$hubs['name']}} image" class=" h-8 w-8 rounded-full">
+                <img src="{{asset($hubs['image'])}}" alt="{{$hubs['name']}} image" class=" h-8 w-8 rounded-full">
                 <span class="break-all text-sm">h/{{ $hubs['name'] }}</span>
               </a>
               @php
