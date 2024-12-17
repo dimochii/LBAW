@@ -12,12 +12,10 @@ class NotificationController extends Controller
     {
         $user = Auth::user();
 
-        // Retrieve all notifications for the user, ordered by date
         $notifications = Notification::where('authenticated_user_id', $user->id)
             ->orderBy('notification_date', 'desc')
             ->get();
 
-        // Optional: Separate read and unread notifications
         $unreadNotifications = $notifications->where('is_read', false);
         $readNotifications = $notifications->where('is_read', true);
 

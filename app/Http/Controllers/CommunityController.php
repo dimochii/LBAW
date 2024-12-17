@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Community;
+use App\Models\Notification;
+use App\Models\RequestNotification;
 use App\Models\CommunityNotification;
 use App\Models\CommunityFollowRequest;
 use App\Models\Image;
@@ -345,7 +347,7 @@ class CommunityController extends Controller
         ->where('authenticated_user_id', auth()->user()->id)
         ->where('request_status', 'pending')
         ->exists()) {
-        return redirect()->back()->with('error', 'Você já fez uma solicitação para seguir esta comunidade.');
+        return redirect()->back()->with('error', 'You have already requested to join this community.');
       }
 
       
@@ -363,13 +365,13 @@ class CommunityController extends Controller
             'authenticated_user_id' => $moderator->id, 
         ]);
 
-        FollowNotification::create([
+        RequestNotification::create([
             'notification_id' => $notification->id,
-            'authenticated_user_id' => $user->id, 
+            'request_id' => $request->id, 
         ]);
     }
 
-      return redirect()->back()->with('success', 'Sua solicitação foi enviada e está aguardando aprovação.');
+      return redirect()->back()->with('success', 'Your request was sent.');
   }
 
 
