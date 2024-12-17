@@ -2,6 +2,19 @@
 
 @section('content')
 <div class="font-grotesk divide-y-2 divide-[black]">
+@if($topicItem->post->community->privacy && !($topicItem->post->community->followers->pluck('id')->contains(Auth::user()->id)))
+  <div class="text-center py-12 bg-white rounded-xl shadow-sm">
+  <a class="flex items-center"
+          href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
+
+          <img src="{{ asset($topicItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
+            class="size-8 rounded-full ring-2  ring-white">
+          <span class="text-2xl font-light underline-effect px-2">h/{{ $topicItem->post->community->name ?? 'Unknown
+            Community' }}</span>
+        </a>
+    <p class="text-gray-500">This post belongs to a private hub.</p>
+  </div>
+  @else
   {{-- news post --}}
   <div class=" flex flex-row" id="post-header">
     <div class="px-8 py-4 w-1/2 flex flex-col grow">
