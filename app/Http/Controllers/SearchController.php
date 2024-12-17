@@ -44,16 +44,15 @@ class SearchController extends Controller
     ->orWhereRaw("LOWER(title) LIKE ?", ["%$search%"])
     ->get()
     ->map(function ($post) {
-        // Check if a related Topic exists for the post
-        $topicExists = Topic::where('post_id', $post->id)->exists();
 
+        $topicExists = Topic::where('post_id', $post->id)->exists();
         return [
             'name' => $post->title,
             'content' => $post->content,
             'community' => $post->community->name,
             'community_route' => $topicExists 
-                ? url("/topic/{$post->id}") // If Topic exists, return /topic/{id}
-                : url("/news/{$post->id}"),            // Otherwise, return /news
+                ? url("/topic/{$post->id}") 
+                : url("/news/{$post->id}"),            
         ];
     });
 
