@@ -67,7 +67,7 @@ class PostController extends Controller
 
     return $ogTags;
   }
-  
+
   private function notifyCommunityFollowers($communityId, $post)
   {
     $community = Community::find($communityId);
@@ -99,7 +99,6 @@ class PostController extends Controller
     }
   }
 
-
   public function createPost()
   {
     if(Auth::user()->is_suspended) {
@@ -108,6 +107,33 @@ class PostController extends Controller
     }
     
     return view('pages.create_post');
+  }
+
+  public function removeAuthors(Request $request, $postId)
+  {
+      $post = Post::findOrFail($postId);
+      $authorsToRemove = $request->input('authors_to_remove', []);
+
+      if (empty($authorsToRemove)) {
+          return response()->json(['message' => 'Nenhum autor selecionado'], 400);
+      }
+
+      if ($post->authors()->count() <= count($authorsToRemove)) {
+          return response()->json(['message' => 'Não é possível remover todos os autores'], 400);
+      }
+
+      try {
+          $post->authors()->detach($authorsToRemove);
+
+          return response()->json([
+              'message' => 'Autores removidos com sucesso',
+              'removed_authors' => $authorsToRemove
+          ]);
+      } catch (\Exception $e) {
+          return response()->json([
+              'message' => 'Falha ao remover autores: ' . $e->getMessage()
+          ], 500);
+      }
   }
 
   public function create(Request $request)
@@ -174,6 +200,12 @@ class PostController extends Controller
     return response()->json(['message' => 'Post deleted successfully'], 200);
   }
 
+  
+
+
+
+
+
   public function upvote($post_id)
   {
     $post = Post::findOrFail($post_id);
@@ -224,6 +256,10 @@ class PostController extends Controller
 
   public function voteUpdate(Request $request, $post_id)
   {
+      if (!is_numeric($post_id)) {
+        return response()->json(['message' => 'Invalid post ID'], 400);
+    }
+
     $post = Post::findOrFail($post_id);
     $user = Auth::user();
     $voteType = $request->input('vote_type');

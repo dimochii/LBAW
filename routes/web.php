@@ -118,6 +118,8 @@ Route::post('/news/{post_id}/voteupdate', [PostController::class, 'voteUpdate'])
 //editing
 Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware('auth')->name('news.edit');
 Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware('auth')->name('news.update');
+Route::post('/news/{post}/remove-authors', [PostController::class, 'removeAuthors'])
+    ->name('news.remove-authors');
 
 //Topic
 Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.show');

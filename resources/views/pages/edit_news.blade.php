@@ -16,89 +16,74 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('news.update', $newsItem->post->id) }}" class="space-y-12">
+        <form method="POST" action="{{ route('news.update', $newsItem->post->id) }}" data-post-id="{{ $newsItem->post->id }}" class="space-y-12">
             @csrf
             @method('PUT')
-            
+
+            <!-- Título -->
             <div class="relative">
-                <label for="title" 
-                       class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
-                              transition-all duration-300 peer-placeholder-shown:text-3xl 
-                              peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
-                    Title
-                </label>
-                <input type="text" 
-                       id="title" 
-                       name="title" 
-                       value="{{ old('title', $newsItem->post->title) }}"
-                       class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 
-                              focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
-                              transition-all duration-300"
-                       placeholder="Enter title"
-                       required>
+                <label for="title" class="absolute left-0 -top-6 text-2xl font-medium text-black/60 transition-all duration-300 peer-placeholder-shown:text-3xl peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">Title</label>
+                <input type="text" id="title" name="title" value="{{ old('title', $newsItem->post->title) }}" class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent transition-all duration-300" placeholder="Enter title" required>
             </div>
 
-            <div id="newsUrlContainer" 
-                 class="space-y-4 transform transition-all duration-500 origin-top">
+            <!-- URL -->
+            <div id="newsUrlContainer" class="space-y-4 transform transition-all duration-500 origin-top">
                 <label for="news_url" class="block text-2xl font-medium">News URL</label>
-                <input type="url" 
-                       id="news_url" 
-                       name="news_url" 
-                       value="{{ old('news_url', $newsItem->news_url) }}"
-                       class="w-full text-xl border-b-2 border-black/10 focus:border-black 
-                              focus:outline-none pb-2 transition-colors duration-300"
-                       placeholder="https://"
-                       required>
+                <input type="url" id="news_url" name="news_url" value="{{ old('news_url', $newsItem->news_url) }}" class="w-full text-xl border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-colors duration-300" placeholder="https://" required>
             </div>
 
+            <!-- Autores -->
+            <div class="space-y-12">
+                <label class="block text-2xl font-medium text-black/60">Authors</label>
+                <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
+                    <ul class="authors-list divide-y divide-gray-200">
+                        @foreach($newsItem->post->authors as $author)
+                            <li class="flex items-center justify-between px-6 py-4 hover:bg-black/5 transition-colors duration-300">
+                                <span class="text-lg font-medium text-black/70">
+                                    {{ $author->name }}
+                                </span>
+                                @if($newsItem->post->authors->count() > 1)
+                                    <button 
+                                        type="button" 
+                                        data-author-id="{{ $author->id }}" 
+                                        class="remove-author-btn px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold"
+                                    >
+                                        remove
+                                    </button>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Conteúdo -->
             <div class="space-y-4">
                 <label class="block text-2xl font-medium">Content</label>
                 <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
                     <div class="flex gap-4 px-6 py-3 border-b border-black/10">
                         <input type="radio" name="editor-toggle" id="write-toggle" class="hidden peer/write" checked>
-                        <label for="write-toggle" class="underline-effect cursor-pointer peer-checked/write:font-bold">
-                            write
-                        </label>
+                        <label for="write-toggle" class="underline-effect cursor-pointer peer-checked/write:font-bold">write</label>
 
                         <input type="radio" name="editor-toggle" id="preview-toggle" class="hidden peer/preview">
-                        <label for="preview-toggle" class="underline-effect cursor-pointer peer-checked/preview:font-bold">
-                            preview
-                        </label>
+                        <label for="preview-toggle" class="underline-effect cursor-pointer peer-checked/preview:font-bold">preview</label>
                     </div>
 
                     <div class="relative">
-                        <textarea id="editor-content" 
-                                name="content" 
-                                class="w-full h-64 p-6 text-lg font-vollkorn focus:outline-none resize-none
-                                       peer-checked/preview:hidden"
-                                placeholder="Write your post content here...">{{ old('content', $newsItem->post->content) }}</textarea>
-                        <div id="preview-content" 
-                             class="hidden w-full h-64 p-6 text-lg font-vollkorn overflow-y-auto
-                                    prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] 
-                                    prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] 
-                                    prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded 
-                                    prose-code:text-[#4793AF]">
-                        </div>
+                        <textarea id="editor-content" name="content" class="w-full h-64 p-6 text-lg font-vollkorn focus:outline-none resize-none peer-checked/preview:hidden" placeholder="Write your post content here...">{{ old('content', $newsItem->post->content) }}</textarea>
                     </div>
                 </div>
             </div>
 
+            <!-- Salvar Alterações -->
             <div class="flex justify-end">
-                <button type="submit" 
-                        class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-black text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1">
+                <button type="submit" class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-black text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1">
                     <span class="relative z-10">Save Changes</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" 
-                        class="relative z-10 h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2" 
-                        viewBox="0 0 20 20" 
-                        fill="currentColor">
-                        <path fill-rule="evenodd" 
-                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
-                            clip-rule="evenodd" />
-                    </svg>
-                    <div class="absolute inset-0 bg-pastelGreen  transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
                 </button>
             </div>
         </form>
+
+
     </div>
 </div>
 
@@ -189,5 +174,44 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize preview content
     previewContent.innerHTML = markdownToHTML(editorContent.value);
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const postId = document.querySelector('form').getAttribute('data-post-id');
+    const authorsContainer = document.querySelector('ul.authors-list');
+
+    // Delegação de evento para botões de remoção
+    authorsContainer.addEventListener('click', function(event) {
+        const removeButton = event.target.closest('.remove-author-btn');
+        if (!removeButton) return;
+
+        const authorId = removeButton.getAttribute('data-author-id');
+        const authorItem = removeButton.closest('li');
+
+        fetch(`/news/${postId}/remove-authors`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ 
+                authors_to_remove: [authorId]
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Não foi possível remover o autor');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Remove o item da lista
+            authorItem.remove();
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+    });
+});
+
 </script>
 @endsection

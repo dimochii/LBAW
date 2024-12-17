@@ -450,7 +450,7 @@ class AuthenticatedUserController extends Controller
         $user->delete();
         Auth::logout();
     
-        return redirect('/news')->with('message', 'Your account has been successfully deleted.');
+        return redirect('/global')->with('message', 'Your account has been successfully deleted.');
     }
     
     

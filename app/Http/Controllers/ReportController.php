@@ -33,7 +33,7 @@ class ReportController extends Controller
     public function report(Request $request)
     {
         if (!Auth::check()) {
-            return redirect('/news')->with('error', 'You must be logged in to submit a report.');
+            return redirect('/global')->with('error', 'You must be logged in to submit a report.');
         }
 
         
@@ -65,7 +65,7 @@ class ReportController extends Controller
         $user = Auth::user();
 
         if (!$user->is_admin) {
-            return redirect('/news')->with('error', 'Access denied.');
+            return redirect('/global')->with('error', 'Access denied.');
         }
 
 
