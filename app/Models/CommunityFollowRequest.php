@@ -24,6 +24,10 @@ class CommunityFollowRequest extends Model
     public function user() {
         return $this->belongsTo(AuthenticatedUser::class, 'authenticated_user_id');
     }
+    public function requestNotification()
+    {
+        return $this->hasOne(RequestNotification::class);
+    }
 
     
 }

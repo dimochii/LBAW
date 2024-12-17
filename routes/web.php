@@ -219,6 +219,9 @@ Route::patch('/notifications/accept-follow-request/{id}', [CommunityController::
 Route::patch('/notifications/reject-follow-request/{id}', [CommunityController::class, 'rejectFollowRequest'])->name('communities.rejectFollowRequest');
 
 
+//Hub Join Requests
+Route::get('/request/{request_id}', [CommunityFollowRequest::class, 'show'])->name('request.show');
+
 // Recover password
 
 Route::post('/send', [MailController::class, 'send']);

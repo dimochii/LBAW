@@ -5,7 +5,7 @@
 <div class="flex flex-col md:flex-row md:divide-x-2 md:divide-y-0 divide-y-2 divide-black">
   <div class="flex flex-col w-[50%]  divide-y-2 divide-black ">
     <div class="flex flex-row p-4 h-full">
-      <h1 class=" tracking-tight font-medium text-5xl">users <span
+      <h1 class=" tracking-tight font-medium text-5xl">reports <span
           class="text-2xl tracking-normal opacity-60">manage</span>
       </h1>
       <span class="ml-auto text-sm tracking-normal opacity-60 mt-auto">{{$startDate->toFormattedDateString()}} ->

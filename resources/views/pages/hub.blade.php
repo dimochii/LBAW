@@ -122,6 +122,11 @@
   </nav>
 
   <!-- Posts Section -->
+   @if($community->privacy && !($community->followers->pluck('id')->contains(Auth::user()->id)))
+  <div class="text-center py-12 bg-white rounded-xl shadow-sm">
+    <p class="text-gray-500">This hub is private.</p>
+  </div>
+  @else
   <div>
     <!-- Posts Grid -->
     <div class="divide-y-2 border-b-2 border-black divide-black">
@@ -167,6 +172,7 @@
     </div>
     @endif
   </div>
+  @endif
 
 
 
