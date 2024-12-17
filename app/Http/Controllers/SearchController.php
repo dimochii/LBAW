@@ -37,18 +37,25 @@ class SearchController extends Controller
                             });
 
     // Search posts
-    $posts = Post::whereRaw("to_tsvector('english', LOWER(title) || ' ' || LOWER(content)) @@ plainto_tsquery(?)", [$search])
-                 ->orWhereRaw("LOWER(title) LIKE ?", ["%$search%"])
-                 ->get()
-                 ->map(function($post) {
-                     return [
-                         'name' => $post->title,
-                         'content' => $post->content,
-                         'community' => $post->community->name,
-                         'community_route' => url("/post/{$post->id}"),
-                     ];
-                 });
+    $posts = Post::whereRaw(
+        "to_tsvector('english', LOWER(title) || ' ' || LOWER(content)) @@ plainto_tsquery(?)", 
+        [$search]
+    )
+    ->orWhereRaw("LOWER(title) LIKE ?", ["%$search%"])
+    ->get()
+    ->map(function ($post) {
 
+        $topicExists = Topic::where('post_id', $post->id)->exists();
+        return [
+            'name' => $post->title,
+            'content' => $post->content,
+            'community' => $post->community->name,
+            'community_route' => $topicExists 
+                ? url("/topic/{$post->id}") 
+                : url("/news/{$post->id}"),            
+        ];
+    });
+    
     // Search users -> return name, photo, and route
     $users = AuthenticatedUser::whereRaw("LOWER(name) LIKE ?", ["%$search%"])
                               ->orWhereRaw("LOWER(email) LIKE ?", ["%$search%"])
