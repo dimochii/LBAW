@@ -432,4 +432,23 @@ class ModeratorController extends Controller
         return redirect()->back()->with('success', 'User has been removed as a moderator successfully.');
     }
 
+    public function removeFollower($user_id,$community_id)
+    {
+        $community = Community::findOrFail($community_id);
+        $user = AuthenticatedUser::findOrFail($user_id);
+
+        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
+          return response()->view('errors.403', [], 403);
+        }
+
+        if (!$community->followers->contains($user)) {
+          return response()->view('errors.400', [], 400);
+        }
+
+        $community->followers()->detach($user);
+
+        return redirect()->back()->with('success', 'removed follower.');
+    }
+
+
 }
