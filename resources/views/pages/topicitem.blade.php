@@ -569,6 +569,7 @@
 
 
   </script>
+@endif
 
 <script> 
 
@@ -593,4 +594,4 @@ function reportTopic() {
 
 </script>
 
-  @endsection
+@endsection
