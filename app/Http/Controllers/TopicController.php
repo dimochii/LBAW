@@ -23,7 +23,7 @@ class TopicController extends Controller
             'post_id' => $post->id,
         ]);
 
-        return redirect()->route('news')->with('success', 'Topic created successfully');
+        return redirect()->route('global')->with('success', 'Topic created successfully, waiting approval.');
     }
 
     /**

@@ -55,6 +55,12 @@ class FeedController extends Controller
     $posts = Post::withCount('votes')
       ->whereIn('community_id', $authUser->communities->pluck('id'))
       ->where('creation_date', '>', now()->subHours(72))
+      ->where(function ($query) {
+        $query->whereDoesntHave('topic') // Include posts that are not topics
+              ->orWhereHas('topic', function ($subQuery) {
+                  $subQuery->where('status', TopicStatus::Accepted->value); // Include only topics with 'accepted' status
+              });
+    })
       ->orderBy('votes_count', 'desc')
       ->orderBy('creation_date', 'desc')
       ->get();
@@ -200,7 +206,7 @@ class FeedController extends Controller
     })
       ->orderBy('creation_date', 'desc')
       ->get();
-      
+
     foreach ($posts as $post) {
       // Count upvotes and downvotes
       $post->upvotes_count = Vote::whereHas('postVote', function ($query) use ($post) {
