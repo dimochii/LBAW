@@ -113,7 +113,7 @@
       class="py-4 relative group {{ $activeTab === 'topics' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
       topics
     </a>
-    @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || Auth::user()->is_admin)
+    @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || (Auth::user()->is_admin))
     <a href="{{ route('moderation.overview', $community->id)  }}"
       class="py-4 relative group {{ $activeTab === 'moderation' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
       moderation

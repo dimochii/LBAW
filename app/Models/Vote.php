@@ -26,5 +26,9 @@ class Vote extends Model
         return $this->hasOne(PostVote::class, 'vote_id');
     }
 
+    public function commentVote()
+    {
+      return $this->hasOne(CommentVote::class, 'vote_id');
+    }
     
 }
