@@ -155,6 +155,7 @@ CREATE TABLE post_notifications (
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
+
 CREATE TABLE suspensions (
     id SERIAL PRIMARY KEY,
     reason TEXT NOT NULL,
@@ -191,6 +192,14 @@ CREATE TABLE community_follow_requests (
     request_status request_status DEFAULT 'pending',
     FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
     FOREIGN KEY (community_id) REFERENCES communities(id)
+);
+
+CREATE TABLE request_notifications (
+    id SERIAL PRIMARY KEY,
+    request_id INT,
+    notification_id INT,
+    FOREIGN KEY (notification_id) REFERENCES notifications(id),
+    FOREIGN KEY (request_id) REFERENCES community_follow_requests(id)
 );
 
 
@@ -1235,14 +1244,14 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
   (8, 95, FALSE), -- The Evolution of Horror Films (curious)
 
   -- Elsa Arendelle (ice_queen)
-  (9, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+  (9, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
   (9, 70, FALSE), -- Hidden Beaches You Need to Visit (interested)
   (9, 80, FALSE), -- Top Vegan Recipes for Beginners (interested)
   (9, 99, FALSE), -- Tips for DIY Home Renovations (interested)
 
   -- Peter Parker (spidey)
   (10, 120, TRUE),   -- The Psychology of Superheroes (fan)
-  (10, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+  (10, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
   (10, 63, FALSE), -- Exploring Classic Films of the 20th Century (curious)
   (10, 76, FALSE), -- How to Get Into Film Directing (interested)
   (10, 95, FALSE), -- The Evolution of Horror Films (curious)
@@ -1250,7 +1259,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
   -- Bob Johnson (bob)
   (11, 23, FALSE),  -- The Rise of AI (interested)
   (11, 4, FALSE),  -- Eco-Friendly Travel Tips (interested)
-  (11, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+  (11, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
   (11, 20, FALSE), -- Healthy Eating on a Budget (interested)
   (11, 61, FALSE), -- How AI is Reshaping the Job Market (interested)
 
@@ -1297,14 +1306,14 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
   (17, 8, FALSE),  -- Staying Motivated to Exercise in the Cold (interested)
   (17, 16, FALSE), -- Anticipated Sequels of 2024 (interested)
   (17, 25, TRUE),  -- Pop Culture Trends of the Decade (expert)
-  (17, 35, FALSE), -- The Science Behind Horror Movies (interested)
+  (17, 68, FALSE), -- The Science Behind Horror Movies (interested)
   (17, 101, FALSE), -- Superhero Origin Stories Comparison (interested)
 
   -- Ian Malcolm (ian)
   (18, 23, FALSE),  -- The Rise of AI (interested)
   (18, 4, FALSE),  -- Eco-Friendly Travel Tips (interested)
   (18, 9, TRUE),   -- Game Development Basics (expert)
-  (18, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+  (18, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
   (18, 22, FALSE), -- Dinosaur Research: Past and Future (expert)
   (18, 45, TRUE),  -- How to Protect Wildlife Habitats (expert)
 
@@ -1328,7 +1337,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
   (21, 7, FALSE),  -- Tips for Writing Detective Novels (interested)
   (21, 12, TRUE),  -- Anticipated Sequels of 2024 (expert)
   (21, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-  (21, 35, FALSE), -- The Science Behind Horror Movies (curious)
+  (21, 68, FALSE), -- The Science Behind Horror Movies (curious)
   (21, 102, FALSE), -- Superhero Origin Stories Comparison (interested)
   (21, 63, TRUE),  -- Exploring Classic Films of the 20th Century (expert)
 
@@ -1367,7 +1376,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
   (26, 7, TRUE),   -- Tips for Writing Detective Novels (expert)
   (26, 12, TRUE),  -- Anticipated Sequels of 2024 (expert)
   (26, 25, TRUE),  -- Pop Culture Trends of the Decade (expert)
-  (26, 35, TRUE),  -- The Science Behind Horror Movies (expert)
+  (26, 68, TRUE),  -- The Science Behind Horror Movies (expert)
   (26, 103, TRUE),  -- Superhero Origin Stories Comparison (expert)
   (26, 63, TRUE),  -- Exploring Classic Films of the 20th Century (expert)
 
@@ -1376,20 +1385,20 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
   (27, 8, FALSE),  -- Staying Motivated to Exercise in the Cold (interested)
   (27, 16, FALSE), -- Anticipated Sequels of 2024 (interested)
   (27, 50, FALSE), -- How to Start a Home Garden (interested)
-  (27, 35, FALSE), -- The Science Behind Horror Movies (curious)
+  (27, 68, FALSE), -- The Science Behind Horror Movies (curious)
   (27, 104, FALSE), -- Superhero Origin Stories Comparison (interested)
   -- Steve Rogers (steve)
 (28, 123, TRUE),   -- The Psychology of Superheroes (expert)
 (28, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (28, 50, FALSE), -- How to Start a Home Garden (interested)
-(28, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(28, 68, FALSE), -- The Science Behind Horror Movies (curious)
 (28, 105, TRUE),  -- Superhero Origin Stories Comparison (expert)
 (28, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
 -- Tony Stark (tony)
 (29, 1, TRUE),   -- The Rise of AI (expert)
 (29, 9, TRUE),   -- Game Development Basics (expert)
-(29, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(29, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
 (29, 26, FALSE), -- Space Exploration Milestones (interested)
 (29, 30, TRUE),  -- Must-Have Gadgets for 2024 (expert)
 (29, 61, TRUE),  -- How AI is Reshaping the Job Market (expert)
@@ -1405,7 +1414,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 -- Victor Frankenstein (victor)
 (31, 23, FALSE),  -- The Rise of AI (curious)
 (31, 9, TRUE),   -- Game Development Basics (expert)
-(31, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(31, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
 (31, 22, TRUE),  -- Dinosaur Research: Past and Future (expert)
 (31, 31, FALSE), -- Best Practices for Urban Gardening (interested)
 (31, 61, TRUE),  -- How AI is Reshaping the Job Market (expert)
@@ -1420,9 +1429,9 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 
 -- Xena Warrior (xena)
 (33, 124, FALSE),  -- The Psychology of Superheroes (interested)
-(33, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(33, 57, FALSE), -- Environmental Conservation Success Stories (supporter)
 (33, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(33, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(33, 89, FALSE), -- The Science Behind Horror Movies (curious)
 (33, 106, TRUE),  -- Superhero Origin Stories Comparison (expert)
 (33, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1436,9 +1445,9 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 
 -- Zorro (zorro)
 (35, 125, FALSE),  -- The Psychology of Superheroes (interested)
-(35, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(35, 57, FALSE), -- Environmental Conservation Success Stories (supporter)
 (35, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(35, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(35, 89, FALSE), -- The Science Behind Horror Movies (curious)
 (35, 107, TRUE),  -- Superhero Origin Stories Comparison (expert)
 (35, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1462,7 +1471,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (38, 125, TRUE),   -- The Psychology of Superheroes (expert)
 (38, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (38, 38, FALSE), -- Indie Music Festival Highlights (interested)
-(38, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(38, 89, FALSE), -- The Science Behind Horror Movies (curious)
 (38, 108, TRUE),  -- Superhero Origin Stories Comparison (expert)
 (38, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1502,7 +1511,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (43, 8, TRUE),   -- Staying Motivated to Exercise in the Cold (interested)
 (43, 16, FALSE), -- Anticipated Sequels of 2024 (interested)
 (43, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(43, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(43, 89, FALSE), -- The Science Behind Horror Movies (curious)
 (43, 43, FALSE), -- Cinematography Techniques in Modern Cinema (interested)
 (43, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1518,7 +1527,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (45, 2, FALSE),  -- The Psychology of Superheroes (interested)
 (45, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (45, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(45, 35, TRUE),  -- The Science Behind Horror Movies (expert)
+(45, 89, TRUE),  -- The Science Behind Horror Movies (expert)
 (45, 109, TRUE),  -- Superhero Origin Stories Comparison (expert)
 (45, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1526,7 +1535,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (46, 2, FALSE),  -- The Psychology of Superheroes (interested)
 (46, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (46, 50, FALSE), -- How to Start a Home Garden (interested)
-(46, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(46, 89, FALSE), -- The Science Behind Horror Movies (curious)
 (46, 110, FALSE), -- Superhero Origin Stories Comparison (interested)
 (46, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1558,7 +1567,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (50, 2, FALSE),  -- The Psychology of Superheroes (interested)
 (50, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (50, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(50, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(50, 90, FALSE), -- The Science Behind Horror Movies (curious)
 (50, 111, FALSE), -- Superhero Origin Stories Comparison (interested)
 (50, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1574,7 +1583,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (52, 2, FALSE),  -- The Psychology of Superheroes (interested)
 (52, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (52, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(52, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(52, 90, FALSE), -- The Science Behind Horror Movies (curious)
 (52, 112, FALSE), -- Superhero Origin Stories Comparison (interested)
 (52, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1591,14 +1600,14 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (54, 8, TRUE),   -- Staying Motivated to Exercise in the Cold (interested)
 (54, 16, FALSE), -- Anticipated Sequels of 2024 (interested)
 (54, 54, FALSE), -- Pop Culture Trends of the Decade (interested)
-(54, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(54, 90, FALSE), -- The Science Behind Horror Movies (curious)
 (54, 113, FALSE), -- Superhero Origin Stories Comparison (interested)
 
 -- Thor Odinson (thor)
 (55, 2, TRUE),   -- The Psychology of Superheroes (expert)
 (55, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (55, 55, FALSE), -- Pop Culture Trends of the Decade (interested)
-(55, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(55, 90, FALSE), -- The Science Behind Horror Movies (curious)
 (55, 114, TRUE),  -- Superhero Origin Stories Comparison (expert)
 (55, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1614,7 +1623,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (57, 2, FALSE),  -- The Psychology of Superheroes (interested)
 (57, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (57, 57, FALSE), -- Pop Culture Trends of the Decade (interested)
-(57, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(57, 90, FALSE), -- The Science Behind Horror Movies (curious)
 (57, 58, FALSE), -- Superhero Origin Stories Comparison (interested)
 (57, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1622,7 +1631,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (58, 2, TRUE),   -- The Psychology of Superheroes (expert)
 (58, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (58, 56, FALSE), -- Pop Culture Trends of the Decade (interested)
-(58, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(58, 90, FALSE), -- The Science Behind Horror Movies (curious)
 (58, 115, TRUE),  -- Superhero Origin Stories Comparison (expert)
 (58, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1630,7 +1639,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (59, 2, TRUE),   -- The Psychology of Superheroes (expert)
 (59, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (59, 47, FALSE), -- Understanding Blockchain (interested)
-(59, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(59, 90, FALSE), -- The Science Behind Horror Movies (curious)
 (59, 59, TRUE),  -- Superhero Origin Stories Comparison (expert)
 (59, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1678,7 +1687,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (65, 2, FALSE),  -- The Psychology of Superheroes (interested)
 (65, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (65, 47, FALSE), -- Understanding Blockchain (interested)
-(65, 35, TRUE),  -- The Science Behind Horror Movies (expert)
+(65, 74, TRUE),  -- The Science Behind Horror Movies (expert)
 (65, 60, FALSE), -- Superhero Origin Stories Comparison (interested)
 (65, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1694,7 +1703,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (67, 2, FALSE),  -- The Psychology of Superheroes (interested)
 (67, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (67, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(67, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(67, 74, FALSE), -- The Science Behind Horror Movies (curious)
 (67, 60, FALSE), -- Superhero Origin Stories Comparison (interested)
 (67, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1702,7 +1711,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (68, 2, FALSE),  -- The Psychology of Superheroes (interested)
 (68, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (68, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(68, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(68, 74, FALSE), -- The Science Behind Horror Movies (curious)
 (68, 62, FALSE), -- Superhero Origin Stories Comparison (interested)
 (68, 63, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1711,7 +1720,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (69, 8, TRUE),   -- Staying Motivated to Exercise in the Cold (interested)
 (69, 16, FALSE), -- Anticipated Sequels of 2024 (interested)
 (69, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(69, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(69, 74, FALSE), -- The Science Behind Horror Movies (curious)
 (69, 62, FALSE), -- Superhero Origin Stories Comparison (interested)
 
 -- Nairobi (nairobi)
@@ -1726,7 +1735,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (71, 2, FALSE),  -- The Psychology of Superheroes (interested)
 (71, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
 (71, 44, FALSE), -- eSports: The Future of Competitive Gaming (interested)
-(71, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(71, 19, FALSE), -- The Science Behind Horror Movies (curious)
 (71, 73, FALSE), -- Superhero Origin Stories Comparison (interested)
 (71, 64, FALSE), -- Exploring Classic Films of the 20th Century (interested)
 
@@ -1742,7 +1751,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (73, 8, TRUE),   -- Staying Motivated to Exercise in the Cold (interested)
 (73, 16, FALSE), -- Anticipated Sequels of 2024 (interested)
 (73, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(73, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(73, 19, FALSE), -- The Science Behind Horror Movies (curious)
 (73, 73, FALSE), -- Superhero Origin Stories Comparison (interested)
 
 -- Maeve Wiley (maeve)
@@ -1750,7 +1759,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 (74, 8, TRUE),   -- Staying Motivated to Exercise in the Cold (interested)
 (74, 16, FALSE), -- Anticipated Sequels of 2024 (interested)
 (74, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
-(74, 35, FALSE), -- The Science Behind Horror Movies (curious)
+(74, 19, FALSE), -- The Science Behind Horror Movies (curious)
 (74, 74, FALSE), -- Superhero Origin Stories Comparison (interested)
 
 -- Marienne Bellamy (marienne)
@@ -1771,7 +1780,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 
 -- Luther Hargreeves (luther)
 (77, 2, TRUE),   -- The Psychology of Superheroes (expert)
-(77, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(77, 43, FALSE), -- Environmental Conservation Success Stories (supporter)
 (77, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
 (77, 35, FALSE), -- The Science Behind Horror Movies (curious)
 (77, 117, TRUE),  -- Superhero Origin Stories Comparison (expert)
@@ -1779,7 +1788,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 
 -- Klaus Hargreeves (klaus)
 (78, 2, FALSE),  -- The Psychology of Superheroes (interested)
-(78, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(78, 43, FALSE), -- Environmental Conservation Success Stories (supporter)
 (78, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
 (78, 35, FALSE), -- The Science Behind Horror Movies (curious)
 (78, 118, FALSE), -- Superhero Origin Stories Comparison (interested)
@@ -1803,7 +1812,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 
 -- Dustin Henderson (dustin)
 (81, 24, FALSE),  -- Emerging Tech Trends in 2024 (interested)
-(81, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(81, 43, FALSE), -- Environmental Conservation Success Stories (supporter)
 (81, 29, FALSE), -- The Evolution of Detective Fiction (interested)
 (81, 35, FALSE), -- The Science Behind Horror Movies (curious)
 (81, 52, FALSE), -- Superhero Origin Stories Comparison (interested)
@@ -1812,7 +1821,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 -- The Professor (professor)
 (82, 1, TRUE),   -- The Rise of AI (expert)
 (82, 9, TRUE),   -- Game Development Basics (expert)
-(82, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(82, 43, FALSE), -- Environmental Conservation Success Stories (supporter)
 (82, 26, FALSE), -- Space Exploration Milestones (interested)
 (82, 30, TRUE),  -- Must-Have Gadgets for 2024 (expert)
 (82, 61, TRUE),  -- How AI is Reshaping the Job Market (expert)
@@ -1876,7 +1885,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 -- Huey Duck (huey)
 (90, 1, FALSE),  -- The Rise of AI (curious)
 (90, 9, TRUE),   -- Game Development Basics (expert)
-(90, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(90, 43, FALSE), -- Environmental Conservation Success Stories (supporter)
 (90, 26, FALSE), -- Space Exploration Milestones (interested)
 (90, 90, TRUE),  -- Must-Have Gadgets for 2024 (expert)
 (90, 61, TRUE),  -- How AI is Reshaping the Job Market (expert)
@@ -1884,7 +1893,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 -- Dewey Duck (dewey)
 (91, 1, FALSE),  -- The Rise of AI (curious)
 (91, 9, TRUE),   -- Game Development Basics (expert)
-(91, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(91, 43, FALSE), -- Environmental Conservation Success Stories (supporter)
 (91, 26, FALSE), -- Space Exploration Milestones (interested)
 (91, 30, TRUE),  -- Must-Have Gadgets for 2024 (expert)
 (91, 61, TRUE),  -- How AI is Reshaping the Job Market (expert)
@@ -1892,7 +1901,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 -- Louie Duck (louie)
 (92, 1, FALSE),  -- The Rise of AI (curious)
 (92, 9, TRUE),   -- Game Development Basics (expert)
-(92, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(92, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
 (92, 26, FALSE), -- Space Exploration Milestones (interested)
 (92, 92, TRUE),  -- Must-Have Gadgets for 2024 (expert)
 (92, 61, TRUE),  -- How AI is Reshaping the Job Market (expert)
@@ -1907,7 +1916,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 
 -- Beast (beast)
 (94, 82, FALSE),  -- The Psychology of Superheroes (interested)
-(94, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(94, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
 (94, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
 (94, 35, FALSE), -- The Science Behind Horror Movies (curious)
 (94, 94, FALSE), -- Superhero Origin Stories Comparison (interested)
@@ -1923,7 +1932,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 
 -- Jasmine (jasmine)
 (96, 82, FALSE),  -- The Psychology of Superheroes (interested)
-(96, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(96, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
 (96, 25, FALSE), -- Pop Culture Trends of the Decade (interested)
 (96, 35, FALSE), -- The Science Behind Horror Movies (curious)
 (96, 96, FALSE), -- Superhero Origin Stories Comparison (interested)
@@ -1932,7 +1941,7 @@ INSERT INTO authors (authenticated_user_id, post_id, pinned) VALUES
 -- Genie (genie)
 (97, 14, FALSE),  -- Budget Friendly Travel Hacks (curious)
 (97, 9, TRUE),   -- Game Development Basics (expert)
-(97, 18, FALSE), -- Environmental Conservation Success Stories (supporter)
+(97, 40, FALSE), -- Environmental Conservation Success Stories (supporter)
 (97, 26, FALSE), -- Space Exploration Milestones (interested)
 (97, 97, TRUE),  -- Must-Have Gadgets for 2024 (expert)
 (97, 61, TRUE),  -- How AI is Reshaping the Job Market (expert)

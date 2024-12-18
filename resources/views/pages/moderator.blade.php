@@ -247,10 +247,10 @@ function toggleModerator(user_id, community_id, isChecked) {
         })
         .catch(error => {
             alert(error.message);
-            document.getElementById(`moderator-checkbox-${userId}`).checked = !isChecked;
+            document.getElementById(`moderator-checkbox-${user_id}`).checked = !isChecked;
         });
     } else {
-        document.getElementById(`moderator-checkbox-${userId}`).checked = !isChecked;
+        document.getElementById(`moderator-checkbox-${user_id}`).checked = !isChecked;
     }
 }
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Community;
+use App\Models\Notification;
+use App\Models\RequestNotification;
 use App\Models\CommunityNotification;
 use App\Models\CommunityFollowRequest;
 use App\Models\Image;
@@ -216,16 +218,25 @@ class CommunityController extends Controller
 
 
   private function cacheRecentHub($communityId, $communityName)
-  {
+{
     $userId = Auth::check() ? Auth::user()->id : null; // Check if the user is authenticated
     $cacheKey = $userId ? "recent_hubs:{$userId}" : "recent_hubs:guest";
 
-    $hubData = ['id' => $communityId, 'name' => $communityName];
+    // Retrieve the community's image path
+    $community = Community::with('image')->find($communityId);
+    $imagePath = $community && $community->image ? $community->image->path : null;
+
+    // Prepare the hub data including the image path
+    $hubData = [
+        'id' => $communityId,
+        'name' => $communityName,
+        'image' => $imagePath, // Add the image path
+    ];
 
     // Fetch recent hubs from cache (use session for guests)
     $recentHubs = $userId
-      ? Cache::get($cacheKey, [])
-      : session()->get($cacheKey, []);
+        ? Cache::get($cacheKey, [])
+        : session()->get($cacheKey, []);
 
     // Remove the hub if it already exists
     $recentHubs = array_filter($recentHubs, fn($hub) => $hub['id'] !== $communityId);
@@ -237,13 +248,14 @@ class CommunityController extends Controller
     $recentHubs = array_slice($recentHubs, 0, 4);
 
     if ($userId) {
-      // Store in cache for authenticated users
-      Cache::put($cacheKey, $recentHubs, now()->addHours(12));
+        // Store in cache for authenticated users
+        Cache::put($cacheKey, $recentHubs, now()->addHours(12));
     } else {
-      // Store in session for guests
-      session()->put($cacheKey, $recentHubs);
+        // Store in session for guests
+        session()->put($cacheKey, $recentHubs);
     }
-  }
+}
+
 
 
   public function updatePrivacy($id)
@@ -335,7 +347,7 @@ class CommunityController extends Controller
         ->where('authenticated_user_id', auth()->user()->id)
         ->where('request_status', 'pending')
         ->exists()) {
-        return redirect()->back()->with('error', 'Você já fez uma solicitação para seguir esta comunidade.');
+        return redirect()->back()->with('error', 'You have already requested to join this community.');
       }
 
       
@@ -353,13 +365,13 @@ class CommunityController extends Controller
             'authenticated_user_id' => $moderator->id, 
         ]);
 
-        FollowNotification::create([
+        RequestNotification::create([
             'notification_id' => $notification->id,
-            'authenticated_user_id' => $user->id, 
+            'request_id' => $request->id, 
         ]);
     }
 
-      return redirect()->back()->with('success', 'Sua solicitação foi enviada e está aguardando aprovação.');
+      return redirect()->back()->with('success', 'Your request was sent.');
   }
 
 

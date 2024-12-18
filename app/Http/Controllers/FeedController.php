@@ -94,7 +94,7 @@ class FeedController extends Controller
   }
   public function global()
   {
-    if(Auth::user()->is_suspended) {
+    if(Auth::user() && Auth::user()->is_suspended) {
 
       return view('pages.suspension');
     }
