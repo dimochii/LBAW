@@ -3080,5 +3080,9 @@ INSERT INTO reports(reported_id, reason, is_open, report_type, authenticated_use
     (25, 'User is not contributing constructively to the discussion', TRUE, 'comment_report', 78),
     (26, 'User is attempting to intimidate other users through comments', TRUE, 'comment_report', 80);
 
+-- suspensions
+
+INSERT INTO suspensions (reason, start, duration, authenticated_user_id)
+VALUES ('Violation of forum rules', NOW(), NOW() + INTERVAL '7 days', 1);
 
 

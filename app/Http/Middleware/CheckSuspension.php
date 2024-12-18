@@ -1,33 +1,23 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon; // Para lidar com datas
+use Carbon\Carbon;
 
 class CheckSuspension
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  
-     * @param  \Closure
-     * @return mixed
-     */
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
             $user = Auth::user();
 
             $suspensions = $user->suspensions()
-                ->where(function ($query) {
-                    $query->where('start', '<=', Carbon::now()) 
-                          ->whereRaw('DATE_ADD(start, INTERVAL duration DAY) >= ?', [Carbon::now()]); 
-                })
+                ->where('start', '<=', Carbon::now())
+                ->whereRaw('start + (duration || \' days\')::interval >= ?', [Carbon::now()])
                 ->get();
 
-            if ($suspensions->isNotEmpty()) {
+            if ($user->is_suspended || $suspensions->count() > 0) {
                 return response()->view('pages.suspension', ['suspensions' => $suspensions]);
             }
         }
@@ -35,5 +25,7 @@ class CheckSuspension
         return $next($request);
     }
 }
+
+
 
 
