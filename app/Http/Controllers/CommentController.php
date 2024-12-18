@@ -224,6 +224,28 @@ public function voteUpdate(Request $request, $comment_id)
     ]);
 }
 
+public function delete($id) {
+
+
+    $comment = Comment::find($id);
+
+    if (!$comment) {
+        return response()->json(['message' => 'Comment not found.'], 404);
+    }
+
+    $user = Auth::user();
+
+    if (!$user->is_admin && $user->id != $comment->authenticated_user_id) {
+        return response()->json(['message' => 'You are not authorized to delete this comment.'], 403);
+    }
+
+    $comment->authenticated_user_id = 1; 
+    $comment->content = ''; 
+    $comment->save(); 
+
+    return response()->json(['message' => 'Comment updated successfully.']);
+}
+
 
 }
 

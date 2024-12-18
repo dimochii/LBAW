@@ -18,6 +18,7 @@
 
           <span>•</span>
           <span>{{ $comment->creation_date ? $comment->creation_date->diffForHumans() : '?' }}</span>
+          @if(auth()->check() && auth()->user()->id != $comment->authenticated_user_id && $comment->authenticated_user_id != 1)
           <span>•</span>
           <span class="underline-effect cursor-pointer group-open/details-{{ $comment ->id }}:before:content-['hide']">
             <button 
@@ -29,6 +30,18 @@
               Report Comment
             </button>
           </span>
+          @endif
+           {{-- Delete Comment Button --}}
+            @if(auth()->check() && (auth()->user()->is_admin || auth()->user()->id == $comment->authenticated_user_id) && $comment->authenticated_user_id != 1)
+            <span>•</span>
+            <form action="{{ route('comments.delete', ['comment_id' => $comment->id]) }}" method="POST" style="display: inline;">
+              @csrf
+              @method('PUT')
+              <button type="submit" class="underline-effect text-red-600 hover:text-red-800">
+                Delete Comment
+              </button>
+            </form>
+          @endif
 
         </div>
       </summary>
