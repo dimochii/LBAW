@@ -110,6 +110,9 @@ Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments']
 Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware('auth')->name('comments.update');
 
+//Comments upvote & downvote
+Route::post('/comment/{comment_id}/voteupdate', [CommentController::class, 'voteUpdate'])->middleware('auth')->name('comments.voteupdate');
+
 //upvote & downvote
 Route::post('/news/{post_id}/upvote', [PostController::class, 'upvote'])->middleware('auth')->name('news.upvote');
 Route::post('/news/{post_id}/downvote', [PostController::class, 'downvote'])->middleware('auth')->name('news.downvote');

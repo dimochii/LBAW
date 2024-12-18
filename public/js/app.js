@@ -23,11 +23,67 @@ function addEventListeners() {
   if (cardCreator != null)
     cardCreator.addEventListener('submit', sendCreateCardRequest);
 
-  const voteButtons = document.querySelectorAll("input[type='checkbox']");
+  const voteButtons = document.querySelectorAll('input[type="checkbox"][id$="-upvote"], input[type="checkbox"][id$="-downvote"]')
   voteButtons.forEach((button) => {
     button.addEventListener("change", voteUpdate)
   })
 
+  const commentVoteButtons = document.querySelectorAll('input[type="checkbox"][id$="-upvote-c"], input[type="checkbox"][id$="-downvote-c"]')
+  commentVoteButtons.forEach((button) => {
+    button.addEventListener("change", commentVoteUpdate)
+  })
+}
+
+
+async function commentVoteUpdate(e) {
+  const commentId = e.target.id.split("-")[0];
+  const voteType = e.target.id.includes("upvote") ? "upvote" : "downvote";
+  const otherVote = document.getElementById(`${commentId}-${voteType == "upvote" ? "downvote" : "upvote"}-c`)
+  console.log(otherVote)
+  console.log(e.target)
+
+  try {
+    const response = await fetch(`/comment/${commentId}/voteupdate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+      },
+      body: JSON.stringify({
+        vote_type: voteType,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      console.log(data.vote === voteType)
+
+      const scoreElement = document.getElementById(`${commentId}-score-c`);
+      if (scoreElement) {
+        scoreElement.textContent = data.newScore
+        // let newScore = data.newScore;
+        // if (!scoreElement.textContent.includes("k")) {
+        //   let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, ''));
+        //   newScore = currentScore + newScore;
+        //   console.log(newScore)
+        //   scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
+        // }
+      }
+
+      if (data.vote === voteType) {
+        e.target.checked = true
+        otherVote.checked = false // exclusive
+      } else {
+        e.target.checked = false
+      }
+
+    } else {
+      console.error("Failed to update the vote:", await response.text());
+    }
+  } catch (error) {
+    console.error("Error while updating the vote:", error);
+  }
 }
 
 async function voteUpdate(e) {

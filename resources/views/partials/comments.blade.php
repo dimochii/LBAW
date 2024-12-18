@@ -42,8 +42,8 @@
       <footer class="flex gap-x-1 items-center mt-4">
         {{-- Upvote --}}
         <div>
-          <input id="upvote-{{ $comment->id }}" type="checkbox" class="hidden peer/upvote">
-          <label for="upvote-{{ $comment->id }}"
+          <input id="{{ $comment->id }}-upvote-c" type="checkbox" class="hidden peer/upvote">
+          <label for="{{ $comment->id }}-upvote-c"
             class="peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 transition-all ease-out">
             <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21,21H3L12,3Z" />
@@ -54,7 +54,7 @@
         </div>
 
         {{-- Score --}}
-        <span class="mr-2">
+        <span class="mr-2" id="{{ $comment->id }}-score-c">
           @php
           $score = $comment->upvotesCount->count() - $comment->downvotesCount->count();
           echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
@@ -63,8 +63,8 @@
 
         {{-- Downvote --}}
         <div>
-          <input id="downvote-{{ $comment->id }}" type="checkbox" class="hidden peer/downvote">
-          <label for="downvote-{{ $comment->id }}"
+          <input id="{{ $comment->id }}-downvote-c" type="checkbox" class="hidden peer/downvote">
+          <label for="{{ $comment->id }}-downvote-c"
             class="cursor-pointer peer-checked/downvote:fill-red-400 hover:fill-red-400 transition-all ease-out">
             <svg class="w-5 h-5 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21,21H3L12,3Z" />
