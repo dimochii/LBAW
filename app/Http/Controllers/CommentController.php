@@ -8,7 +8,9 @@ use App\Models\Comment;
 use App\Models\CommentNotification;
 use App\Models\Notification; // Assuming you have a Notification model for general notifications
 use App\Models\AuthenticatedUser; // To get the authors of the post
-
+use App\Models\CommentVote;
+use App\Models\Vote;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -175,7 +177,7 @@ class CommentController extends Controller
     return redirect()->back()->with('success', 'Comment downvoted successfully.');
 }
 
-public function voteUpdate(Request $request, $post_id, $comment_id)
+public function voteUpdate(Request $request, $comment_id)
 {
     $comment = Comment::findOrFail($comment_id);
     $user = Auth::user();
