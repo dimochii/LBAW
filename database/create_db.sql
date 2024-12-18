@@ -155,6 +155,7 @@ CREATE TABLE post_notifications (
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
+
 CREATE TABLE suspensions (
     id SERIAL PRIMARY KEY,
     reason TEXT NOT NULL,
@@ -191,6 +192,14 @@ CREATE TABLE community_follow_requests (
     request_status request_status DEFAULT 'pending',
     FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id),
     FOREIGN KEY (community_id) REFERENCES communities(id)
+);
+
+CREATE TABLE request_notifications (
+    id SERIAL PRIMARY KEY,
+    request_id INT,
+    notification_id INT,
+    FOREIGN KEY (notification_id) REFERENCES notifications(id),
+    FOREIGN KEY (request_id) REFERENCES community_follow_requests(id)
 );
 
 

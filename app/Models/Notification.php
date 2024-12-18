@@ -38,4 +38,8 @@ class Notification extends Model
     {
         return $this->hasOne(PostNotification::class);
     }
+    public function requestNotification()
+    {
+        return $this->hasOne(RequestNotification::class);
+    }
 }
