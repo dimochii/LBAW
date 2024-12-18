@@ -134,14 +134,19 @@
 
         <a href="{{ route('notifications.show', Auth::user()->id) }}"
           class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
-          <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
-          <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
-          <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-          </svg>
+            <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
+            <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
+            <span id="notification-count"
+                  class="absolute -top-2 -right-2 bg-pastelRed text-white text-xs rounded-full px-2 py-1">
+                <!-- O número será atualizado dinamicamente -->
+            </span>
+            <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
         </a>
+
 
         <div class="relative">
           <a href="#" class="relative fill-transparent text-[#3C3D37] hover:text-[#3C3D37]/80 transition-colors"
@@ -315,7 +320,21 @@
                   class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37]">
               <h1 class="mt-4 mb-1 font-medium tracking-tight text-xl text-center">h/{{$community->name}}</h1>
               <p class="text-sm font-light break-all tracking-tight text-center">{{ $community->description }}</p>
-              
+              <div class="flex items-center justify-center text-sm font-light break-all tracking-tight text-center">
+                  @if($community->privacy)
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 12c2.21 0 4-1.79 4-4V5c0-2.21-1.79-4-4-4S8 2.79 8 5v3c0 2.21 1.79 4 4 4z"></path>
+                      <path fill-rule="evenodd" d="M4 9c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2H4zm2 3v6h12v-6H6z" clip-rule="evenodd"></path>
+                  </svg>
+                  private
+                  @else
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
+                      <path d="M11 14h2v2h-2zm0-8h2v6h-2z"></path>
+                  </svg>
+                  public
+                  @endif
+              </div>
               <div class="flex flex-row justify-center gap-8 mt-4">
                   <div class="flex items-center">
                       <span class="font-medium text-lg">{{ number_format($followers_count ?? 0, 0) }}</span>
@@ -399,5 +418,34 @@
     onclick="toggleLeftSidebar()">
   </div>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const notificationCountElement = document.getElementById('notification-count');
+
+    async function fetchUnreadNotifications() {
+        try {
+            const response = await fetch('/api/notifications/unread-count', {
+                headers: { 'Accept': 'application/json' },
+            });
+            const data = await response.json();
+            if (data.unreadCount > 0) {
+                notificationCountElement.textContent = data.unreadCount;
+                notificationCountElement.classList.remove('hidden');
+            } else {
+                notificationCountElement.classList.add('hidden');
+            }
+        } catch (error) {
+            console.error('Failed to fetch unread notifications count:', error);
+        }
+    }
+
+    // Fetch notifications on page load
+    fetchUnreadNotifications();
+
+    // Optionally refresh the count periodically
+    setInterval(fetchUnreadNotifications, 60000); // 60 seconds
+});
+
+</script>
 
 </html>

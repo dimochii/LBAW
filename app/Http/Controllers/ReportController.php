@@ -9,12 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class ReportController extends Controller
 {
     public function show()
-    {
-        if(Auth::user()->is_suspended) {
-
-            return view('pages.suspension');
-          }
-          
+    {  
         $user = Auth::user();
 
         //descomentar isto depois

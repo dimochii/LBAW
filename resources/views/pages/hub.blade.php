@@ -64,16 +64,18 @@
         </form>
         </div>
 
-        <p class="mt-2 text-sm">{{ $community->description }}</p>
+        <p class="text-gray-600 mt-2 text-sm">{{ $community->description }}</p>
         <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
           <div class="flex items-center">
+            <a href="{{ route('community.followers', $community->id) }}">
               <span class="font-medium text-lg">{{ number_format($followers_count ?? 0, 0) }}</span>
               <span class="ml-1 text-sm ">followers</span>
+            </a>
             </div>
           <div class="flex items-center">
               <span class="font-medium text-lg">{{ number_format($posts_count ?? 0, 0) }}</span>
               <span class="ml-1 text-sm t">posts</span>
-          </div>
+            </div>
         </div>
 
         <!-- Sort by and + post button -->
