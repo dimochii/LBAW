@@ -307,67 +307,61 @@
         class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
 
         <!-- Hubs Section -->
-        <div class="p-4 border-b-2 border-black">
-          <div class="flex flex-wrap items-start gap-3">
-            <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" alt="Community Image"
-              class="rounded-full  size-20">
-
-            <div class="flex-1 break-words">
-              <h2 class="font-medium break-all">/{{ $community->name }}</h2>
-              <p class="text-sm text-gray-600 whitespace-normal">
-                {{ $community->description }}
-              </p>
-              <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
-                <div class="flex items-center shrink-0">
-                  <span>{{ number_format($followers_count ?? 0, 0) }}</span>
-                  <span class="ml-1">reading</span>
-                </div>
-                <div class="flex items-center shrink-0">
-                  <span>{{ number_format($posts_count ?? 0, 0) }}</span>
-                  <span class="ml-1">posts</span>
-                </div>
+        <div class="border-b-2 border-black">
+          <a class="p-4 flex flex-col hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-all group"
+              href="{{route('communities.show', $community->id)}}">
+              <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" 
+                  alt="hub image"
+                  class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37]">
+              <h1 class="mt-4 mb-1 font-medium tracking-tight text-xl text-center">h/{{$community->name}}</h1>
+              <p class="text-sm font-light break-all tracking-tight text-center">{{ $community->description }}</p>
+              
+              <div class="flex flex-row justify-center gap-8 mt-4">
+                  <div class="flex items-center">
+                      <span class="font-medium text-lg">{{ number_format($followers_count ?? 0, 0) }}</span>
+                      <span class="ml-1 text-sm ">followers</span>
+                  </div>
+                  <div class="flex items-center">
+                      <span class="font-medium text-lg">{{ number_format($posts_count ?? 0, 0) }}</span>
+                      <span class="ml-1 text-sm t">posts</span>
+                  </div>
               </div>
-
-              <div>
-                @auth
-                @if($is_following)
-                {{-- Estado: Seguindo --}}
-                <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                        bg-[#F4F2ED] text-black border-2 border-black">
-                    unfollow -
+              
+              <div class="flex justify-center mt-6">
+                  @auth
+                  @if($is_following)
+                  {{-- Estado: Seguindo --}}
+                  <form action="{{ route('communities.leave', $community->id) }}" method="POST">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" 
+                          class="px-3.5 py-2.5 text-sm font-medium rounded-lg bg-[#F4F2ED] text-black border-2 border-black">
+                          unfollow -
+                      </button>
+                  </form>
+                  @elseif($community->privacy && $community->followRequests->where('authenticated_user_id', Auth::user()->id)->where('request_status', 'pending')->count() > 0)
+                  <button class="px-3.5 py-2.5 text-sm font-medium rounded-lg bg-[#F4F2ED] text-gray-600 border-2 border-black cursor-not-allowed" 
+                      disabled>
+                      request Pending
                   </button>
-                </form>
-                @elseif($community->privacy && $community->followRequests->where('authenticated_user_id',
-                Auth::user()->id)->where('request_status', 'pending')->count() > 0)
-                <button class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                    bg-[#F4F2ED] text-gray-600 border-2 border-black cursor-not-allowed" disabled>
-                  request Pending
-                </button>
-                @else
-                <form id="followForm" action="{{ route('communities.join', $community->id) }}" method="POST"
-                  class="inline">
-                  @csrf
-                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                        bg-black text-[#F4F2ED]">
-                    follow +
-                  </button>
-                </form>
-
-                @endif
-                @else
-                <a href="{{ route('login') }}" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                            bg-black text-[#F4F2ED]">
-                  follow +
-                </a>
-                @endauth
+                  @else
+                  <form id="followForm" action="{{ route('communities.join', $community->id) }}" method="POST">
+                      @csrf
+                      <button type="submit" 
+                          class="px-3.5 py-2.5 text-sm font-medium rounded-lg bg-black text-[#F4F2ED] border-2 border-black">
+                          follow +
+                      </button>
+                  </form>
+                  @endif
+                  @else
+                  <a href="{{ route('login') }}" 
+                      class="px-3.5 py-2.5 text-sm font-medium rounded-lg bg-black text-[#F4F2ED] border-2 border-black">
+                      follow +
+                  </a>
+                  @endauth
               </div>
-            </div>
-          </div>
-        </div>
-
+          </a>
+      </div>
 
         <!-- Moderators Section -->
         <div class="p-4">

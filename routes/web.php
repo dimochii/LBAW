@@ -126,6 +126,8 @@ Route::get('/topic/{post_id}', [TopicController::class, 'show'])->name('topic.sh
 //editing
 Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware('auth')->name('topics.edit');
 Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware('auth')->name('topics.update');
+Route::post('/topic/{post_id}/remove-authors', [TopicController::class, 'removeAuthors'])
+    ->name('topics.remove-authors');
 Route::post('/topic/{post_id}/accept', [TopicController::class, 'accept'])->middleware('auth')->name('topics.accept');
 Route::post('/topic/{post_id}/reject', [TopicController::class, 'reject'])->middleware('auth')->name('topics.reject');
 

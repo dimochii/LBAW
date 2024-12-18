@@ -140,7 +140,8 @@
           </span>
           @if (count($topicItem->post->authors) === 1)
           <a data-name="authors" class="underline-effect">
-            {{ $author->username ?? 'Unknown' }}
+            {{ $topicItem->post->authors[0]->username ?? 'Unknown' }}
+          </a>
           </a>
           @else
           @include('partials.authors_dropdown', [
