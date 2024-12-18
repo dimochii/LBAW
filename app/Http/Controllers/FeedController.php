@@ -192,9 +192,15 @@ class FeedController extends Controller
     // Fetch posts from user's communities, sorted by creation date
     $posts = Post::withCount('votes')
       ->whereIn('community_id', $authUser->communities->pluck('id'))
+      ->where(function ($query) {
+        $query->whereDoesntHave('topic') // Include posts that are not topics
+              ->orWhereHas('topic', function ($subQuery) {
+                  $subQuery->where('status', TopicStatus::Accepted->value); // Include only topics with 'accepted' status
+              });
+    })
       ->orderBy('creation_date', 'desc')
       ->get();
-
+      
     foreach ($posts as $post) {
       // Count upvotes and downvotes
       $post->upvotes_count = Vote::whereHas('postVote', function ($query) use ($post) {

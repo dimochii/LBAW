@@ -153,7 +153,7 @@ class PostController extends Controller
           'authors.*' => 'exists:authenticated_users,id', 
       ]);
 
-    $title = "News";
+    $title = $request->title ?? "News";
 
       $post = Post::create([
           'title' => $title,
@@ -176,6 +176,7 @@ class PostController extends Controller
 
           return app(NewsController::class)->createNews($post, $request->news_url, $ogTags['image'] ?? null);
       } elseif ($request->type === 'topic') {
+        $post->title = $request->title;
           return app(TopicController::class)->createTopic($post);
       }
 
