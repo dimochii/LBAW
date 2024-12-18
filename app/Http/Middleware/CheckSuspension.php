@@ -13,9 +13,10 @@ class CheckSuspension
             $user = Auth::user();
 
             $suspensions = $user->suspensions()
-                ->where('start', '<=', Carbon::now())
-                ->whereRaw('start + (duration || \' days\')::interval >= ?', [Carbon::now()])
-                ->get();
+            ->where('start', '<=', Carbon::now()) 
+            ->where('duration', '>=', Carbon::now()) 
+            ->get();
+
 
             if ($user->is_suspended || $suspensions->count() > 0) {
                 return response()->view('pages.suspension', ['suspensions' => $suspensions]);

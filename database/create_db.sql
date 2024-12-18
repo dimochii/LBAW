@@ -3083,6 +3083,6 @@ INSERT INTO reports(reported_id, reason, is_open, report_type, authenticated_use
 -- suspensions
 
 INSERT INTO suspensions (reason, start, duration, authenticated_user_id)
-VALUES ('Violation of forum rules', NOW(), NOW() + INTERVAL '7 days', 1);
+VALUES ('Violation of forum rules', NOW(), NOW() + INTERVAL '7 days', 7);
 
 

@@ -307,7 +307,7 @@
       </main>
 
       <!-- Right Sidebar -->
-      @if (Request::is('hub/*'))
+      @if (Request::is('hub/*') && isset($community))
       <aside id="right-sidebar"
         class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
 
