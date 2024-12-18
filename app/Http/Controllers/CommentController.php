@@ -195,6 +195,7 @@ public function voteUpdate(Request $request, $comment_id)
             $newScore += $existingVote->upvote ? -1 : 1;
 
             return response()->json([
+                'vote' => null,
                 'status' => 'removed',
                 'message' => 'Vote removed successfully.',
                 'newScore' => $newScore
@@ -216,6 +217,7 @@ public function voteUpdate(Request $request, $comment_id)
     }
 
     return response()->json([
+        'vote' => $voteType,
         'status' => 'success',
         'message' => $voteType === 'upvote' ? 'Comment upvoted successfully.' : 'Comment downvoted successfully.',
         'newScore' => $newScore

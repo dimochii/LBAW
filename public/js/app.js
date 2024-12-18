@@ -61,12 +61,14 @@ async function commentVoteUpdate(e) {
 
       const scoreElement = document.getElementById(`${commentId}-score-c`);
       if (scoreElement) {
-        let newScore = data.newScore;
-        if (!scoreElement.textContent.includes("k")) {
-          let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, ''));
-          newScore = currentScore + newScore;
-          scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
-        }
+        scoreElement.textContent = data.newScore
+        // let newScore = data.newScore;
+        // if (!scoreElement.textContent.includes("k")) {
+        //   let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, ''));
+        //   newScore = currentScore + newScore;
+        //   console.log(newScore)
+        //   scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
+        // }
       }
 
       if (data.vote === voteType) {
