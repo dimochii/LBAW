@@ -55,13 +55,7 @@
           ]
           ])
 
-        <form action="{{ route('post.delete', ['id' => $newsItem->post_id]) }}" method="POST" style="display: inline-block;">
-          @csrf
-          @method('DELETE')
-          <button type="submit" class="text-red-500 hover:underline">
-            Delete Post
-          </button>
-        </form>
+
           @else
           @include('partials.options_dropdown', [
           "options" => [
