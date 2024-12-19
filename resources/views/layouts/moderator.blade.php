@@ -7,6 +7,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ config('app.name', 'Laravel') }}</title>
   <script defer src="{{ asset('js/layout.js') }}"></script>
+  <script defer src="{{ asset('js/app.js') }}"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -19,9 +20,6 @@
   @vite('resources/css/app.css')
   {{--
   <link rel="stylesheet" href="{{ asset('css/build.css' )}}"> --}}
-
-  <script defer src="{{ asset('js/app.js') }}"></script>
-
 </head>
 
 
@@ -41,7 +39,7 @@
           href="{{route('communities.show', $id)}}">
           <img src=" {{ asset($hub->image->path ?? 'images/groupdefault.jpg') }} " alt="moderated hub image"
             class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37]">
-          <h1 class="mt-4 mb-1 font-medium tracking-tight text-xl">h/{{$hub->name}}</h1>
+          <h1 class="mt-4 mb-1 font-medium tracking-tight text-xl break-all">h/{{$hub->name}}</h1>
           <p class="text-sm font-light break-all tracking-tight"> {{ $hub->description }}</p>
           {{-- <div class="flex flex-row justify-around *:flex *:flex-col *:items-center *:justify-center">
             <div>

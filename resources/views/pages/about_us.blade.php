@@ -417,25 +417,4 @@
 
 
 @endsection
-<script>
-    // Optional: Add live markdown preview functionality
-    const markdownInput = document.querySelector('textarea');
-    const markdownPreview = document.getElementById('markdown-preview');
 
-    function markdownToHTML(markdown) {
-        return markdown
-            .replace(/^(#{1,6})\s*(.+)$/gm, (_, hashes, content) =>
-                `<h${hashes.length}>${content}</h${hashes.length}>`
-            )
-            .replace(/^>\s*(.+)$/gm, '<blockquote>$1</blockquote>')
-            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.+?)\*/g, '<em>$1</em>')
-            .replace(/\[([^\[]+)\]\(([^\)]+)\)/g, '<a href="$2">$1</a>');
-    }
-
-    if (markdownInput && markdownPreview) {
-        markdownInput.addEventListener('input', (e) => {
-            markdownPreview.innerHTML = markdownToHTML(e.target.value);
-        });
-    }
-</script>

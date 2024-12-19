@@ -1,17 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+<span class="hidden" id="postId">{{$newsItem->post->id}}</span>
 <div class="font-grotesk divide-y-2 divide-[black]">
-  @if($newsItem->post->community->privacy && !($newsItem->post->community->followers->pluck('id')->contains(Auth::user()->id)))
+  @if($newsItem->post->community->privacy &&
+  !($newsItem->post->community->followers->pluck('id')->contains(Auth::user()->id)))
   <div class="text-center py-12 bg-white rounded-xl shadow-sm">
-  <a class="flex items-center"
-          href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
+    <a class="flex items-center"
+      href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
 
-          <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
-            class="size-8 rounded-full ring-2  ring-white">
-          <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
-            Community' }}</span>
-        </a>
+      <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
+        class="size-8 rounded-full ring-2  ring-white">
+      <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
+        Community' }}</span>
+    </a>
     <p class="text-gray-500">This post belongs to a private hub.</p>
   </div>
   @else
@@ -189,6 +191,7 @@
         @endif
       </div>
     </div>
+    
     <div class="text-sm text-gray-600">
       contributors • {{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown
       date' }}
@@ -269,7 +272,7 @@
     </div>
 
     {{-- comments wrapper --}}
-    <div class="w-11/12 min-w-72">
+    <div class="min-w-72">
       {{-- comment thread --}}
       @foreach ($comments as $comment)
       @if (is_null($comment->parent_comment_id))
@@ -280,36 +283,11 @@
 
   </div>
   @endif
-  </div>
-  
+</div>
 
-  <script>
-    // Function to convert markdown to HTML
-    function markdownToHTML(markdown) {
-    const headingClasses = {
-        1: "m-0 text-4xl font-bold",
-        2: "m-0 text-3xl font-bold",
-        3: "m-0 text-2xl font-bold",
-        4: "m-0 text-xl font-bold",
-        5: "m-0 text-lg font-bold",
-        6: "m-0 text-base font-bold",
-    } 
 
-    return markdown
-        .replace(/^(#{1,6})\s*(.+)$/gm, (_, hashes, content) =>
-            `<h${hashes.length} class="${headingClasses[hashes.length]}">${content}</h${hashes.length}>`
-        ) // Headings
-        .replace(/^>\s*(.+)$/gm, 
-            `<blockquote class="prose-blockquote border-l-4 border-[#4793AF]/[.50] pl-4 italic text-gray-700">$1</blockquote>`
-        ) // Blockquotes
-        .replace(/-{3,}/g, '<hr class="my-4 border-[#4793AF]/[.50]"/>')
-        .replace (/\[([^\[]+)\]\(([^\)]+)\)/g, '<a href=\'\$2\'>\$1</a>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>') // Bold
-        .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>') // Italics
-        .replace(/`(.*?)`/g, '<code class="bg-gray-200 p-1 rounded text-[#4793AF]">$1</code>') // Inline Code
-        .replace(/^(?!<(h[1-6]|blockquote|hr)[^>]*>).+/gm, '$&<br>')
-        .replace(/(<br>\s*){2,}/g, '<br>') // Add <br> for plain text lines
-    }
+<script>
+
     
     const bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'] 
     const randomColor = bgcolors[Math.floor(Math.random() * bgcolors.length)]
@@ -318,99 +296,99 @@
     // document.getElementById('post-content').classList.add(`bg-${randomColor}`)
 
 
-    const threadPlaceholder = document.getElementById('thread-placeholder') 
-    const threadEditor = document.getElementById('thread-editor') 
+    // const threadPlaceholder = document.getElementById('thread-placeholder') 
+    // const threadEditor = document.getElementById('thread-editor') 
     
-    threadPlaceholder.addEventListener('click', function () {
-      threadPlaceholder.classList.add('hidden')
-      threadEditor.classList.remove('hidden') 
-    }) 
+    // threadPlaceholder.addEventListener('click', function () {
+    //   threadPlaceholder.classList.add('hidden')
+    //   threadEditor.classList.remove('hidden') 
+    // }) 
 
-    const replyBtns = document.querySelectorAll("[data-toggle='reply-form']") 
+    // const replyBtns = document.querySelectorAll("[data-toggle='reply-form']") 
 
-    replyBtns.forEach(btn => {
-      btn.addEventListener('click', event => {
-        const targetId = btn.getAttribute('data-target') 
-        const targetElement = document.getElementById(targetId) 
-        console.log(targetElement)
-        if (targetElement.classList.contains('hidden')) {
-          targetElement.classList.add("block")
-          targetElement.classList.remove("hidden")
-        } else 
-        {
-          targetElement.classList.remove("block")
-          targetElement.classList.add("hidden")
-        }
-      }) 
-    }) 
+    // replyBtns.forEach(btn => {
+    //   btn.addEventListener('click', event => {
+    //     const targetId = btn.getAttribute('data-target') 
+    //     const targetElement = document.getElementById(targetId) 
+    //     console.log(targetElement)
+    //     if (targetElement.classList.contains('hidden')) {
+    //       targetElement.classList.add("block")
+    //       targetElement.classList.remove("hidden")
+    //     } else 
+    //     {
+    //       targetElement.classList.remove("block")
+    //       targetElement.classList.add("hidden")
+    //     }
+    //   }) 
+    // }) 
 
-    function setupEditor(id) {
-      const editor = document.getElementById(`${id}-editor`)
-      const textarea = document.getElementById(`editor-${id}-input`) 
-      const preview = document.getElementById(`editor-${id}-preview`) 
+    // function setupEditor(id) {
+    //   const editor = document.getElementById(`${id}-editor`)
+    //   const textarea = document.getElementById(`editor-${id}-input`) 
+    //   const preview = document.getElementById(`editor-${id}-preview`) 
       
-      // Tab key behavior for indentation in textarea
-      textarea.addEventListener("keydown", (e) => {
-        if (e.key === "Tab") {
-          e.preventDefault()  // Prevent default tab behavior (focus shift)
+    //   // Tab key behavior for indentation in textarea
+    //   textarea.addEventListener("keydown", (e) => {
+    //     if (e.key === "Tab") {
+    //       e.preventDefault()  // Prevent default tab behavior (focus shift)
 
-          const start = textarea.selectionStart 
-          const end = textarea.selectionEnd 
+    //       const start = textarea.selectionStart 
+    //       const end = textarea.selectionEnd 
 
-          // Insert tab character
-          textarea.value = textarea.value.substring(0, start) + "  " + textarea.value.substring(end) 
+    //       // Insert tab character
+    //       textarea.value = textarea.value.substring(0, start) + "  " + textarea.value.substring(end) 
 
-          // Move the cursor after the inserted tab
-          textarea.selectionStart = textarea.selectionEnd = start + 2 
-        }
-      }) 
+    //       // Move the cursor after the inserted tab
+    //       textarea.selectionStart = textarea.selectionEnd = start + 2 
+    //     }
+    //   }) 
 
-      // Live preview: update the HTML preview on input change
-      textarea.addEventListener('input', (e) => {
-        const markdownText = e.target.value 
-        preview.innerHTML = markdownToHTML(markdownText, id) 
-      }) 
+    //   // Live preview: update the HTML preview on input change
+    //   textarea.addEventListener('input', (e) => {
+    //     const markdownText = e.target.value 
+    //     preview.innerHTML = markdownToHTML(markdownText, id) 
+    //   }) 
 
-      // Toggle editor visibility based on radio button selection
-      document.getElementById(`editor-write-toggle-${id}`).addEventListener('change', () => {
-        textarea.classList.remove('hidden') 
-        preview.classList.add('hidden') 
-      }) 
+    //   // Toggle editor visibility based on radio button selection
+    //   document.getElementById(`editor-write-toggle-${id}`).addEventListener('change', () => {
+    //     textarea.classList.remove('hidden') 
+    //     preview.classList.add('hidden') 
+    //   }) 
 
-      document.getElementById(`editor-preview-toggle-${id}`).addEventListener('change', () => {
-        textarea.classList.add('hidden') 
-        preview.classList.remove('hidden') 
-      }) 
+    //   document.getElementById(`editor-preview-toggle-${id}`).addEventListener('change', () => {
+    //     textarea.classList.add('hidden') 
+    //     preview.classList.remove('hidden') 
+    //   }) 
 
-      editor.querySelector('[name="cancel-btn"]').addEventListener('click', () => {
-        editor.classList.add('hidden')
+    //   editor.querySelector('[name="cancel-btn"]').addEventListener('click', () => {
+    //     editor.classList.add('hidden')
 
-        if (id === 'thread') {
-          document.getElementById('thread-placeholder').classList.remove('hidden')
-        }
+    //     if (id === 'thread') {
+    //       document.getElementById('thread-placeholder').classList.remove('hidden')
+    //     }
 
-        preview.innerHTML = ''
-        textarea.value = ''
-      })
-    }
+    //     preview.innerHTML = ''
+    //     textarea.value = ''
+    //   })
+    // }
 
     // Initialize editor for each specific ID
-    const editorIds = document.querySelectorAll('[id$="-editor"]')
+    // const editorIds = document.querySelectorAll('[id$="-editor"]')
 
-    editorIds.forEach(editor => {
-      const id = editor.id.replace('-editor', '')  // Extract the unique id (e.g., "comment-1")
-      setupEditor(id)  // Setup the editor for this specific instance
-    }) 
+    // editorIds.forEach(editor => {
+    //   const id = editor.id.replace('-editor', '')  // Extract the unique id (e.g., "comment-1")
+    //   setupEditor(id)  // Setup the editor for this specific instance
+    // }) 
 
-    const markdownText = document.querySelectorAll('[data-text="markdown"]')
-    markdownText.forEach(element => {
-      element.innerHTML = markdownToHTML(element.textContent)
-    })
+    // const markdownText = document.querySelectorAll('[data-text="markdown"]')
+    // markdownText.forEach(element => {
+    //   element.innerHTML = markdownToHTML(element.textContent)
+    // })
 
-  </script>
-
-  <script>
-    const postId = {{ $newsItem->post_id }};
+</script>
+{{-- 
+<script>
+  const postId = {{ $newsItem->post_id }};
 
   // reply comments submit
   const nodes = document.querySelectorAll('div[data-parent-id]');
@@ -522,27 +500,26 @@
   });
 
 
-  </script>
+</script> --}}
 
-  <script>
-    function reportNews() {
-
-    const authors = @json($newsItem->post->authors->pluck('id')); 
-      const form = document.getElementById('reportForm'); 
-      form.reset();
-      authors.forEach(authorId => {
-        const input = document.createElement('input'); 
-        input.type = 'hidden';
-        input.name = 'reported_user_id[]'; 
-        input.value = authorId; 
-        form.appendChild(input); 
-        });
-      document.getElementById('reportForm').action = '{{ route('report')  }}';
-      document.getElementById('report_type').value = 'item_report';
-      document.getElementById('reported_id').value = '{{ $newsItem->post_id }}';
-      document.getElementById('reportTitle').textContent = 'Report all authors';
-      document.getElementById('reportModal').classList.remove('hidden');
+<script>
+  function reportNews(authors) {
+    const authors = @json($newsItem->post->authors->pluck('id'));
+    const form = document.getElementById('reportForm')
+    form.reset();
+    authors.forEach(authorId => {
+      const input = document.createElement('input')
+      input.type = 'hidden'
+      input.name = 'reported_user_id[]'
+      input.value = authorId 
+      form.appendChild(input) 
+      });
+    document.getElementById('reportForm').action = '{{ route('report')  }}'
+    document.getElementById('report_type').value = 'item_report'
+    document.getElementById('reported_id').value = '{{ $newsItem->post_id }}'
+    document.getElementById('reportTitle').textContent = 'Report all authors'
+    document.getElementById('reportModal').classList.remove('hidden')
   }
-  </script>
+</script>
 
-  @endsection
+@endsection
