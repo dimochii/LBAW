@@ -15,6 +15,7 @@ use App\Models\CommentVote;
 use App\Models\Notification;
 use App\Models\PostNotification;
 use App\Models\UpvoteNotification;
+use App\Models\AuthenticatedUser;
 use DOMDocument;
 use DOMXPath;
 
@@ -99,6 +100,37 @@ class PostController extends Controller
     }
   }
 
+  private function notifyFollowers($userId, $post)
+  {
+    $user = AuthenticatedUser::find($userId);
+
+    // Retrieve followers of the user
+    $followers = $user->followers;
+
+    // Get the authors of the post
+    $authors = $post->authors->pluck('id')->toArray(); // Get author IDs
+
+    foreach ($followers as $follower) {
+      // Skip notifying if the follower is an author of the post
+      if (in_array($follower->id, $authors)) {
+        continue;
+      }
+
+      // Create a notification for each follower
+      $notification = Notification::create([
+        'is_read' => false,
+        'notification_date' => now(),
+        'authenticated_user_id' => $follower->id,
+      ]);
+
+      // Link the notification to the post
+      PostNotification::create([
+        'notification_id' => $notification->id,
+        'post_id' => $post->id,
+      ]);
+    }
+  }
+
 
   public function createPost()
   {
@@ -121,7 +153,7 @@ class PostController extends Controller
           'authors.*' => 'exists:authenticated_users,id', 
       ]);
 
-    $title = "News";
+    $title = $request->title ?? "News";
 
       $post = Post::create([
           'title' => $title,
@@ -135,6 +167,7 @@ class PostController extends Controller
         $post->authors()->attach($request->authors, ['pinned' => false]);
 
       $this->notifyCommunityFollowers($request->community_id, $post);
+      $this->notifyFollowers(Auth::user()->id, $post);
 
       if ($request->type === 'news') {
           $ogTags = $this->getOgTags($request->news_url);
@@ -143,6 +176,7 @@ class PostController extends Controller
 
           return app(NewsController::class)->createNews($post, $request->news_url, $ogTags['image'] ?? null);
       } elseif ($request->type === 'topic') {
+        $post->title = $request->title;
           return app(TopicController::class)->createTopic($post);
       }
 

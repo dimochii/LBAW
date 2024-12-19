@@ -23,7 +23,7 @@ class TopicController extends Controller
             'post_id' => $post->id,
         ]);
 
-        return redirect()->route('news')->with('success', 'Topic created successfully');
+        return redirect()->route('global')->with('success', 'Topic created successfully, waiting approval.');
     }
 
     /**
@@ -35,12 +35,14 @@ class TopicController extends Controller
 
             return view('pages.suspension');
           }
-
+        
         // Retrieve the topic using the post ID
         $topicItem = Topic::with('post.community')
             ->where('post_id', $post_id)
             ->firstOrFail();
-
+        if((!Auth::user()->is_admin) && ($topicItem->status != 'accepted')){
+            return response()->view('errors.403', [], 403);
+        }
         // Get upvote and downvote counts
         $topicItem->upvotes_count = Vote::whereHas('postVote', function ($query) use ($topicItem) {
             $query->where('post_id', $topicItem->post_id);

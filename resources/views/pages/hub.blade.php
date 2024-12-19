@@ -145,7 +145,9 @@
       @elseif ($activeTab === 'topics')
       @if ($topicPosts->count() > 0)
       @foreach ($topicPosts as $post)
+      @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || Auth::user()->is_admin || $post->topic->status->value === 'accepted')
       @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
+      @endif
       @endforeach
       @endif      
 
