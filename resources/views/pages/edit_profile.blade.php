@@ -170,7 +170,7 @@
             </div>
         </form>
 
-        <div class="md:col-span-2 flex justify-start">
+        <div class="md:col-span-2 flex justify-end mt-4">
             <form method="POST" action="{{ route('user.delete') }}" onsubmit="return confirm('Are you sure you want to delete your account?')">
                 @csrf
                 @method('DELETE')

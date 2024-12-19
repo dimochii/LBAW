@@ -63,7 +63,34 @@
             </div>
 
             <div class="space-y-4">
-                <label class="block text-2xl font-medium">Content</label>
+            <div class="flex items-center mb-2">
+                    <label class="block text-2xl font-medium">Content</label>
+                    <div class="px-2 relative inline-block">
+                        <svg class="help-trigger w-5 h-5 text-gray-500 hover:text-gray-700 cursor-help transition-colors duration-200" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            stroke-width="2" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <div class="help-tooltip absolute z-50 w-64 p-2 bg-gray-900 text-white text-sm rounded-lg -left-24 bottom-full mb-2">
+                            <div class="relative">
+                                Markdown formatting is supported. Use preview mode to see how your content will look.
+                                <ul class="mt-1 list-disc list-inside">
+                                    <li># for headers</li>
+                                    <li>** for bold</li>
+                                    <li>* for italic</li>
+                                </ul>
+                                <div class="absolute h-2 w-2 bg-gray-900 rotate-45 -bottom-1 left-1/2 transform -translate-x-1/2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
                     <div class="flex gap-4 px-6 py-3 border-b border-black/10">
                         <input type="radio" name="editor-toggle" id="write-toggle" class="hidden peer/write" checked>
@@ -122,6 +149,18 @@
 </div>
 
 <style>
+.help-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.help-trigger:hover + .help-tooltip,
+.help-tooltip:hover {
+    visibility: visible;
+    opacity: 1;
+}
+
 .underline-effect {
     position: relative;
 }

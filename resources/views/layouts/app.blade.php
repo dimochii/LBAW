@@ -304,7 +304,7 @@
       <!-- Right Sidebar -->
       @if (Request::is('hub/*') && isset($community))
       <aside id="right-sidebar"
-        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64  bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
+        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64  bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out overflow-y-auto">
         <!-- Hubs Section -->
         <div class="border-b-2 border-black">
           <a class="p-4 flex flex-col hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-all group"

@@ -79,7 +79,29 @@
             </div>
 
             <div>
-                <label for="moderators" class="block text-2xl font-medium mb-2">Additional Moderators</label>
+                <div class="flex items-center mb-2">
+                    <label for="moderators" class="block text-2xl font-medium mr-2">Additional Moderators</label>
+                    <div class="relative inline-block">
+                        <svg class="help-trigger w-5 h-5 text-gray-500 hover:text-gray-700 cursor-help transition-colors duration-200" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            stroke-width="2" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <div class="help-tooltip absolute z-50 w-64 p-2 bg-gray-900 text-white text-sm rounded-lg -left-24 bottom-full mb-2">
+                            <div class="relative">
+                                Hold Shift key to select multiple consecutive moderators, or Ctrl key (Cmd on Mac) to select individual moderators
+                                <div class="absolute h-2 w-2 bg-gray-900 rotate-45 -bottom-1 left-1/2 transform -translate-x-1/2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <select 
                     name="moderators[]" 
                     id="moderators" 
@@ -151,6 +173,19 @@
     </div>
 </div>
 
+<style>
+    .help-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.help-trigger:hover + .help-tooltip,
+.help-tooltip:hover {
+    visibility: visible;
+    opacity: 1;
+}
+</style>
 <script>
     const nameInput = document.getElementById('name');
     const descriptionInput = document.getElementById('description');
