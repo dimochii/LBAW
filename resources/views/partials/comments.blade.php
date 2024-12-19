@@ -8,7 +8,7 @@
       <a href="#c-{{ $comment->id }}"
         class="absolute top-[32px] bg-[#A6A6A6] hover:bg-[#4793AF] w-px hover:w-0.5 h-[calc(100%-32px)] cursor-pointer"></a>
     </div>
-    <details open class="group/details-{{ $comment ->id }} mt-2 grow">
+    <details open class="group/details mt-2 grow">
       {{-- Comment Header --}}
       <summary class="list-none">
         <div class="px-2 text-sm mb-5">

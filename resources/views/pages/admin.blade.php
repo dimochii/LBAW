@@ -171,7 +171,7 @@
 
 @endsection
 
-<script>
+{{-- <script>
   function toggleSuspend(userId, isChecked) {
         const action = isChecked ? 'suspend' : 'unsuspend';
         const confirmationMessage = isChecked
@@ -241,4 +241,4 @@
             document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
         }
     }
-</script>
+</script> --}}
