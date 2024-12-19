@@ -110,6 +110,14 @@
                 </button>
             </div>
         </form>
+
+        <form action="{{ route('post.delete', ['id' => $topicItem->post_id]) }}" method="POST" style="display: inline-block;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="text-red-500 hover:underline">
+              Delete Post
+            </button>
+          </form> 
     </div>
 </div>
 
