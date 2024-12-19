@@ -148,7 +148,7 @@ Route::middleware(['auth', 'check.suspension'])->group(function () {
 //creation
 Route::get('/posts/create', [PostController::class, 'createPost'])->middleware(['auth', 'check.suspension'])->name('post.create');
 Route::post('/posts', [PostController::class, 'create'])->middleware(['auth', 'check.suspension'])->name('post.store');
-Route::delete('/posts/delete/{id}', [PostController::class, 'delete'])->middleware(['auth', 'check.suspension'])->name('post.delete');
+Route::delete('/posts/delete/{id}', [PostController::class, 'destroy'])->middleware(['auth', 'check.suspension'])->name('post.delete');
 
 Route::get('/global', [FeedController::class, 'global'])->middleware('check.suspension')->name('global');
 
