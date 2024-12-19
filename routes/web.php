@@ -133,13 +133,18 @@ Route::post('/topic/{post_id}/reject', [TopicController::class, 'reject'])->midd
 
 Route::middleware(['auth', 'check.suspension'])->group(function () {
   Route::controller(AdminController::class)->group(function () {
-    Route::get('/admin', 'overview')->name('admin.overview');
-    Route::get('/admin/users', 'users')->name('admin.users');
-    Route::get('/admin/hubs', 'hubs')->name('admin.hubs');
-    Route::get('/admin/posts', 'posts')->name('admin.posts');
-    Route::get('/admin/reports', 'reports')->name('admin.reports');
+      Route::get('/admin', 'overview')->name('admin.overview');
+      Route::match(['get', 'post'], '/admin/users', 'users')->name('admin.users');
+      Route::get('/admin/hubs', 'hubs')->name('admin.hubs');
+      Route::get('/admin/posts', 'posts')->name('admin.posts');
+      Route::get('/admin/reports', 'reports')->name('admin.reports');
+
+      // Add routes for suspending/unsuspending users
+      Route::post('/admin/users/{id}/suspend', 'suspend')->name('admin.users.suspend');
+      Route::post('/admin/users/{id}/unsuspend', 'unsuspend')->name('admin.users.unsuspend');
   });
 });
+
 
 
 //Posts
@@ -171,7 +176,6 @@ Route::middleware(['auth', 'check.suspension'])->group(function () {
     Route::get('/search', 'search')->name('search');
   });
 });
-
 
 //Hub
 Route::get('/hub/{id}', [CommunityController::class, 'show'])->middleware('check.suspension')->name('communities.show');
