@@ -49,6 +49,14 @@
           @include('partials.options_dropdown', [
           "options" => ['edit post' => route('topics.edit',['post_id' => ($topicItem->post_id)])]
           ])
+
+        <form action="{{ route('post.delete', ['id' => $topicItem->post_id]) }}" method="POST" style="display: inline-block;">
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="text-red-500 hover:underline">
+            Delete Post
+          </button>
+        </form>
           @else
             @include('partials.options_dropdown', [
                 "options" => [
