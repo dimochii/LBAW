@@ -4,7 +4,9 @@
 <span class="hidden" id="postId">{{$topicItem->post->id}}</span>
 <div class="font-grotesk divide-y-2 divide-[black]">
   @if($topicItem->post->community->privacy &&
-  !($topicItem->post->community->followers->pluck('id')->contains(Auth::user()->id)))
+  !($topicItem->post->community->followers->pluck('id')->contains(Auth::user()->id)) &&
+  // !($topicItem->post->authors->pluck('id')->contains(Auth::user()->id)) &&
+  !(Auth::user()->is_admin))
   <div class="text-center py-12 bg-white rounded-xl shadow-sm">
     <a class="flex items-center"
       href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
@@ -15,6 +17,7 @@
         Community' }}</span>
     </a>
     <p class="text-gray-500">This post belongs to a private hub.</p>
+    <p>{{Auth::user()->is_admin}} olaaaa</p>
   </div>
   @else
   {{-- news post --}}
@@ -53,8 +56,8 @@
           @include('partials.options_dropdown', [
           "options" => ['edit post' => route('topics.edit',['post_id' => ($topicItem->post_id)])]
           ])
-          
-        </form>
+
+          </form>
           @else
           @include('partials.options_dropdown', [
           "options" => [
