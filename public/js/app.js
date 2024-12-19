@@ -89,7 +89,7 @@ function addEventListeners() {
     })
   }
 
-  let privacies = tableBody ? tableBody.querySelectorAll('[data-route]') : null
+  const privacies = document.querySelectorAll('[data-route]'); 
   if (privacies) {
     privacies.forEach(function (element) {
       element.addEventListener('click', function () {
