@@ -25,7 +25,7 @@
 <body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">
   <div class="min-h-screen flex flex-col">
     <!-- Top Header -->
-    <header class="flex items-center justify-between h-12 border-b-2 border-black">
+    <header class="flex items-center justify-between h-12 border-b-2 border-black fixed top-0 left-0 right-0 z-50 bg-[#F4F2ED]">
       <!-- Logo Section -->
       <div class="w-32 md:w-48 bg-pastelGreen h-full flex items-center border-r-2 border-black">
         <a href="{{ url('/') }}" class="m-auto text-[#F4F2ED] font-bold text-4xl tracking-tight">
@@ -209,7 +209,7 @@
       </div>
     </header>
 
-    <div class="flex flex-1">
+    <div class="flex pt-12 ">
       <!-- Mobile Menu Button -->
       <button id="mobile-menu-button"
         class="md:hidden fixed bottom-4 right-4 z-50 bg-pastelBlue text-[#F4F2ED] p-3 rounded-full shadow-lg"
@@ -220,8 +220,9 @@
       </button>
 
       <!-- Left Sidebar -->
-      <aside id="left-sidebar"
-        class="text-[#3C3D37] text-lg fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 bg-[#F4F2ED] border-r-2 border-black transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
+      <aside id="left-sidebar" class="w-48 md:block flex-shrink-0 bg-[#F4F2ED] border-r-2 border-black h-screen-header overflow-y-auto sticky top-12">
+
+        
         <nav class="divide-y-2 divide-black">
           <!-- Primary Links -->
           <div class="py-4">
@@ -300,7 +301,7 @@
       </aside>
 
       <!-- Main Content -->
-      <main class="flex-1">
+      <main class="flex-1 h-screen-header overflow-y-auto">
         <section id="content">
           @yield('content')
         </section>

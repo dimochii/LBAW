@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer" 
              onclick="window.location.href='${community.route}'">
             <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                <div class="w-2 h-2 rounded-full object-cover bg-green-500"></div>
                 <span class="text-sm text-gray-700">${community.name}</span>
             </div>
             ${community.description ? `

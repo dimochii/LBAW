@@ -95,7 +95,7 @@
           <a class="flex items-center" href="{{ route('communities.show', $hub->id) }}">
             <img src="{{ asset( $hub->image->path ?? 'images/groupdefault.jpg') }}"
         onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
-              class="max-w-full rounded-full size-9 mr-3 ">
+              class="max-w-full rounded-full size-9 mr-3 object-cover">
             <span class="truncate max-w-32 hover:max-w-full transition-all" data-sort>{{ $hub->name }}</span>
           </a>
         </td>

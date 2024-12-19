@@ -8,7 +8,7 @@
           href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
 
           <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
-            class="size-8 rounded-full ring-2  ring-white">
+            class="size-8 rounded-full  object-coverring-2  ring-white">
           <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
             Community' }}</span>
         </a>
@@ -23,7 +23,7 @@
           href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
 
           <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
-            class="size-8 rounded-full ring-2  ring-white">
+            class="size-8 rounded-full object-cover ring-2  ring-white">
           <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
             Community' }}</span>
         </a>
@@ -167,7 +167,7 @@
   <div id="post-content" class="py-4 px-8 flex flex-col gap-4  flex-none">
     {{-- <div>
       <a class="flex items-center" href="">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="size-8 rounded-full ">
+        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="size-8 rounded-full object-cover ">
         <span class="underline-effect">@anonymous</span>
       </a>
     </div> --}}
@@ -178,12 +178,12 @@
         @foreach($newsItem->post->authors->take(4) as $author)
         <a href="{{ route('user.profile', $author->id) }}" class="group">
           <img src="{{ asset($author->image->path ?? '/images/default.jpg') }}" alt="{{ $author->name }}"
-            class="w-10 h-10 border-2 border-white rounded-full ">
+            class="w-10 h-10 border-2 border-white rounded-full object-cover ">
         </a>
         @endforeach
         @if($newsItem->post->authors->count() > 4)
         <button id="expand-button"
-          class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-slate-600 border-2 border-white rounded-full hover:bg-gray-600">
+          class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-slate-600 border-2 border-white rounded-full  object-coverhover:bg-gray-600">
           +{{ $newsItem->post->authors->count() - 4 }}
         </button>
         @endif
@@ -210,7 +210,7 @@
         if(Auth::check()) {$image_id = Auth::user()->image_id;}
         else { $image_id = 1;}
         @endphp
-        <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}" class="size-8 rounded-full ">
+        <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}" class="size-8 rounded-full object-cover ">
       </a>
       <span class=" px-2 text-xl font-light">start a thread</span>
     </div>

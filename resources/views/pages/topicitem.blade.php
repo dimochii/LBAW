@@ -8,7 +8,7 @@
           href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
 
           <img src="{{ asset($topicItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
-            class="size-8 rounded-full ring-2  ring-white">
+            class="size-8 rounded-full object-cover ring-2  ring-white">
           <span class="text-2xl font-light underline-effect px-2">h/{{ $topicItem->post->community->name ?? 'Unknown
             Community' }}</span>
         </a>
@@ -21,7 +21,7 @@
       <div class="flex items-center h-8 relative">
       <a class="flex items-center" href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
         <img src="{{ asset($topicItem->post->community->image->path ?? 'images/groupdefault.jpg') }}" 
-        class="size-8 rounded-full ring-2  ring-white">
+        class="size-8 rounded-full object-cover ring-2  ring-white">
         <span class="text-2xl font-light underline-effect px-2">h/{{ $topicItem->post->community->name ?? 'Unknown Community' }}</span>
       </a>
      
@@ -169,12 +169,12 @@
         @foreach($topicItem->post->authors->take(4) as $author)
         <a href="{{ route('user.profile', $author->id) }}" class="group">
           <img src="{{ asset($author->image->path ?? '/images/default.jpg') }}" alt="{{ $author->name }}"
-            class="w-10 h-10 border-2 border-white rounded-full ">
+            class="w-10 h-10 border-2 border-white rounded-full object-cover ">
         </a>
         @endforeach
         @if($topicItem->post->authors->count() > 4)
         <button id="expand-button"
-          class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-slate-600 border-2 border-white rounded-full hover:bg-gray-600">
+          class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-slate-600 border-2 border-white rounded-full object-cover hover:bg-gray-600">
           +{{ $topicItem->post->authors->count() - 4 }}
         </button>
         @endif
@@ -197,13 +197,13 @@
   {{-- comment editor --}}
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
-      <a class="size-8 rounded-full " href="">
+      <a class="size-8 rounded-full object-cover " href="">
         @php 
           if(Auth::check()) {$image_id = Auth::user()->image_id;}
           else { $image_id = 1;}
         @endphp
         <img src="{{ asset(Auth::user()->image->path  ?? '/images/default.jpg') }}" 
-        class="size-8 rounded-full ">
+        class="size-8 rounded-fullobject-cover ">
       </a>
       <span class="text-xl font-light">start a thread</span>
     </div>
