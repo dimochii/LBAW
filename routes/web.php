@@ -89,8 +89,6 @@ Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])
 Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware(['auth', 'check.suspension']);
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware(['auth', 'check.suspension']);
 Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware(['auth', 'check.suspension'])->name('user.delete');
-Route::delete('deleteaccount/{id}',[AdminController::class,'deleteUserAccount'])->middleware(['auth', 'check.suspension'])->name('admin.delete');
-
 //admin
 Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite'])->middleware(['auth', 'check.suspension']);
 Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite'])->middleware(['auth', 'check.suspension']);
@@ -131,17 +129,24 @@ Route::post('/topic/{post_id}/remove-authors', [TopicController::class, 'removeA
 Route::post('/topic/{post_id}/accept', [TopicController::class, 'accept'])->middleware(['auth', 'check.suspension'])->name('topics.accept');
 Route::post('/topic/{post_id}/reject', [TopicController::class, 'reject'])->middleware(['auth', 'check.suspension'])->name('topics.reject');
 
-Route::middleware(['auth', 'check.suspension'])->group(function () {
+
+Route::middleware(['auth', 'check.suspension', 'check.admin'])->group(function () {
+  // Admin routes handled by AdminController
   Route::controller(AdminController::class)->group(function () {
       Route::get('/admin', 'overview')->name('admin.overview');
       Route::match(['get', 'post'], '/admin/users', 'users')->name('admin.users');
       Route::get('/admin/hubs', 'hubs')->name('admin.hubs');
       Route::get('/admin/posts', 'posts')->name('admin.posts');
       Route::get('/admin/reports', 'reports')->name('admin.reports');
+
+      // User management routes
+      Route::post('/users/{id}/suspend', 'suspend')->name('users.suspend');
+      Route::post('/users/{id}/unsuspend', 'unsuspend')->name('users.unsuspend');
+      Route::post('/users/{id}/make_admin', 'makeAdmin')->name('users.make_admin');
+      Route::post('/users/{id}/remove_admin', 'removeAdmin')->name('users.remove_admin');
+      Route::delete('/deleteaccount/{id}', 'deleteUserAccount')->name('admin.delete');
   });
 });
-
-
 
 //Posts
 //creation
@@ -157,10 +162,6 @@ Route::middleware(['auth', 'check.suspension'])->group(function () {
     Route::get('/recent', 'recent')->name('recent');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/bestof', 'bestof')->name('bestof');
-    Route::post('/users/{id}/suspend', [AdminController::class, 'suspend'])->name('users.suspend');
-    Route::post('/users/{id}/unsuspend', [AdminController::class, 'unsuspend'])->name('users.unsuspend');
-    Route::post('/users/{id}/make_admin', [AdminController::class, 'makeAdmin'])->name('users.make_admin');
-    Route::post('/users/{id}/remove_admin', [AdminController::class, 'removeAdmin'])->name('users.remove_admin');
   });
 
   Route::get('/notifications', function () {
