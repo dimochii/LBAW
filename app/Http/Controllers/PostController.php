@@ -219,10 +219,23 @@ class PostController extends Controller
       return response()->json(['message' => 'Post cannot be deleted as it has votes or comments'], 400);
     }
 
+    $topics = Topic::where('post_id', $post->id)->get();
+    foreach ($topics as $topic) {
+        $topic->delete();
+    }
+
+    $news = News::where('post_id', $post->id)->get();
+    foreach ($news as $newsItem) {
+        $newsItem->delete();
+    }
+
+    PostNotification::where('post_id', $post->id)->delete();
+
+
     $post->authors()->detach();
     $post->delete();
 
-    return response()->json(['message' => 'Post deleted successfully'], 200);
+    return redirect('/global')->with('message', 'Post deleted successfully');
   }
 
   
