@@ -56,13 +56,14 @@
                         {{-- Current Image Preview --}}
                         <div class="ring-2 ring-black rounded-full p-1 transition-transform duration-300 group-hover:scale-105">
                             @if ($user->image_id)
-                            <img src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" alt="Current Profile" class="h-24 w-24 rounded-full object-cover">
+                                <img id="currentProfileImage" src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" alt="Current Profile" class="h-24 w-24 rounded-full object-cover">
                             @else
                                 <div class="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
                                     <span class="text-3xl font-light text-gray-500">{{ substr($user->name, 0, 1) }}</span>
                                 </div>
                             @endif
                         </div>
+
                         
                         {{-- Image Upload --}}
                         <div class="flex-1">
@@ -78,9 +79,6 @@
                                     <p class="mt-2 text-lg font-light text-gray-600">Click to upload new image</p>
                                 </div>
                             </label>
-                            <div id="imagePreview" class="mt-4">
-                                <!-- Image preview will appear here -->
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -190,22 +188,26 @@
 
 <script>
     function updateImagePreview(event) {
-        const previewContainer = document.getElementById('imagePreview');
-        const file = event.target.files[0];
+    const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                previewContainer.innerHTML = `<img src="${e.target.result}" alt="Image Preview" class="h-24 w-24 rounded-full object-cover">`;
+            reader.onload = function (e) {
+                const profileImage = document.getElementById('currentProfileImage');
+                if (profileImage) {
+                    profileImage.src = e.target.result;
+                }
             };
             reader.readAsDataURL(file);
-        } else {
-            previewContainer.innerHTML = '';
         }
     }
+
+    
     function submitDeleteForm() {
 
         alert(1);
     }
+
+    
 
 </script>
 

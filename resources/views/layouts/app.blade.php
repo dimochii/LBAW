@@ -33,15 +33,6 @@
           <span class="hidden md:block">whatsUP</span>
         </a>
       </div>
-
-      <!-- Hamburger Button -->
-      <button id="mobile-menu-button"
-        class="md:hidden fixed bottom-4 right-4 z-50 bg-pastelBlue text-[#F4F2ED] p-3 rounded-full shadow-lg"
-        onclick="toggleMobileMenu()">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
-      </button>
       <!-- Search Section -->
       <div class="flex-1 bg-pastelRed h-full flex items-center pl-2 md:pl-4 relative">
         <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,23 +200,19 @@
       </div>
     </header>
 
-    <div class="flex pt-12 ">
+    <div class="flex pt-12 ml-0 md:ml-48">
       <!-- Mobile Menu Button -->
-      <button id="mobile-menu-button"
-        class="md:hidden fixed bottom-4 right-4 z-50 bg-pastelBlue text-[#F4F2ED] p-3 rounded-full shadow-lg"
-        onclick="toggleMobileMenu()">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
+      <button id="mobile-menu-button" class="md:hidden fixed bottom-4 right-4 z-50 bg-pastelBlue text-[#F4F2ED] p-3 rounded-full shadow-lg transition-transform duration-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
       </button>
 
       <!-- Left Sidebar -->
-      <aside id="left-sidebar" class="w-48 md:block flex-shrink-0 bg-[#F4F2ED] border-r-2 border-black h-screen-header overflow-y-auto sticky top-12">
-
-        
+      <aside id="left-sidebar" class="text-[#3C3D37] text-lg fixed inset-y-0 left-0 w-48 bg-[#F4F2ED] border-r-2 border-black z-40 overflow-y-auto max-h-screen transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
         <nav class="divide-y-2 divide-black">
           <!-- Primary Links -->
-          <div class="py-4">
+          <div class="pt-14 pb-2">
             <div class="*:*:underline-effect *:px-4 *:py-1 flex flex-col text-xl ml-2">
               <a href="{{ url('/home') }}" class=" mr-auto">
                 <span class="">home</span>
@@ -301,7 +288,7 @@
       </aside>
 
       <!-- Main Content -->
-      <main class="flex-1 h-screen-header overflow-y-auto">
+      <main class="flex-1">
         <section id="content">
           @yield('content')
         </section>
@@ -310,8 +297,7 @@
       <!-- Right Sidebar -->
       @if (Request::is('hub/*') && isset($community))
       <aside id="right-sidebar"
-        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
-
+        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64  bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
         <!-- Hubs Section -->
         <div class="border-b-2 border-black">
           <a class="p-4 flex flex-col hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-all group"
@@ -414,9 +400,6 @@
 
       @endif
     </div>
-  </div>
-  <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"
-    onclick="toggleLeftSidebar()">
   </div>
 </body>
 <script>
