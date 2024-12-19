@@ -103,7 +103,6 @@ Route::get('/post/{post_id}', [PostController::class, 'show'])->name('post.show'
 //News
 Route::get('/news', [NewsController::class, 'list'])->middleware('check.suspension')->name('news');
 Route::get('/news/{post_id}', [NewsController::class, 'show'])->middleware('check.suspension')->name('news.show');
-Route::get('/news/{post_id}/comments', [CommentController::class, 'getComments'])->middleware('check.suspension')->name('post.comments');
 
 Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->middleware(['auth', 'check.suspension'])->name('comments.store');
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware(['auth', 'check.suspension'])->name('comments.update');

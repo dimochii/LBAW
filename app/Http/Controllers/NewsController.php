@@ -54,7 +54,6 @@ class NewsController extends Controller
 
     $newsItem->score = $newsItem->upvotes_count - $newsItem->downvotes_count;
 
-    //user is logged in
     if(Auth::check()) {
       $authUser = Auth::user();
       $userVote = $authUser->votes()
@@ -63,7 +62,6 @@ class NewsController extends Controller
         })
         ->first();
     }
-    //user is a visitor
     else{$userVote = NULL;}
 
     if ($userVote) {

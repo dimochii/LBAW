@@ -41,6 +41,60 @@ class ModeratorController extends Controller
     return redirect('/hub/' . $id . '/moderation/users');
   }
 
+  public function  makeModerator($user_id, $community_id)
+  {
+      $community = Community::find($community_id);
+      $userToAdd = AuthenticatedUser::find($user_id);
+
+      if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
+        return response()->view('errors.403', [], 403);
+      }
+      if ($community->moderators->contains($userToAdd)) {
+        return response()->view('errors.400', [], 400);
+      }
+
+        $community->moderators()->attach($userToAdd);
+
+        return response()->json(['message' => 'User gained moderator privileges successfully']);
+    }
+    
+    public function removeModerator($user_id, $community_id)
+    {
+        $community = Community::find($community_id);
+        $userToRemove = AuthenticatedUser::find($user_id);
+
+        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
+            return response()->view('errors.403', [], 403);
+        }
+
+        if (!$community->moderators->contains($userToRemove)) {
+            return response()->view('errors.400', [], 400);
+        }
+
+        $community->moderators()->detach($userToRemove);
+
+        return response()->json(['message' => 'User has been removed from moderator successfully.']);
+    }
+
+    public function removeFollower($user_id,$community_id)
+    {
+        $community = Community::findOrFail($community_id);
+        $user = AuthenticatedUser::findOrFail($user_id);
+
+        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
+          return response()->view('errors.403', [], 403);
+        }
+
+        if (!$community->followers->contains($user)) {
+          return response()->view('errors.400', [], 400);
+        }
+
+        $community->followers()->detach($user);
+
+        return redirect()->back()->with('success', 'removed follower.');
+    }
+
+
   private function activeUsersChart($id)
   {
     // Get the date range for the last 14 days
@@ -395,59 +449,5 @@ class ModeratorController extends Controller
       'topicsCount',
     ));
   }
-
-  public function  makeModerator($user_id, $community_id)
-    {
-        $community = Community::find($community_id);
-        $userToAdd = AuthenticatedUser::find($user_id);
-
-        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
-          return response()->view('errors.403', [], 403);
-        }
-        if ($community->moderators->contains($userToAdd)) {
-          return response()->view('errors.400', [], 400);
-        }
-
-        $community->moderators()->attach($userToAdd);
-
-        return response()->json(['message' => 'User gained moderator privileges successfully']);
-    }
-    
-    public function removeModerator($user_id, $community_id)
-    {
-        $community = Community::find($community_id);
-        $userToRemove = AuthenticatedUser::find($user_id);
-
-        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
-            return response()->view('errors.403', [], 403);
-        }
-
-        if (!$community->moderators->contains($userToRemove)) {
-            return response()->view('errors.400', [], 400);
-        }
-
-        $community->moderators()->detach($userToRemove);
-
-        return response()->json(['message' => 'User has been removed from moderator successfully.']);
-    }
-
-    public function removeFollower($user_id,$community_id)
-    {
-        $community = Community::findOrFail($community_id);
-        $user = AuthenticatedUser::findOrFail($user_id);
-
-        if (!Auth::user()->moderatedCommunities->contains($community) && !Auth::user()->is_admin) {
-          return response()->view('errors.403', [], 403);
-        }
-
-        if (!$community->followers->contains($user)) {
-          return response()->view('errors.400', [], 400);
-        }
-
-        $community->followers()->detach($user);
-
-        return redirect()->back()->with('success', 'removed follower.');
-    }
-
 
 }

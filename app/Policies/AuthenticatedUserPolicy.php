@@ -28,6 +28,7 @@ class AuthenticatedUserPolicy
 
     public function isCommunityAdmin(AuthenticatedUser $user, Community $community): bool
     {
-        return $community->moderators->contains($user->id);
+        //return $community->moderators->contains($user->id);
+        return $user->moderatedCommunities->contains($community);
     }
 }
