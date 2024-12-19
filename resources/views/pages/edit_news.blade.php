@@ -71,21 +71,24 @@
                 </div>
             </div>
 
-            <div class="flex justify-end">
-                <button type="submit" class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-black text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1">
-                    <span class="relative z-10">Save Changes</span>
-                </button>
+            <div class="flex justify-end gap-8">
+                <form action="{{ route('post.delete', ['id' => $newsItem->post_id]) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white">
+                        <span class="relative z-10">Delete Post</span>
+                    </button>
+                </form>
+
+                <form method="POST" action="{{ route('news.update', $newsItem->post->id) }}">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-black text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1">
+                        <span class="relative z-10">Save Changes</span>
+                    </button>
+                </form>
             </div>
         </form>
-        
-        <form action="{{ route('post.delete', ['id' => $newsItem->post_id]) }}" method="POST" style="display: inline-block;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-red-600 text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1 hover:bg-red-700">
-                <span class="relative z-10">Delete Post</span>
-            </button>
-        </form>
-        
     </div>
 </div>
 

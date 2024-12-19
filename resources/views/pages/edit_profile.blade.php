@@ -151,9 +151,7 @@
                     </div>
                 </div>
             </div>
-            
-            
-            
+
 
             {{-- Submit Button --}}
             <div class="md:col-span-2 flex justify-end">
