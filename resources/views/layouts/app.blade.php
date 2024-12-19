@@ -125,19 +125,26 @@
 
         <a href="{{ route('notifications.show', Auth::user()->id) }}"
           class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
-            <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
-            <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
-            <span id="notification-count"
-                  class="absolute -top-2 -right-2 bg-pastelRed text-white text-xs rounded-full px-2 py-1">
-                <!-- O número será atualizado dinamicamente -->
-            </span>
+            @php
+                $unreadCount = Auth::user()->notifications()->where('is_read', false)->count();
+            @endphp
+
+            @if($unreadCount > 0)
+                <div class="absolute -top-2 -right-2">
+                    <div class="absolute w-5 h-5 bg-pastelRed rounded-full animate-ping opacity-75"></div>
+                    
+                    <div class="relative bg-pastelRed text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center px-1">
+                        {{ $unreadCount > 99 ? '99+' : $unreadCount }}
+                    </div>
+                </div>
+            @endif
+
             <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor"
                 viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                       d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
         </a>
-
 
         <div class="relative">
           <a href="#" class="relative fill-transparent text-[#3C3D37] hover:text-[#3C3D37]/80 transition-colors"
@@ -402,34 +409,5 @@
     </div>
   </div>
 </body>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const notificationCountElement = document.getElementById('notification-count');
-
-    async function fetchUnreadNotifications() {
-        try {
-            const response = await fetch('/api/notifications/unread-count', {
-                headers: { 'Accept': 'application/json' },
-            });
-            const data = await response.json();
-            if (data.unreadCount > 0) {
-                notificationCountElement.textContent = data.unreadCount;
-                notificationCountElement.classList.remove('hidden');
-            } else {
-                notificationCountElement.classList.add('hidden');
-            }
-        } catch (error) {
-            console.error('Failed to fetch unread notifications count:', error);
-        }
-    }
-
-    // Fetch notifications on page load
-    fetchUnreadNotifications();
-
-    // Optionally refresh the count periodically
-    setInterval(fetchUnreadNotifications, 60000); // 60 seconds
-});
-
-</script>
 
 </html>
