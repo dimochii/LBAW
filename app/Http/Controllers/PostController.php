@@ -95,8 +95,6 @@ class PostController extends Controller
     }
   }
 
-<<<<<<< HEAD
-=======
   private function notifyFollowers($userId, $post)
   {
     $user = AuthenticatedUser::find($userId);
@@ -129,7 +127,6 @@ class PostController extends Controller
   }
 
 
->>>>>>> 21f1022290410b89562b6a79cf9033d762d48d94
   public function createPost()
   {
     return view('pages.create_post');
