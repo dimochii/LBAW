@@ -31,11 +31,6 @@ class TopicController extends Controller
      */
     public function show($post_id)
     {
-        if(Auth::user()->is_suspended) {
-
-            return view('pages.suspension');
-          }
-        
         // Retrieve the topic using the post ID
         $topicItem = Topic::with('post.community')
             ->where('post_id', $post_id)
@@ -94,11 +89,6 @@ class TopicController extends Controller
      */
     public function list()
     {
-        if(Auth::user()->is_suspended) {
-
-            return view('pages.suspension');
-        }
-
         $topics = Topic::with('post')->get();
         
         foreach ($topics as $item) {
@@ -124,11 +114,6 @@ class TopicController extends Controller
      */
     public function edit($post_id)
     {
-        if(Auth::user()->is_suspended) {
-
-            return view('pages.suspension');
-        
-        }
         $post = Post::findOrFail($post_id);
         $topicItem = Topic::with('post')->where('post_id', $post_id)->firstOrFail();
 

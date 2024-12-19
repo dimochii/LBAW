@@ -44,31 +44,48 @@ class AdminController extends Controller
         return response()->json(['message' => 'User lost admin privileges successfully']);
     }
     
+    public function suspend($id, Request $request)
+    {
+      if (!$this->authorize('isAdmin', Auth::user())) {
+        return response()->view('errors.403', [], 403); 
+    }
 
-    public function suspend($id)
-    { 
-        if (!$this->authorize('isAdmin', Auth::user())) {
-            return response()->view('errors.403', [], 403); 
-        }
+        $request->validate([
+            'reason' => 'required|string',
+            'duration' => 'required|integer|min:1',
+        ]);
 
         $user = AuthenticatedUser::findOrFail($id);
+
         $user->is_suspended = true;
         $user->save();
 
-        return response()->json(['message' => 'User suspended successfully']);
+        $suspension = new Suspension([
+            'reason' => $request->input('reason'),
+            'start' => now(),
+            'duration' => $request->input('duration'),  
+            'authenticated_user_id' => $user->id, 
+        ]);
+
+        $suspension->save();
+
+        return response()->json(['message' => 'User suspended successfully.']);
     }
 
     public function unsuspend($id)
     {
-        if (!$this->authorize('isAdmin', Auth::user())) {
-            return response()->view('errors.403', [], 403); 
-        }
+      if (!$this->authorize('isAdmin', Auth::user())) {
+        return response()->view('errors.403', [], 403); 
+      }
 
         $user = AuthenticatedUser::findOrFail($id);
+        
         $user->is_suspended = false;
         $user->save();
 
-        return response()->json(['message' => 'User unsuspended successfully']);
+        $user->suspensions()->delete();
+
+        return response()->json(['message' => 'User unsuspended successfully.']);
     }
 
     public function deleteUserAccount(Request $request, $id) {

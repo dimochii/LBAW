@@ -20,10 +20,6 @@ class CommunityController extends Controller
 {
   public function createHub()
   {
-    if(Auth::user()->is_suspended) {
-
-      return view('pages.suspension');
-    }
 
     return view('pages.create_hub');
   }
@@ -389,10 +385,6 @@ class CommunityController extends Controller
 
   public function index(Request $request)
   {
-    if(Auth::user()->is_suspended) {
-
-      return view('pages.suspension');
-  }
 
     $sortBy = $request->get('sort_by', 'name');
     $order = $request->get('order', 'asc');
@@ -406,10 +398,6 @@ class CommunityController extends Controller
 
   public function getFollowers($id)
   {
-    if(Auth::user()->is_suspended) {
-
-      return view('pages.suspension');
-   }
 
     $community = Community::findOrFail($id);
     $user = Auth::user();
