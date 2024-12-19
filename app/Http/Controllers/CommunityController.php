@@ -450,5 +450,32 @@ class CommunityController extends Controller
       return redirect()->back()->with('success', 'Follow request rejected.');
   }
 
+  public function deleteCommunity(Request $request, $id)
+  {
+      $admin = Auth::user();
+      if (!$admin->is_admin) {
+          return redirect()->back()->with('error', 'You are not authorized to perform this action.');
+      }
+
+      $community = Community::findOrFail($id);
+      if ($community->posts()->exists()) {
+          return redirect()->back()->with('error', 'This community cannot be deleted as it contains posts.');
+      }
+
+      $community->followers()->detach();
+      $community->moderators()->detach();
+
+      if ($community->followRequests()->exists()) {
+          $community->followRequests()->delete();
+      }
+
+      if ($community->reports()->exists()) {
+          $community->reports()->delete();
+      }
+
+      $community->delete();
+      return redirect()->route('admin.hubs')->with('message', 'Community has been successfully deleted.');
+  }
+
 
 }

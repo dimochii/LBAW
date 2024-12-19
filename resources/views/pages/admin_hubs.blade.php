@@ -127,15 +127,28 @@
         </td>
 
         <td class="px-4 py-4">
-          <button name="delete-button"
-            class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
-            delete
-          </button>
-        </td>
+        <form action="{{ route('admin.community.delete', ['id' => $hub->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this community?')">
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold delete-button" data-community-id="{{ $hub->id }}">
+            Delete
+        </button>
+        </form>
+      </td>
+
+
       </tr>
       @endforeach
     </tbody>
   </table>
+</div>
+
+<div id="error-toast" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white p-4 rounded-md shadow-lg z-50">
+  <p id="toast-message" class="text-lg font-bold"></p>
+</div>
+
+<div id="success-toast" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-md shadow-lg z-50">
+  <p id="toast-message-success" class="text-lg font-bold"></p>
 </div>
 
 
@@ -150,7 +163,6 @@
     const headers = table.querySelectorAll('th');
     const privacies = tableBody.querySelectorAll('[data-route]')
 
-    // Initialize directions array after the table headers are loaded
     const directions = Array.from(headers).map(function (header) {
         return '';
     });
@@ -181,13 +193,8 @@
     }
 
     function sortColumn(index) {
-        // Set the direction for sorting
         const direction = directions[index] || 'asc';
-
-        // Set the multiplier based on the sorting direction
         const multiplier = direction === 'asc' ? 1 : -1;
-
-        // Convert the NodeList to an array so we can sort it
         const newRows = Array.from(rows);
 
         newRows.sort(function (rowA, rowB) {
@@ -202,15 +209,12 @@
             return 0;
         });
 
-        // Remove all current rows from the table
         [].forEach.call(rows, function (row) {
             tableBody.removeChild(row);
         });
 
-        // Reverse the sorting direction for the next click
         directions[index] = direction === 'asc' ? 'desc' : 'asc';
 
-        // Append the sorted rows back to the table
         newRows.forEach(function (newRow) {
             tableBody.appendChild(newRow);
         });
@@ -230,12 +234,11 @@
                 if (dataType) {
                     const cellText = cell.textContent.toLowerCase();
                     if (cellText.includes(queryLower)) {
-                        rowVisible = true; // If any cell matches, show the row
+                        rowVisible = true; 
                     }
                 }
             });
 
-            // Show or hide the row based on whether it matched the query
             row.style.display = rowVisible ? '' : 'none';
         });
     }
@@ -334,11 +337,9 @@
             })
             .catch(error => {
                 alert(error.message);
-                // Revert checkbox state if the request fails
                 document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
             });
         } else {
-            // Revert checkbox state if the user cancels the action
             document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
         }
     }
@@ -369,12 +370,14 @@
             })
             .catch(error => {
                 alert(error.message);
-                // Revert checkbox state if the request fails
                 document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
             });
         } else {
-            // Revert checkbox state if the user cancels the action
             document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
         }
     }
+
+   
+
+
 </script>

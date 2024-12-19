@@ -90,6 +90,8 @@ Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->mid
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware(['auth', 'check.suspension']);
 Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware(['auth', 'check.suspension'])->name('user.delete');
 Route::delete('deleteaccount/{id}',[AuthenticatedUserController::class,'deleteUserAccount'])->middleware(['auth', 'check.suspension'])->name('admin.delete');
+Route::delete('deletecommunity/{id}', [CommunityController::class, 'deleteCommunity'])->middleware(['auth', 'check.suspension'])->name('admin.community.delete');
+
 
 //admin
 Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware(['auth', 'check.suspension']);
