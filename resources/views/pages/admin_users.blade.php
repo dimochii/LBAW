@@ -121,9 +121,9 @@
         <div id="suspend-modal" class="hidden fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
           <div class="bg-white p-6 rounded shadow-lg w-96">
               <h3 class="text-xl font-bold mb-4">Suspend User</h3>
-              <form id="suspend-form" action="" method="POST">
+              <form id="suspend-form" action="{{ route('users.suspend', $user->id) }}" method="POST">
                   @csrf
-                  <input type="hidden" name="authenticated_user_id" id="authenticated_user_id">
+                  <input type="hidden" name="authenticated_user_id" id="authenticated_user_id" value="{{$user->id}}">
 
                   <div class="mb-4">
                       <label for="reason" class="block font-medium text-gray-700">Reason</label>
@@ -136,7 +136,7 @@
                   </div>
 
                   <div class="flex justify-end gap-4">
-                      <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded" onclick="closeSuspendModal()">Cancel</button>
+                      <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded" onclick="closeSuspendModal({{ $user->id }})">Cancel</button>
                       <button type="submit" class="bg-rose-500 text-white py-2 px-4 rounded">Suspend</button>
                   </div>
               </form>
@@ -281,10 +281,8 @@
   }
 
 
-  function closeSuspendModal() {
+  function closeSuspendModal(userId) {
       document.getElementById('suspend-modal').classList.add('hidden');
-  }
-
     document.getElementById('suspend-form').addEventListener('submit', function(e) {
         e.preventDefault(); 
 
@@ -292,6 +290,10 @@
         const authenticatedUserId = form.authenticated_user_id.value; 
         const reason = form.reason.value;
         const duration = form.duration.value;
+
+        console.log('User ID:', userId);
+        console.log('reason:', reason);
+        console.log('duration', duration);
 
         fetch(`/users/${userId}/suspend`, {
             method: 'POST',
@@ -307,13 +309,13 @@
         .then(response => response.json())
         .then(data => {
             alert(data.message);  
-            closeSuspendModal();  
             updateButtonState(userId, true); 
         })
         .catch(error => {
             alert('Failed to suspend user: ' + error.message);
         });
     });
+  }
 
     function updateButtonState(userId, isSuspended) {
         const suspendButton = document.querySelector(`button.suspend-btn[data-user-id="${userId}"]`);

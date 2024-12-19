@@ -10,6 +10,7 @@ use App\Models\Topic;
 use App\Models\Report;
 use App\Models\Post;
 use App\Models\FollowNotification;
+use App\Models\Suspension;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;

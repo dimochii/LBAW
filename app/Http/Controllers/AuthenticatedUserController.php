@@ -356,9 +356,6 @@ class AuthenticatedUserController extends Controller
 
     public function getFollowers($id)
     {
-        if(Auth::user()->is_suspended) {
-            return view('pages.suspension');
-        }
         $user = AuthenticatedUser::findOrFail($id);
         $followers = $user->followers;
 
@@ -367,10 +364,6 @@ class AuthenticatedUserController extends Controller
 
     public function getFollows($id)
     {
-        if(Auth::user()->is_suspended) {
-
-            return view('pages.suspension');
-        }
         $user = AuthenticatedUser::findOrFail($id);
         $following = $user->follows;
 
