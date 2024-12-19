@@ -105,12 +105,44 @@
           onclick="toggleAdmin({{ $user->id }}, this.checked)"
           >
         </td>
-        <td class="px-4 py-4">
-          <input id="suspend-checkbox-{{ $user->id }}" type="checkbox" class="w-4 h-4 accent-red-500"
-            @if($user->is_suspended) checked @endif
-          onclick="toggleSuspend({{ $user->id }}, this.checked)"
-          >
+        <td>
+            @if($user->is_suspended)
+                <button type="button" class="unsuspend-btn" onclick="unsuspendUser({{ $user->id }})">
+                    unsuspend user
+                </button>
+            @else
+                <button type="button" class="suspend-btn px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bol" onclick="openSuspendModal({{ $user->id }})">
+                    suspend user
+                </button>
+            @endif
         </td>
+
+
+        <div id="suspend-modal" class="hidden fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+          <div class="bg-white p-6 rounded shadow-lg w-96">
+              <h3 class="text-xl font-bold mb-4">Suspend User</h3>
+              <form id="suspend-form" action="" method="POST">
+                  @csrf
+                  <input type="hidden" name="authenticated_user_id" id="authenticated_user_id">
+
+                  <div class="mb-4">
+                      <label for="reason" class="block font-medium text-gray-700">Reason</label>
+                      <input type="text" name="reason" id="reason" class="w-full border-gray-300 rounded p-2" required>
+                  </div>
+
+                  <div class="mb-4">
+                      <label for="duration" class="block font-medium text-gray-700">Duration (in days)</label>
+                      <input type="number" name="duration" id="duration" class="w-full border-gray-300 rounded p-2" required>
+                  </div>
+
+                  <div class="flex justify-end gap-4">
+                      <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded" onclick="closeSuspendModal()">Cancel</button>
+                      <button type="submit" class="bg-rose-500 text-white py-2 px-4 rounded">Suspend</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+
         <td class="px-4 py-4">
           <form action="{{ route('admin.delete', ['id' => $user->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this account?')">
             @csrf
@@ -129,3 +161,186 @@
 </div>
 
 @endsection
+{{-- 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search-input');
+    const table = document.querySelector('table');
+    const tableBody = table.querySelector('tbody');
+    const rows = tableBody.querySelectorAll('tr');
+    const headers = table.querySelectorAll('th');
+
+    // Initialize directions array after the table headers are loaded
+    const directions = Array.from(headers).map(function (header) {
+        return '';
+    });
+
+    const transform = function (index, content) {
+        const type = headers[index].getAttribute('data-type');
+        switch (type) {
+            case 'number':
+                return parseFloat(content);
+            case 'string':
+            default:
+                return content;
+        }
+    };
+
+    function updateHeaderText(index, direction) {
+        headers.forEach(function (header) {
+              header.textContent = header.textContent.replace(/ (ASC|DESC)$/, '');
+        });
+
+        const header = headers[index];
+
+        if (direction === 'asc') {
+            header.textContent = header.textContent.replace(/ (ASC|DESC)$/, '') + ' ASC';
+        } else {
+            header.textContent = header.textContent.replace(/ (ASC|DESC)$/, '') + ' DESC';
+        }
+    }
+
+    function sortColumn(index) {
+        // Set the direction for sorting
+        const direction = directions[index] || 'asc';
+
+        // Set the multiplier based on the sorting direction
+        const multiplier = direction === 'asc' ? 1 : -1;
+
+        // Convert the NodeList to an array so we can sort it
+        const newRows = Array.from(rows);
+
+        newRows.sort(function (rowA, rowB) {
+            const cellA = rowA.querySelectorAll('td')[index].innerHTML;
+            const cellB = rowB.querySelectorAll('td')[index].innerHTML;
+
+            const a = transform(index, cellA);
+            const b = transform(index, cellB);
+
+            if (a > b) return 1 * multiplier;
+            if (a < b) return -1 * multiplier;
+            return 0;
+        });
+
+        // Remove all current rows from the table
+        [].forEach.call(rows, function (row) {
+            tableBody.removeChild(row);
+        });
+
+        // Reverse the sorting direction for the next click
+        directions[index] = direction === 'asc' ? 'desc' : 'asc';
+
+        // Append the sorted rows back to the table
+        newRows.forEach(function (newRow) {
+            tableBody.appendChild(newRow);
+        });
+
+        updateHeaderText(index, directions[index]);
+
+    }
+
+    function filterTable(query) {
+        const queryLower = query.toLowerCase();
+
+        rows.forEach(function (row) {
+            let rowVisible = false;
+
+            row.querySelectorAll('td').forEach(function (cell, index) {
+                const dataType = headers[index].getAttribute('data-type');
+                if (dataType) {
+                    const cellText = cell.textContent.toLowerCase();
+                    if (cellText.includes(queryLower)) {
+                        rowVisible = true; // If any cell matches, show the row
+                    }
+                }
+            });
+
+            // Show or hide the row based on whether it matched the query
+            row.style.display = rowVisible ? '' : 'none';
+        });
+    }
+
+    // Assign click listeners to column headers for sorting
+    headers.forEach(function (header, index) {
+        if (header.hasAttribute('data-type')) {
+            header.addEventListener('click', function () {
+                sortColumn(index);
+            });
+        }
+    })
+
+    searchInput.addEventListener('input', function () {
+        filterTable(searchInput.value);
+    });
+  })
+
+  function toggleSuspend(userId, isChecked) {
+        const action = isChecked ? 'suspend' : 'unsuspend';
+        const confirmationMessage = isChecked
+            ? 'Are you sure you want to suspend this user?'
+            : 'Are you sure you want to unsuspend this user?';
+
+        if (confirm(confirmationMessage)) {
+            fetch(`/users/${userId}/${action}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update user status.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                alert(error.message);
+                // Revert checkbox state if the request fails
+                document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
+            });
+        } else {
+            // Revert checkbox state if the user cancels the action
+            document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
+        }
+    }
+
+    function toggleAdmin(userId, isChecked) {
+        const action = isChecked ? 'make_admin' : 'remove_admin';
+        const confirmationMessage = isChecked
+            ? 'Are you sure you want to grant this user admin privileges?'
+            : 'Are you sure you want to revoke this user\'s admin privileges?';
+
+        if (confirm(confirmationMessage)) {
+            fetch(`/users/${userId}/${action}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update admin status.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                alert(error.message);
+                // Revert checkbox state if the request fails
+                document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
+            });
+        } else {
+            // Revert checkbox state if the user cancels the action
+            document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
+        }
+    }
+</script> --}}

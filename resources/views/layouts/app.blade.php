@@ -134,14 +134,19 @@
 
         <a href="{{ route('notifications.show', Auth::user()->id) }}"
           class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
-          <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
-          <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
-          <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-          </svg>
+            <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
+            <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
+            <span id="notification-count"
+                  class="absolute -top-2 -right-2 bg-pastelRed text-white text-xs rounded-full px-2 py-1">
+                <!-- O número será atualizado dinamicamente -->
+            </span>
+            <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
         </a>
+
 
         <div class="relative">
           <a href="#" class="relative fill-transparent text-[#3C3D37] hover:text-[#3C3D37]/80 transition-colors"
@@ -302,72 +307,80 @@
       </main>
 
       <!-- Right Sidebar -->
-      @if (Request::is('hub/*'))
+      @if (Request::is('hub/*') && isset($community))
       <aside id="right-sidebar"
         class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
 
         <!-- Hubs Section -->
-        <div class="p-4 border-b-2 border-black">
-          <div class="flex flex-wrap items-start gap-3">
-            <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" alt="Community Image"
-              class="rounded-full  size-20">
-
-            <div class="flex-1 break-words">
-              <h2 class="font-medium break-all">/{{ $community->name }}</h2>
-              <p class="text-sm text-gray-600 whitespace-normal">
-                {{ $community->description }}
-              </p>
-              <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
-                <div class="flex items-center shrink-0">
-                  <span>{{ number_format($followers_count ?? 0, 0) }}</span>
-                  <span class="ml-1">reading</span>
-                </div>
-                <div class="flex items-center shrink-0">
-                  <span>{{ number_format($posts_count ?? 0, 0) }}</span>
-                  <span class="ml-1">posts</span>
-                </div>
+        <div class="border-b-2 border-black">
+          <a class="p-4 flex flex-col hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-all group"
+              href="{{route('communities.show', $community->id)}}">
+              <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" 
+                  alt="hub image"
+                  class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37]">
+              <h1 class="mt-4 mb-1 font-medium tracking-tight text-xl text-center">h/{{$community->name}}</h1>
+              <p class="text-sm font-light break-all tracking-tight text-center">{{ $community->description }}</p>
+              <div class="flex items-center justify-center text-sm font-light break-all tracking-tight text-center">
+                  @if($community->privacy)
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 12c2.21 0 4-1.79 4-4V5c0-2.21-1.79-4-4-4S8 2.79 8 5v3c0 2.21 1.79 4 4 4z"></path>
+                      <path fill-rule="evenodd" d="M4 9c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2H4zm2 3v6h12v-6H6z" clip-rule="evenodd"></path>
+                  </svg>
+                  private
+                  @else
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
+                      <path d="M11 14h2v2h-2zm0-8h2v6h-2z"></path>
+                  </svg>
+                  public
+                  @endif
               </div>
-
-              <div>
-                @auth
-                @if($is_following)
-                {{-- Estado: Seguindo --}}
-                <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                        bg-[#F4F2ED] text-black border-2 border-black">
-                    unfollow -
-                  </button>
-                </form>
-                @elseif($community->privacy && $community->followRequests->where('authenticated_user_id',
-                Auth::user()->id)->where('request_status', 'pending')->count() > 0)
-                <button class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                    bg-[#F4F2ED] text-gray-600 border-2 border-black cursor-not-allowed" disabled>
-                  request Pending
-                </button>
-                @else
-                <form id="followForm" action="{{ route('communities.join', $community->id) }}" method="POST"
-                  class="inline">
-                  @csrf
-                  <button type="submit" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                                        bg-black text-[#F4F2ED]">
-                    follow +
-                  </button>
-                </form>
-
-                @endif
-                @else
-                <a href="{{ route('login') }}" class="mt-2 px-4 py-1 text-sm rounded-full hover:opacity-80 transition-colors 
-                            bg-black text-[#F4F2ED]">
-                  follow +
-                </a>
-                @endauth
+              <div class="flex flex-row justify-center gap-8 mt-4">
+                  <div class="flex items-center">
+                      <span class="font-medium text-lg">{{ number_format($followers_count ?? 0, 0) }}</span>
+                      <span class="ml-1 text-sm ">followers</span>
+                  </div>
+                  <div class="flex items-center">
+                      <span class="font-medium text-lg">{{ number_format($posts_count ?? 0, 0) }}</span>
+                      <span class="ml-1 text-sm t">posts</span>
+                  </div>
               </div>
-            </div>
-          </div>
-        </div>
-
+              
+              <div class="flex justify-center mt-6">
+                  @auth
+                  @if($is_following)
+                  {{-- Estado: Seguindo --}}
+                  <form action="{{ route('communities.leave', $community->id) }}" method="POST">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" 
+                          class="px-3.5 py-2.5 text-sm font-medium rounded-lg bg-[#F4F2ED] text-black border-2 border-black">
+                          unfollow -
+                      </button>
+                  </form>
+                  @elseif($community->privacy && $community->followRequests->where('authenticated_user_id', Auth::user()->id)->where('request_status', 'pending')->count() > 0)
+                  <button class="px-3.5 py-2.5 text-sm font-medium rounded-lg bg-[#F4F2ED] text-gray-600 border-2 border-black cursor-not-allowed" 
+                      disabled>
+                      request Pending
+                  </button>
+                  @else
+                  <form id="followForm" action="{{ route('communities.join', $community->id) }}" method="POST">
+                      @csrf
+                      <button type="submit" 
+                          class="px-3.5 py-2.5 text-sm font-medium rounded-lg bg-black text-[#F4F2ED] border-2 border-black">
+                          follow +
+                      </button>
+                  </form>
+                  @endif
+                  @else
+                  <a href="{{ route('login') }}" 
+                      class="px-3.5 py-2.5 text-sm font-medium rounded-lg bg-black text-[#F4F2ED] border-2 border-black">
+                      follow +
+                  </a>
+                  @endauth
+              </div>
+          </a>
+      </div>
 
         <!-- Moderators Section -->
         <div class="p-4">
@@ -405,5 +418,34 @@
     onclick="toggleLeftSidebar()">
   </div>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const notificationCountElement = document.getElementById('notification-count');
+
+    async function fetchUnreadNotifications() {
+        try {
+            const response = await fetch('/api/notifications/unread-count', {
+                headers: { 'Accept': 'application/json' },
+            });
+            const data = await response.json();
+            if (data.unreadCount > 0) {
+                notificationCountElement.textContent = data.unreadCount;
+                notificationCountElement.classList.remove('hidden');
+            } else {
+                notificationCountElement.classList.add('hidden');
+            }
+        } catch (error) {
+            console.error('Failed to fetch unread notifications count:', error);
+        }
+    }
+
+    // Fetch notifications on page load
+    fetchUnreadNotifications();
+
+    // Optionally refresh the count periodically
+    setInterval(fetchUnreadNotifications, 60000); // 60 seconds
+});
+
+</script>
 
 </html>

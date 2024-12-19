@@ -15,6 +15,7 @@ use App\Models\CommentVote;
 use App\Models\Notification;
 use App\Models\PostNotification;
 use App\Models\UpvoteNotification;
+use App\Models\AuthenticatedUser;
 use DOMDocument;
 use DOMXPath;
 
@@ -22,11 +23,6 @@ class PostController extends Controller
 {
   public function show($id)
   {
-    if(Auth::user()->is_suspended) {
-
-      return view('pages.suspension');
-    }
-
     $post = Post::findOrFail($id);
     if(!$post -> news()){return  redirect()->route('topic.show', $id);}
     else{return redirect()->route('news.show', $id);}
@@ -67,7 +63,7 @@ class PostController extends Controller
 
     return $ogTags;
   }
-  
+
   private function notifyCommunityFollowers($communityId, $post)
   {
     $community = Community::find($communityId);
@@ -99,15 +95,68 @@ class PostController extends Controller
     }
   }
 
+  private function notifyFollowers($userId, $post)
+  {
+    $user = AuthenticatedUser::find($userId);
+
+    // Retrieve followers of the user
+    $followers = $user->followers;
+
+    // Get the authors of the post
+    $authors = $post->authors->pluck('id')->toArray(); // Get author IDs
+
+    foreach ($followers as $follower) {
+      // Skip notifying if the follower is an author of the post
+      if (in_array($follower->id, $authors)) {
+        continue;
+      }
+
+      // Create a notification for each follower
+      $notification = Notification::create([
+        'is_read' => false,
+        'notification_date' => now(),
+        'authenticated_user_id' => $follower->id,
+      ]);
+
+      // Link the notification to the post
+      PostNotification::create([
+        'notification_id' => $notification->id,
+        'post_id' => $post->id,
+      ]);
+    }
+  }
+
 
   public function createPost()
   {
-    if(Auth::user()->is_suspended) {
-
-      return view('pages.suspension');
-    }
-    
     return view('pages.create_post');
+  }
+
+  public function removeAuthors(Request $request, $postId)
+  {
+      $post = Post::findOrFail($postId);
+      $authorsToRemove = $request->input('authors_to_remove', []);
+
+      if (empty($authorsToRemove)) {
+          return response()->json(['message' => 'Nenhum autor selecionado'], 400);
+      }
+
+      if ($post->authors()->count() <= count($authorsToRemove)) {
+          return response()->json(['message' => 'Não é possível remover todos os autores'], 400);
+      }
+
+      try {
+          $post->authors()->detach($authorsToRemove);
+
+          return response()->json([
+              'message' => 'Autores removidos com sucesso',
+              'removed_authors' => $authorsToRemove
+          ]);
+      } catch (\Exception $e) {
+          return response()->json([
+              'message' => 'Falha ao remover autores: ' . $e->getMessage()
+          ], 500);
+      }
   }
 
   public function create(Request $request)
@@ -121,7 +170,7 @@ class PostController extends Controller
           'authors.*' => 'exists:authenticated_users,id', 
       ]);
 
-    $title = "News";
+    $title = $request->title ?? "News";
 
       $post = Post::create([
           'title' => $title,
@@ -135,6 +184,7 @@ class PostController extends Controller
         $post->authors()->attach($request->authors, ['pinned' => false]);
 
       $this->notifyCommunityFollowers($request->community_id, $post);
+      $this->notifyFollowers(Auth::user()->id, $post);
 
       if ($request->type === 'news') {
           $ogTags = $this->getOgTags($request->news_url);
@@ -143,6 +193,7 @@ class PostController extends Controller
 
           return app(NewsController::class)->createNews($post, $request->news_url, $ogTags['image'] ?? null);
       } elseif ($request->type === 'topic') {
+        $post->title = $request->title;
           return app(TopicController::class)->createTopic($post);
       }
 
@@ -168,11 +219,30 @@ class PostController extends Controller
       return response()->json(['message' => 'Post cannot be deleted as it has votes or comments'], 400);
     }
 
+    $topics = Topic::where('post_id', $post->id)->get();
+    foreach ($topics as $topic) {
+        $topic->delete();
+    }
+
+    $news = News::where('post_id', $post->id)->get();
+    foreach ($news as $newsItem) {
+        $newsItem->delete();
+    }
+
+    PostNotification::where('post_id', $post->id)->delete();
+
+
     $post->authors()->detach();
     $post->delete();
 
-    return response()->json(['message' => 'Post deleted successfully'], 200);
+    return redirect('/global')->with('message', 'Post deleted successfully');
   }
+
+  
+
+
+
+
 
   public function upvote($post_id)
   {
@@ -224,6 +294,10 @@ class PostController extends Controller
 
   public function voteUpdate(Request $request, $post_id)
   {
+      if (!is_numeric($post_id)) {
+        return response()->json(['message' => 'Invalid post ID'], 400);
+    }
+
     $post = Post::findOrFail($post_id);
     $user = Auth::user();
     $voteType = $request->input('vote_type');

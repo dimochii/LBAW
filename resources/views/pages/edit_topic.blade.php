@@ -16,7 +16,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('topics.update', $topicItem->post->id) }}" class="space-y-12">
+        <form method="POST" action="{{ route('topics.update', $topicItem->post->id) }}" data-post-id="{{ $topicItem->post->id }}" class="space-y-12">
             @csrf
             @method('PUT')
             
@@ -38,6 +38,29 @@
                        required>
             </div>
 
+            <div class="space-y-12">
+                <label class="block text-2xl font-medium text-black/60">Authors</label>
+                <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
+                    <ul class="authors-list divide-y divide-gray-200">
+                        @foreach($topicItem->post->authors as $author)
+                            <li class="flex items-center justify-between px-6 py-4 hover:bg-black/5 transition-colors duration-300">
+                                <span class="text-lg font-medium text-black/70">
+                                    {{ $author->name }}
+                                </span>
+                                @if($topicItem->post->authors->count() > 1)
+                                    <button 
+                                        type="button" 
+                                        data-author-id="{{ $author->id }}" 
+                                        class="remove-author-btn px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold"
+                                    >
+                                        remove
+                                    </button>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
 
             <div class="space-y-4">
                 <label class="block text-2xl font-medium">Content</label>
@@ -177,5 +200,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize preview content
     previewContent.innerHTML = markdownToHTML(editorContent.value);
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const postId = document.querySelector('form').getAttribute('data-post-id');
+    const authorsContainer = document.querySelector('ul.authors-list');
+
+    authorsContainer.addEventListener('click', function(event) {
+        const removeButton = event.target.closest('.remove-author-btn');
+        if (!removeButton) return;
+
+        const authorId = removeButton.getAttribute('data-author-id');
+        const authorItem = removeButton.closest('li');
+
+        fetch(`/news/${postId}/remove-authors`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ 
+                authors_to_remove: [authorId]
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Not possible to remove author');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Remove o item da lista
+            authorItem.remove();
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+    });
+});
+
 </script>
 @endsection

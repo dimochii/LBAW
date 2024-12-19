@@ -43,7 +43,7 @@
                 @endif
             </div>
             @else
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $community->privacy ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+                <span class="px-4 inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $community->privacy ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
                     @if($community->privacy)
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -66,20 +66,75 @@
 
         <p class="text-gray-600 mt-2 text-sm">{{ $community->description }}</p>
         <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
-          <a href="{{ route('community.followers', $community->id) }}" class="flex items-center gap-2">
-            <div class="flex items-center gap-2">
-              <span>{{ number_format($followers_count ?? 0, 0) }}</span>
-              <span>Followers</span>
-            </div </a>
-            <div class="flex items-center gap-2">
-              <span>{{ number_format($posts_count ?? 0, 0) }}</span>
-              <span>Posts</span>
+          <div class="flex items-center">
+            <a href="{{ route('community.followers', $community->id) }}">
+              <span class="font-medium text-lg">{{ number_format($followers_count ?? 0, 0) }}</span>
+              <span class="ml-1 text-sm ">followers</span>
+            </a>
+            </div>
+          <div class="flex items-center">
+              <span class="font-medium text-lg">{{ number_format($posts_count ?? 0, 0) }}</span>
+              <span class="ml-1 text-sm t">posts</span>
             </div>
         </div>
 
         <!-- Sort by and + post button -->
         <div class="flex items-center gap-4 mt-6">
-          <div class="flex items-center gap-2">
+        @auth
+        @if($is_following)
+        {{-- Estado: Seguindo --}}
+        <form action="{{ route('communities.leave', $community->id) }}" method="POST" class="inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" 
+                class="inline-flex items-center justify-center px-3.5 py-2.5 font-medium text-black border-2 border-black rounded-lg bg-[#F4F2ED]">
+                unfollow -
+            </button>
+        </form>
+        @elseif($community->privacy && $community->followRequests->where('authenticated_user_id', Auth::user()->id)->where('request_status', 'pending')->count() > 0)
+        <button 
+            class="inline-flex items-center justify-center px-3.5 py-2.5 font-medium text-gray-600 border-2 border-black rounded-lg bg-[#F4F2ED] cursor-not-allowed" 
+            disabled>
+            request Pending
+        </button>
+        @else
+        <form id="followForm" action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
+            @csrf
+            <button type="submit" 
+                class="inline-flex items-center justify-center px-3.5 py-2.5 font-medium text-[#F4F2ED] border-2 border-black rounded-lg bg-black">
+                follow +
+            </button>
+        </form>
+        @endif
+    @else
+    <a href="{{ route('login') }}" 
+        class="inline-flex items-center justify-center px-3.5 py-2.5 font-medium text-[#F4F2ED] border-2 border-black rounded-lg bg-black">
+        follow +
+    </a>
+    @endauth
+          @auth
+            @if($is_following)
+            <a 
+                href="{{ route('post.create') }}" 
+                class="relative inline-flex items-center justify-center px-3.5 py-2.5 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-black rounded-lg shadow-md group bg-black text-[#F4F2ED] hover:opacity-80">
+                <span
+                    class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-pastelGreen group-hover:translate-x-0 ease">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </span>
+                <span
+                    class="absolute flex items-center text-base font-semibold justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
+                    + post
+                </span>
+                <span class="relative text-base font-semibold invisible">+ post</span>
+            </a>
+
+
+            @endif
+        @endauth
+
+        <div class="flex items-center gap-2">
             <span class="text-sm text-gray-600">sort by</span>
             <select name="sort" class="bg-transparent text-sm text-gray-900 font-medium focus:outline-none">
               <option value="newest">Newest</option>
@@ -87,13 +142,6 @@
               <option value="trending">Trending</option>
             </select>
           </div>
-          @auth
-          @if($is_following)
-          <a href="{{ route('post.create') }}" class="px-4 text-gray-600 text-sm font-medium underline-effect">
-            + post
-          </a>
-          @endif
-          @endauth
         </div>
       </div>
     </div>
@@ -145,7 +193,9 @@
       @elseif ($activeTab === 'topics')
       @if ($topicPosts->count() > 0)
       @foreach ($topicPosts as $post)
+      @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || Auth::user()->is_admin || $post->topic->status->value === 'accepted')
       @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
+      @endif
       @endforeach
       @endif      
 

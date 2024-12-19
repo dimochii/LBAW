@@ -46,10 +46,6 @@ class AuthenticatedUserController extends Controller
 
     public function show($id)
     {
-        if(Auth::user()->is_suspended) {
-
-            return view('pages.suspension');
-        }
 
         $user = AuthenticatedUser::findOrFail($id);
         $followers = $user->followers;
@@ -81,11 +77,6 @@ class AuthenticatedUserController extends Controller
 
     public function getFollowers($id)
     {
-        if(Auth::user()->is_suspended) {
-
-            return view('pages.suspension');
-        }
-
         $user = AuthenticatedUser::findOrFail($id);
         $followers = $user->followers;
 
@@ -94,10 +85,6 @@ class AuthenticatedUserController extends Controller
 
     public function getFollows($id)
     {
-        if(Auth::user()->is_suspended) {
-
-            return view('pages.suspension');
-        }
         $user = AuthenticatedUser::findOrFail($id);
         $following = $user->follows;
 
@@ -106,11 +93,6 @@ class AuthenticatedUserController extends Controller
 
     public function edit($id)
     {
-        if(Auth::user()->is_suspended) {
-
-            return view('pages.suspension');
-        }
-        
         $user = AuthenticatedUser::findOrFail($id);
 
         if (!$this->authorize('editProfile', $user)) {
@@ -311,17 +293,32 @@ class AuthenticatedUserController extends Controller
     }
     
 
-    public function suspend($id)
-    { 
+    public function suspend($id, Request $request)
+    {
         if (!Auth::user()->is_admin) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
+        $request->validate([
+            'reason' => 'required|string',
+            'duration' => 'required|integer|min:1',
+        ]);
+
         $user = AuthenticatedUser::findOrFail($id);
+
         $user->is_suspended = true;
         $user->save();
 
-        return response()->json(['message' => 'User suspended successfully']);
+        $suspension = new Suspension([
+            'reason' => $request->input('reason'),
+            'start' => now(),
+            'duration' => $request->input('duration'),  
+            'authenticated_user_id' => $user->id, 
+        ]);
+
+        $suspension->save();
+
+        return response()->json(['message' => 'User suspended successfully.']);
     }
 
     public function unsuspend($id)
@@ -331,11 +328,15 @@ class AuthenticatedUserController extends Controller
         }
 
         $user = AuthenticatedUser::findOrFail($id);
+        
         $user->is_suspended = false;
         $user->save();
 
-        return response()->json(['message' => 'User unsuspended successfully']);
+        $user->suspensions()->delete();
+
+        return response()->json(['message' => 'User unsuspended successfully.']);
     }
+
 
 
     public function favorites() {
@@ -450,7 +451,7 @@ class AuthenticatedUserController extends Controller
         $user->delete();
         Auth::logout();
     
-        return redirect('/news')->with('message', 'Your account has been successfully deleted.');
+        return redirect('/global')->with('message', 'Your account has been successfully deleted.');
     }
     
     
