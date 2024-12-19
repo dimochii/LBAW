@@ -100,7 +100,7 @@ function addEventListeners() {
 
   const editorIds = document.querySelectorAll('[id$="-editor"]')
   const replyBtns = document.querySelectorAll("[data-toggle='reply-form']")
-  if (editorIds) {
+  if (editorIds.length > 0) {
     threadPlaceholder.addEventListener('click', function () {
       threadPlaceholder.classList.add('hidden')
       threadEditor.classList.remove('hidden')
@@ -145,13 +145,20 @@ function addEventListeners() {
         content: newCommentContent.value,
         parent_comment_id: null,
       };
-    
+
       postComment(data, postId);
     });
 
     const replies = document.querySelectorAll('div[data-parent-id]')
     replies.forEach((ele, postId) => {
       handleReplySubmission(ele, postId)
+    })
+  }
+
+  const suspendForm = document.getElementById('suspend-form')
+  if (suspendForm) {
+    suspendForm.addEventListener('submit', (e) => {
+      suspendUser(e)
     })
   }
 
@@ -561,14 +568,66 @@ async function commentVoteUpdate(e) {
   }
 }
 
-function toggleSuspend(userId, isChecked) {
-  const action = isChecked ? 'suspend' : 'unsuspend';
-  const confirmationMessage = isChecked
-    ? 'Are you sure you want to suspend this user?'
-    : 'Are you sure you want to unsuspend this user?';
+// admin suspend user
 
-  if (confirm(confirmationMessage)) {
-    fetch(`/users/${userId}/${action}`, {
+function openSuspendModal(userId) {
+  document.getElementById('authenticated_user_id').value = userId;
+  document.getElementById('suspend-modal').classList.remove('hidden');
+}
+
+function closeSuspendModal() {
+  document.getElementById('suspend-modal').classList.add('hidden');
+}
+
+async function suspendUser(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const authenticatedUserId = form.authenticated_user_id.value;
+  const reason = form.reason.value;
+  const duration = form.duration.value;
+
+  console.log(authenticatedUserId)
+
+  fetch(`/users/${authenticatedUserId}/suspend`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    },
+    body: JSON.stringify({
+      reason: reason,
+      duration: duration
+    })
+  })
+    .then(response => response.text())
+    .then(rawData => {
+      console.log('Raw response:', rawData);
+      try {
+        const data = JSON.parse(rawData);
+        alert(data.message);
+        closeSuspendModal();
+        updateButtonState(authenticatedUserId, true);
+      } catch (e) {
+        console.error('Failed to parse response as JSON:', e.message);
+      }
+    })
+    .catch(error => {
+      console.error('Failed to suspend user:', error.message);
+    });
+}
+
+function updateButtonState(userId, isSuspended) {
+  const suspendButton = document.querySelector(`button.suspend-btn[data-user-id="${userId}"]`);
+  const unsuspendButton = document.querySelector(`button.unsuspend-btn[data-user-id="${userId}"]`);
+
+  if (suspendButton) suspendButton.disabled = isSuspended;
+  if (unsuspendButton) unsuspendButton.disabled = !isSuspended;
+}
+
+function unsuspendUser(userId) {
+  if (confirm('Are you sure you want to unsuspend this user?')) {
+    fetch(`/users/${userId}/unsuspend`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -576,23 +635,49 @@ function toggleSuspend(userId, isChecked) {
       },
       body: JSON.stringify({})
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to update user status.');
-        }
-        return response.json();
-      })
+      .then(response => response.json())
       .then(data => {
         alert(data.message);
+        updateButtonState(userId, false);
       })
       .catch(error => {
-        alert(error.message);
-        document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
+        alert('Failed to unsuspend user: ' + error.message);
       });
-  } else {
-    document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
   }
 }
+
+// function toggleSuspend(userId, isChecked) {
+//   const action = isChecked ? 'suspend' : 'unsuspend';
+//   const confirmationMessage = isChecked
+//     ? 'Are you sure you want to suspend this user?'
+//     : 'Are you sure you want to unsuspend this user?';
+
+//   if (confirm(confirmationMessage)) {
+//     fetch(`/users/${userId}/${action}`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+//       },
+//       body: JSON.stringify({})
+//     })
+//       .then(response => {
+//         if (!response.ok) {
+//           throw new Error('Failed to update user status.');
+//         }
+//         return response.json();
+//       })
+//       .then(data => {
+//         alert(data.message);
+//       })
+//       .catch(error => {
+//         alert(error.message);
+//         document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
+//       });
+//   } else {
+//     document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
+//   }
+// }
 
 async function toggleAdmin(userId, isChecked) {
   const action = isChecked ? 'make_admin' : 'remove_admin';
