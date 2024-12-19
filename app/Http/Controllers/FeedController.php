@@ -12,6 +12,7 @@ use App\Models\Vote;
 use App\Models\Topic;
 use App\Models\News;
 
+use App\Enums\TopicStatus;
 use App\Models\PostVote;
 use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,12 @@ class FeedController extends Controller
     $posts = Post::withCount('votes')
       ->whereIn('community_id', $authUser->communities->pluck('id'))
       ->where('creation_date', '>', now()->subHours(72))
+      ->where(function ($query) {
+        $query->whereDoesntHave('topic') // Include posts that are not topics
+              ->orWhereHas('topic', function ($subQuery) {
+                  $subQuery->where('status', TopicStatus::Accepted->value); // Include only topics with 'accepted' status
+              });
+    })
       ->orderBy('votes_count', 'desc')
       ->orderBy('creation_date', 'desc')
       ->get();
@@ -100,13 +107,19 @@ class FeedController extends Controller
 
     // Fetch posts from public communities created within the last 72 hours
     $posts = Post::withCount('votes')
-      ->whereHas('community', function ($query) {
+    ->whereHas('community', function ($query) {
         $query->where('privacy', false);
-      })
-      ->where('creation_date', '>', now()->subHours(72))
-      ->orderBy('votes_count', 'desc')
-      ->orderBy('creation_date', 'desc')
-      ->get();
+    })
+    ->where('creation_date', '>', now()->subHours(72))
+    ->where(function ($query) {
+        $query->whereDoesntHave('topic') // Include posts that are not topics
+              ->orWhereHas('topic', function ($subQuery) {
+                  $subQuery->where('status', TopicStatus::Accepted->value); // Include only topics with 'accepted' status
+              });
+    })
+    ->orderBy('votes_count', 'desc')
+    ->orderBy('creation_date', 'desc')
+    ->get();
 
     $authUser = Auth::user(); // For retrieving user-specific votes
 
@@ -172,6 +185,12 @@ class FeedController extends Controller
     // Fetch posts from user's communities, sorted by creation date
     $posts = Post::withCount('votes')
       ->whereIn('community_id', $authUser->communities->pluck('id'))
+      ->where(function ($query) {
+        $query->whereDoesntHave('topic') // Include posts that are not topics
+              ->orWhereHas('topic', function ($subQuery) {
+                  $subQuery->where('status', TopicStatus::Accepted->value); // Include only topics with 'accepted' status
+              });
+    })
       ->orderBy('creation_date', 'desc')
       ->get();
 

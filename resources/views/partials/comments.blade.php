@@ -18,6 +18,7 @@
 
           <span>•</span>
           <span>{{ $comment->creation_date ? $comment->creation_date->diffForHumans() : '?' }}</span>
+          @if(auth()->check() && auth()->user()->id != $comment->authenticated_user_id && $comment->authenticated_user_id != 1)
           <span>•</span>
           <span class="underline-effect cursor-pointer group-open/details-{{ $comment ->id }}:before:content-['hide']">
             <button 
@@ -29,6 +30,18 @@
               Report Comment
             </button>
           </span>
+          @endif
+           {{-- Delete Comment Button --}}
+            @if(auth()->check() && (auth()->user()->is_admin || auth()->user()->id == $comment->authenticated_user_id) && $comment->authenticated_user_id != 1)
+            <span>•</span>
+            <form action="{{ route('comments.delete', ['comment_id' => $comment->id]) }}" method="POST" style="display: inline;">
+              @csrf
+              @method('PUT')
+              <button type="submit" class="underline-effect text-red-600 hover:text-red-800">
+                Delete Comment
+              </button>
+            </form>
+          @endif
 
         </div>
       </summary>
@@ -42,8 +55,8 @@
       <footer class="flex gap-x-1 items-center mt-4">
         {{-- Upvote --}}
         <div>
-          <input id="upvote-{{ $comment->id }}" type="checkbox" class="hidden peer/upvote">
-          <label for="upvote-{{ $comment->id }}"
+          <input id="{{ $comment->id }}-upvote-c" type="checkbox" class="hidden peer/upvote">
+          <label for="{{ $comment->id }}-upvote-c"
             class="peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 transition-all ease-out">
             <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21,21H3L12,3Z" />
@@ -54,7 +67,7 @@
         </div>
 
         {{-- Score --}}
-        <span class="mr-2">
+        <span class="mr-2" id="{{ $comment->id }}-score-c">
           @php
           $score = $comment->upvotesCount->count() - $comment->downvotesCount->count();
           echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
@@ -63,8 +76,8 @@
 
         {{-- Downvote --}}
         <div>
-          <input id="downvote-{{ $comment->id }}" type="checkbox" class="hidden peer/downvote">
-          <label for="downvote-{{ $comment->id }}"
+          <input id="{{ $comment->id }}-downvote-c" type="checkbox" class="hidden peer/downvote">
+          <label for="{{ $comment->id }}-downvote-c"
             class="cursor-pointer peer-checked/downvote:fill-red-400 hover:fill-red-400 transition-all ease-out">
             <svg class="w-5 h-5 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21,21H3L12,3Z" />

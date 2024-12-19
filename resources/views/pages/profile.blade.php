@@ -172,11 +172,13 @@
     @elseif ($activeTab === 'topics')
       @if ($authored_topics->count() > 0)
         @foreach ($authored_topics as $item)
+        @if (Auth::user()->id === $user->id || $item->topic->status->value === 'accepted')
           @include('partials.post', [
             'news' => false,
             'item' =>$item, 
             'post' => $item->topic,
           ])
+          @endif
         @endforeach
       @else
         <p class="text-gray-500">This user has not participated in any topics yet.</p>

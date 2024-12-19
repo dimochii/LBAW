@@ -27,7 +27,7 @@
                     <span class="font-medium ml-1">{{ $notification->requestNotification->request->user->name }}</span>
                 </a> 
             @elseif($notification->postNotification && $notification->postNotification->post)
-                <a href="{{ route($notification->postNotification->post->news ? 'news.show' : 'topics.show', $notification->postNotification->post->id) }}"
+                <a href="{{ route($notification->postNotification->post->news ? 'news.show' : 'topic.show', $notification->postNotification->post->id) }}"
                    onclick="markAsRead({{ $notification->id }})"
                    class="flex items-center hover:text-blue-600 transition-colors">
 
