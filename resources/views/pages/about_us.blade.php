@@ -76,7 +76,6 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!--  News Discovery -->
             <div class="border-2 border-black p-6">
                 <h3 class="text-3xl font-medium text-black mb-4">
                     News Discovery
@@ -84,8 +83,7 @@
                 <p class="text-[#555555] font-light leading-relaxed mb-6">
                     Instantly fetch trending news with rich preview thumbnails. Explore curated content from diverse sources at your fingertips.
                 </p>
-                <!-- Image from a News Link -->
-                <div class="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16 relative">
+                <div class="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16 relative bg-white border-2 border-black">
                     <div class="grid grid-cols-1 sm:grid-cols-9 gap-10">
 
                         <div class="sm:col-span-6 lg:col-span-5">
@@ -176,8 +174,8 @@
                     Create and join interest-based communities. Find your tribe, share passions, and expand your digital network.
                 </p>
                 <!--  Reddit-like Community Threads -->
-                <div class="border-2 border-black p-4 mb-4">
-                    <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-md mb-4">
+                <div class="border-2 border-black p-4 mb-4 bg-gray-50">
+                    <div class="flex items-center space-x-4 p-4 rounded-md mb-4">
                         <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
                              alt="Community Image" class="rounded-full ring-2 ring-black h-36 w-36 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 object-cover">
                         <div>
@@ -367,8 +365,14 @@
                         <div class="flex mb-4">
                             <div class="w-1/2 pr-2">
                                 <h4 class="font-semibold mb-2">Markdown Input</h4>
-                                <textarea class="w-full h-40 p-2 border rounded font-mono text-sm" placeholder="Type your markdown here..."> Learn More</textarea>
+                                <textarea class="w-full h-40 p-2 border rounded font-mono text-sm" placeholder="Type your markdown here..."> 
+                                    # Welcome to Hubs!
+                                    This is a **collaborative** platform where we share *interesting* stories.
+                                    > Community drives innovation.
+                                    Learn More](#)
+                                </textarea>
                             </div>
+
                             <div class="w-1/2 pl-2">
                                 <h4 class="font-semibold mb-2">Live Preview</h4>
                                 <div id="markdown-preview" class="h-40 p-2 border rounded overflow-auto prose">

@@ -105,12 +105,44 @@
           onclick="toggleAdmin({{ $user->id }}, this.checked)"
           >
         </td>
-        <td class="px-4 py-4">
-          <input id="suspend-checkbox-{{ $user->id }}" type="checkbox" class="w-4 h-4 accent-red-500"
-            @if($user->is_suspended) checked @endif
-          onclick="toggleSuspend({{ $user->id }}, this.checked)"
-          >
+        <td>
+            @if($user->is_suspended)
+                <button type="button" class="unsuspend-btn" onclick="unsuspendUser({{ $user->id }})">
+                    unsuspend user
+                </button>
+            @else
+                <button type="button" class="suspend-btn px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bol" onclick="openSuspendModal({{ $user->id }})">
+                    suspend user
+                </button>
+            @endif
         </td>
+
+
+        <div id="suspend-modal" class="hidden fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+          <div class="bg-white p-6 rounded shadow-lg w-96">
+              <h3 class="text-xl font-bold mb-4">Suspend User</h3>
+              <form id="suspend-form" action="" method="POST">
+                  @csrf
+                  <input type="hidden" name="authenticated_user_id" id="authenticated_user_id">
+
+                  <div class="mb-4">
+                      <label for="reason" class="block font-medium text-gray-700">Reason</label>
+                      <input type="text" name="reason" id="reason" class="w-full border-gray-300 rounded p-2" required>
+                  </div>
+
+                  <div class="mb-4">
+                      <label for="duration" class="block font-medium text-gray-700">Duration (in days)</label>
+                      <input type="number" name="duration" id="duration" class="w-full border-gray-300 rounded p-2" required>
+                  </div>
+
+                  <div class="flex justify-end gap-4">
+                      <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded" onclick="closeSuspendModal()">Cancel</button>
+                      <button type="submit" class="bg-rose-500 text-white py-2 px-4 rounded">Suspend</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+
         <td class="px-4 py-4">
           <form action="{{ route('admin.delete', ['id' => $user->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this account?')">
             @csrf
@@ -243,14 +275,57 @@
     });
   })
 
-  function toggleSuspend(userId, isChecked) {
-        const action = isChecked ? 'suspend' : 'unsuspend';
-        const confirmationMessage = isChecked
-            ? 'Are you sure you want to suspend this user?'
-            : 'Are you sure you want to unsuspend this user?';
+  function openSuspendModal(userId) {
+      document.getElementById('authenticated_user_id').value = userId;  
+      document.getElementById('suspend-modal').classList.remove('hidden');
+  }
 
-        if (confirm(confirmationMessage)) {
-            fetch(`/users/${userId}/${action}`, {
+
+  function closeSuspendModal() {
+      document.getElementById('suspend-modal').classList.add('hidden');
+  }
+
+    document.getElementById('suspend-form').addEventListener('submit', function(e) {
+        e.preventDefault(); 
+
+        const form = e.target;
+        const authenticatedUserId = form.authenticated_user_id.value; 
+        const reason = form.reason.value;
+        const duration = form.duration.value;
+
+        fetch(`/users/${userId}/suspend`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                reason: reason,
+                duration: duration
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);  
+            closeSuspendModal();  
+            updateButtonState(userId, true); 
+        })
+        .catch(error => {
+            alert('Failed to suspend user: ' + error.message);
+        });
+    });
+
+    function updateButtonState(userId, isSuspended) {
+        const suspendButton = document.querySelector(`button.suspend-btn[data-user-id="${userId}"]`);
+        const unsuspendButton = document.querySelector(`button.unsuspend-btn[data-user-id="${userId}"]`);
+        
+        if (suspendButton) suspendButton.disabled = isSuspended;
+        if (unsuspendButton) unsuspendButton.disabled = !isSuspended;
+    }
+
+    function unsuspendUser(userId) {
+        if (confirm('Are you sure you want to unsuspend this user?')) {
+            fetch(`/users/${userId}/unsuspend`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -258,25 +333,18 @@
                 },
                 body: JSON.stringify({})
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to update user status.');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 alert(data.message);
+                updateButtonState(userId, false);  
             })
             .catch(error => {
-                alert(error.message);
-                // Revert checkbox state if the request fails
-                document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
+                alert('Failed to unsuspend user: ' + error.message);
             });
-        } else {
-            // Revert checkbox state if the user cancels the action
-            document.getElementById(`suspend-checkbox-${userId}`).checked = !isChecked;
         }
     }
+
+
 
     function toggleAdmin(userId, isChecked) {
         const action = isChecked ? 'make_admin' : 'remove_admin';
