@@ -287,13 +287,8 @@
         e.preventDefault(); 
 
         const form = e.target;
-        const authenticatedUserId = form.authenticated_user_id.value; 
         const reason = form.reason.value;
         const duration = form.duration.value;
-
-        console.log('User ID:', userId);
-        console.log('reason:', reason);
-        console.log('duration', duration);
 
         fetch(`/users/${userId}/suspend`, {
             method: 'POST',
@@ -374,11 +369,9 @@
             })
             .catch(error => {
                 alert(error.message);
-                // Revert checkbox state if the request fails
                 document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
             });
         } else {
-            // Revert checkbox state if the user cancels the action
             document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
         }
     }

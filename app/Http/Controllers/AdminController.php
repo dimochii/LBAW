@@ -70,7 +70,8 @@ class AdminController extends Controller
 
         $suspension->save();
 
-        return response()->json(['message' => 'User suspended successfully.']);
+        return redirect()->route('admin.overview', $user->id)->with('success', 'Profile updated successfully!');
+        //return response()->json(['message' => 'User suspended successfully.']);
     }
 
     public function unsuspend($id)
@@ -126,16 +127,13 @@ class AdminController extends Controller
       }
    
 
-      //delete user notifications....
       if ($user->notifications()->exists()) {
           $user->notifications()->update(['authenticated_user_id' => $deletedUserId]);
       }
   
-      //erase reports with user.....
       if ($user->reports()->exists()) {
           $user->reports()->delete(); 
       }
-      //erase suspensions with user...
       if ($user->suspensions()->exists()) {
           $user->suspensions()->delete(); 
       }
