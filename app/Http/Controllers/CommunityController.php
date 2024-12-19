@@ -450,32 +450,50 @@ class CommunityController extends Controller
       return redirect()->back()->with('success', 'Follow request rejected.');
   }
 
-  public function deleteCommunity(Request $request, $id)
+    public function deleteCommunity(Request $request, $id)
   {
       $admin = Auth::user();
+      
       if (!$admin->is_admin) {
-          return redirect()->back()->with('error', 'You are not authorized to perform this action.');
+          return response()->json([
+              'success' => false,
+              'message' => 'You are not authorized to perform this action.'
+          ], 403);
       }
-
+      
       $community = Community::findOrFail($id);
+      
       if ($community->posts()->exists()) {
-          return redirect()->back()->with('error', 'This community cannot be deleted as it contains posts.');
+          return response()->json([
+              'success' => false,
+              'message' => 'This community cannot be deleted as it contains posts.'
+          ], 400);
       }
-
-      $community->followers()->detach();
-      $community->moderators()->detach();
-
-      if ($community->followRequests()->exists()) {
-          $community->followRequests()->delete();
+      
+      try {
+          $community->followers()->detach();
+          $community->moderators()->detach();
+          
+          if ($community->followRequests()->exists()) {
+              $community->followRequests()->delete();
+          }
+          
+          if ($community->reports()->exists()) {
+              $community->reports()->delete();
+          }
+          
+          $community->delete();
+          
+          return response()->json([
+              'success' => true,
+              'message' => 'Community has been successfully deleted.'
+          ]);
+          
+      } catch (\Exception $e) {
+          return response()->json([
+              'success' => false,
+              'message' => 'An error occurred while deleting the community.'
+          ], 500);
       }
-
-      if ($community->reports()->exists()) {
-          $community->reports()->delete();
-      }
-
-      $community->delete();
-      return redirect()->route('admin.hubs')->with('message', 'Community has been successfully deleted.');
   }
-
-
 }
