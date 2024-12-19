@@ -77,8 +77,15 @@
                 </button>
             </div>
         </form>
-
-
+        
+        <form action="{{ route('post.delete', ['id' => $newsItem->post_id]) }}" method="POST" style="display: inline-block;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-red-600 text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1 hover:bg-red-700">
+                <span class="relative z-10">Delete Post</span>
+            </button>
+        </form>
+        
     </div>
 </div>
 
