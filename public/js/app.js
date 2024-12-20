@@ -618,17 +618,15 @@ function updateButtonState(userId, isSuspended) {
   const suspendButton = document.querySelector(`button.suspend-btn[data-user-id="${userId}"]`);
   const unsuspendButton = document.querySelector(`button.unsuspend-btn[data-user-id="${userId}"]`);
 
-  if (suspendButton) suspendButton.disabled = isSuspended;
-  if (unsuspendButton) unsuspendButton.disabled = !isSuspended;
-
   if (isSuspended) {
-    if (suspendButton) suspendButton.style.display = 'none';
-    if (unsuspendButton) unsuspendButton.style.display = 'inline-block';
+    if (suspendButton) suspendButton.classList.add('hidden');
+    if (unsuspendButton) unsuspendButton.classList.remove('hidden');
   } else {
-    if (suspendButton) suspendButton.style.display = 'inline-block';
-    if (unsuspendButton) unsuspendButton.style.display = 'none';
+    if (suspendButton) suspendButton.classList.remove('hidden');
+    if (unsuspendButton) unsuspendButton.classList.add('hidden');
   }
 }
+
 
 function unsuspendUser(userId) {
   if (confirm('Are you sure you want to unsuspend this user?')) {

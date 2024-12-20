@@ -107,16 +107,35 @@
           >
         </td>
         <td>
-            @if($user->is_suspended)
-                <button type="button" class="unsuspend-btn font-bold px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white" data-user-id="{{$user->id}}" onclick="unsuspendUser({{ $user->id }})">
-                    Unsuspend
-                </button>
-            @else
-                <button type="button" class="suspend-btn px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold" data-user-id="{{$user->id}}" onclick="openSuspendModal({{ $user->id }})">
-                    Suspend
-                </button>
-            @endif
+          @if($user->is_suspended)
+            <button type="button" 
+                    class="unsuspend-btn font-bold px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white" 
+                    data-user-id="{{$user->id}}" 
+                    onclick="unsuspendUser({{ $user->id }})">
+              Unsuspend
+            </button>
+            <button type="button" 
+                    class="suspend-btn hidden px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold" 
+                    data-user-id="{{$user->id}}" 
+                    onclick="openSuspendModal({{ $user->id }})">
+              Suspend
+            </button>
+          @else
+            <button type="button" 
+                    class="suspend-btn font-bold px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white" 
+                    data-user-id="{{$user->id}}" 
+                    onclick="openSuspendModal({{ $user->id }})">
+              Suspend
+            </button>
+            <button type="button" 
+                    class="unsuspend-btn hidden px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white font-bold" 
+                    data-user-id="{{$user->id}}" 
+                    onclick="unsuspendUser({{ $user->id }})">
+              Unsuspend
+            </button>
+          @endif
         </td>
+
 
 
         <div id="suspend-modal" class="hidden fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">

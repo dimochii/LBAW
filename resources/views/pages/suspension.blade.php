@@ -10,19 +10,20 @@
 
     <div class="flex justify-center mb-6">
         @if($suspensions->isNotEmpty())
-            @foreach($suspensions as $suspension)
-                <div class="text-center mb-4">
-                    <p class="text-base font-semibold text-gray-800">Suspension Start:
-                        <span class="text-rose-400">{{ $suspension->start }}</span>
-                    </p>
-                    <p class="text-base font-semibold text-gray-800">Duration:
-                        <span class="text-rose-400">{{ $suspension->duration ?? 'Indefinite' }}</span>
-                    </p>
-                    <p class="text-base font-semibold text-gray-800">Reason:
-                        <span class="text-rose-400">{{ $suspension->reason }}</span>
-                    </p>
-                </div>
-            @endforeach
+            @php
+                $latestSuspension = $suspensions->first();
+            @endphp
+            <div class="text-center mb-4">
+                <p class="text-base font-semibold text-gray-800">Suspension Start:
+                    <span class="text-rose-400">{{ $latestSuspension->start }}</span>
+                </p>
+                <p class="text-base font-semibold text-gray-800">Duration:
+                    <span class="text-rose-400">{{ $latestSuspension->duration ?? 'Indefinite' }}</span>
+                </p>
+                <p class="text-base font-semibold text-gray-800">Reason:
+                    <span class="text-rose-400">{{ $latestSuspension->reason }}</span>
+                </p>
+            </div>
         @else
             <p class="text-gray-800">No suspension details available.</p>
         @endif
