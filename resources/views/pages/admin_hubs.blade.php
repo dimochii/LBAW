@@ -128,7 +128,7 @@
         </td>
 
         <td class="px-4 py-4">
-        <form action="{{ route('admin.community.delete', ['id' => $hub->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this community?')">
+        <form action="{{ route('admin.community.delete', ['id' => $hub->id]) }}" method="POST" >
           @csrf
           @method('DELETE')
           <button type="submit" class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold delete-button" data-community-id="{{ $hub->id }}">

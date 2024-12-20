@@ -88,7 +88,30 @@
 
             <div id="newsUrlContainer" 
                  class="space-y-4 transform transition-all duration-500 origin-top">
-                <label for="news_url" class="block text-2xl font-medium">News URL</label>
+                 <div class="flex items-center gap-2">
+                    <label for="news_url" class="block text-2xl font-medium">News URL</label>
+                    <div class="relative inline-block">
+                        <svg class="help-trigger w-5 h-5 text-gray-500 hover:text-gray-700 cursor-help transition-colors duration-200" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            stroke-width="2" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <div class="help-tooltip absolute z-50 w-72 p-2 bg-gray-900 text-white text-sm rounded-lg -left-24 bottom-full mb-2">
+                            <div class="relative">
+                                <p>Leave the title field empty to automatically use the news article's title.</p>
+                                <p class="mt-1">The post will automatically fetch and use the first image from the news article.</p>
+                                <div class="absolute h-2 w-2 bg-gray-900 rotate-45 -bottom-1 left-1/2 transform -translate-x-1/2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <input type="url" 
                        id="news_url" 
                        name="news_url" 

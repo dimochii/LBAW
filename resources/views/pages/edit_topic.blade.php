@@ -138,13 +138,15 @@
             </div>
         </form>
 
-        <form action="{{ route('post.delete', ['id' => $topicItem->post_id]) }}" method="POST" style="display: inline-block;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white">
-              Delete Post
-            </button>
-          </form> 
+        <div class="flex justify-end mt-4">
+            <form action="{{ route('post.delete', ['id' => $topicItem->post_id]) }}" method="POST" style="display: inline-block;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white">
+                Delete Post
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 
