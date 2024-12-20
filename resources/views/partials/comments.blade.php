@@ -37,7 +37,7 @@
             <form action="{{ route('comments.delete', ['comment_id' => $comment->id]) }}" method="POST" style="display: inline;">
               @csrf
               @method('PUT')
-              <button type="submit" class="underline-effect text-red-600 hover:text-red-800">
+              <button type="submit" class="underline-effect text-red-600 hover:text-red-800 delete-comment-button" data-comment-id="{{ $comment->id }}">
                 Delete Comment
               </button>
             </form>

@@ -1070,4 +1070,70 @@ function handleFollowRequest(url, notificationId, action) {
   });
 }
 
+// DELETE COMMENT
+
+document.addEventListener('DOMContentLoaded', function () {
+  const deleteCommentButtons = document.querySelectorAll('.delete-comment-button');
+
+  deleteCommentButtons.forEach(button => {
+      button.closest('form').addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          if (confirm('Are you sure you want to delete this comment?')) {
+              try {
+                  const response = await fetch(this.action, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                      },
+                      body: JSON.stringify({
+                          _method: 'PUT'
+                      })
+                  });
+
+                  const result = await response.json();
+
+                  const notification = document.createElement('div');
+                  notification.className = 'fixed left-1/2 top-16 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+
+                  if (result.success) {
+                      notification.style.backgroundColor = '#c5e6a6';
+                      notification.style.border = '2px solid #34a853';
+                      notification.innerHTML = `<span class="inline-block mr-2" style="color: #34a853;">✓</span> ${result.message}`;
+                  } else {
+                      notification.style.backgroundColor = '#ed6a5a';
+                      notification.style.border = '2px solid #a30000';
+                      notification.innerHTML = `<span class="inline-block mr-2" style="color: #a30000;">✕</span> ${result.message}`;
+                  }
+
+                  document.body.appendChild(notification);
+
+                  setTimeout(() => {
+                      notification.remove();
+                      if (result.success) {
+                          button.closest('.comment-container').remove();
+                      }
+                  }, 3000);
+
+              } catch (error) {
+                  console.error('Error:', error);
+
+                  const errorNotification = document.createElement('div');
+                  errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+                  errorNotification.style.backgroundColor = '#ffebee';
+                  errorNotification.style.border = '1px solid #a30000';
+                  errorNotification.innerHTML = `<span class="inline-block mr-2" style="color: #a30000;">✕</span> An error occurred while processing your request.`;
+
+                  document.body.appendChild(errorNotification);
+
+                  setTimeout(() => {
+                      errorNotification.remove();
+                  }, 3000);
+              }
+          }
+      });
+  });
+});
+
 
