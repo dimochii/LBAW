@@ -420,7 +420,6 @@ class CommunityController extends Controller
 
   public function acceptFollowRequest($requestId) {
       $request = CommunityFollowRequest::findOrFail($requestId);
-      $this->authorize('isCommunityAdmin', $request->community);
 
       $request->request_status = 'accepted';
       $request->save();
@@ -431,14 +430,12 @@ class CommunityController extends Controller
       $notification->is_read = true;
       $notification->save();
 
-      return redirect()->back()->with('success', 'Follow request accepted.');
+      return response()->json(['success' => 'Follow request accepted.']);
   }
 
 
   public function rejectFollowRequest($requestId) {
       $request = CommunityFollowRequest::findOrFail($requestId);
-
-      $this->authorize('isCommunityAdmin', $request->community);
 
       $request->request_status = 'rejected';
       $request->save();
@@ -447,7 +444,7 @@ class CommunityController extends Controller
       $notification->is_read = true;
       $notification->save();
 
-      return redirect()->back()->with('success', 'Follow request rejected.');
+      return response()->json(['success' => 'Follow request rejected.']);
   }
 
     public function deleteCommunity(Request $request, $id)

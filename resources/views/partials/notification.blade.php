@@ -10,22 +10,33 @@
             <strong class="text-sm text-gray-600">{{ $notification->notification_date }}</strong>
         </td>
         <td class="px-4 py-4 w-full">
-            @if($notification->requestNotification && $notification->requestNotification->request)
-                <a href="{{ 'request.show', $notification->requestNotification->request->id }}"
-                   onclick="markAsRead({{ $notification->id }})"
-                   class="flex items-center hover:text-blue-600 transition-colors">
+        @if($notification->requestNotification && $notification->requestNotification->request)
+            <div class="flex items-center hover:text-blue-600 transition-colors">
 
-                   <!-- Community Avatar -->
-                   <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 object-cover">
-                        <img src="{{ asset($notification->requestNotification->request->community->image->path ?? 'images/groupdefault.jpg' )}}"
-                             alt="{{ $notification->requestNotification->request->community->name }}"
-                             class="w-full h-full object-cover">
-                    </div>
+                <div class="mr-3 w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 object-cover">
+                    <img src="{{ asset($notification->requestNotification->request->community->image->path ?? 'images/groupdefault.jpg') }}"
+                        alt="{{ $notification->requestNotification->request->community->name }}"
+                        class="w-full h-full object-cover">
+                </div>
 
-                    <!-- Request and Community Name -->
+                <div>
                     New join request on {{ $notification->requestNotification->request->community->name }}: 
                     <span class="font-medium ml-1">{{ $notification->requestNotification->request->user->name }}</span>
-                </a> 
+                </div>
+
+                <div class="ml-auto flex gap-2">
+                    <button 
+                        class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition"
+                        onclick="handleFollowRequest('{{ route('community.acceptRequest', $notification->requestNotification->request->id) }}', {{ $notification->id }}, 'accepted')">
+                        accept
+                    </button>
+                    <button 
+                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                        onclick="handleFollowRequest('{{ route('community.rejectRequest', $notification->requestNotification->request->id) }}', {{ $notification->id }}, 'rejected')">
+                        reject
+                    </button>
+                </div>
+            </div>
             @elseif($notification->postNotification && $notification->postNotification->post)
                 <a href="{{ route($notification->postNotification->post->news ? 'news.show' : 'topic.show', $notification->postNotification->post->id) }}"
                    onclick="markAsRead({{ $notification->id }})"
@@ -95,3 +106,32 @@
         </td>
     </tr>
     @endif
+
+<script>
+    function handleFollowRequest(url, notificationId, action) {
+        if (!confirm(`Are you sure you want to ${action} this follow request?`)) {
+            return;
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                document.querySelector(`[data-notification-id="${notificationId}"]`).remove();
+                alert(`Follow request ${action}ed successfully.`);
+            } else {
+                return response.json().then(error => {
+                    throw new Error(error.message || 'Failed to process the request.');
+                });
+            }
+        })
+        .catch(error => {
+            alert(`Error: ${error.message}`);
+        });
+        }
+</script>

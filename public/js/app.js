@@ -1040,3 +1040,34 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
 });
+
+// FOLLOW REQUEST
+
+function handleFollowRequest(url, notificationId, action) {
+  if (!confirm(`Are you sure you want to ${action} this follow request?`)) {
+      return;
+  }
+
+  fetch(url, {
+      method: 'POST',
+      headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'Accept': 'application/json',
+      },
+  })
+  .then(response => {
+      if (response.ok) {
+          document.querySelector(`[data-notification-id="${notificationId}"]`).remove();
+          alert(`Follow request ${action}ed successfully.`);
+      } else {
+          return response.json().then(error => {
+              throw new Error(error.message || 'Failed to process the request.');
+          });
+      }
+  })
+  .catch(error => {
+      alert(`Error: ${error.message}`);
+  });
+}
+
+
