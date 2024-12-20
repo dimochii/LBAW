@@ -107,41 +107,62 @@
           >
         </td>
         <td>
-            @if($user->is_suspended)
-                <button type="button" class="unsuspend-btn font-bold px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white" data-user-id="{{$user->id}}" onclick="unsuspendUser({{ $user->id }})">
-                    Unsuspend
-                </button>
-            @else
-                <button type="button" class="suspend-btn px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold" data-user-id="{{$user->id}}" onclick="openSuspendModal({{ $user->id }})">
-                    Suspend
-                </button>
-            @endif
+          @if($user->is_suspended)
+            <button type="button" 
+                    class="unsuspend-btn font-bold px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white" 
+                    data-user-id="{{$user->id}}" 
+                    onclick="unsuspendUser({{ $user->id }})">
+              Unsuspend
+            </button>
+            <button type="button" 
+                    class="suspend-btn hidden px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold" 
+                    data-user-id="{{$user->id}}" 
+                    onclick="openSuspendModal({{ $user->id }})">
+              Suspend
+            </button>
+          @else
+            <button type="button" 
+                    class="suspend-btn font-bold px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white" 
+                    data-user-id="{{$user->id}}" 
+                    onclick="openSuspendModal({{ $user->id }})">
+              Suspend
+            </button>
+            <button type="button" 
+                    class="unsuspend-btn hidden px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white font-bold" 
+                    data-user-id="{{$user->id}}" 
+                    onclick="unsuspendUser({{ $user->id }})">
+              Unsuspend
+            </button>
+          @endif
         </td>
+
 
 
         <div id="suspend-modal" class="hidden fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
           <div class="bg-white p-6 rounded shadow-lg w-96">
-              <h3 class="text-xl font-bold mb-4">Suspend User</h3>
-              <form id="suspend-form" action="{{ route('users.suspend', $user->id) }}" method="POST">
-                  @csrf
-                  <input type="hidden" name="authenticated_user_id" id="authenticated_user_id" value="{{$user->id}}">
+            <h3 class="text-xl font-bold mb-4">Suspend User</h3>
+            <form id="suspend-form">
+              @csrf
+              <input type="hidden" name="authenticated_user_id" id="authenticated_user_id">
 
-                  <div class="mb-4">
-                      <label for="reason" class="block font-medium text-gray-700 mb-1">Reason</label>
-                      <input type="text" name="reason" id="reason" class="w-full border-gray-300 rounded p-2 border-2" required>
-                  </div>
+              <div class="mb-4">
+                <label for="reason" class="block font-medium text-gray-700 mb-1">Reason</label>
+                <input type="text" name="reason" id="reason" class="w-full border-gray-300 rounded p-2 border-2" required>
+              </div>
 
-                  <div class="mb-6">
-                      <label for="duration" class="block font-medium text-gray-700 mb-1">Duration (in days)</label>
-                      <input type="number" name="duration" id="duration" class="w-full border-gray-300 rounded p-2 border-2" required>
-                  </div>
+              <div class="mb-6">
+                <label for="duration" class="block font-medium text-gray-700 mb-1">Duration (in days)</label>
+                <input type="number" name="duration" id="duration" class="w-full border-gray-300 rounded p-2 border-2" required>
+              </div>
 
-                  <div class="flex justify-end gap-4">
-                      <button type="button" class="px-2 py-1 rounded-md bg-gray-300 hover:bg-gray-400/[.80] text-white font-bold" onclick="closeSuspendModal()">Cancel</button>
-                      <button type="submit" class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">Suspend</button>
-                  </div>
-              </form>
+              <div class="flex justify-end gap-4">
+                <button type="button" class="px-2 py-1 rounded-md bg-gray-300 hover:bg-gray-400/[.80] text-white font-bold" onclick="closeSuspendModal()">Cancel</button>
+                <button type="submit" class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">Suspend</button>
+              </div>
+            </form>
           </div>
+        </div>
+
       </div>
 
         <td class="px-4 py-4">

@@ -94,6 +94,14 @@
 
                     <div class="relative">
                         <textarea id="editor-content" name="content" class="w-full h-64 p-6 text-lg font-vollkorn focus:outline-none resize-none peer-checked/preview:hidden" placeholder="Write your post content here...">{{ old('content', $newsItem->post->content) }}</textarea>
+                        <div id="preview-content" 
+                             class="hidden w-full h-64 p-6 text-lg font-vollkorn overflow-y-auto
+                                    prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] 
+                                    prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] 
+                                    prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded 
+                                    prose-code:text-[#4793AF]">
+                        </div>
+
                     </div>
                 </div>
             </div>

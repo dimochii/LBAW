@@ -587,43 +587,46 @@ async function suspendUser(e) {
   const reason = form.reason.value;
   const duration = form.duration.value;
 
-  console.log(authenticatedUserId)
-
-  fetch(`/users/${authenticatedUserId}/suspend`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    },
-    body: JSON.stringify({
-      reason: reason,
-      duration: duration
-    })
-  })
-    .then(response => response.text())
-    .then(rawData => {
-      console.log('Raw response:', rawData);
-      try {
-        const data = JSON.parse(rawData);
-        alert(data.message);
-        closeSuspendModal();
-        updateButtonState(authenticatedUserId, true);
-      } catch (e) {
-        console.error('Failed to parse response as JSON:', e.message);
-      }
-    })
-    .catch(error => {
-      console.error('Failed to suspend user:', error.message);
+  try {
+    const response = await fetch(`/users/${authenticatedUserId}/suspend`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+      body: JSON.stringify({ reason, duration }),
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Failed to suspend user');
+    }
+
+    const data = await response.json();
+
+
+    closeSuspendModal();
+
+    updateButtonState(authenticatedUserId, true);
+  } catch (error) {
+    console.error('Failed to suspend user:', error.message);
+    alert('Error: ' + error.message);
+  }
 }
 
 function updateButtonState(userId, isSuspended) {
   const suspendButton = document.querySelector(`button.suspend-btn[data-user-id="${userId}"]`);
   const unsuspendButton = document.querySelector(`button.unsuspend-btn[data-user-id="${userId}"]`);
 
-  if (suspendButton) suspendButton.disabled = isSuspended;
-  if (unsuspendButton) unsuspendButton.disabled = !isSuspended;
+  if (isSuspended) {
+    if (suspendButton) suspendButton.classList.add('hidden');
+    if (unsuspendButton) unsuspendButton.classList.remove('hidden');
+  } else {
+    if (suspendButton) suspendButton.classList.remove('hidden');
+    if (unsuspendButton) unsuspendButton.classList.add('hidden');
+  }
 }
+
 
 function unsuspendUser(userId) {
   if (confirm('Are you sure you want to unsuspend this user?')) {
@@ -631,20 +634,26 @@ function unsuspendUser(userId) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       },
-      body: JSON.stringify({})
     })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to unsuspend user');
+        }
+        return response.json();
+      })
       .then(data => {
-        alert(data.message);
         updateButtonState(userId, false);
       })
       .catch(error => {
-        alert('Failed to unsuspend user: ' + error.message);
+        alert('Error unsuspending user: ' + error.message);
       });
   }
 }
+
+document.getElementById('suspend-form').addEventListener('submit', suspendUser);
+
 
 // function toggleSuspend(userId, isChecked) {
 //   const action = isChecked ? 'suspend' : 'unsuspend';
@@ -1068,7 +1077,7 @@ function handleFollowRequest(url, notificationId, action) {
   .catch(error => {
       alert(`Error: ${error.message}`);
   });
-}
+  }
 
 // DELETE COMMENT
 

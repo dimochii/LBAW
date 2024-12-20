@@ -46,33 +46,36 @@ class AdminController extends Controller
     }
     
     public function suspend($id, Request $request)
-    {
+  {
       if (!$this->authorize('isAdmin', Auth::user())) {
-        return response()->view('errors.403', [], 403); 
-    }
+          return response()->json(['error' => 'Unauthorized'], 403);
+      }
 
-        $request->validate([
-            'reason' => 'required|string',
-            'duration' => 'required|integer|min:1',
-        ]);
+      $request->validate([
+          'reason' => 'required|string',
+          'duration' => 'required|integer|min:1',
+      ]);
 
-        $user = AuthenticatedUser::findOrFail($id);
+      try {
+          $user = AuthenticatedUser::findOrFail($id);
 
-        $user->is_suspended = true;
-        $user->save();
+          $user->is_suspended = true;
+          $user->save();
+          $suspension = new Suspension([
+              'reason' => $request->input('reason'),
+              'start' => now(),
+              'duration' => $request->input('duration'),
+              'authenticated_user_id' => $user->id,
+          ]);
 
-        $suspension = new Suspension([
-            'reason' => $request->input('reason'),
-            'start' => now(),
-            'duration' => $request->input('duration'),  
-            'authenticated_user_id' => $user->id, 
-        ]);
+          $suspension->save();
 
-        $suspension->save();
+          return response()->json(['message' => 'User suspended successfully.'], 200);
+      } catch (\Exception $e) {
+          return response()->json(['error' => 'Failed to suspend user: ' . $e->getMessage()], 500);
+      }
+  }
 
-        return redirect()->route('admin.overview', $user->id)->with('success', 'Profile updated successfully!');
-        //return response()->json(['message' => 'User suspended successfully.']);
-    }
 
     public function unsuspend($id)
     {
