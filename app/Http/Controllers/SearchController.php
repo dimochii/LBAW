@@ -52,7 +52,7 @@ class SearchController extends Controller
             'community' => $post->community->name,
             'community_route' => $topicExists 
                 ? url("/topic/{$post->id}") 
-                : url("/news/{$post->id}"),            
+                : url("/global/{$post->id}"),            
         ];
     });
     

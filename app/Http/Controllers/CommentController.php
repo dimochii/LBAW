@@ -184,22 +184,25 @@ class CommentController extends Controller
     }
 
     public function delete($id) {
-
         $comment = Comment::find($id);
+
         if (!$comment) {
-            return response()->view('errors.404', [], 404); 
+            return response()->json(['success' => false, 'message' => 'Comment not found.'], 404);
         }
+
         $user = Auth::user();
+
         if (!$user->is_admin && $user->id != $comment->authenticated_user_id) {
-            return response()->view('errors.403', [], 403);
+            return response()->json(['success' => false, 'message' => 'You are not authorized to delete this comment.'], 403);
         }
 
-        $comment->authenticated_user_id = 1; 
-        $comment->content = ''; 
-        $comment->save(); 
+        $comment->authenticated_user_id = 1;
+        $comment->content = '';
+        $comment->save();
 
-        return response()->json(['message' => 'Comment updated successfully.']);
+        return response()->json(['success' => true, 'message' => 'Comment updated successfully.']);
     }
+
 }
 
 

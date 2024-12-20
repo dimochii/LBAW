@@ -39,13 +39,9 @@ use App\Http\Controllers\LeftController;
 Route::redirect('/', '/global');
 
 
-// API
-
-
-
-
 
 // Authentication
+
 Route::controller(LoginController::class)->group(function () {
   Route::get('/login', 'showLoginForm')->name('login');
   Route::post('/login', 'authenticate');
@@ -64,71 +60,117 @@ Route::controller(RegisterController::class)->group(function () {
   Route::post('/register', 'register');
 });
 
-//admin
 
 
-//Authenticated User
-//profile
-Route::get('/users/{id}/profile', [AuthenticatedUserController::class, 'show'])->middleware(['auth', 'check.suspension'])->name('user.profile');
-//edit profile
-Route::get('/users/{id}/edit', [AuthenticatedUserController::class, 'edit'])->middleware(['auth', 'check.suspension'])->name('user.edit');
-Route::post('/users/{id}/update', [AuthenticatedUserController::class, 'update'])->middleware(['auth', 'check.suspension'])->name('user.update');
-Route::post('/users/{id}', [AuthenticatedUserController::class, 'destroy'])->middleware(['auth', 'check.suspension'])->name('user.destroy');
-Route::get('/users/{id}', [AuthenticatedUserController::class, 'show'])->middleware(['auth', 'check.suspension'])->name('user.profile');
-Route::get('/users/{user}/profile', [AuthenticatedUserController::class, 'show'])->middleware(['auth', 'check.suspension'])->name('user.profile');
-Route::get('/users/{user}/profile/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware(['auth', 'check.suspension']);
+//AuthenticatedUsers
+
+Route::middleware(['auth', 'check.suspension'])->group(function () {
+  // Authenticated User Profile and Actions
+  Route::controller(AuthenticatedUserController::class)->group(function () {
+      // Profile Management
+      Route::get('/users/{id}/profile', 'show')->name('user.profile');
+      Route::get('/users/{id}/edit', 'edit')->name('user.edit');
+      Route::post('/users/{id}/update', 'update')->name('user.update');
+      Route::delete('/deletemyaccount', 'deletemyaccount')->name('user.delete');
+      Route::post('/users/{id}', 'destroy')->name('user.destroy');
+
+      // Followers & Following
+      Route::get('/users/{id}/followers', 'getFollowers')->name('user.followers');
+      Route::get('/users/{id}/following', 'getFollows')->name('user.following');
+      Route::post('/user/{id}/follow', 'follow')->name('user.follow');
+
+      // Favorites Management
+      Route::get('/users/{user}/profile/favorites', 'favorites');
+      Route::get('/favorites', 'favorites');
+      Route::post('/favorite/{id}/add', 'addfavorite');
+      Route::post('/favorite/{id}/remove', 'remfavorite');
+      Route::delete('/unfavorites/{id}', 'remfavorite');
+  });
+});
 
 
 
-//followers & following
-Route::get('/users/{id}/followers', [AuthenticatedUserController::class, 'getFollowers'])->middleware('check.suspension')->name('user.followers');
-Route::get('/users/{id}/following', [AuthenticatedUserController::class, 'getFollows'])->middleware('check.suspension')->name('user.following');
-Route::post('/user/{id}/follow', [AuthenticatedUserController::class, 'follow'])->middleware('check.suspension')->name('user.follow');
-//articles
+//Posts
 
-Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->middleware(['auth', 'check.suspension']);
-Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware(['auth', 'check.suspension']);
-Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware(['auth', 'check.suspension'])->name('user.delete');
-//admin
-Route::post('/favorite/{id}/add', [AuthenticatedUserController::class, 'addfavorite'])->middleware(['auth', 'check.suspension']);
-Route::post('/favorite/{id}/remove', [AuthenticatedUserController::class, 'remfavorite'])->middleware(['auth', 'check.suspension']);
+Route::controller(PostController::class)->group(function () {
+  // Post Viewing
+  Route::get('/post/{post_id}', 'show')->name('post.show');
+
+  // Post Creation and Management
+  Route::middleware(['auth', 'check.suspension'])->group(function () {
+      Route::get('/posts/create', 'createPost')->name('post.create');
+      Route::post('/posts', 'create')->name('post.store');
+      Route::delete('/posts/delete/{id}', 'destroy')->name('post.delete');
+
+      // Post Voting
+      Route::post('/news/{post_id}/upvote', 'upvote')->name('news.upvote');
+      Route::post('/news/{post_id}/downvote', 'downvote')->name('news.downvote');
+      Route::post('/news/{post_id}/voteupdate', 'voteUpdate')->name('news.voteupdate');
+
+      // Post Author Management
+      Route::post('/news/{post}/remove-authors', 'removeAuthors')->name('news.remove-authors');
+  });
+});
 
 
-
-//Post
-Route::get('/post/{post_id}', [PostController::class, 'show'])->name('post.show');
 
 //News
-Route::get('/news', [NewsController::class, 'list'])->middleware('check.suspension')->name('news');
-Route::get('/news/{post_id}', [NewsController::class, 'show'])->middleware('check.suspension')->name('news.show');
 
-Route::post('/news/{post_id}/comment', [CommentController::class, 'store'])->middleware(['auth', 'check.suspension'])->name('comments.store');
-Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware(['auth', 'check.suspension'])->name('comments.update');
+Route::controller(NewsController::class)->group(function () {
+  // News Viewing
+  Route::get('/news', 'list')->middleware('check.suspension')->name('news');
+  Route::get('/news/{post_id}', 'show')->middleware('check.suspension')->name('news.show');
 
-//Comments upvote & downvote
-Route::post('/comment/{comment_id}/voteupdate', [CommentController::class, 'voteUpdate'])->middleware('auth')->name('comments.voteupdate');
-Route::put('/comment/{comment_id}/delete', [CommentController::class, 'delete'])->middleware('auth')->name('comments.delete');
-//upvote & downvote
-Route::post('/news/{post_id}/upvote', [PostController::class, 'upvote'])->middleware(['auth', 'check.suspension'])->name('news.upvote');
-Route::post('/news/{post_id}/downvote', [PostController::class, 'downvote'])->middleware(['auth', 'check.suspension'])->name('news.downvote');
-Route::post('/news/{post_id}/voteupdate', [PostController::class, 'voteUpdate'])->middleware(['auth', 'check.suspension'])->name('news.voteupdate');
+  // News Editing and Updating
+  Route::middleware(['auth', 'check.suspension'])->group(function () {
+      Route::get('/news/{post_id}/edit', 'edit')->name('news.edit');
+      Route::put('/news/{post_id}', 'update')->name('news.update');
+  });
+});
 
-//editing
-Route::get('/news/{post_id}/edit', [NewsController::class, 'edit'])->middleware(['auth', 'check.suspension'])->name('news.edit');
-Route::put('/news/{post_id}', [NewsController::class, 'update'])->middleware(['auth', 'check.suspension'])->name('news.update');
-Route::post('/news/{post}/remove-authors', [PostController::class, 'removeAuthors'])
-    ->name('news.remove-authors');
 
-//Topic
-Route::get('/topic/{post_id}', [TopicController::class, 'show'])->middleware('check.suspension')->name('topic.show');
-//editing
-Route::get('/topic/{post_id}/edit', [TopicController::class, 'edit'])->middleware(['auth', 'check.suspension'])->name('topics.edit');
-Route::put('/topic/{post_id}', [TopicController::class, 'update'])->middleware(['auth', 'check.suspension'])->name('topics.update');
-Route::post('/topic/{post_id}/remove-authors', [TopicController::class, 'removeAuthors'])
-    ->name('topics.remove-authors');
-Route::post('/topic/{post_id}/accept', [TopicController::class, 'accept'])->middleware(['auth', 'check.suspension'])->name('topics.accept');
-Route::post('/topic/{post_id}/reject', [TopicController::class, 'reject'])->middleware(['auth', 'check.suspension'])->name('topics.reject');
 
+//Topics
+
+Route::controller(TopicController::class)->group(function () {
+  // Topic Viewing
+  Route::get('/topic/{post_id}', 'show')->middleware('check.suspension')->name('topic.show');
+
+  // Topic Editing and Updating
+  Route::middleware(['auth', 'check.suspension'])->group(function () {
+      Route::get('/topic/{post_id}/edit', 'edit')->name('topics.edit');
+      Route::put('/topic/{post_id}', 'update')->name('topics.update');
+
+      // Topic Author Management
+      Route::post('/topic/{post_id}/remove-authors', 'removeAuthors')->name('topics.remove-authors');
+
+      // Topic Approval/Rejection
+      Route::post('/topic/{post_id}/accept', 'accept')->name('topics.accept');
+      Route::post('/topic/{post_id}/reject', 'reject')->name('topics.reject');
+  });
+});
+
+
+
+//Comments
+
+Route::controller(CommentController::class)->group(function () {
+  // Comment Management
+  Route::middleware(['auth', 'check.suspension'])->group(function () {
+      Route::post('/news/{post_id}/comment', 'store')->name('comments.store');
+      Route::put('/comments/{id}', 'update')->name('comments.update');
+  });
+
+  // Comment Voting and Deletion
+  Route::middleware('auth')->group(function () {
+      Route::post('/comment/{comment_id}/voteupdate', 'voteUpdate')->name('comments.voteupdate');
+      Route::put('/comment/{comment_id}/delete', 'delete')->name('comments.delete');
+  });
+});
+
+
+
+//Administrators
 
 Route::middleware(['auth', 'check.suspension', 'check.admin'])->group(function () {
   // Admin routes handled by AdminController
@@ -148,11 +190,9 @@ Route::middleware(['auth', 'check.suspension', 'check.admin'])->group(function (
   });
 });
 
-//Posts
-//creation
-Route::get('/posts/create', [PostController::class, 'createPost'])->middleware(['auth', 'check.suspension'])->name('post.create');
-Route::post('/posts', [PostController::class, 'create'])->middleware(['auth', 'check.suspension'])->name('post.store');
-Route::delete('/posts/delete/{id}', [PostController::class, 'destroy'])->middleware(['auth', 'check.suspension'])->name('post.delete');
+
+
+//Feed
 
 Route::get('/global', [FeedController::class, 'global'])->middleware('check.suspension')->name('global');
 
@@ -174,56 +214,91 @@ Route::middleware(['auth', 'check.suspension'])->group(function () {
   });
 });
 
-//Hub
-Route::get('/hub/{id}', [CommunityController::class, 'show'])->middleware('check.suspension')->name('communities.show');
 
-Route::middleware(['auth', 'check.suspension'])->group(function () {
-  Route::get('/hubs/create', [CommunityController::class, 'createHub']);
+
+//Hub /Community
+
+Route::middleware('check.suspension')->group(function () {
+  // Viewing hub (community)
+  Route::get('/hub/{id}', [CommunityController::class, 'show'])->name('communities.show');
+  Route::get('/hub/{id}/followers', [CommunityController::class, 'getFollowers'])->name('community.followers');
 });
-Route::post('/hubs/destroy', [CommunityController::class, 'destroy'])->middleware(['auth', 'check.suspension'])->name('communities.destroy');
-
-Route::post('/hubs', [CommunityController::class, 'store'])->middleware(['auth', 'check.suspension'])->name('communities.store');
-Route::get('/all-hubs', [CommunityController::class, 'index'])->middleware(['auth', 'check.suspension'])->name('communities.index');
-
-Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->middleware(['auth', 'check.suspension'])->name('communities.join');
-Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->middleware(['auth', 'check.suspension'])->name('communities.leave');
-Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->middleware(['auth', 'check.suspension'])->name('communities.update.privacy');
-
-Route::post('/users/{user_id}/{community_id}/make_moderator', [ModeratorController::class, 'makeModerator'])->middleware(['auth', 'check.suspension'])->name('users.make_moderator');
-Route::post('/users/{user_id}/{community_id}/remove_moderator', [ModeratorController::class, 'removeModerator'])->middleware(['auth', 'check.suspension'])->name('users.remove_moderator');
-Route::delete('/users/{user_id}/{community_id}/remove_follower', [ModeratorController::class, 'removeFollower'])->name('community.remove_follower');
-//Route::post('/communities/{id}/apply', [CommunityController::class, 'apply'])->middleware(['auth', 'check.suspension'])->name('communities.apply');
 
 Route::middleware(['auth', 'check.suspension'])->group(function () {
+  // Community creation and management
+  Route::get('/hubs/create', [CommunityController::class, 'createHub']);
+  Route::post('/hubs', [CommunityController::class, 'store'])->name('communities.store');
+  Route::post('/hub/{id}/join', [CommunityController::class, 'join'])->name('communities.join');
+  Route::delete('/hub/{id}/leave', [CommunityController::class, 'leave'])->name('communities.leave');
+  Route::post('/hub/{id}/privacy', [CommunityController::class, 'updatePrivacy'])->name('communities.update.privacy');
+
+  // Follow request handling
+  Route::post('/notifications/accept-follow-request/{id}', [CommunityController::class, 'acceptFollowRequest'])->name('community.acceptRequest');
+  Route::post('/notifications/reject-follow-request/{id}', [CommunityController::class, 'rejectFollowRequest'])->name('community.rejectRequest');
+});
+
+// Hub index and destruction
+Route::middleware(['auth', 'check.suspension'])->group(function () {
+  Route::get('/all-hubs', [CommunityController::class, 'index'])->name('communities.index');
+  Route::post('/hubs/destroy', [CommunityController::class, 'destroy'])->name('communities.destroy');
+  Route::delete('deletecommunity/{id}', [CommunityController::class, 'deleteCommunity'])->name('admin.community.delete');
+});
+
+
+
+//(Hub/Community) Moderator
+
+Route::middleware(['auth', 'check.suspension', 'check.moderator'])->group(function () {
+  // Moderator-specific routes
   Route::controller(ModeratorController::class)->group(function () {
-    Route::get('/hub/{id}/moderation', 'overview')->name('moderation.overview');
-    Route::get('/hub/{id}/moderation/users', 'users')->name('moderation.users');
-    Route::get('/hub/{id}/moderation/posts', 'posts')->name('moderation.posts');
-    Route::get('/hub/{id}/moderation/reports', 'reports')->name('moderation.reports');
+      // Moderation overview and sections
+      Route::get('/hub/{id}/moderation', 'overview')->name('moderation.overview');
+      Route::get('/hub/{id}/moderation/users', 'users')->name('moderation.users');
+      Route::get('/hub/{id}/moderation/posts', 'posts')->name('moderation.posts');
+      Route::get('/hub/{id}/moderation/reports', 'reports')->name('moderation.reports');
+
+      // User management within communities
+      Route::post('/users/{user_id}/{community_id}/make_moderator', 'makeModerator')->name('users.make_moderator');
+      Route::post('/users/{user_id}/{community_id}/remove_moderator', 'removeModerator')->name('users.remove_moderator');
+      Route::delete('/users/{user_id}/{community_id}/remove_follower', 'removeFollower')->name('community.remove_follower');
   });
 });
 
 
-Route::get('/reports', [ReportController::class, 'show'])->middleware(['auth', 'check.suspension']);
-Route::post('/report', [ReportController::class, 'report'])->middleware(['auth', 'check.suspension'])->name('report');
-Route::patch('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware(['auth', 'check.suspension']);
-Route::get('/side', [SideController::class, 'show'])->middleware(['auth', 'check.suspension'])->name('side.show');
-
-//Followers
-Route::get('/hub/{id}/followers', [CommunityController::class, 'getFollowers'])->middleware('check.suspension')->name('community.followers');
-
-//Notifications
-Route::get('/notifications', [NotificationController::class, 'show'])
-    ->middleware(['auth', 'check.suspension'])
-    ->name('notifications.show');
-    //mark as read
-Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-Route::patch('/notifications/accept-follow-request/{id}', [CommunityController::class, 'acceptFollowRequest'])->middleware(['auth', 'check.suspension'])->name('communities.acceptFollowRequest');
-Route::patch('/notifications/reject-follow-request/{id}', [CommunityController::class, 'rejectFollowRequest'])->middleware(['auth', 'check.suspension'])->name('communities.rejectFollowRequest');
-
 
 //Hub Join Requests
+
 Route::get('/request/{request_id}', [CommunityFollowRequest::class, 'show'])->middleware(['auth', 'check.suspension'])->name('request.show');
+
+
+
+//Reports
+
+Route::middleware(['auth', 'check.suspension'])->group(function () {
+  // Viewing reports
+  Route::get('/reports', [ReportController::class, 'show']);
+  // Creating a new report
+  Route::post('/report', [ReportController::class, 'report'])->name('report');
+  // Resolving a report
+  Route::patch('/report/{id}/resolve', [ReportController::class, 'resolve'])->middleware('check.moderator');
+});
+
+
+
+//Left side bar
+
+Route::get('/side', [SideController::class, 'show'])->middleware(['auth', 'check.suspension'])->name('side.show');
+
+
+
+// Notifications
+
+Route::middleware(['auth', 'check.suspension'])->group(function () {
+  Route::get('/notifications', [NotificationController::class, 'show'])->name('notifications.show');
+  Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+});
+
+
 
 // Recover password
 
@@ -236,6 +311,8 @@ Route::controller(GoogleController::class)->group(function () {
   Route::get('auth/google/call-back', 'callbackGoogle')->name('google-call-back');
 });
 
+
+//Images
 
 Route::get('/images/{filename}', function ($filename) {
   $path = base_path('images/' . $filename);
@@ -250,4 +327,3 @@ Route::get('/images/{filename}', function ($filename) {
   return response()->file($path);
 })->name('images.serve');
 
-// Left side bar

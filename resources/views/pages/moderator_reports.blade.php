@@ -57,10 +57,10 @@
     <thead class="bg-gray-100">
       <tr>
         <th
-          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer" data-type="number">
           ID</th>
         <th
-          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer" data-type="string">
           Reporter</th>
         <th
           class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">
@@ -82,9 +82,9 @@
         <td class="px-4 py-4 whitespace-nowrap">{{ $report->id }}</td>
         <td class="px-4 py-4">
           <a class="flex items-center" href="{{ route('user.profile', $report->authenticated_user_id) }}">
-            <img
-              src="{{ $report->user->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}"
-              class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+          <img src="{{ asset( $report->user->image->path ?? 'images/groupdefault.jpg') }}"
+                            onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
+                                class="max-w-full rounded-full size-9 mr-3 object-cover">
             <span class="break-all" data-sort>{{ '@' . $report->user->username }}</span>
           </a>
         </td>
@@ -136,130 +136,3 @@
 
 
 @endsection
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-const searchInput = document.getElementById('search-input');
-const table = document.querySelector('table');
-const tableBody = table.querySelector('tbody');
-const rows = tableBody.querySelectorAll('tr');
-const headers = table.querySelectorAll('th');
-
-const directions = Array.from(headers).map(() => '');
-
-const transform = function (index, content) {
-const type = headers[index].getAttribute('data-type');
-switch (type) {
-  case 'number': return parseFloat(content);
-  case 'string':
-  default: return content;
-}
-};
-
-function updateHeaderText(index, direction) {
-headers.forEach(header => {
-  header.textContent = header.textContent.replace(/ (ASC|DESC)$/, '');
-});
-
-const header = headers[index];
-header.textContent += direction === 'asc' ? ' ASC' : ' DESC';
-}
-
-function sortColumn(index) {
-const direction = directions[index] || 'asc';
-const multiplier = direction === 'asc' ? 1 : -1;
-
-const newRows = Array.from(rows);
-newRows.sort((rowA, rowB) => {
-  const cellA = rowA.querySelectorAll('td')[index].innerHTML;
-  const cellB = rowB.querySelectorAll('td')[index].innerHTML;
-
-  const a = transform(index, cellA);
-  const b = transform(index, cellB);
-
-  return (a > b ? 1 : a < b ? -1 : 0) * multiplier;
-});
-
-rows.forEach(row => tableBody.removeChild(row));
-directions[index] = direction === 'asc' ? 'desc' : 'asc';
-newRows.forEach(newRow => tableBody.appendChild(newRow));
-
-updateHeaderText(index, directions[index]);
-}
-
-function filterTable(query) {
-const queryLower = query.toLowerCase();
-rows.forEach(row => {
-  const rowVisible = Array.from(row.querySelectorAll('td')).some(cell => {
-    return cell.textContent.toLowerCase().includes(queryLower);
-  });
-  row.style.display = rowVisible ? '' : 'none';
-});
-}
-
-headers.forEach((header, index) => {
-if (header.hasAttribute('data-type')) {
-  header.addEventListener('click', () => sortColumn(index));
-}
-});
-
-searchInput.addEventListener('input', () => filterTable(searchInput.value));
-});
-
-function openResolveModal(reportId) {
-const modal = document.getElementById('resolveModal');
-if (modal) {
-  modal.classList.remove('hidden');
-  const form = modal.querySelector('#resolveForm');
-  form.action = `/report/${reportId}/resolve`; 
-  document.getElementById('report_id').value = reportId;
-} else {
-  console.error(`Modal not found!`);
-}
-}
-
-function closeResolveModal() {
-const modal = document.getElementById('resolveModal');
-if (modal) {
-  modal.classList.add('hidden');
-}
-}
-
-
-function toggleModerator(userId, communityId, isChecked) {
-    const action = isChecked ? 'make_moderator' : 'remove_moderator';
-    const confirmationMessage = isChecked
-        ? 'Are you sure you want to grant this user moderator privileges in this community?'
-        : 'Are you sure you want to revoke this user\'s moderator privileges in this community?';
-
-    if (confirm(confirmationMessage)) {
-        fetch(`/hub/${communityId}/${action}/${userId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({})
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to update moderator status.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert(data.message);
-        })
-        .catch(error => {
-            alert(error.message);
-            document.getElementById(`moderator-checkbox-${userId}`).checked = !isChecked;
-        });
-    } else {
-        document.getElementById(`moderator-checkbox-${userId}`).checked = !isChecked;
-    }
-}
-
-
-
-
-</script>

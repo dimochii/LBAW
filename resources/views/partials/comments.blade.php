@@ -1,14 +1,14 @@
 <div class="relative mb-3 min-w-72 max-w-full" id="c-{{ $comment->id }}" data-id="{{ $comment->id }}" data-parent-id="{{ is_null($comment->parent_comment_id) ? 'null' : $comment->parent_comment_id}}">
   <div class="flex flex-row mt-5">
-    <div class="size-8 rounded-full ">
+    <div class="size-8 rounded-full object-cover">
       <a href="">
-        <img src="{{ asset($comment->user->image->path ?? '/images/default.jpg') }}" class="size-8 rounded-full">
+        <img src="{{ asset($comment->user->image->path ?? '/images/default.jpg') }}" class="size-8 rounded-full object-cover">
       </a>
 
       <a href="#c-{{ $comment->id }}"
         class="absolute top-[32px] bg-[#A6A6A6] hover:bg-[#4793AF] w-px hover:w-0.5 h-[calc(100%-32px)] cursor-pointer"></a>
     </div>
-    <details open class="group/details-{{ $comment ->id }} mt-2 grow">
+    <details open class="group/details mt-2 grow">
       {{-- Comment Header --}}
       <summary class="list-none">
         <div class="px-2 text-sm mb-5">
@@ -37,7 +37,7 @@
             <form action="{{ route('comments.delete', ['comment_id' => $comment->id]) }}" method="POST" style="display: inline;">
               @csrf
               @method('PUT')
-              <button type="submit" class="underline-effect text-red-600 hover:text-red-800">
+              <button type="submit" class="underline-effect text-red-600 hover:text-red-800 delete-comment-button" data-comment-id="{{ $comment->id }}">
                 Delete Comment
               </button>
             </form>

@@ -15,7 +15,7 @@ news = Bool
         href="{{ route('communities.show', ['id' => $post->post->community->id ?? 'unknown']) }}">
         <img src="{{ $post->post->community->image_id ? asset($post->post->community->image->path) : 'images/groupdefault.jpg' }}" 
         onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
-          class="size-8 rounded-full ">
+          class="size-8 rounded-full object-cover">
 
         <span class="text-xl font-light underline-effect-light px-2">h/{{ $post->post->community->name ?? 'Unknown Community'
           }}</span>

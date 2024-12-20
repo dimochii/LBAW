@@ -98,7 +98,7 @@
           @if ($isFollowing)
               <form action="{{ route('user.follow', $user->id) }}" method="POST" class="w-full">
                   @csrf
-                  <button type="submit" class="w-full border-2 border-black px-6 py-2 bg-gray-500 text-white rounded-full 
+                  <button type="submit" class="w-full border-2 border-black px-6 py-2 bg-gray-500 text-white object-cover rounded-full 
                   hover:bg-gray-600 transition-all duration-300 font-semibold">
                       Following
                   </button>
@@ -106,7 +106,7 @@
           @else
               <form action="{{ route('user.follow', $user->id) }}" method="POST" class="w-full">
                   @csrf
-                  <button type="submit" class="w-full border-2 border-black px-6 py-2 bg-pastelBlue text-white rounded-full 
+                  <button type="submit" class="w-full border-2 border-black px-6 py-2 bg-pastelBlue text-white object-cover rounded-full 
                   hover:bg-green-700 transition-all duration-300 font-semibold">
                       Follow
                   </button>
@@ -234,7 +234,7 @@
                           <img src="{{ asset($community->image->path) }}"
                             onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
                               alt="{{ $community->name }}"
-                              class="rounded-full size-20 grayscale hover:grayscale-0 transition-all duration-300 ease-in-out">
+                              class="rounded-full object-cover size-20 grayscale hover:grayscale-0 transition-all duration-300 ease-in-out">
                           
                           <div class="flex-1 break-words">
                               <h2 class="font-medium break-all">h/{{ $community->name }}</h2>
@@ -245,7 +245,7 @@
                       </div>
                     </a>
                     @if ($community->moderators->pluck('id')->contains($user->id))
-                        <span class="px-3 py-1 text-sm font-semibold text-white bg-pastelGreen rounded-full">
+                        <span class="px-3 py-1 text-sm font-semibold text-white bg-pastelGreen object-cover rounded-full">
                             Moderator
                         </span>
                     @endif

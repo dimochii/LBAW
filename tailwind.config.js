@@ -18,6 +18,9 @@ export default {
       animation: {
         'spin-slow': 'spin 3s linear infinite',
       },
+      height: {
+        'screen-header': 'calc(100vh - 48px)',
+      },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
         vollkorn: ["Vollkorn", "sans-serif"],

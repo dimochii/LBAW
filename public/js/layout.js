@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer" 
              onclick="window.location.href='${community.route}'">
             <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                <div class="w-2 h-2 rounded-full object-cover bg-green-500"></div>
                 <span class="text-sm text-gray-700">${community.name}</span>
             </div>
             ${community.description ? `
@@ -122,44 +122,61 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ---------- Responsive design ----------
+  
 
-function toggleLeftSidebar() {
-    const leftSidebar = document.getElementById('left-sidebar');
-    const overlay = document.getElementById('mobile-menu-overlay');
-    if (leftSidebar.classList.contains('-translate-x-full')) {
-        leftSidebar.classList.remove('-translate-x-full');
-        overlay.classList.remove('hidden');
-    } else {
-        leftSidebar.classList.add('-translate-x-full');
-        overlay.classList.add('hidden');
-    }
-}
 
-function toggleMobileMenu() {
-    const leftSidebar = document.getElementById('left-sidebar');
-    const overlay = document.getElementById('mobile-menu-overlay');
-    
-    leftSidebar.classList.toggle('-translate-x-full');
-    overlay.classList.toggle('hidden');
-}
 
-document.addEventListener('click', function(event) {
+document.addEventListener('DOMContentLoaded', function() {
     const leftSidebar = document.getElementById('left-sidebar');
-    const rightSidebar = document.getElementById('right-sidebar');
-    const overlay = document.getElementById('mobile-menu-overlay');
-    const mobileMenuButton = event.target.closest('button');
-    
-    if (!leftSidebar.contains(event.target) && 
-        (!rightSidebar || !rightSidebar.contains(event.target)) && 
-        !mobileMenuButton?.hasAttribute('onclick')) {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    let isMenuOpen = false;
+
+    // Function to toggle menu
+    function toggleMobileMenu() {
+        isMenuOpen = !isMenuOpen;
         
-        leftSidebar.classList.add('-translate-x-full');
-        if (rightSidebar) {
-            rightSidebar.classList.add('translate-x-full');
+        if (isMenuOpen) {
+            // Open menu
+            leftSidebar.classList.remove('-translate-x-full');
+            leftSidebar.classList.add('translate-x-0');
+            mobileMenuButton.classList.add('menu-open');
+            // Add overlay
+            createOverlay();
+        } else {
+            // Close menu
+            leftSidebar.classList.remove('translate-x-0');
+            leftSidebar.classList.add('-translate-x-full');
+            mobileMenuButton.classList.remove('menu-open');
+            // Remove overlay
+            removeOverlay();
         }
-        overlay.classList.add('hidden');
     }
+
+    // Create overlay function
+    function createOverlay() {
+        const overlay = document.createElement('div');
+        overlay.id = 'mobile-menu-overlay';
+        overlay.className = 'fixed inset-0 bg-black bg-opacity-50 z-30';
+        overlay.addEventListener('click', toggleMobileMenu);
+        document.body.appendChild(overlay);
+    }
+
+    function removeOverlay() {
+        const overlay = document.getElementById('mobile-menu-overlay');
+        if (overlay) {
+            overlay.remove();
+        }
+    }
+
+    mobileMenuButton.addEventListener('click', toggleMobileMenu);
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768 && isMenuOpen) { 
+            toggleMobileMenu();
+        }
+    });
 });
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const profileIcon = document.getElementById('profileIcon');

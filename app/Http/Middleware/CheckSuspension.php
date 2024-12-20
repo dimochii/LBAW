@@ -19,7 +19,7 @@ class CheckSuspension
 
             if ($user->is_suspended || $suspensions->count() > 0) {
                 foreach($suspensions as $suspension){
-                    if(!($suspension->start + $suspension->duration) < Carbon::now()){
+                    if(!($suspension->start->addDays( $suspension->duration)) < Carbon::now()){
                         return response()->view('pages.suspension', ['suspensions' => $suspensions]);
                     }
                 }
