@@ -12,7 +12,7 @@
       {{-- Comment Header --}}
       <summary class="list-none">
         <div class="px-2 text-sm mb-5">
-          <a href="{{ route('user.profile', ['user' => $comment->user->id]) }}" class="underline-effect">
+          <a href="{{ route('user.profile', ['id' => $comment->user->id]) }}" class="underline-effect">
             {{ $comment->user->username }}
           </a>
 
