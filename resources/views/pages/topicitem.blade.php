@@ -1,11 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+<span class="hidden" id="postId">{{$topicItem->post->id}}</span>
 <div class="font-grotesk divide-y-2 divide-[black]">
-@if($topicItem->post->community->privacy && !($topicItem->post->community->followers->pluck('id')->contains(Auth::user()->id)))
+  @if($topicItem->post->community->privacy &&
+  !($topicItem->post->community->followers->pluck('id')->contains(Auth::user()->id)))
   <div class="text-center py-12 bg-white rounded-xl shadow-sm">
-  <a class="flex items-center"
-          href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
+    <a class="flex items-center"
+      href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
 
           <img src="{{ asset($topicItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
             class="size-8 rounded-full object-cover ring-2  ring-white">
@@ -35,7 +37,7 @@
         @endif
         @endauth --}}
 
-      
+
         <div class="ml-auto">
           <input type="checkbox" class="peer hidden" id="{{$topicItem->post_id}}-options">
           <label for="{{$topicItem->post_id}}-options">
@@ -52,12 +54,12 @@
           
         </form>
           @else
-            @include('partials.options_dropdown', [
-                "options" => [
-                    'report post' => "javascript:reportTopic()"
-                ]
-            ])
-            @include('partials.report_box', ['reported_id' =>$topicItem->post_id])
+          @include('partials.options_dropdown', [
+          "options" => [
+          'report post' => "javascript:reportTopic()"
+          ]
+          ])
+          @include('partials.report_box', ['reported_id' =>$topicItem->post_id])
           @endif
         </div>
 
@@ -69,20 +71,18 @@
 
       <div id="post-actions" class="flex flex-row mt-auto text-xl gap-2 items-center">
         <div>
-            <input 
-                id="favorite-{{$topicItem->post_id}}" 
-                type="checkbox" 
-                class="hidden peer/favorite" 
-                {{ Auth::check() && Auth::user()->favouritePosts->contains($topicItem->post_id) ? 'checked' : '' }} 
-                name="favorite" 
-                onchange="toggleFavorite({{ $topicItem->post_id }})">
+          <input id="favorite-{{$topicItem->post_id}}" type="checkbox" class="hidden peer/favorite" {{ Auth::check() &&
+            Auth::user()->favouritePosts->contains($topicItem->post_id) ? 'checked' : '' }}
+          name="favorite"
+          onchange="toggleFavorite({{ $topicItem->post_id }})">
 
-            <label for="favorite-{{$topicItem->post_id}}" 
-                class="cursor-pointer peer-checked/favorite:fill-pink-500 cursor-pointer group-hover/wrapper:hover:fill-pink-500 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
-                <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-            </label>
+          <label for="favorite-{{$topicItem->post_id}}"
+            class="cursor-pointer peer-checked/favorite:fill-pink-500 cursor-pointer group-hover/wrapper:hover:fill-pink-500 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
+            <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+          </label>
         </div>
 
         <div>
@@ -100,7 +100,7 @@
         <span class="mr-2" id="{{ $topicItem->post_id}}-score">
           @php
           $score = $topicItem->upvotes_count - $topicItem->downvotes_count;
-          
+
           echo $score >= 1000 ? number_format($score / 1000, 1) . 'k' : $score;
           @endphp
         </span>
@@ -154,6 +154,7 @@
       </div>
     </div>
   </div>
+  @endif
 
   @isset($topicItem->post->content)
   <div id="post-content" class="py-4 px-8 flex flex-col gap-4  flex-none">
@@ -182,11 +183,11 @@
         @endif
       </div>
     </div>
-      <div class="col-start-2 row-start-1">
-        contributors • {{$topicItem->post->creation_date ? $topicItem->post->creation_date->diffForHumans() : 'Unknown
-        date'}}
-      </div>
- 
+    <div class="col-start-2 row-start-1">
+      contributors • {{$topicItem->post->creation_date ? $topicItem->post->creation_date->diffForHumans() : 'Unknown
+      date'}}
+    </div>
+
 
     <div data-text="markdown"
       class="break-words font-vollkorn max-w-[95%] prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded prose-code:text-[#4793AF]">
@@ -264,7 +265,7 @@
     </div>
 
     {{-- comments wrapper --}}
-    <div class="w-11/12 min-w-72">
+    <div class="min-w-72">
       {{-- comment thread --}}
       @foreach ($comments as $comment)
       @if (is_null($comment->parent_comment_id))
@@ -274,309 +275,309 @@
     </div>
 
   </div>
-
-  <script>
-    
-
-
-    // Function to convert markdown to HTML
-    function markdownToHTML(markdown) {
-    const headingClasses = {
-        1: "m-0 text-4xl font-bold",
-        2: "m-0 text-3xl font-bold",
-        3: "m-0 text-2xl font-bold",
-        4: "m-0 text-xl font-bold",
-        5: "m-0 text-lg font-bold",
-        6: "m-0 text-base font-bold",
-    } 
-
-    return markdown
-        .replace(/^(#{1,6})\s*(.+)$/gm, (_, hashes, content) =>
-            `<h${hashes.length} class="${headingClasses[hashes.length]}">${content}</h${hashes.length}>`
-        ) // Headings
-        .replace(/^>\s*(.+)$/gm, 
-            `<blockquote class="prose-blockquote border-l-4 border-[#4793AF]/[.50] pl-4 italic text-gray-700">$1</blockquote>`
-        ) // Blockquotes
-        .replace(/-{3,}/g, '<hr class="my-4 border-[#4793AF]/[.50]"/>')
-        .replace (/\[([^\[]+)\]\(([^\)]+)\)/g, '<a href=\'\$2\'>\$1</a>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>') // Bold
-        .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>') // Italics
-        .replace(/`(.*?)`/g, '<code class="bg-gray-200 p-1 rounded text-[#4793AF]">$1</code>') // Inline Code
-        .replace(/^(?!<(h[1-6]|blockquote|hr)[^>]*>).+/gm, '$&<br>')
-        .replace(/(<br>\s*){2,}/g, '<br>') // Add <br> for plain text lines
-    }
-    
-    const bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'] 
+</div>
+<script>
+  const bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'] 
     const randomColor = bgcolors[Math.floor(Math.random() * bgcolors.length)]
-
     document.getElementById('post-header').classList.add(`bg-${randomColor}`)
     // document.getElementById('post-content').classList.add(`bg-${randomColor}`)
+</script>
 
+@endsection
 
-    const threadPlaceholder = document.getElementById('thread-placeholder') 
-    const threadEditor = document.getElementById('thread-editor') 
+<script>
+  // // Function to convert markdown to HTML
+    // function markdownToHTML(markdown) {
+    // const headingClasses = {
+    //     1: "m-0 text-4xl font-bold",
+    //     2: "m-0 text-3xl font-bold",
+    //     3: "m-0 text-2xl font-bold",
+    //     4: "m-0 text-xl font-bold",
+    //     5: "m-0 text-lg font-bold",
+    //     6: "m-0 text-base font-bold",
+    // } 
+
+    // return markdown
+    //     .replace(/^(#{1,6})\s*(.+)$/gm, (_, hashes, content) =>
+    //         `<h${hashes.length} class="${headingClasses[hashes.length]}">${content}</h${hashes.length}>`
+    //     ) // Headings
+    //     .replace(/^>\s*(.+)$/gm, 
+    //         `<blockquote class="prose-blockquote border-l-4 border-[#4793AF]/[.50] pl-4 italic text-gray-700">$1</blockquote>`
+    //     ) // Blockquotes
+    //     .replace(/-{3,}/g, '<hr class="my-4 border-[#4793AF]/[.50]"/>')
+    //     .replace (/\[([^\[]+)\]\(([^\)]+)\)/g, '<a href=\'\$2\'>\$1</a>')
+    //     .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>') // Bold
+    //     .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>') // Italics
+    //     .replace(/`(.*?)`/g, '<code class="bg-gray-200 p-1 rounded text-[#4793AF]">$1</code>') // Inline Code
+    //     .replace(/^(?!<(h[1-6]|blockquote|hr)[^>]*>).+/gm, '$&<br>')
+    //     .replace(/(<br>\s*){2,}/g, '<br>') // Add <br> for plain text lines
+    // }
     
-    threadPlaceholder.addEventListener('click', function () {
-      threadPlaceholder.classList.add('hidden')
-      threadEditor.classList.remove('hidden') 
-    }) 
 
-    const replyBtns = document.querySelectorAll("[data-toggle='reply-form']") 
 
-    replyBtns.forEach(btn => {
-      btn.addEventListener('click', event => {
-        const targetId = btn.getAttribute('data-target') 
-        const targetElement = document.getElementById(targetId) 
-        console.log(targetElement)
-        if (targetElement.classList.contains('hidden')) {
-          targetElement.classList.add("block")
-          targetElement.classList.remove("hidden")
-        } else 
-        {
-          targetElement.classList.remove("block")
-          targetElement.classList.add("hidden")
-        }
-      }) 
-    }) 
 
-    function setupEditor(id) {
-      const editor = document.getElementById(`${id}-editor`)
-      const textarea = document.getElementById(`editor-${id}-input`) 
-      const preview = document.getElementById(`editor-${id}-preview`) 
+    // const threadPlaceholder = document.getElementById('thread-placeholder') 
+    // const threadEditor = document.getElementById('thread-editor') 
+    
+    // threadPlaceholder.addEventListener('click', function () {
+    //   threadPlaceholder.classList.add('hidden')
+    //   threadEditor.classList.remove('hidden') 
+    // }) 
+
+    // const replyBtns = document.querySelectorAll("[data-toggle='reply-form']") 
+
+    // replyBtns.forEach(btn => {
+    //   btn.addEventListener('click', event => {
+    //     const targetId = btn.getAttribute('data-target') 
+    //     const targetElement = document.getElementById(targetId) 
+    //     console.log(targetElement)
+    //     if (targetElement.classList.contains('hidden')) {
+    //       targetElement.classList.add("block")
+    //       targetElement.classList.remove("hidden")
+    //     } else 
+    //     {
+    //       targetElement.classList.remove("block")
+    //       targetElement.classList.add("hidden")
+    //     }
+    //   }) 
+    // }) 
+
+    // function setupEditor(id) {
+    //   const editor = document.getElementById(`${id}-editor`)
+    //   const textarea = document.getElementById(`editor-${id}-input`) 
+    //   const preview = document.getElementById(`editor-${id}-preview`) 
       
-      // Tab key behavior for indentation in textarea
-      textarea.addEventListener("keydown", (e) => {
-        if (e.key === "Tab") {
-          e.preventDefault()  // Prevent default tab behavior (focus shift)
+    //   // Tab key behavior for indentation in textarea
+    //   textarea.addEventListener("keydown", (e) => {
+    //     if (e.key === "Tab") {
+    //       e.preventDefault()  // Prevent default tab behavior (focus shift)
 
-          const start = textarea.selectionStart 
-          const end = textarea.selectionEnd 
+    //       const start = textarea.selectionStart 
+    //       const end = textarea.selectionEnd 
 
-          // Insert tab character
-          textarea.value = textarea.value.substring(0, start) + "  " + textarea.value.substring(end) 
+    //       // Insert tab character
+    //       textarea.value = textarea.value.substring(0, start) + "  " + textarea.value.substring(end) 
 
-          // Move the cursor after the inserted tab
-          textarea.selectionStart = textarea.selectionEnd = start + 2 
-        }
-      }) 
+    //       // Move the cursor after the inserted tab
+    //       textarea.selectionStart = textarea.selectionEnd = start + 2 
+    //     }
+    //   }) 
 
-      // Live preview: update the HTML preview on input change
-      textarea.addEventListener('input', (e) => {
-        const markdownText = e.target.value 
-        preview.innerHTML = markdownToHTML(markdownText, id) 
-      }) 
+    //   // Live preview: update the HTML preview on input change
+    //   textarea.addEventListener('input', (e) => {
+    //     const markdownText = e.target.value 
+    //     preview.innerHTML = markdownToHTML(markdownText, id) 
+    //   }) 
 
-      // Toggle editor visibility based on radio button selection
-      document.getElementById(`editor-write-toggle-${id}`).addEventListener('change', () => {
-        textarea.classList.remove('hidden') 
-        preview.classList.add('hidden') 
-      }) 
+    //   // Toggle editor visibility based on radio button selection
+    //   document.getElementById(`editor-write-toggle-${id}`).addEventListener('change', () => {
+    //     textarea.classList.remove('hidden') 
+    //     preview.classList.add('hidden') 
+    //   }) 
 
-      document.getElementById(`editor-preview-toggle-${id}`).addEventListener('change', () => {
-        textarea.classList.add('hidden') 
-        preview.classList.remove('hidden') 
-      }) 
+    //   document.getElementById(`editor-preview-toggle-${id}`).addEventListener('change', () => {
+    //     textarea.classList.add('hidden') 
+    //     preview.classList.remove('hidden') 
+    //   }) 
 
-      editor.querySelector('[name="cancel-btn"]').addEventListener('click', () => {
-        editor.classList.add('hidden')
+    //   editor.querySelector('[name="cancel-btn"]').addEventListener('click', () => {
+    //     editor.classList.add('hidden')
 
-        if (id === 'thread') {
-          document.getElementById('thread-placeholder').classList.remove('hidden')
-        }
+    //     if (id === 'thread') {
+    //       document.getElementById('thread-placeholder').classList.remove('hidden')
+    //     }
 
-        preview.innerHTML = ''
-        textarea.value = ''
-      })
-    }
+    //     preview.innerHTML = ''
+    //     textarea.value = ''
+    //   })
+    // }
 
-    // Initialize editor for each specific ID
-    const editorIds = document.querySelectorAll('[id$="-editor"]')
+    // // Initialize editor for each specific ID
+    // const editorIds = document.querySelectorAll('[id$="-editor"]')
 
-    editorIds.forEach(editor => {
-      const id = editor.id.replace('-editor', '')  // Extract the unique id (e.g., "comment-1")
-      setupEditor(id)  // Setup the editor for this specific instance
-    }) 
+    // editorIds.forEach(editor => {
+    //   const id = editor.id.replace('-editor', '')  // Extract the unique id (e.g., "comment-1")
+    //   setupEditor(id)  // Setup the editor for this specific instance
+    // }) 
 
-    const markdownText = document.querySelectorAll('[data-text="markdown"]')
-    markdownText.forEach(element => {
-      element.innerHTML = markdownToHTML(element.textContent)
-    })
+    // const markdownText = document.querySelectorAll('[data-text="markdown"]')
+    // markdownText.forEach(element => {
+    //   element.innerHTML = markdownToHTML(element.textContent)
+    // })
 
-  </script>
+</script>
 
-  <script>
-    const voteButtons = document.querySelectorAll("input[type='checkbox']");
+<script>
+  //   const voteButtons = document.querySelectorAll("input[type='checkbox']");
 
-  voteButtons.forEach((button) => {
-    button.addEventListener("change", async function () {
-      const postId = this.id.split("-")[0]; // Extract the post_id from the input's ID
-      const voteType = this.id.includes("upvote") ? "upvote" : "downvote";
-      const isChecked = this.checked;
+  // voteButtons.forEach((button) => {
+  //   button.addEventListener("change", async function () {
+  //     const postId = this.id.split("-")[0]; // Extract the post_id from the input's ID
+  //     const voteType = this.id.includes("upvote") ? "upvote" : "downvote";
+  //     const isChecked = this.checked;
 
-      try {
-        // Make an asynchronous request to update the vote
-        const response = await fetch(`/news/${postId}/voteupdate`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-          },
-          body: JSON.stringify({
-            vote_type: voteType,
-          }),
-        });
+  //     try {
+  //       // Make an asynchronous request to update the vote
+  //       const response = await fetch(`/news/${postId}/voteupdate`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+  //         },
+  //         body: JSON.stringify({
+  //           vote_type: voteType,
+  //         }),
+  //       });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          console.log(data.vote === voteType);
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log(data);
+  //         console.log(data.vote === voteType);
 
-          // Update the score of the specific post
-          const scoreElement = document.getElementById(`${postId}-score`);
-          if (scoreElement) {
-            let newScore = data.newScore;
+  //         // Update the score of the specific post
+  //         const scoreElement = document.getElementById(`${postId}-score`);
+  //         if (scoreElement) {
+  //           let newScore = data.newScore;
 
-            // If the score already contains a "k", don't modify it
-            if (!scoreElement.textContent.includes("k")) {
-              // If the current score doesn't have a "k", add the new score to it
-              let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, '')); // Get the current numerical score
-              newScore = currentScore + newScore; // Add the new score to the existing score
-              scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
-            }
-          }
+  //           // If the score already contains a "k", don't modify it
+  //           if (!scoreElement.textContent.includes("k")) {
+  //             // If the current score doesn't have a "k", add the new score to it
+  //             let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, '')); // Get the current numerical score
+  //             newScore = currentScore + newScore; // Add the new score to the existing score
+  //             scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
+  //           }
+  //         }
 
-          if (data.vote === voteType) {          
-            this.checked = true;
-          } else {
-            this.checked = false;
-          }
-        } else {
-          console.error("Failed to update the vote:", await response.text());
-        }
-      } catch (error) {
-        console.error("Error while updating the vote:", error);
-      }
-    });
-  });
+  //         if (data.vote === voteType) {          
+  //           this.checked = true;
+  //         } else {
+  //           this.checked = false;
+  //         }
+  //       } else {
+  //         console.error("Failed to update the vote:", await response.text());
+  //       }
+  //     } catch (error) {
+  //       console.error("Error while updating the vote:", error);
+  //     }
+  //   });
+  // });
 
-  const postId = {{ $topicItem->post_id }};
+  // const postId = {{ $topicItem->post_id }};
 
-  // reply comments submit
-  const nodes = document.querySelectorAll('div[data-parent-id]');
+  // // reply comments submit
+  // const nodes = document.querySelectorAll('div[data-parent-id]');
 
-  nodes.forEach(node => {
-    const id = node.getAttribute('data-id');
-    const parentId = node.getAttribute('data-parent-id');
-    const commentContent = document.getElementById(`editor-${id}-input`);
-    const commentHtml = document.getElementById(`editor-${id}-preview`)
+  // nodes.forEach(node => {
+  //   const id = node.getAttribute('data-id');
+  //   const parentId = node.getAttribute('data-parent-id');
+  //   const commentContent = document.getElementById(`editor-${id}-input`);
+  //   const commentHtml = document.getElementById(`editor-${id}-preview`)
 
-    const submitBtn = document.getElementById(`${id}-editor`).querySelector("[name='submit-btn']");
+  //   const submitBtn = document.getElementById(`${id}-editor`).querySelector("[name='submit-btn']");
 
-    // Make the event handler async
-    submitBtn.addEventListener('click', async () => {  // Use async here
-      // Prepare the data to send in the body of the request
-      const data = {
-        content: commentContent.value,
-        parent_comment_id: id,  // If parentId is "null", set it to null
-      };
+  //   // Make the event handler async
+  //   submitBtn.addEventListener('click', async () => {  // Use async here
+  //     // Prepare the data to send in the body of the request
+  //     const data = {
+  //       content: commentContent.value,
+  //       parent_comment_id: id,  // If parentId is "null", set it to null
+  //     };
 
-      try {
-        // Perform the AJAX call using fetch
-        const response = await fetch(`/news/${postId}/comment`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // Add CSRF token if needed
-          },
-          body: JSON.stringify(data), // Send the data in JSON format
-        });
+  //     try {
+  //       // Perform the AJAX call using fetch
+  //       const response = await fetch(`/news/${postId}/comment`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // Add CSRF token if needed
+  //         },
+  //         body: JSON.stringify(data), // Send the data in JSON format
+  //       });
 
-        if (response.ok) {
-          const result = await response.json();
-          console.log('Comment successfully posted:', result);
+  //       if (response.ok) {
+  //         const result = await response.json();
+  //         console.log('Comment successfully posted:', result);
           
-          // Assuming the response contains the ID of the newly created comment
-          const commentId = result.comment.id;  // Adjust based on actual response structure
+  //         // Assuming the response contains the ID of the newly created comment
+  //         const commentId = result.comment.id;  // Adjust based on actual response structure
           
-          // Reload the page and append the new comment's ID to the URL
-          window.location.href = `${window.location.href.split('#')[0]}#c-${commentId}`;
-          location.reload(true)
+  //         // Reload the page and append the new comment's ID to the URL
+  //         window.location.href = `${window.location.href.split('#')[0]}#c-${commentId}`;
+  //         location.reload(true)
           
-        } else {
-          console.error('Failed to post comment:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error while posting comment:', error);
-      }
-    })
-  })
+  //       } else {
+  //         console.error('Failed to post comment:', await response.text());
+  //       }
+  //     } catch (error) {
+  //       console.error('Error while posting comment:', error);
+  //     }
+  //   })
+  // })
 
-  const submitNewComment = threadEditor.querySelector('[name="submit-btn"]')
-  const newCommentContent = document.getElementById('editor-thread-input')
+  // const submitNewComment = threadEditor.querySelector('[name="submit-btn"]')
+  // const newCommentContent = document.getElementById('editor-thread-input')
 
-  submitNewComment.addEventListener('click', async () => {
-      const data = {
-        content: newCommentContent.value,
-        parent_comment_id: null,  
-      };
+  // submitNewComment.addEventListener('click', async () => {
+  //     const data = {
+  //       content: newCommentContent.value,
+  //       parent_comment_id: null,  
+  //     };
 
-      try {
-        const response = await fetch(`/news/${postId}/comment`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // Add CSRF token if needed
-          },
-          body: JSON.stringify(data), // Send the data in JSON format
-        });
+  //     try {
+  //       const response = await fetch(`/news/${postId}/comment`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // Add CSRF token if needed
+  //         },
+  //         body: JSON.stringify(data), // Send the data in JSON format
+  //       });
 
-        if (response.ok) {
-          const result = await response.json();
-          console.log('Comment successfully posted:', result);
+  //       if (response.ok) {
+  //         const result = await response.json();
+  //         console.log('Comment successfully posted:', result);
           
-          const commentId = result.comment.id;
+  //         const commentId = result.comment.id;
           
-          window.location.href = `${window.location.href.split('#')[0]}#c-${commentId}`;
-          location.reload(true)
+  //         window.location.href = `${window.location.href.split('#')[0]}#c-${commentId}`;
+  //         location.reload(true)
           
-        } else {
-          console.error('Failed to post comment:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error while posting comment:', error);
-      }
-  })
+  //       } else {
+  //         console.error('Failed to post comment:', await response.text());
+  //       }
+  //     } catch (error) {
+  //       console.error('Error while posting comment:', error);
+  //     }
+  // })
 
-  document.getElementById('expand-button')?.addEventListener('click', function () {
-    const contributorsContainer = document.getElementById('contributors-images');
-    const authors = @json($topicItem->post->authors);
+  // document.getElementById('expand-button')?.addEventListener('click', function () {
+  //   const contributorsContainer = document.getElementById('contributors-images');
+  //   const authors = @json($topicItem->post->authors);
     
-    contributorsContainer.innerHTML = ''; 
+  //   contributorsContainer.innerHTML = ''; 
     
-    authors.forEach(author => {
-      const anchor = document.createElement('a');
-      anchor.href = `{{ route('user.profile', ':id') }}`.replace(':id', author.id);
-      anchor.className = 'group';
+  //   authors.forEach(author => {
+  //     const anchor = document.createElement('a');
+  //     anchor.href = `{{ route('user.profile', ':id') }}`.replace(':id', author.id);
+  //     anchor.className = 'group';
 
-      const img = document.createElement('img');
-      img.src = `{{ asset('images/user' . ':image_id' . '.jpg') }}`.replace(':image_id', author.image_id);//nao sei mudar nisto :(, depois voltar
-      img.alt = author.name;
-      img.className = 'w-10 h-10 border-2 border-white rounded-full dark:border-gray-800';
+  //     const img = document.createElement('img');
+  //     img.src = `{{ asset('images/user' . ':image_id' . '.jpg') }}`.replace(':image_id', author.image_id);//nao sei mudar nisto :(, depois voltar
+  //     img.alt = author.name;
+  //     img.className = 'w-10 h-10 border-2 border-white rounded-full dark:border-gray-800';
 
-      anchor.appendChild(img);
-      contributorsContainer.appendChild(anchor);
-    });
+  //     anchor.appendChild(img);
+  //     contributorsContainer.appendChild(anchor);
+  //   });
 
-    this.remove();
-  });
+  //   this.remove();
+  // });
 
 
-  </script>
-@endif
+</script>
 
-<script> 
-
-function reportTopic() {
+<script>
+  function reportTopic() {
       const authors = @json($topicItem->post->authors->pluck('id')); 
       const form = document.getElementById('reportForm'); 
       form.reset();
@@ -596,5 +597,3 @@ function reportTopic() {
     }
 
 </script>
-
-@endsection

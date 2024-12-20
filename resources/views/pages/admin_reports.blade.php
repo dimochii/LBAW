@@ -48,8 +48,8 @@
         <table class="w-full bg-white border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">ID</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reporter</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer" data-type="number">ID</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer" data-type="string">Reporter</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reported Type</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Reason</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">Status</th>
@@ -116,94 +116,3 @@
 
 
 @endsection
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('search-input');
-    const table = document.querySelector('table');
-    const tableBody = table.querySelector('tbody');
-    const rows = tableBody.querySelectorAll('tr');
-    const headers = table.querySelectorAll('th');
-
-    const directions = Array.from(headers).map(() => '');
-
-    const transform = function (index, content) {
-      const type = headers[index].getAttribute('data-type');
-      switch (type) {
-        case 'number': return parseFloat(content);
-        case 'string':
-        default: return content;
-      }
-    };
-
-    function updateHeaderText(index, direction) {
-      headers.forEach(header => {
-        header.textContent = header.textContent.replace(/ (ASC|DESC)$/, '');
-      });
-
-      const header = headers[index];
-      header.textContent += direction === 'asc' ? ' ASC' : ' DESC';
-    }
-
-    function sortColumn(index) {
-      const direction = directions[index] || 'asc';
-      const multiplier = direction === 'asc' ? 1 : -1;
-
-      const newRows = Array.from(rows);
-      newRows.sort((rowA, rowB) => {
-        const cellA = rowA.querySelectorAll('td')[index].innerHTML;
-        const cellB = rowB.querySelectorAll('td')[index].innerHTML;
-
-        const a = transform(index, cellA);
-        const b = transform(index, cellB);
-
-        return (a > b ? 1 : a < b ? -1 : 0) * multiplier;
-      });
-
-      rows.forEach(row => tableBody.removeChild(row));
-      directions[index] = direction === 'asc' ? 'desc' : 'asc';
-      newRows.forEach(newRow => tableBody.appendChild(newRow));
-
-      updateHeaderText(index, directions[index]);
-    }
-
-    function filterTable(query) {
-      const queryLower = query.toLowerCase();
-      rows.forEach(row => {
-        const rowVisible = Array.from(row.querySelectorAll('td')).some(cell => {
-          return cell.textContent.toLowerCase().includes(queryLower);
-        });
-        row.style.display = rowVisible ? '' : 'none';
-      });
-    }
-
-    headers.forEach((header, index) => {
-      if (header.hasAttribute('data-type')) {
-        header.addEventListener('click', () => sortColumn(index));
-      }
-    });
-
-    searchInput.addEventListener('input', () => filterTable(searchInput.value));
-  });
-  
-  function openResolveModal(reportId) {
-    const modal = document.getElementById('resolveModal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        const form = modal.querySelector('#resolveForm');
-        form.action = `/report/${reportId}/resolve`; 
-        document.getElementById('report_id').value = reportId;
-    } else {
-        console.error(`Modal not found!`);
-    }
-}
-
-function closeResolveModal() {
-    const modal = document.getElementById('resolveModal');
-    if (modal) {
-        modal.classList.add('hidden');
-    }
-}
-
-
-</script>
