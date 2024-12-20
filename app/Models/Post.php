@@ -61,8 +61,7 @@ class Post extends Model
 
     public function authors()
     {
-        return $this->belongsToMany(AuthenticatedUser::class, 'authors')
-                    ->withPivot('pinned');
+        return $this->belongsToMany(AuthenticatedUser::class, 'authors');
     }
 
     public function favourites()
