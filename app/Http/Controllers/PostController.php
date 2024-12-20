@@ -180,8 +180,19 @@ class PostController extends Controller
 
       $post->authors()->attach(Auth::user()->id);
       
-      if ($request->has('authors'))
-        $post->authors()->attach($request->authors);
+      if ($request->has('authors')) {
+        $authors = $request->authors;
+    
+        $authors = array_unique($authors);
+    
+        $currentAuthors = $post->authors->pluck('id')->toArray();
+   
+        $newAuthors = array_diff($authors, $currentAuthors);
+    
+        if (!empty($newAuthors)) {
+            $post->authors()->attach($newAuthors);
+        }
+    }
 
       $this->notifyCommunityFollowers($request->community_id, $post);
       $this->notifyFollowers(Auth::user()->id, $post);

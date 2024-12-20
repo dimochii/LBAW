@@ -214,7 +214,8 @@
                                   name="content" 
                                   class="w-full h-64 p-6 text-lg font-vollkorn focus:outline-none resize-none
                                          peer-checked/preview:hidden"
-                                  placeholder="Write your post content here..."></textarea>
+                                  placeholder="Write your post content here..."
+                                  required></textarea>
                         <div id="preview-content" 
                              class="hidden w-full h-64 p-6 text-lg font-vollkorn overflow-y-auto
                                     prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] 
@@ -262,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const newsRadio = document.getElementById('postTypeNews');
     const topicRadio = document.getElementById('postTypeTopic');
     const newsUrlContainer = document.getElementById('newsUrlContainer');
+    const titleInput = document.getElementById('title');
 
     function toggleNewsUrl() {
         newsUrlContainer.style.display = newsRadio.checked ? 'block' : 'none';
@@ -269,8 +271,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     toggleNewsUrl();
 
+    function toggleTitleRequired() {
+        titleInput.required = topicRadio.checked;
+    }
+
+    toggleTitleRequired();
+
     newsRadio.addEventListener('change', toggleNewsUrl);
     topicRadio.addEventListener('change', toggleNewsUrl);
+    newsRadio.addEventListener('change', toggleTitleRequired);
+    topicRadio.addEventListener('change', toggleTitleRequired);
 });
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -91,7 +91,7 @@ class NewsController extends Controller
       'image_url' => $imageUrl
     ]);
 
-    return redirect()->route('news')->with('success', $news);
+    return redirect()->route('news.show', $post->id)->with('success', 'News post created successfully.');
   }
 
   public function edit($post_id)
