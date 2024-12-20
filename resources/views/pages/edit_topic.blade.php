@@ -142,8 +142,8 @@
             <form action="{{ route('post.delete', ['id' => $topicItem->post_id]) }}" method="POST" style="display: inline-block;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white">
-                Delete Post
+                <button type="submit" class="group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white delete-button" data-post-id="{{ $newsItem->post_id }}">
+                    Delete Post
                 </button>
             </form>
         </div>
@@ -283,6 +283,94 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             alert(error.message);
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteButtons = document.querySelectorAll('.delete-button');
+    
+    deleteButtons.forEach(button => {
+        button.closest('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (confirm('Are you sure you want to delete this post?')) {
+                try {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        },
+                        body: JSON.stringify({
+                            _method: 'DELETE'
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed left-1/2 top-16 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+                    
+                    if (response.ok) {
+                        notification.style.backgroundColor = '#c5e6a6';  
+                        notification.style.border = '2px solid #34a853';
+                    } else {
+                        notification.style.backgroundColor = '#ed6a5a';  
+                        notification.style.border = '2px solid #a30000';
+                    }
+                    
+                    const icon = document.createElement('span');
+                    icon.className = 'inline-block mr-2';
+                    icon.innerHTML = response.ok 
+                        ? '✓'  
+                        : '✕'; 
+                    icon.style.color = response.ok ? '#34a853' : '#a30000';
+                    
+                    const messageText = document.createElement('span');
+                    messageText.textContent = response.ok 
+                        ? 'Post successfully deleted!'
+                        : result.message || 'Failed to delete post.';
+                    messageText.style.color = '#333333';
+                    
+                    notification.appendChild(icon);
+                    notification.appendChild(messageText);
+                    
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                        if (response.ok) {
+                            window.location.href = '/global';  // Redirect after success
+                        }
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+
+                    const errorNotification = document.createElement('div');
+                    errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+                    errorNotification.style.backgroundColor = '#ffebee';
+                    errorNotification.style.border = '1px solid #a30000';
+                    
+                    const errorIcon = document.createElement('span');
+                    errorIcon.className = 'inline-block mr-2';
+                    errorIcon.innerHTML = '✕';
+                    errorIcon.style.color = '#a30000';
+                    
+                    const errorText = document.createElement('span');
+                    errorText.textContent = 'An error occurred while processing your request.';
+                    errorText.style.color = '#333333';
+                    
+                    errorNotification.appendChild(errorIcon);
+                    errorNotification.appendChild(errorText);
+                    document.body.appendChild(errorNotification);
+                    
+                    setTimeout(() => {
+                        errorNotification.remove();
+                    }, 3000);
+                }
+            }
         });
     });
 });

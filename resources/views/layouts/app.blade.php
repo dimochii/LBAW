@@ -160,10 +160,10 @@
               class="block pr-8 py-2 text-gray-700 hover:bg-gray-100 border-b border-gray-200">
               <div class="flex items-center px-4 py-3">
                 <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}"
-                  class="size-10 rounded-full" />
+                  class="size-10 rounded-full object-cover" />
                 <div>
                   <div class=" px-2 font-medium text-gray-900 pr-6">{{ Auth::user()->name }}</div>
-                  <div class="text-gray-500 text-sm">View profile</div>
+                  <div class="text-gray-500 text-sm px-1">View profile</div>
                 </div>
               </div>
             </a>
@@ -245,7 +245,7 @@
               <a href="/hub/{{ $recent['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                 {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
-                <img src="{{asset($recent['image'])}}" alt="{{$recent['name']}} image" class=" h-8 w-8 rounded-full">
+                <img src="{{asset($recent['image'])}}" alt="{{$recent['name']}} image" class=" h-8 w-8 rounded-full object-cover">
                 <span class="break-all text-sm">h/{{ $recent['name'] }}</span>
               </a>
               @php
@@ -263,7 +263,7 @@
               <a href="/hub/{{ $hubs['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                 {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
-                <img src="{{asset($hubs['image'])}}" alt="{{$hubs['name']}} image" class=" h-8 w-8 rounded-full">
+                <img src="{{asset($hubs['image'])}}" alt="{{$hubs['name']}} image" class=" h-8 w-8 rounded-full object-cover">
                 <span class="break-all text-sm">h/{{ $hubs['name'] }}</span>
               </a>
               @php
@@ -304,14 +304,14 @@
       <!-- Right Sidebar -->
       @if (Request::is('hub/*') && isset($community))
       <aside id="right-sidebar"
-        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64  bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out overflow-y-auto">
+        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out overflow-y-auto min-h-screen">
         <!-- Hubs Section -->
         <div class="border-b-2 border-black">
           <a class="p-4 flex flex-col hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-all group"
               href="{{route('communities.show', $community->id)}}">
               <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" 
                   alt="hub image"
-                  class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37]">
+                  class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37] object-cover">
               <h1 class="mt-4 mb-1 font-medium tracking-tight text-xl text-center">h/{{$community->name}}</h1>
               <p class="text-sm font-light break-all tracking-tight text-center">{{ $community->description }}</p>
               <div class="flex items-center justify-center text-sm font-light break-all tracking-tight text-center">

@@ -8,7 +8,7 @@
           href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
 
           <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
-            class="size-8 rounded-full  object-coverring-2  ring-white">
+            class="size-8 rounded-full  object-cover  ring-white">
           <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
             Community' }}</span>
         </a>
