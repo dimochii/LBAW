@@ -950,3 +950,190 @@ function createItem(item) {
 
 addEventListeners()
 shortNewsUrl()
+
+// DELETE COMMUNITY
+
+document.addEventListener('DOMContentLoaded', function() {
+  const deleteButtons = document.querySelectorAll('.delete-button-hub');
+  
+  deleteButtons.forEach(button => {
+      button.closest('form').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          if (confirm('Are you sure you want to delete this community?')) {
+              try {
+                  const response = await fetch(this.action, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                      },
+                      body: JSON.stringify({
+                          _method: 'DELETE'
+                      })
+                  });
+                  
+                  const result = await response.json();
+                  
+                  const notification = document.createElement('div');
+                  notification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+                  
+                  if (response.ok) {
+                      notification.style.backgroundColor = '#c5e6a6';  
+                      notification.style.border = '2px solid #34a853';
+                  } else {
+                      notification.style.backgroundColor = '#ed6a5a';  
+                      notification.style.border = '2px solid #a30000';
+                  }
+                  
+                  const icon = document.createElement('span');
+                  icon.className = 'inline-block mr-2';
+                  icon.innerHTML = response.ok 
+                      ? '✓'  
+                      : '✕'; 
+                  icon.style.color = response.ok ? '#34a853' : '#a30000';
+                  
+                  const messageText = document.createElement('span');
+                  messageText.textContent = response.ok 
+                      ? 'Community successfully deleted!'
+                      : 'Failed to delete community. It may contain posts or you may not have permission.';
+                  messageText.style.color = '#333333';
+                  
+                  notification.appendChild(icon);
+                  notification.appendChild(messageText);
+                  
+                  document.body.appendChild(notification);
+                  
+                  setTimeout(() => {
+                      notification.remove();
+                      if (response.ok) {
+                          window.location.href = '/admin/hubs';
+                      }
+                  }, 3000);
+                  
+              } catch (error) {
+                  console.error('Error:', error);
+
+                  const errorNotification = document.createElement('div');
+                  errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+                  errorNotification.style.backgroundColor = '#ffebee';
+                  errorNotification.style.border = '1px solid #a30000';
+                  
+                  const errorIcon = document.createElement('span');
+                  errorIcon.className = 'inline-block mr-2';
+                  errorIcon.innerHTML = '✕';
+                  errorIcon.style.color = '#a30000';
+                  
+                  const errorText = document.createElement('span');
+                  errorText.textContent = 'An error occurred while processing your request.';
+                  errorText.style.color = '#333333';
+                  
+                  errorNotification.appendChild(errorIcon);
+                  errorNotification.appendChild(errorText);
+                  document.body.appendChild(errorNotification);
+                  
+                  setTimeout(() => {
+                      errorNotification.remove();
+                  }, 3000);
+              }
+          }
+      });
+  });
+});
+
+// FOLLOW REQUEST
+
+function handleFollowRequest(url, notificationId, action) {
+  if (!confirm(`Are you sure you want to ${action} this follow request?`)) {
+      return;
+  }
+
+  fetch(url, {
+      method: 'POST',
+      headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'Accept': 'application/json',
+      },
+  })
+  .then(response => {
+      if (response.ok) {
+          document.querySelector(`[data-notification-id="${notificationId}"]`).remove();
+          alert(`Follow request ${action}ed successfully.`);
+      } else {
+          return response.json().then(error => {
+              throw new Error(error.message || 'Failed to process the request.');
+          });
+      }
+  })
+  .catch(error => {
+      alert(`Error: ${error.message}`);
+  });
+}
+
+// DELETE COMMENT
+
+document.addEventListener('DOMContentLoaded', function () {
+  const deleteCommentButtons = document.querySelectorAll('.delete-comment-button');
+
+  deleteCommentButtons.forEach(button => {
+      button.closest('form').addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          if (confirm('Are you sure you want to delete this comment?')) {
+              try {
+                  const response = await fetch(this.action, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                      },
+                      body: JSON.stringify({
+                          _method: 'PUT'
+                      })
+                  });
+
+                  const result = await response.json();
+
+                  const notification = document.createElement('div');
+                  notification.className = 'fixed left-1/2 top-16 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+
+                  if (result.success) {
+                      notification.style.backgroundColor = '#c5e6a6';
+                      notification.style.border = '2px solid #34a853';
+                      notification.innerHTML = `<span class="inline-block mr-2" style="color: #34a853;">✓</span> ${result.message}`;
+                  } else {
+                      notification.style.backgroundColor = '#ed6a5a';
+                      notification.style.border = '2px solid #a30000';
+                      notification.innerHTML = `<span class="inline-block mr-2" style="color: #a30000;">✕</span> ${result.message}`;
+                  }
+
+                  document.body.appendChild(notification);
+
+                  setTimeout(() => {
+                      notification.remove();
+                      if (result.success) {
+                          button.closest('.comment-container').remove();
+                      }
+                  }, 3000);
+
+              } catch (error) {
+                  console.error('Error:', error);
+
+                  const errorNotification = document.createElement('div');
+                  errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+                  errorNotification.style.backgroundColor = '#ffebee';
+                  errorNotification.style.border = '1px solid #a30000';
+                  errorNotification.innerHTML = `<span class="inline-block mr-2" style="color: #a30000;">✕</span> An error occurred while processing your request.`;
+
+                  document.body.appendChild(errorNotification);
+
+                  setTimeout(() => {
+                      errorNotification.remove();
+                  }, 3000);
+              }
+          }
+      });
+  });
+});
+
+

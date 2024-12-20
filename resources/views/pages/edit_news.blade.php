@@ -55,7 +55,34 @@
             </div>
 
             <div class="space-y-4">
-                <label class="block text-2xl font-medium">Content</label>
+            <div class="flex items-center mb-2">
+                    <label class="block text-2xl font-medium">Content</label>
+                    <div class="px-2 relative inline-block">
+                        <svg class="help-trigger w-5 h-5 text-gray-500 hover:text-gray-700 cursor-help transition-colors duration-200" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            stroke-width="2" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <div class="help-tooltip absolute z-50 w-64 p-2 bg-gray-900 text-white text-sm rounded-lg -left-24 bottom-full mb-2">
+                            <div class="relative">
+                                Markdown formatting is supported. Use preview mode to see how your content will look.
+                                <ul class="mt-1 list-disc list-inside">
+                                    <li># for headers</li>
+                                    <li>** for bold</li>
+                                    <li>* for italic</li>
+                                </ul>
+                                <div class="absolute h-2 w-2 bg-gray-900 rotate-45 -bottom-1 left-1/2 transform -translate-x-1/2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
                     <div class="flex gap-4 px-6 py-3 border-b border-black/10">
                         <input type="radio" name="editor-toggle" id="write-toggle" class="hidden peer/write" checked>
@@ -78,18 +105,33 @@
             </div>
         </form>
         
-        <form action="{{ route('post.delete', ['id' => $newsItem->post_id]) }}" method="POST" style="display: inline-block;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-red-600 text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1 hover:bg-red-700">
-                <span class="relative z-10">Delete Post</span>
-            </button>
-        </form>
-        
+        <div class="flex justify-end mt-4">
+            <form action="{{ route('post.delete', ['id' => $newsItem->post_id]) }}" method="POST" style="display: inline-block;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="group inline-flex items-center rounded gap-4 px-8 py-4 bg-rose-400 text-xl font-medium transition-all duration-300 hover:bg-rose-600 hover:text-white delete-button" data-post-id="{{ $newsItem->post_id }}">
+                    Delete Post
+                </button>
+            </form>
+        </div>
+
     </div>
 </div>
 
 <style>
+
+.help-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.help-trigger:hover + .help-tooltip,
+.help-tooltip:hover {
+    visibility: visible;
+    opacity: 1;
+}
+
 .underline-effect {
     position: relative;
 }
@@ -213,6 +255,97 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteButtons = document.querySelectorAll('.delete-button');
+    
+    deleteButtons.forEach(button => {
+        button.closest('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (confirm('Are you sure you want to delete this post?')) {
+                try {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        },
+                        body: JSON.stringify({
+                            _method: 'DELETE'
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed left-1/2 top-16 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+                    
+                    if (response.ok) {
+                        notification.style.backgroundColor = '#c5e6a6';  
+                        notification.style.border = '2px solid #34a853';
+                    } else {
+                        notification.style.backgroundColor = '#ed6a5a';  
+                        notification.style.border = '2px solid #a30000';
+                    }
+                    
+                    const icon = document.createElement('span');
+                    icon.className = 'inline-block mr-2';
+                    icon.innerHTML = response.ok 
+                        ? '✓'  
+                        : '✕'; 
+                    icon.style.color = response.ok ? '#34a853' : '#a30000';
+                    
+                    const messageText = document.createElement('span');
+                    messageText.textContent = response.ok 
+                        ? 'Post successfully deleted!'
+                        : result.message || 'Failed to delete post.';
+                    messageText.style.color = '#333333';
+                    
+                    notification.appendChild(icon);
+                    notification.appendChild(messageText);
+                    
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                        if (response.ok) {
+                            window.location.href = '/global';  // Redirect after success
+                        }
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+
+                    const errorNotification = document.createElement('div');
+                    errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+                    errorNotification.style.backgroundColor = '#ffebee';
+                    errorNotification.style.border = '1px solid #a30000';
+                    
+                    const errorIcon = document.createElement('span');
+                    errorIcon.className = 'inline-block mr-2';
+                    errorIcon.innerHTML = '✕';
+                    errorIcon.style.color = '#a30000';
+                    
+                    const errorText = document.createElement('span');
+                    errorText.textContent = 'An error occurred while processing your request.';
+                    errorText.style.color = '#333333';
+                    
+                    errorNotification.appendChild(errorIcon);
+                    errorNotification.appendChild(errorText);
+                    document.body.appendChild(errorNotification);
+                    
+                    setTimeout(() => {
+                        errorNotification.remove();
+                    }, 3000);
+                }
+            }
+        });
+    });
+});
+
+
+
 
 </script>
 @endsection

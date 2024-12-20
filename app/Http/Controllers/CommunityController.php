@@ -420,7 +420,6 @@ class CommunityController extends Controller
 
   public function acceptFollowRequest($requestId) {
       $request = CommunityFollowRequest::findOrFail($requestId);
-      $this->authorize('isCommunityAdmin', $request->community);
 
       $request->request_status = 'accepted';
       $request->save();
@@ -431,14 +430,12 @@ class CommunityController extends Controller
       $notification->is_read = true;
       $notification->save();
 
-      return redirect()->back()->with('success', 'Follow request accepted.');
+      return response()->json(['success' => 'Follow request accepted.']);
   }
 
 
   public function rejectFollowRequest($requestId) {
       $request = CommunityFollowRequest::findOrFail($requestId);
-
-      $this->authorize('isCommunityAdmin', $request->community);
 
       $request->request_status = 'rejected';
       $request->save();
@@ -447,8 +444,53 @@ class CommunityController extends Controller
       $notification->is_read = true;
       $notification->save();
 
-      return redirect()->back()->with('success', 'Follow request rejected.');
+      return response()->json(['success' => 'Follow request rejected.']);
   }
 
-
+    public function deleteCommunity(Request $request, $id)
+  {
+      $admin = Auth::user();
+      
+      if (!$admin->is_admin) {
+          return response()->json([
+              'success' => false,
+              'message' => 'You are not authorized to perform this action.'
+          ], 403);
+      }
+      
+      $community = Community::findOrFail($id);
+      
+      if ($community->posts()->exists()) {
+          return response()->json([
+              'success' => false,
+              'message' => 'This community cannot be deleted as it contains posts.'
+          ], 400);
+      }
+      
+      try {
+          $community->followers()->detach();
+          $community->moderators()->detach();
+          
+          if ($community->followRequests()->exists()) {
+              $community->followRequests()->delete();
+          }
+          
+          if ($community->reports()->exists()) {
+              $community->reports()->delete();
+          }
+          
+          $community->delete();
+          
+          return response()->json([
+              'success' => true,
+              'message' => 'Community has been successfully deleted.'
+          ]);
+          
+      } catch (\Exception $e) {
+          return response()->json([
+              'success' => false,
+              'message' => 'An error occurred while deleting the community.'
+          ], 500);
+      }
+  }
 }

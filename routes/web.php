@@ -90,6 +90,8 @@ Route::get('/favorites', [AuthenticatedUserController::class, 'favorites'])->mid
 Route::delete('/unfavorites/{id}', [AuthenticatedUserController::class, 'remfavorite'])->middleware(['auth', 'check.suspension']);
 Route::delete('/deletemyaccount', [AuthenticatedUserController::class, 'deletemyaccount'])->middleware(['auth', 'check.suspension'])->name('user.delete');
 Route::delete('deleteaccount/{id}',[AuthenticatedUserController::class,'deleteUserAccount'])->middleware(['auth', 'check.suspension'])->name('admin.delete');
+Route::delete('deletecommunity/{id}', [CommunityController::class, 'deleteCommunity'])->middleware(['auth', 'check.suspension'])->name('admin.community.delete');
+
 
 //admin
 Route::post('/users/{id}/suspend',[AuthenticatedUserController::class,'suspend'])->middleware(['auth', 'check.suspension']);
@@ -224,8 +226,9 @@ Route::get('/notifications', [NotificationController::class, 'show'])
     ->name('notifications.show');
     //mark as read
 Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-Route::patch('/notifications/accept-follow-request/{id}', [CommunityController::class, 'acceptFollowRequest'])->middleware(['auth', 'check.suspension'])->name('communities.acceptFollowRequest');
-Route::patch('/notifications/reject-follow-request/{id}', [CommunityController::class, 'rejectFollowRequest'])->middleware(['auth', 'check.suspension'])->name('communities.rejectFollowRequest');
+
+Route::post('/notifications/accept-follow-request/{id}', [CommunityController::class, 'acceptFollowRequest'])->middleware(['auth', 'check.suspension'])->name('community.acceptRequest');
+Route::post('/notifications/reject-follow-request/{id}', [CommunityController::class, 'rejectFollowRequest'])->middleware(['auth', 'check.suspension'])->name('community.rejectRequest');
 
 
 //Hub Join Requests

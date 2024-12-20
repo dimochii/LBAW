@@ -93,8 +93,9 @@
         <td class="px-4 py-4 whitespace-nowrap" data-sort>{{ $hub->id }}</td>
         <td class="px-4 py-4">
           <a class="flex items-center" href="{{ route('communities.show', $hub->id) }}">
-            <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-              class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
+            <img src="{{ asset( $hub->image->path ?? 'images/groupdefault.jpg') }}"
+        onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
+              class="max-w-full rounded-full size-9 mr-3 object-cover">
             <span class="truncate max-w-32 hover:max-w-full transition-all" data-sort>{{ $hub->name }}</span>
           </a>
         </td>
@@ -127,15 +128,31 @@
         </td>
 
         <td class="px-4 py-4">
-          <button name="delete-button"
-            class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
-            delete
-          </button>
-        </td>
+        <form action="{{ route('admin.community.delete', ['id' => $hub->id]) }}" method="POST" >
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold delete-button-hub" data-community-id="{{ $hub->id }}">
+            Delete
+        </button>
+        </form>
+      </td>
+
+
       </tr>
       @endforeach
     </tbody>
   </table>
 </div>
 
+<div id="error-toast" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white p-4 rounded-md shadow-lg z-50">
+  <p id="toast-message" class="text-lg font-bold"></p>
+</div>
+
+<div id="success-toast" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-md shadow-lg z-50">
+  <p id="toast-message-success" class="text-lg font-bold"></p>
+</div>
+
+
 @endsection
+
+

@@ -25,7 +25,7 @@
 <body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">
   <div class="min-h-screen flex flex-col">
     <!-- Top Header -->
-    <header class="flex items-center justify-between h-12 border-b-2 border-black">
+    <header class="flex items-center justify-between h-12 border-b-2 border-black fixed top-0 left-0 right-0 z-50 bg-[#F4F2ED]">
       <!-- Logo Section -->
       <div class="w-32 md:w-48 bg-pastelGreen h-full flex items-center border-r-2 border-black">
         <a href="{{ url('/') }}" class="m-auto text-[#F4F2ED] font-bold text-4xl tracking-tight">
@@ -33,15 +33,6 @@
           <span class="hidden md:block">whatsUP</span>
         </a>
       </div>
-
-      <!-- Hamburger Button -->
-      <button id="mobile-menu-button"
-        class="md:hidden fixed bottom-4 right-4 z-50 bg-pastelBlue text-[#F4F2ED] p-3 rounded-full shadow-lg"
-        onclick="toggleMobileMenu()">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
-      </button>
       <!-- Search Section -->
       <div class="flex-1 bg-pastelRed h-full flex items-center pl-2 md:pl-4 relative">
         <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,19 +125,26 @@
 
         <a href="{{ route('notifications.show', Auth::user()->id) }}"
           class="text-[#3C3D37] hover:text-[#3C3D37] transition-colors hidden md:block relative">
-            <div class="rounded-lg bg-pastelRed animate-ping w-2 h-2 absolute top-0 right-0"></div>
-            <div class="rounded-lg bg-pastelRed w-2 h-2 absolute top-0 right-0"></div>
-            <span id="notification-count"
-                  class="absolute -top-2 -right-2 bg-pastelRed text-white text-xs rounded-full px-2 py-1">
-                <!-- O número será atualizado dinamicamente -->
-            </span>
+            @php
+                $unreadCount = Auth::user()->notifications()->where('is_read', false)->count();
+            @endphp
+
+            @if($unreadCount > 0)
+                <div class="absolute -top-2 -right-2">
+                    <div class="absolute w-5 h-5 bg-pastelRed rounded-full animate-ping opacity-75"></div>
+                    
+                    <div class="relative bg-pastelRed text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center px-1">
+                        {{ $unreadCount > 99 ? '99+' : $unreadCount }}
+                    </div>
+                </div>
+            @endif
+
             <svg class="w-6 h-6 hover:fill-pastelYellow fill-transparent transition-colors" stroke="currentColor"
                 viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                       d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
         </a>
-
 
         <div class="relative">
           <a href="#" class="relative fill-transparent text-[#3C3D37] hover:text-[#3C3D37]/80 transition-colors"
@@ -162,10 +160,10 @@
               class="block pr-8 py-2 text-gray-700 hover:bg-gray-100 border-b border-gray-200">
               <div class="flex items-center px-4 py-3">
                 <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}"
-                  class="size-10 rounded-full" />
+                  class="size-10 rounded-full object-cover" />
                 <div>
                   <div class=" px-2 font-medium text-gray-900 pr-6">{{ Auth::user()->name }}</div>
-                  <div class="text-gray-500 text-sm">View profile</div>
+                  <div class="text-gray-500 text-sm px-1">View profile</div>
                 </div>
               </div>
             </a>
@@ -209,22 +207,19 @@
       </div>
     </header>
 
-    <div class="flex flex-1">
+    <div class="flex pt-12 ml-0 md:ml-48">
       <!-- Mobile Menu Button -->
-      <button id="mobile-menu-button"
-        class="md:hidden fixed bottom-4 right-4 z-50 bg-pastelBlue text-[#F4F2ED] p-3 rounded-full shadow-lg"
-        onclick="toggleMobileMenu()">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
+      <button id="mobile-menu-button" class="md:hidden fixed bottom-4 right-4 z-50 bg-pastelBlue text-[#F4F2ED] p-3 rounded-full shadow-lg transition-transform duration-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
       </button>
 
       <!-- Left Sidebar -->
-      <aside id="left-sidebar"
-        class="text-[#3C3D37] text-lg fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:w-48 flex-shrink-0 bg-[#F4F2ED] border-r-2 border-black transition-transform duration-200 ease-in-out z-40 overflow-y-auto">
+      <aside id="left-sidebar" class="text-[#3C3D37] text-lg fixed inset-y-0 left-0 w-48 bg-[#F4F2ED] border-r-2 border-black z-40 overflow-y-auto max-h-screen transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
         <nav class="divide-y-2 divide-black">
           <!-- Primary Links -->
-          <div class="py-4">
+          <div class="pt-14 pb-2">
             <div class="*:*:underline-effect *:px-4 *:py-1 flex flex-col text-xl ml-2">
               <a href="{{ url('/home') }}" class=" mr-auto">
                 <span class="">home</span>
@@ -250,7 +245,7 @@
               <a href="/hub/{{ $recent['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                 {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
-                <img src="{{asset($recent['image'])}}" alt="{{$recent['name']}} image" class=" h-8 w-8 rounded-full">
+                <img src="{{asset($recent['image'])}}" alt="{{$recent['name']}} image" class=" h-8 w-8 rounded-full object-cover">
                 <span class="break-all text-sm">h/{{ $recent['name'] }}</span>
               </a>
               @php
@@ -268,7 +263,7 @@
               <a href="/hub/{{ $hubs['id'] }}"
                 class="flex items-center space-x-2 px-4 py-2 hover:bg-[#3C3D37] hover:text-[#F4F2ED]">
                 {{-- <div class="w-2 h-2 rounded-full bg-{{ $colors[$colorIndex] }}"></div> --}}
-                <img src="{{asset($hubs['image'])}}" alt="{{$hubs['name']}} image" class=" h-8 w-8 rounded-full">
+                <img src="{{asset($hubs['image'])}}" alt="{{$hubs['name']}} image" class=" h-8 w-8 rounded-full object-cover">
                 <span class="break-all text-sm">h/{{ $hubs['name'] }}</span>
               </a>
               @php
@@ -309,15 +304,14 @@
       <!-- Right Sidebar -->
       @if (Request::is('hub/*') && isset($community))
       <aside id="right-sidebar"
-        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 flex-shrink-0 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out z-40">
-
+        class="fixed inset-y-0 right-0 transform translate-x-full md:translate-x-0 md:static md:w-64 bg-[#F4F2ED] border-l-2 border-black transition-transform duration-200 ease-in-out overflow-y-auto min-h-screen">
         <!-- Hubs Section -->
         <div class="border-b-2 border-black">
           <a class="p-4 flex flex-col hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-all group"
               href="{{route('communities.show', $community->id)}}">
               <img src="{{ asset($community->image->path ?? 'images/groupdefault.jpg') }}" 
                   alt="hub image"
-                  class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37]">
+                  class="rounded-full h-20 w-20 mx-auto ring-2 group-hover:ring-[#F4F2ED] ring-[#3C3D37] object-cover">
               <h1 class="mt-4 mb-1 font-medium tracking-tight text-xl text-center">h/{{$community->name}}</h1>
               <p class="text-sm font-light break-all tracking-tight text-center">{{ $community->description }}</p>
               <div class="flex items-center justify-center text-sm font-light break-all tracking-tight text-center">
@@ -414,38 +408,6 @@
       @endif
     </div>
   </div>
-  <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"
-    onclick="toggleLeftSidebar()">
-  </div>
 </body>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const notificationCountElement = document.getElementById('notification-count');
-
-    async function fetchUnreadNotifications() {
-        try {
-            const response = await fetch('/api/notifications/unread-count', {
-                headers: { 'Accept': 'application/json' },
-            });
-            const data = await response.json();
-            if (data.unreadCount > 0) {
-                notificationCountElement.textContent = data.unreadCount;
-                notificationCountElement.classList.remove('hidden');
-            } else {
-                notificationCountElement.classList.add('hidden');
-            }
-        } catch (error) {
-            console.error('Failed to fetch unread notifications count:', error);
-        }
-    }
-
-    // Fetch notifications on page load
-    fetchUnreadNotifications();
-
-    // Optionally refresh the count periodically
-    setInterval(fetchUnreadNotifications, 60000); // 60 seconds
-});
-
-</script>
 
 </html>

@@ -82,9 +82,9 @@
         <td class="px-4 py-4 whitespace-nowrap">{{ $report->id }}</td>
         <td class="px-4 py-4">
           <a class="flex items-center" href="{{ route('user.profile', $report->authenticated_user_id) }}">
-            <img
-              src="{{ $report->user->avatar ?? 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png' }}"
-              class="max-w-full rounded-3xl min-w-[32px] mr-3 w-[32px]">
+          <img src="{{ asset( $report->user->image->path ?? 'images/groupdefault.jpg') }}"
+                            onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
+                                class="max-w-full rounded-full size-9 mr-3 object-cover">
             <span class="break-all" data-sort>{{ '@' . $report->user->username }}</span>
           </a>
         </td>
