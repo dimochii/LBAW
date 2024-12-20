@@ -9,6 +9,8 @@ use App\Models\News;
 use App\Models\Topic;
 use App\Models\Report;
 use App\Models\Post;
+use App\Models\FollowNotification;
+use App\Models\Suspension;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -17,6 +19,140 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+  public function  makeAdmin($id)
+    {
+        
+        if (!$this->authorize('isAdmin', Auth::user())) {
+            return response()->view('errors.403', [], 403); 
+        }
+
+        $user = AuthenticatedUser::findOrFail($id);
+        $user->is_admin = true;
+        $user->save();
+
+        return response()->json(['message' => 'User gained admin privileges successfully']);
+    }
+    public function  removeAdmin($id)
+    {
+        if (!$this->authorize('isAdmin', Auth::user())) {
+            return response()->view('errors.403', [], 403); 
+        }
+
+        $user = AuthenticatedUser::findOrFail($id);
+        $user->is_admin = false;
+        $user->save();
+
+        return response()->json(['message' => 'User lost admin privileges successfully']);
+    }
+    
+    public function suspend($id, Request $request)
+    {
+      if (!$this->authorize('isAdmin', Auth::user())) {
+        return response()->view('errors.403', [], 403); 
+    }
+
+        $request->validate([
+            'reason' => 'required|string',
+            'duration' => 'required|integer|min:1',
+        ]);
+
+        $user = AuthenticatedUser::findOrFail($id);
+
+        $user->is_suspended = true;
+        $user->save();
+
+        $suspension = new Suspension([
+            'reason' => $request->input('reason'),
+            'start' => now(),
+            'duration' => $request->input('duration'),  
+            'authenticated_user_id' => $user->id, 
+        ]);
+
+        $suspension->save();
+
+        return redirect()->route('admin.overview', $user->id)->with('success', 'Profile updated successfully!');
+        //return response()->json(['message' => 'User suspended successfully.']);
+    }
+
+    public function unsuspend($id)
+    {
+      if (!$this->authorize('isAdmin', Auth::user())) {
+        return response()->view('errors.403', [], 403); 
+      }
+
+        $user = AuthenticatedUser::findOrFail($id);
+        
+        $user->is_suspended = false;
+        $user->save();
+
+        $user->suspensions()->delete();
+
+        return response()->json(['message' => 'User unsuspended successfully.']);
+    }
+
+    public function deleteUserAccount(Request $request, $id) {
+      $admin = Auth::user();
+      
+      if (!$this->authorize('isAdmin', Auth::user())) {
+        return response()->view('errors.403', [], 403); 
+    }
+  
+      $user = AuthenticatedUser::find($id);
+      $deletedUserId = 1;
+      $deletedUser = AuthenticatedUser::find($deletedUserId);
+
+      //Update votes --> deleted user
+      if ($user->votes()->exists()) {
+          $user->votes()->update(['authenticated_user_id' => $deletedUserId]);
+      }
+
+      //Update comments --> deleted user
+      if ($user->comments()->exists()) {
+          $user->comments()->update(['authenticated_user_id' => $deletedUserId]);
+      }
+
+      //update post ---> solo writer --> deleted user// co-author ---> just remove
+      foreach ($user->authoredPosts as $post) {
+          $authorCount = $post->authors()->count();
+          if ($authorCount === 1) {
+              $post->update(['authenticated_user_id' => $deletedUserId]);
+              $post->authors()->syncWithoutDetaching([$deletedUserId]); 
+              $post->authors()->detach($user->id); 
+          } 
+
+          else {
+              $post->authors()->detach($user); 
+              //$post->authors()->attach($deletedUser); // Add the deleted user as an author
+          }
+      }
+   
+
+      if ($user->notifications()->exists()) {
+          $user->notifications()->update(['authenticated_user_id' => $deletedUserId]);
+      }
+  
+      if ($user->reports()->exists()) {
+          $user->reports()->delete(); 
+      }
+      if ($user->suspensions()->exists()) {
+          $user->suspensions()->delete(); 
+      }
+
+      FollowNotification::where('follower_id', $user->id)
+      ->update(['follower_id' => $deletedUserId]);
+
+      
+      $user->moderatedCommunities()->detach();
+      $user->favouritePosts()->detach();
+      $user->communities()->detach();
+      $user->follows()->detach();
+      $user->followers()->detach();
+      $user->delete();
+  
+      return redirect()->route('admin.users')->with('message', 'User account has been successfully deleted.');
+      
+  }
+
   private function newCommunitiesChart()
   {
     // Get the date range for the last 14 days

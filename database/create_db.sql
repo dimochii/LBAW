@@ -160,7 +160,7 @@ CREATE TABLE suspensions (
     id SERIAL PRIMARY KEY,
     reason TEXT NOT NULL,
     start TIMESTAMP NOT NULL,
-    duration TIMESTAMP,
+    duration INT,
     authenticated_user_id INT,
     FOREIGN KEY (authenticated_user_id) REFERENCES authenticated_users(id)
 );
@@ -3083,6 +3083,6 @@ INSERT INTO reports(reported_id, reason, is_open, report_type, authenticated_use
 -- suspensions
 
 INSERT INTO suspensions (reason, start, duration, authenticated_user_id)
-VALUES ('Violation of forum rules', NOW(), NOW() + INTERVAL '7 days', 7);
+VALUES ('Violation of forum rules', NOW(),7, 7);
 
 

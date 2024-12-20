@@ -122,9 +122,9 @@
         <div id="suspend-modal" class="hidden fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
           <div class="bg-white p-6 rounded shadow-lg w-96">
               <h3 class="text-xl font-bold mb-4">Suspend User</h3>
-              <form id="suspend-form" action="" method="POST">
+              <form id="suspend-form" action="{{ route('users.suspend', $user->id) }}" method="POST">
                   @csrf
-                  <input type="hidden" name="authenticated_user_id" id="authenticated_user_id">
+                  <input type="hidden" name="authenticated_user_id" id="authenticated_user_id" value="{{$user->id}}">
 
                   <div class="mb-4">
                       <label for="reason" class="block font-medium text-gray-700 mb-1">Reason</label>
@@ -336,11 +336,9 @@
             })
             .catch(error => {
                 alert(error.message);
-                // Revert checkbox state if the request fails
                 document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
             });
         } else {
-            // Revert checkbox state if the user cancels the action
             document.getElementById(`admin-checkbox-${userId}`).checked = !isChecked;
         }
     }

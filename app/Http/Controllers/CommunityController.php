@@ -18,125 +18,10 @@ use Illuminate\Support\Facades\DB;
 
 class CommunityController extends Controller
 {
+
   public function createHub()
   {
-
     return view('pages.create_hub');
-  }
-
-
-  public function destroy($id)
-  {
-    // Find the community by ID
-    $community = Community::findOrFail($id);
-    if (!($this->authorize('isAdmin') || $this->authorize('isCommunityAdmin', $community))) {
-      abort(403, 'Unauthorized action.');
-    }
-
-    // Check if the community has any posts
-    if ($community->posts()->exists()) {
-      // If the community has posts, prevent deletion
-      return redirect()->back()->with('error', 'Cannot delete a community that has posts.');
-    }
-
-    // If no posts exist, delete the community
-    $community->delete();
-
-    // Redirect back with a success message
-    return redirect()->back()->with('success', 'deleted community.');
-  }
-
-  private function newPostsChart($id)
-  {
-    // Define the date range for the past 14 days
-    $startDate = now()->subDays(13)->startOfDay();
-    $endDate = now()->endOfDay();
-
-    // Fetch the data for news filtered by community ID
-    $newsData = DB::table('news')
-      ->join('posts', 'news.post_id', '=', 'posts.id')
-      ->select(DB::raw('DATE(posts.creation_date) as post_date'), DB::raw('COUNT(*) as news_count'))
-      ->where('posts.community_id', $id)
-      ->whereBetween('posts.creation_date', [$startDate, $endDate])
-      ->groupBy('post_date')
-      ->pluck('news_count', 'post_date');
-
-    // Fetch the data for topics filtered by community ID
-    $topicsData = DB::table('topics')
-      ->join('posts', 'topics.post_id', '=', 'posts.id')
-      ->select(DB::raw('DATE(posts.creation_date) as post_date'), DB::raw('COUNT(*) as topics_count'))
-      ->where('posts.community_id', $id)
-      ->whereBetween('posts.creation_date', [$startDate, $endDate])
-      ->groupBy('post_date')
-      ->pluck('topics_count', 'post_date');
-
-    // Fetch the data for all posts filtered by community ID
-    $postsData = DB::table('posts')
-      ->select(DB::raw('DATE(creation_date) as post_date'), DB::raw('COUNT(*) as total_count'))
-      ->where('community_id', $id)
-      ->whereBetween('creation_date', [$startDate, $endDate])
-      ->groupBy('post_date')
-      ->pluck('total_count', 'post_date');
-
-    // Generate the labels (list of dates for the last 14 days)
-    $labels = collect();
-    for ($date = $startDate->copy(); $date <= $endDate; $date->addDay()) {
-      $labels->push($date->toDateString());
-    }
-
-    // Map the data to ensure each label has a corresponding value
-    $newsCounts = $labels->map(fn($date) => $newsData[$date] ?? 0);
-    $topicsCounts = $labels->map(fn($date) => $topicsData[$date] ?? 0);
-    $postsCounts = $labels->map(fn($date) => $postsData[$date] ?? 0);
-
-    // Build the combo chart
-    $chart = Chartjs::build()
-      ->name('newPostsChart')
-      ->type('bar') // Base type for mixed charts
-      ->size(['width' => 400, 'height' => 200])
-      ->labels($labels->toArray())
-      ->datasets([
-        [
-          "type" => "bar",
-          "label" => "News",
-          "backgroundColor" => "rgba(255, 99, 132, 0.5)",
-          "borderColor" => "rgba(255, 99, 132, 1)",
-          "data" => $newsCounts->toArray(),
-        ],
-        [
-          "type" => "bar",
-          "label" => "Topics",
-          "backgroundColor" => "rgba(54, 162, 235, 0.5)",
-          "borderColor" => "rgba(54, 162, 235, 1)",
-          "data" => $topicsCounts->toArray(),
-        ],
-        [
-          "type" => "line",
-          "label" => "Total Posts",
-          "backgroundColor" => "rgba(75, 192, 192, 0.5)",
-          "borderColor" => "rgba(75, 192, 192, 1)",
-          "fill" => false,
-          "data" => $postsCounts->toArray(),
-        ]
-      ])
-      ->options([
-        "scales" => [
-          "y" => [
-            "beginAtZero" => true,
-            "ticks" => [
-              "stepSize" => 1, // Ensure integer-only y-axis
-            ],
-          ],
-          "x" => [
-            "type" => "time",
-            "time" => [
-              "unit" => "day",
-            ],
-          ],
-        ],
-      ]);
-
-    return $chart;
   }
 
   public function show($id)
@@ -492,5 +377,98 @@ class CommunityController extends Controller
               'message' => 'An error occurred while deleting the community.'
           ], 500);
       }
+  }
+
+    
+  private function newPostsChart($id)
+  {
+    $startDate = now()->subDays(13)->startOfDay();
+    $endDate = now()->endOfDay();
+
+    // Fetch the data for news filtered by community ID
+    $newsData = DB::table('news')
+      ->join('posts', 'news.post_id', '=', 'posts.id')
+      ->select(DB::raw('DATE(posts.creation_date) as post_date'), DB::raw('COUNT(*) as news_count'))
+      ->where('posts.community_id', $id)
+      ->whereBetween('posts.creation_date', [$startDate, $endDate])
+      ->groupBy('post_date')
+      ->pluck('news_count', 'post_date');
+
+    // Fetch the data for topics filtered by community ID
+    $topicsData = DB::table('topics')
+      ->join('posts', 'topics.post_id', '=', 'posts.id')
+      ->select(DB::raw('DATE(posts.creation_date) as post_date'), DB::raw('COUNT(*) as topics_count'))
+      ->where('posts.community_id', $id)
+      ->whereBetween('posts.creation_date', [$startDate, $endDate])
+      ->groupBy('post_date')
+      ->pluck('topics_count', 'post_date');
+
+    // Fetch the data for all posts filtered by community ID
+    $postsData = DB::table('posts')
+      ->select(DB::raw('DATE(creation_date) as post_date'), DB::raw('COUNT(*) as total_count'))
+      ->where('community_id', $id)
+      ->whereBetween('creation_date', [$startDate, $endDate])
+      ->groupBy('post_date')
+      ->pluck('total_count', 'post_date');
+
+    // Generate the labels (list of dates for the last 14 days)
+    $labels = collect();
+    for ($date = $startDate->copy(); $date <= $endDate; $date->addDay()) {
+      $labels->push($date->toDateString());
+    }
+
+    // Map the data to ensure each label has a corresponding value
+    $newsCounts = $labels->map(fn($date) => $newsData[$date] ?? 0);
+    $topicsCounts = $labels->map(fn($date) => $topicsData[$date] ?? 0);
+    $postsCounts = $labels->map(fn($date) => $postsData[$date] ?? 0);
+
+    // Build the combo chart
+    $chart = Chartjs::build()
+      ->name('newPostsChart')
+      ->type('bar') // Base type for mixed charts
+      ->size(['width' => 400, 'height' => 200])
+      ->labels($labels->toArray())
+      ->datasets([
+        [
+          "type" => "bar",
+          "label" => "News",
+          "backgroundColor" => "rgba(255, 99, 132, 0.5)",
+          "borderColor" => "rgba(255, 99, 132, 1)",
+          "data" => $newsCounts->toArray(),
+        ],
+        [
+          "type" => "bar",
+          "label" => "Topics",
+          "backgroundColor" => "rgba(54, 162, 235, 0.5)",
+          "borderColor" => "rgba(54, 162, 235, 1)",
+          "data" => $topicsCounts->toArray(),
+        ],
+        [
+          "type" => "line",
+          "label" => "Total Posts",
+          "backgroundColor" => "rgba(75, 192, 192, 0.5)",
+          "borderColor" => "rgba(75, 192, 192, 1)",
+          "fill" => false,
+          "data" => $postsCounts->toArray(),
+        ]
+      ])
+      ->options([
+        "scales" => [
+          "y" => [
+            "beginAtZero" => true,
+            "ticks" => [
+              "stepSize" => 1, // Ensure integer-only y-axis
+            ],
+          ],
+          "x" => [
+            "type" => "time",
+            "time" => [
+              "unit" => "day",
+            ],
+          ],
+        ],
+      ]);
+
+    return $chart;
   }
 }
