@@ -26,75 +26,70 @@ class CommunityController extends Controller
 
   public function show($id)
   {
-    if(Auth::user()->is_suspended) {
+      if(Auth::user()->is_suspended) {
+          return redirect()->route('news');
+      }
 
-      return redirect()->route('news');
-    }
+      $community = Community::with(['posts', 'posts.authors', 'posts.votes', 'posts.comments'])
+          ->findOrFail($id);
 
+      if (!$community) {
+          abort(404, 'Community not found');
+      }
 
-    $community = Community::with(['posts', 'posts.authors', 'posts.votes', 'posts.comments'])
-    ->findOrFail($id);
+      $this->cacheRecentHub($community->id, $community->name);
+      $sortOption = request()->query('sort', 'newest');
 
-    if (!$community) {
-      abort(404, 'Community not found');
-    }
+      $posts = $community->posts;
 
-    $this->cacheRecentHub($community->id, $community->name);
+      if ($sortOption === 'newest') {
+          $posts = $posts->sortByDesc('created_at');
+      } elseif ($sortOption === 'top') {
+          $posts = $posts->sortByDesc(function($post) {
+              return $post->votes->where('upvote', true)->count() - $post->votes->where('upvote', false)->count();
+          });
+      } elseif ($sortOption === 'trending') {
+          $posts = $posts->sortByDesc(function($post) {
+              return $post->comments->count() + $post->votes->where('upvote', true)->count();
+          });
+      }
 
-    $posts = $community->posts->map(function ($post) {
-      $upvotes = $post->votes->where('upvote', true)->count();
-      $downvotes = $post->votes->where('upvote', false)->count();
+      $newsPosts = $posts->filter(function ($post) {
+          return !is_null($post->news);
+      });
 
-      return [
-        'id' => $post->id,
-        'title' => $post->title,
-        'content' => $post->content,
-        'authors_list' => $post->authors->pluck('name')->join(', '),
-        'created_at' => $post->created_at,
-        'score' => $upvotes - $downvotes,
-        'comments_count' => $post->comments->count(),
-        'news' => $post->news,  
-        'topic' => $post->topic,
-      ];
-    });
+      $topicPosts = $posts->filter(function ($post) {
+          return !is_null($post->topic);
+      });
 
-    $newsPosts = $community->posts->filter(function ($post) {
-      return !is_null($post['news']);
-    });
+      $posts_count = $posts->count();
+      $followers_count = $community->followers()->count();
 
-    $topicPosts = $community->posts->filter(function ($post) {
-      return !is_null($post['topic']);
-    });
-    $posts_count = $posts->count();
-    $followers_count = $community->followers()->count();
+      $user = Auth::user();
+      if ($user) {
+          $is_following = $community->followers()
+              ->where('authenticated_user_id', $user->id)
+              ->exists();
+      } else {
+          $is_following = false;
+      }
 
-    $user = Auth::user();
-    if ($user) {
-      $is_following = $community->followers()
-        ->where('authenticated_user_id', $user->id)
-        ->exists();
-    } else {
-      $is_following = false;
-    }
+      $newPosts = $this->newPostsChart($id);
+      $startDate = Carbon::now()->subDays(13)->toFormattedDateString();
+      $endDate = Carbon::now()->toFormattedDateString();
 
-    // moderation stats
-    // $activeTab = request()->query('tab', 'news');
-    $newPosts = $this->newPostsChart($id);
-    $startDate = Carbon::now()->subDays(13)->toFormattedDateString();
-    $endDate = Carbon::now()->toFormattedDateString();
-
-    return view('pages.hub', [
-      'community' => $community,
-      // 'posts' => $posts,
-      'newsPosts' => $newsPosts,
-      'topicPosts' => $topicPosts,
-      'is_following' => $is_following,
-      'posts_count' => $posts_count,
-      'followers_count' => $followers_count,
-      'newPosts' => $newPosts,
-      'startDate'=> $startDate, 
-      'endDate'=> $endDate, 
-    ]);
+      return view('pages.hub', [
+          'community' => $community,
+          'newsPosts' => $newsPosts,
+          'topicPosts' => $topicPosts,
+          'is_following' => $is_following,
+          'posts_count' => $posts_count,
+          'followers_count' => $followers_count,
+          'newPosts' => $newPosts,
+          'startDate' => $startDate,
+          'endDate' => $endDate,
+          'sortOption' => $sortOption, 
+      ]);
   }
 
 

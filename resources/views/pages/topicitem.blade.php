@@ -206,7 +206,7 @@
           else { $image_id = 1;}
         @endphp
         <img src="{{ asset(Auth::user()->image->path  ?? '/images/default.jpg') }}" 
-        class="size-8 rounded-fullobject-cover ">
+        class="size-8 rounded-full object-cover ">
       </a>
       <span class="text-xl font-light">start a thread</span>
     </div>
