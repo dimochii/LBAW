@@ -50,20 +50,20 @@
             {{-- Left Column --}}
             <div class="space-y-8">
                 {{-- Profile Image Section --}}
-                <div class="border-2 border-black p-8 group transition-all duration-300 hover:bg-gray-50">
-                    <h3 class="text-2xl font-medium mb-6">Profile Image</h3>
+                <fieldset class="border-2 border-black p-8 group transition-all duration-300 hover:bg-gray-50">
+                    <legend class="text-2xl font-medium mb-6">Profile Image</legend>
                     <div class="flex items-center space-x-8">
                         {{-- Current Image Preview --}}
                         <div class="ring-2 ring-black rounded-full p-1 transition-transform duration-300 group-hover:scale-105">
                             @if ($user->image_id)
-                            <img src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" alt="Current Profile" class="h-24 w-24 rounded-full object-cover">
+                                <img id="currentProfileImage" src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" alt="Current Profile" class="h-24 w-24 rounded-full object-cover">
                             @else
                                 <div class="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
                                     <span class="text-3xl font-light text-gray-500">{{ substr($user->name, 0, 1) }}</span>
                                 </div>
                             @endif
                         </div>
-                        
+
                         {{-- Image Upload --}}
                         <div class="flex-1">
                             <label class="cursor-pointer block">
@@ -78,16 +78,13 @@
                                     <p class="mt-2 text-lg font-light text-gray-600">Click to upload new image</p>
                                 </div>
                             </label>
-                            <div id="imagePreview" class="mt-4">
-                                <!-- Image preview will appear here -->
-                            </div>
                         </div>
                     </div>
-                </div>
+                </fieldset>
 
                 {{-- Basic Information --}}
-                <div class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
-                    <h3 class="text-2xl font-medium">Basic Information</h3>
+                <fieldset class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
+                    <legend class="text-2xl font-medium">Basic Information</legend>
                     {{-- Name --}}
                     <div>
                         <label for="name" class="block text-lg font-light">Name</label>
@@ -108,15 +105,15 @@
                         <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}"
                                class="mt-2 block w-full border-2 border-gray-200 p-4 font-light text-lg transition-colors duration-300 focus:border-black focus:ring-0">
                     </div>
-                </div>
+                </fieldset>
                 
             </div>
 
             {{-- Right Column --}}
             <div class="space-y-8">
                 {{-- Additional Information --}}
-                <div class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
-                    <h3 class="text-2xl font-medium">Additional Information</h3>
+                <fieldset class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
+                    <legend class="text-2xl font-medium">Additional Information</legend>
 
                     {{-- Birth Date --}}
                     <div>
@@ -131,11 +128,11 @@
                         <textarea id="description" name="description" rows="4"
                                   class="mt-2 block w-full border-2 border-gray-200 p-4 font-light text-lg transition-colors duration-300 focus:border-black focus:ring-0 resize-none">{{ old('description', $user->description) }}</textarea>
                     </div>
-                </div>
+                </fieldset>
 
                 {{-- Password Section --}}
-                <div class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
-                    <h3 class="text-2xl font-medium">Change Password</h3>
+                <fieldset class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
+                    <legend class="text-2xl font-medium">Change Password</legend>
                     
                     {{-- Password --}}
                     <div>
@@ -151,11 +148,8 @@
                         <input type="password" id="password_confirmation" name="password_confirmation"
                                class="mt-2 block w-full border-2 border-gray-200 p-4 font-light text-lg transition-colors duration-300 focus:border-black focus:ring-0">
                     </div>
-                </div>
+                </fieldset>
             </div>
-            
-            
-            
 
             {{-- Submit Button --}}
             <div class="md:col-span-2 flex justify-end">
@@ -174,7 +168,7 @@
             </div>
         </form>
 
-        <div class="md:col-span-2 flex justify-start">
+        <div class="md:col-span-2 flex justify-end mt-4">
             <form method="POST" action="{{ route('user.delete') }}" onsubmit="return confirm('Are you sure you want to delete your account?')">
                 @csrf
                 @method('DELETE')
@@ -184,29 +178,23 @@
             </form>
         </div>
 
-
     </div>
 </div>
 
 <script>
     function updateImagePreview(event) {
-        const previewContainer = document.getElementById('imagePreview');
-        const file = event.target.files[0];
+    const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                previewContainer.innerHTML = `<img src="${e.target.result}" alt="Image Preview" class="h-24 w-24 rounded-full object-cover">`;
+            reader.onload = function (e) {
+                const profileImage = document.getElementById('currentProfileImage');
+                if (profileImage) {
+                    profileImage.src = e.target.result;
+                }
             };
             reader.readAsDataURL(file);
-        } else {
-            previewContainer.innerHTML = '';
         }
     }
-    function submitDeleteForm() {
-
-        alert(1);
-    }
-
 </script>
 
 @endsection

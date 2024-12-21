@@ -11,6 +11,10 @@ class Suspension extends Model
     public $timestamps = false;
     protected $fillable = ['reason', 'start', 'duration', 'authenticated_user_id'];
 
+    protected $casts = [
+        'start' => 'datetime', 
+    ];
+
     public function user()
     {
         return $this->belongsTo(AuthenticatedUser::class);

@@ -61,7 +61,7 @@ class AuthenticatedUser extends Authenticatable
     
     public function authoredPosts()
     {
-        return $this->belongsToMany(Post::class, 'authors')->withPivot('pinned');
+        return $this->belongsToMany(Post::class, 'authors');
     }
 
     public function favouritePosts()

@@ -134,40 +134,46 @@
             @endif
         @endauth
 
+        @php
+        $activeTab = request()->query('tab', 'news'); // Default to 'News'
+        @endphp
+
         <div class="flex items-center gap-2">
             <span class="text-sm text-gray-600">sort by</span>
-            <select name="sort" class="bg-transparent text-sm text-gray-900 font-medium focus:outline-none">
-              <option value="newest">Newest</option>
-              <option value="top">Top</option>
-              <option value="trending">Trending</option>
-            </select>
-          </div>
+            <form action="{{ url('/hub/' . $community->id) }}" method="GET" class="inline-flex items-center gap-2">
+                <input type="hidden" name="tab" value="{{ $activeTab }}">
+                <select name="sort" class="bg-transparent text-sm text-gray-900 font-medium focus:outline-none" onchange="this.form.submit()">
+                    <option value="newest" {{ $sortOption === 'newest' ? 'selected' : '' }}>Newest</option>
+                    <option value="top" {{ $sortOption === 'top' ? 'selected' : '' }}>Top</option>
+                    <option value="trending" {{ $sortOption === 'trending' ? 'selected' : '' }}>Trending</option>
+                </select>
+            </form>
+        </div>
+
         </div>
       </div>
     </div>
   </div>
 
-  @php
-  $activeTab = request()->query('tab', 'news'); // Default to 'News'
-  @endphp
   {{-- @include('partials.news_topic_nav', ['url' => '/hub/' . $community->id]) --}}
 
   <nav class="border-b-2 border-black w-full font-light text-xl tracking-tighter px-6 flex flex-wrap gap-4 md:gap-8">
-    <a href="{{ url('/hub/' . $community->id . '/?tab=news') }}"
-      class="py-4 relative group {{ $activeTab === 'news' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
-      news
-    </a>
-    <a href="{{ url('/hub/' . $community->id . '/?tab=topics') }}"
-      class="py-4 relative group {{ $activeTab === 'topics' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
-      topics
-    </a>
-    @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || (Auth::user()->is_admin))
-    <a href="{{ route('moderation.overview', $community->id)  }}"
-      class="py-4 relative group {{ $activeTab === 'moderation' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
-      moderation
-    </a>
-    @endif
+      <a href="{{ url('/hub/' . $community->id . '/?tab=news&sort=' . $sortOption) }}"
+          class="py-4 relative group {{ $activeTab === 'news' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+          news
+      </a>
+      <a href="{{ url('/hub/' . $community->id . '/?tab=topics&sort=' . $sortOption) }}"
+          class="py-4 relative group {{ $activeTab === 'topics' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+          topics
+      </a>
+      @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || (Auth::user()->is_admin))
+          <a href="{{ route('moderation.overview', $community->id) }}"
+              class="py-4 relative group {{ $activeTab === 'moderation' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+              moderation
+          </a>
+      @endif
   </nav>
+
 
   <!-- Posts Section -->
    @if($community->privacy && !($community->followers->pluck('id')->contains(Auth::user()->id)) && !(Auth::user()->is_admin))
@@ -179,41 +185,39 @@
     <!-- Posts Grid -->
     <div class="divide-y-2 border-b-2 border-black divide-black">
       @if ($activeTab === 'news')
-      @if ($newsPosts->count() > 0)
-      @foreach ($newsPosts as $post)
-      @include('partials.post', [
-      'news' => 'true',
-      'item' => $post,
-      'post' => $post->news,
-      ])
-      @endforeach
-      @endif
-
-
-      @elseif ($activeTab === 'topics')
-      @if ($topicPosts->count() > 0)
-      @foreach ($topicPosts as $post)
-      @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || Auth::user()->is_admin || $post->topic->status->value === 'accepted')
-      @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
-      @endif
-      @endforeach
-      @endif      
-
-      @else
-      <div class="text-center py-12 bg-white rounded-xl shadow-sm">
-        <p class="text-gray-500">No posts available in this hub yet.</p>
-        @auth
-        @if($is_following)
-        <a href="{{ route('post.create', ['community_id' => $community->id]) }}"
-          class="mt-4 inline-block px-11 py-3 bg-pastelBlue text-white text-sm font-medium rounded-full 
-          hover:bg-blue-600 transition-colors duration-200 border-2 border-black">
-          Create the first post
-        </a>
+        @if ($newsPosts->count() > 0)
+          @foreach ($newsPosts as $post)
+            @include('partials.post', [
+              'news' => 'true',
+              'item' => $post,
+              'post' => $post->news,
+            ])
+          @endforeach
         @endif
-        @endauth
-      </div>
+      @elseif ($activeTab === 'topics')
+        @if ($topicPosts->count() > 0)
+          @foreach ($topicPosts as $post)
+            @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || Auth::user()->is_admin || $post->topic->status->value === 'accepted')
+              @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
+            @endif
+          @endforeach
+        @endif      
+      @else
+        <div class="text-center py-12 bg-white rounded-xl shadow-sm">
+          <p class="text-gray-500">No posts available in this hub yet.</p>
+          @auth
+            @if($is_following)
+              <a href="{{ route('post.create', ['community_id' => $community->id]) }}"
+                class="mt-4 inline-block px-11 py-3 bg-pastelBlue text-white text-sm font-medium rounded-full 
+                hover:bg-blue-600 transition-colors duration-200 border-2 border-black">
+                Create the first post
+              </a>
+            @endif
+          @endauth
+        </div>
       @endif
     </div>
+
 
     <!-- Pagination -->
     @if(method_exists($community->posts, 'hasPages') && $community->posts->hasPages())

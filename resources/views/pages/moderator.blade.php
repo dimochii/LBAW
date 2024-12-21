@@ -72,8 +72,9 @@
         <td class="px-4 py-4 whitespace-nowrap" data-sort>{{$user->id}}</td>
         <td class="px-4 py-4">
           <a class="flex items-center" href="{{ route('user.profile', $user->id) }}">
-            <img src="{{ asset($user->user->image->path ?? 'images/default.jpg') }}"
-              class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
+          <img src="{{ asset( $user->image->path ?? 'images/groupdefault.jpg') }}"
+              onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
+          class="max-w-full rounded-full size-9 mr-3 object-cover">
             <span class="break-all" data-sort>{{ '@' . $user->username }}</span>
           </a>
         </td>

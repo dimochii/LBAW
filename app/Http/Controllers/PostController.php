@@ -178,10 +178,21 @@ class PostController extends Controller
           'community_id' => $request->community_id,
       ]);
 
-      $post->authors()->attach(Auth::user()->id, ['pinned' => false]);
+      $post->authors()->attach(Auth::user()->id);
       
-      if ($request->has('authors'))
-        $post->authors()->attach($request->authors, ['pinned' => false]);
+      if ($request->has('authors')) {
+        $authors = $request->authors;
+    
+        $authors = array_unique($authors);
+    
+        $currentAuthors = $post->authors->pluck('id')->toArray();
+   
+        $newAuthors = array_diff($authors, $currentAuthors);
+    
+        if (!empty($newAuthors)) {
+            $post->authors()->attach($newAuthors);
+        }
+    }
 
       $this->notifyCommunityFollowers($request->community_id, $post);
       $this->notifyFollowers(Auth::user()->id, $post);

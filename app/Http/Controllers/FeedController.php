@@ -34,7 +34,8 @@ class FeedController extends Controller
     
         return $posts;
     }
-  // Fetch posts from user's communities created in the last 72 hours, order them by vote quantity, caches values for 60mins
+
+  // Fetch all posts from user's communities, order them by vote quantity, then by creation date
   public function home()
   {
 
@@ -49,44 +50,26 @@ class FeedController extends Controller
 
     $posts = Post::withCount('votes')
       ->whereIn('community_id', $authUser->communities->pluck('id'))
-      ->where('creation_date', '>', now()->subHours(72))
       ->where(function ($query) {
-        $query->whereDoesntHave('topic') // Include posts that are not topics
+        $query->whereDoesntHave('topic') 
               ->orWhereHas('topic', function ($subQuery) {
-                  $subQuery->where('status', TopicStatus::Accepted->value); // Include only topics with 'accepted' status
+                  $subQuery->where('status', TopicStatus::Accepted->value); 
               });
     })
       ->orderBy('votes_count', 'desc')
       ->orderBy('creation_date', 'desc')
       ->get();
 
-    foreach ($posts as $item) {
-
-      $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->post_id);
-      })->first();
-
-
-      if ($userVote) {
-        $item->user_upvoted = $userVote->upvote;
-        $item->user_downvoted = !$userVote->upvote;
-      } else {
-        // User hasn't voted on this post
-        $item->user_upvoted = false;
-        $item->user_downvoted = false;
-      }
-    }
     $news = $posts->filter(function ($post) {
-      return !is_null($post->news); // Only posts with associated news
+      return !is_null($post->news); 
   })->sortByDesc(function ($post) {
-      return [$post->score, $post->creation_date]; // Score first, then creation date
+      return [$post->score, $post->creation_date];
   });
 
-  // Filter and sort topics
   $topics = $posts->filter(function ($post) {
-      return !is_null($post->topic); // Only posts with associated topics
+      return !is_null($post->topic); 
   })->sortByDesc(function ($post) {
-      return [$post->score, $post->creation_date]; // Score first, then creation date
+      return [$post->score, $post->creation_date]; 
   });
 
     return view('pages.home', [
@@ -94,82 +77,40 @@ class FeedController extends Controller
       'topics' => $topics
     ]);
   }
+
+
+  // Fetch posts from public communities created within the last 72 hours, ordered by vote quantity, then by creation date
   public function global()
   {
-    // Check if cached posts exist
-    // $cachedPosts = Cache::get('popular_posts');
-
-    // if ($cachedPosts) {
-    //   return view('pages.global', [
-    //     'posts' => $cachedPosts
-    //   ]);
-    // }
-
-    // Fetch posts from public communities created within the last 72 hours
     $posts = Post::withCount('votes')
     ->whereHas('community', function ($query) {
         $query->where('privacy', false);
     })
     ->where('creation_date', '>', now()->subHours(72))
     ->where(function ($query) {
-        $query->whereDoesntHave('topic') // Include posts that are not topics
+        $query->whereDoesntHave('topic') 
               ->orWhereHas('topic', function ($subQuery) {
-                  $subQuery->where('status', TopicStatus::Accepted->value); // Include only topics with 'accepted' status
+                  $subQuery->where('status', TopicStatus::Accepted->value);
               });
     })
     ->orderBy('votes_count', 'desc')
     ->orderBy('creation_date', 'desc')
     ->get();
 
-    $authUser = Auth::user(); // For retrieving user-specific votes
 
-    foreach ($posts as $item) {
-      // Count upvotes and downvotes
-      $item->upvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->id);
-      })->where('upvote', true)->count();
-
-      $item->downvotes_count = Vote::whereHas('postVote', function ($query) use ($item) {
-        $query->where('post_id', $item->id);
-      })->where('upvote', false)->count();
-
-      // Check if the authenticated user has voted on this post
-      if ($authUser) {
-        $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($item) {
-          $query->where('post_id', $item->id);
-        })->first();
-
-        if ($userVote) {
-          $item->user_upvoted = $userVote->upvote;
-          $item->user_downvoted = !$userVote->upvote;
-        } else {
-          // User hasn't voted on this post
-          $item->user_upvoted = false;
-          $item->user_downvoted = false;
-        }
-      } else {
-        // For guests, no votes are possible
-        $item->user_upvoted = false;
-        $item->user_downvoted = false;
-      }
-    }
     $news = $posts->filter(function ($post) {
-      return !is_null($post->news); // Only posts with associated news
+      return !is_null($post->news); 
   })->sortByDesc(function ($post) {
-      return [$post->score, $post->creation_date]; // Score first, then creation date
+      return [$post->score, $post->creation_date]; 
   });
 
-  // Filter and sort topics
+
   $topics = $posts->filter(function ($post) {
-      return !is_null($post->topic); // Only posts with associated topics
+      return !is_null($post->topic);
   })->sortByDesc(function ($post) {
-      return [$post->score, $post->creation_date]; // Score first, then creation date
+      return [$post->score, $post->creation_date]; 
   });
 
-    // Cache the posts for 60 minutes
-    // Cache::put('popular_posts', $posts, 60);
-
-    // Render the view and pass the posts
     return view('pages.global', [
       'news' => $news,
       'topics' => $topics
@@ -177,62 +118,38 @@ class FeedController extends Controller
   }
 
 
+  // Fetch posts from user's communities created in the last 72 hours, order them by creation date
   public function recent()
   {
 
-    $authUser = Auth::user(); // For retrieving user-specific votes
+    $authUser = Auth::user(); 
 
-    // Fetch posts from user's communities, sorted by creation date
+
     $posts = Post::withCount('votes')
       ->whereIn('community_id', $authUser->communities->pluck('id'))
+      ->where('creation_date', '>', now()->subHours(72))
       ->where(function ($query) {
-        $query->whereDoesntHave('topic') // Include posts that are not topics
+        $query->whereDoesntHave('topic') 
               ->orWhereHas('topic', function ($subQuery) {
-                  $subQuery->where('status', TopicStatus::Accepted->value); // Include only topics with 'accepted' status
+                  $subQuery->where('status', TopicStatus::Accepted->value); 
               });
     })
       ->orderBy('creation_date', 'desc')
       ->get();
 
-    foreach ($posts as $post) {
-      // Count upvotes and downvotes
-      $post->upvotes_count = Vote::whereHas('postVote', function ($query) use ($post) {
-        $query->where('post_id', $post->id);
-      })->where('upvote', true)->count();
 
-      $post->downvotes_count = Vote::whereHas('postVote', function ($query) use ($post) {
-        $query->where('post_id', $post->id);
-      })->where('upvote', false)->count();
-
-      // Check if the authenticated user has voted on this post
-      $userVote = $authUser->votes()->whereHas('postVote', function ($query) use ($post) {
-        $query->where('post_id', $post->id);
-      })->first();
-
-      if ($userVote) {
-        $post->user_upvoted = $userVote->upvote;
-        $post->user_downvoted = !$userVote->upvote;
-      } else {
-        // User hasn't voted on this post
-        $post->user_upvoted = false;
-        $post->user_downvoted = false;
-      }
-    }
-
-        $news = $posts->filter(function ($post) {
-      return !is_null($post->news); // Only posts with associated news
+  $news = $posts->filter(function ($post) {
+      return !is_null($post->news); 
   })->sortByDesc(function ($post) {
-      return [ $post->creation_date]; // Score first, then creation date
+      return [ $post->creation_date]; 
   });
 
-  // Filter and sort topics
   $topics = $posts->filter(function ($post) {
-      return !is_null($post->topic); // Only posts with associated topics
+      return !is_null($post->topic); 
   })->sortByDesc(function ($post) {
-      return [ $post->creation_date]; // Score first, then creation date
+      return [ $post->creation_date];
   });
 
-    // Render the view and pass the posts collection
     return view('pages.recent', [
       'news' => $news,
       'topics' => $topics
@@ -246,7 +163,6 @@ class FeedController extends Controller
 
   public function bestof()
   {
-      // 10 topics
       $topTopics = Topic::select('topics.*')
           ->addSelect([
               'votes_count' => function ($query) {
@@ -260,7 +176,6 @@ class FeedController extends Controller
           ->limit(10)
           ->get();
   
-      // 10 news
       $topNews = News::select('news.*')
           ->addSelect([
               'votes_count' => function ($query) {

@@ -75,28 +75,12 @@ class AuthenticatedUserController extends Controller
     }
 
 
-    public function getFollowers($id)
-    {
-        $user = AuthenticatedUser::findOrFail($id);
-        $followers = $user->followers;
-
-        return view('pages.followers', compact('user', 'followers'));
-    }
-
-    public function getFollows($id)
-    {
-        $user = AuthenticatedUser::findOrFail($id);
-        $following = $user->follows;
-
-        return view('pages.following', compact('user', 'following'));
-    }
-
     public function edit($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
 
         if (!$this->authorize('editProfile', $user)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->view('errors.403', [], 403); 
         }
 
         $user = Auth::user();
@@ -105,9 +89,9 @@ class AuthenticatedUserController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    if (Auth::user()->id != $id) {
-        return response()->json(['message' => 'Unauthorized'], 403);
+    {
+    if (!$this->authorize('editProfile', Auth::user())) {
+        return response()->view('errors.403', [], 403); 
     }
 
     $user = AuthenticatedUser::findOrFail($id);
@@ -143,7 +127,6 @@ class AuthenticatedUserController extends Controller
         $user->password = Hash::make($validatedData['password']);
     }
 
-    // Handle image (or other file) update
     if ($request->hasFile('image')) {
 
         $file = $request->file('image');
@@ -171,8 +154,8 @@ class AuthenticatedUserController extends Controller
 
     public function destroy($id)
     {
-        if (Auth::user()->id != $id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        if (!$this->authorize('editProfile', Auth::user())) {
+            return response()->view('errors.403', [], 403); 
         }
 
         $user = AuthenticatedUser::findOrFail($id);
@@ -181,7 +164,135 @@ class AuthenticatedUserController extends Controller
         return response()->json(['message' => 'User deleted successfully']);
     }
 
+    public function follow($id)
+    {
+        $userToFollow = AuthenticatedUser::findOrFail($id);
+        
+        if (Auth::check()) {
+            $authenticatedUser = Auth::user(); 
+    
+            if ($authenticatedUser->follows()->where('followed_id', $userToFollow->id)->exists()) {
+                $authenticatedUser->follows()->detach($userToFollow->id);
+    
+                return redirect()->back()->with('success', 'You have unfollowed ' . $userToFollow->name);
+            } else {
+                $authenticatedUser->follows()->attach($userToFollow->id);
+    
+                return redirect()->back()->with('success', 'You are now following ' . $userToFollow->name);
+            }
+        }
+    
+        return redirect()->back()->with('error', 'Something went wrong.');
+    }
+    
 
+    public function favorites() {
+
+        if (!Auth::check()) {
+            return response()->view('errors.403', [], 403);
+        }
+    
+        $favorites = Auth::user()->favouritePosts;
+        return view('partials.favorites',compact('favorites'));
+    }
+
+    public function addfavorite(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->view('errors.403', [], 403);
+        }
+
+        $post = Post::find($id);
+
+        if (!$post) {
+            return response()->view('errors.404', [], 404);
+        }
+
+        $user = Auth::user();
+
+        if ($user->favouritePosts()->where('post_id', $id)->exists()) {
+            return response()->view('errors.400', [], 400);
+        }
+
+        $user->favouritePosts()->attach($id);
+
+        return response()->json(['message' => 'Post added to favorites successfully']);
+    }
+
+
+    public function remfavorite(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->view('errors.403', [], 403);
+        }
+
+        $post = Post::find($id);
+
+        if (!$post) {
+            return response()->view('errors.404', [], 404);
+        }
+
+        $user = Auth::user();
+
+        if (!$user->favouritePosts()->where('post_id', $id)->exists()) {
+            return response()->view('errors.400', [], 400);
+        }
+
+        $user->favouritePosts()->detach($id);
+
+        return response()->json(['message' => 'Post removed from favorites successfully'], 200);
+    }
+
+    //Deleted User ---> id = 1
+
+    public function deletemyaccount() {
+        $user = Auth::user();
+        $deletedUserId = 1;     
+        
+        if ($user->votes()->exists()) {
+            $user->votes()->update(['authenticated_user_id' => $deletedUserId]);
+        }
+        if ($user->comments()->exists()) {
+            $user->comments()->update(['authenticated_user_id' => $deletedUserId]);
+        }
+        //update post ---> solo writer --> deleted user// co-author ---> just remove
+        foreach ($user->authoredPosts as $post) {
+            $authorCount = $post->authors()->count();
+            if ($authorCount === 1) {
+                $post->update(['authenticated_user_id' => $deletedUserId]);
+                $post->authors()->syncWithoutDetaching([$deletedUserId]); 
+                $post->authors()->detach($user->id); 
+            } 
+
+            else {
+                $post->authors()->detach($user); 
+            }
+        }
+        if ($user->notifications()->exists()) {
+            $user->notifications()->update(['authenticated_user_id' => $deletedUserId]);
+        }
+        if ($user->reports()->exists()) {
+            $user->reports()->delete(); 
+        }
+        if ($user->suspensions()->exists()) {
+            $user->suspensions()->delete(); 
+        }
+
+        FollowNotification::where('follower_id', $user->id)
+        ->update(['follower_id' => $deletedUserId]);
+
+        $user->moderatedCommunities()->detach();
+        $user->favouritePosts()->detach();
+        $user->communities()->detach();
+        $user->follows()->detach();
+        $user->followers()->detach();
+        $user->delete();
+        Auth::logout();
+    
+        return redirect('/global')->with('message', 'Your account has been successfully deleted.');
+    }
+    
+    
     public function getCommunities($id)
     {
         $user = AuthenticatedUser::findOrFail($id);
@@ -236,7 +347,6 @@ class AuthenticatedUserController extends Controller
     }));
 }
 
-    
     public function getVotedTopics($user)
     {
         return $this->fetchPostData(Post::whereHas('topic')->whereHas('votes', function ($query) use ($user) {
@@ -244,290 +354,27 @@ class AuthenticatedUserController extends Controller
         }));
     }
 
-    public function follow($id)
+    public function getFollowers($id)
     {
-        $userToFollow = AuthenticatedUser::findOrFail($id);
-        
-        if (Auth::check()) {
-            $authenticatedUser = Auth::user(); 
-    
-            if ($authenticatedUser->follows()->where('followed_id', $userToFollow->id)->exists()) {
-                $authenticatedUser->follows()->detach($userToFollow->id);
-    
-                return redirect()->back()->with('success', 'You have unfollowed ' . $userToFollow->name);
-            } else {
-                $authenticatedUser->follows()->attach($userToFollow->id);
-    
-                return redirect()->back()->with('success', 'You are now following ' . $userToFollow->name);
-            }
-        }
-    
-        return redirect()->back()->with('error', 'Something went wrong.');
-    }
-    
-
-    public function  makeAdmin($id)
-    {
-        
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
         $user = AuthenticatedUser::findOrFail($id);
-        $user->is_admin = true;
-        $user->save();
+        $followers = $user->followers;
 
-        return response()->json(['message' => 'User gained admin privileges successfully']);
+        return view('pages.followers', compact('user', 'followers'));
     }
-    public function  removeAdmin($id)
-    {
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
 
+    public function getFollows($id)
+    {
         $user = AuthenticatedUser::findOrFail($id);
-        $user->is_admin = false;
-        $user->save();
+        $following = $user->follows;
 
-        return response()->json(['message' => 'User lost admin privileges successfully']);
-    }
-    
-
-    public function suspend($id, Request $request)
-    {
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $request->validate([
-            'reason' => 'required|string',
-            'duration' => 'required|integer|min:1',
-        ]);
-
-        $user = AuthenticatedUser::findOrFail($id);
-
-        $user->is_suspended = true;
-        $user->save();
-
-        $suspension = new Suspension([
-            'reason' => $request->input('reason'),
-            'start' => now(),
-            'duration' => $request->input('duration'),  
-            'authenticated_user_id' => $user->id, 
-        ]);
-
-        $suspension->save();
-
-        return response()->json(['message' => 'User suspended successfully.']);
-    }
-
-    public function unsuspend($id)
-    {
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $user = AuthenticatedUser::findOrFail($id);
-        
-        $user->is_suspended = false;
-        $user->save();
-
-        $user->suspensions()->delete();
-
-        return response()->json(['message' => 'User unsuspended successfully.']);
-    }
-
-
-
-    public function favorites() {
-
-        if (!Auth::check()) {
-            return response()->json(['message' => 'You are not logged in'], 403);
-        }
-    
-        $favorites = Auth::user()->favouritePosts;
-        return view('partials.favorites',compact('favorites'));
-    }
-
-    public function addfavorite(Request $request, $id)
-    {
-        if (!Auth::check()) {
-            return response()->json(['message' => 'You are not logged in'], 403);
-        }
-
-        $post = Post::find($id);
-
-        if (!$post) {
-            return response()->json(['message' => 'Post not found'], 404);
-        }
-
-        $user = Auth::user();
-
-        if ($user->favouritePosts()->where('post_id', $id)->exists()) {
-            return response()->json(['message' => 'Post is already in your favorites'], 400);
-        }
-
-        $user->favouritePosts()->attach($id);
-
-        return response()->json(['message' => 'Post added to favorites successfully'], 201);
-    }
-
-
-    public function remfavorite(Request $request, $id)
-    {
-        if (!Auth::check()) {
-            return response()->json(['message' => 'You are not logged in'], 403);
-        }
-
-        $post = Post::find($id);
-
-        if (!$post) {
-            return response()->json(['message' => 'Post not found'], 404);
-        }
-
-        $user = Auth::user();
-
-        if (!$user->favouritePosts()->where('post_id', $id)->exists()) {
-            return response()->json(['message' => 'Post is not in your favorites'], 400);
-        }
-
-        $user->favouritePosts()->detach($id);
-
-        return response()->json(['message' => 'Post removed from favorites successfully'], 200);
-    }
-    //Deleted User ---> id = 1
-
-    public function deletemyaccount() {
-        $user = Auth::user();
-        $deletedUserId = 1;     
-        
-        //Update votes --> deleted user
-        if ($user->votes()->exists()) {
-            $user->votes()->update(['authenticated_user_id' => $deletedUserId]);
-        }
-        //Update comments --> deleted user
-        if ($user->comments()->exists()) {
-            $user->comments()->update(['authenticated_user_id' => $deletedUserId]);
-        }
-        //update post ---> solo writer --> deleted user// co-author ---> just remove
-        foreach ($user->authoredPosts as $post) {
-            $authorCount = $post->authors()->count();
-            if ($authorCount === 1) {
-                $post->update(['authenticated_user_id' => $deletedUserId]);
-                $post->authors()->syncWithoutDetaching([$deletedUserId]); 
-                $post->authors()->detach($user->id); 
-            } 
-
-            else {
-                $post->authors()->detach($user); 
-                //$post->authors()->attach($deletedUser); // Add the deleted user as an author
-            }
-        }
-
-        //delete user notifications....
-        if ($user->notifications()->exists()) {
-            $user->notifications()->update(['authenticated_user_id' => $deletedUserId]);
-        }
-    
-        //erase reports with user.....
-        if ($user->reports()->exists()) {
-            $user->reports()->delete(); 
-        }
-        //erase suspensions with user...
-        if ($user->suspensions()->exists()) {
-            $user->suspensions()->delete(); 
-        }
-
-
-        FollowNotification::where('follower_id', $user->id)
-        ->update(['follower_id' => $deletedUserId]);
-
-        
-        $user->moderatedCommunities()->detach();
-        $user->favouritePosts()->detach();
-        $user->communities()->detach();
-        $user->follows()->detach();
-        $user->followers()->detach();
-        $user->delete();
-        Auth::logout();
-    
-        return redirect('/global')->with('message', 'Your account has been successfully deleted.');
-    }
-    
-    
-    
-    public function deleteUserAccount(Request $request, $id) {
-        $admin = Auth::user();
-        
-        // Check if the authenticated user is an admin
-        if (!$admin->is_admin) {
-            return redirect()->back()->with('error', 'You are not authorized to perform this action.');
-        }
-    
-        $user = AuthenticatedUser::find($id);
-        $deletedUserId = 1;
-        $deletedUser = AuthenticatedUser::find($deletedUserId);
-
-        //Update votes --> deleted user
-        if ($user->votes()->exists()) {
-            $user->votes()->update(['authenticated_user_id' => $deletedUserId]);
-        }
-
-        //Update comments --> deleted user
-        if ($user->comments()->exists()) {
-            $user->comments()->update(['authenticated_user_id' => $deletedUserId]);
-        }
-
-        //update post ---> solo writer --> deleted user// co-author ---> just remove
-        foreach ($user->authoredPosts as $post) {
-            $authorCount = $post->authors()->count();
-            if ($authorCount === 1) {
-                $post->update(['authenticated_user_id' => $deletedUserId]);
-                $post->authors()->syncWithoutDetaching([$deletedUserId]); 
-                $post->authors()->detach($user->id); 
-            } 
-
-            else {
-                $post->authors()->detach($user); 
-                //$post->authors()->attach($deletedUser); // Add the deleted user as an author
-            }
-        }
-     
-
-        //delete user notifications....
-        if ($user->notifications()->exists()) {
-            $user->notifications()->update(['authenticated_user_id' => $deletedUserId]);
-        }
-    
-        //erase reports with user.....
-        if ($user->reports()->exists()) {
-            $user->reports()->delete(); 
-        }
-        //erase suspensions with user...
-        if ($user->suspensions()->exists()) {
-            $user->suspensions()->delete(); 
-        }
-
-        FollowNotification::where('follower_id', $user->id)
-        ->update(['follower_id' => $deletedUserId]);
-
-        
-        $user->moderatedCommunities()->detach();
-        $user->favouritePosts()->detach();
-        $user->communities()->detach();
-        $user->follows()->detach();
-        $user->followers()->detach();
-        $user->delete();
-    
-        return redirect()->route('admin.users')->with('message', 'User account has been successfully deleted.');
-        
+        return view('pages.following', compact('user', 'following'));
     }
     
     public function getReputation($user)
     {
 
         $postVotes = $user->authoredPosts()
-            ->with('votes') // Load votes relation
+            ->with('votes')
             ->get()
             ->flatMap(function ($post) {
                 return $post->votes;
@@ -536,9 +383,8 @@ class AuthenticatedUserController extends Controller
         $postUpvotes = $postVotes->where('upvote', true)->count();
         $postDownvotes = $postVotes->where('upvote', false)->count();
 
-        // Calculate comment upvotes and downvotes
         $commentVotes = $user->comments()
-            ->with('votes') // Load votes relation
+            ->with('votes')
             ->get()
             ->flatMap(function ($comment) {
                 return $comment->votes;
@@ -547,13 +393,11 @@ class AuthenticatedUserController extends Controller
         $commentUpvotes = $commentVotes->where('vote.upvote', true)->count();
         $commentDownvotes = $commentVotes->where('vote.upvote', false)->count();
 
-        // Calculate the net score
         $postNetScore = $postUpvotes - $postDownvotes;
         $commentNetScore = $commentUpvotes - $commentDownvotes;
 
         $reputation = $postNetScore + $commentNetScore;
 
-        // Return the result
         return $reputation;
     }
     
