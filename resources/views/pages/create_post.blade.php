@@ -21,7 +21,7 @@
                            class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
                                   transition-all duration-300 peer-placeholder-shown:text-3xl 
                                   peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
-                        Title <span class="text-red-500">*</span>
+                        Title
                     </label>
                     <input type="text" 
                            id="title" 
@@ -171,7 +171,7 @@
 
                 <div class="space-y-4">
                     <div class="flex items-center mb-2">
-                        <label class="block text-2xl font-medium">Content</label>
+                        <label class="block text-2xl font-medium">Content<span class="text-red-500">*</span></label>
                         <div class="px-2 relative inline-block">
                             <svg class="help-trigger w-5 h-5 text-gray-500 hover:text-gray-700 cursor-help transition-colors duration-200" 
                                 xmlns="http://www.w3.org/2000/svg" 

@@ -120,7 +120,7 @@
     </details>
   </div>
 </div>
-<script></script>
+
 
 
 
