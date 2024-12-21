@@ -9,6 +9,7 @@ const adminFilter = document.getElementById('admin-filter')
 const privacyFilter = document.getElementById('privacy-filter')
 const reportsStatusFilter = document.getElementById('reports-status-filter')
 const reportsTypeFilter = document.getElementById('reports-type-filter')
+const moderatorFilter = document.getElementById('moderator-filter')
 
 
 const directions = headers ? Array.from(headers).map(function (header) {
@@ -128,6 +129,12 @@ function addEventListeners() {
 
   if (reportsTypeFilter) {
     reportsTypeFilter.addEventListener('change', () => {
+      filterTable(searchInput.value)
+    })
+  }
+
+  if (moderatorFilter) {
+    moderatorFilter.addEventListener('change', () => {
       filterTable(searchInput.value)
     })
   }
@@ -591,7 +598,14 @@ function filterTable(query) {
       rowVisible = false
     }
 
-    
+    if (moderatorFilter && moderatorFilter.value != '') {
+      const modCheck = row.querySelector("td[data-moderator] > input")
+      if (moderatorFilter.value == 'moderator' && !modCheck.checked) {
+        rowVisible = false
+      } else if (moderatorFilter.value == 'normal' && modCheck.checked) {
+        rowVisible = false
+      }
+    }
 
     // if (!categoryFilter.value == 'Status' && !row.textContent.toLowerCase().includes(categoryFilter.value.toLowerCase())) {
     //   rowVisible = false
