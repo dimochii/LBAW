@@ -1,8 +1,16 @@
-const searchInput = document.getElementById('search-input');
-const table = document.querySelector('table');
-const tableBody = table ? table.querySelector('tbody') : null;
-const rows = tableBody ? tableBody.querySelectorAll('tr') : null;
+const searchInput = document.getElementById('search-input')
+const table = document.querySelector('table')
+const tableBody = table ? table.querySelector('tbody') : null
+const rows = tableBody ? tableBody.querySelectorAll('tr') : null
 const headers = table ? table.querySelectorAll('th') : null
+const statusFilter = document.getElementById('status-filter')
+const suspensionFilter = document.getElementById('suspension-filter')
+const adminFilter = document.getElementById('admin-filter')
+const privacyFilter = document.getElementById('privacy-filter')
+const reportsStatusFilter = document.getElementById('reports-status-filter')
+const reportsTypeFilter = document.getElementById('reports-type-filter')
+const moderatorFilter = document.getElementById('moderator-filter')
+
 
 const directions = headers ? Array.from(headers).map(function (header) {
   return '';
@@ -89,7 +97,49 @@ function addEventListeners() {
     })
   }
 
-  const privacies = document.querySelectorAll('[data-route]'); 
+  if (statusFilter) {
+    statusFilter.addEventListener('change', () => {
+      filterTable(searchInput.value)
+    })
+  }
+
+  if (adminFilter) {
+    adminFilter.addEventListener('change', () => {
+      filterTable(searchInput.value)
+    })
+  }
+
+  if (suspensionFilter) {
+    suspensionFilter.addEventListener('change', () => {
+      filterTable(searchInput.value)
+    })
+  }
+
+  if (privacyFilter) {
+    privacyFilter.addEventListener('change', () => {
+      filterTable(searchInput.value)
+    })
+  }
+
+  if (reportsStatusFilter) {
+    reportsStatusFilter.addEventListener('change', () => {
+      filterTable(searchInput.value)
+    })
+  }
+
+  if (reportsTypeFilter) {
+    reportsTypeFilter.addEventListener('change', () => {
+      filterTable(searchInput.value)
+    })
+  }
+
+  if (moderatorFilter) {
+    moderatorFilter.addEventListener('change', () => {
+      filterTable(searchInput.value)
+    })
+  }
+
+  const privacies = document.querySelectorAll('[data-route]');
   if (privacies) {
     privacies.forEach(function (element) {
       element.addEventListener('click', function () {
@@ -497,6 +547,8 @@ function sortColumn(index) {
   updateHeaderText(index, directions[index]);
 }
 
+
+
 function filterTable(query) {
   const queryLower = query.toLowerCase();
 
@@ -512,6 +564,52 @@ function filterTable(query) {
         }
       }
     });
+
+    if (statusFilter && statusFilter.value != '' && !row.textContent.includes(statusFilter.value)) {
+      rowVisible = false
+    }
+
+    if (suspensionFilter && suspensionFilter.value != '') {
+      if (row.querySelector('.suspend-btn').classList.contains('hidden') && suspensionFilter.value == 'Suspend') {
+        rowVisible = false
+      } else if (row.querySelector('.unsuspend-btn').classList.contains('hidden') && suspensionFilter.value == 'Unsuspend') {
+        rowVisible = false
+      }
+    }
+
+    if (adminFilter && adminFilter.value != '') {
+      const adminCheck = row.querySelector("td[data-admin] > input")
+      if (adminFilter.value == 'admin' && !adminCheck.checked) {
+        rowVisible = false
+      } else if (adminFilter.value == 'normal' && adminCheck.checked) {
+        rowVisible = false
+      }
+    }
+
+    if (privacyFilter && privacyFilter.value != '' && !row.textContent.includes(privacyFilter.value)) {
+      rowVisible = false
+    }
+
+    if (reportsStatusFilter && reportsStatusFilter.value != '' && !row.textContent.includes(reportsStatusFilter.value)) {
+      rowVisible = false
+    }
+
+    if (reportsTypeFilter && reportsTypeFilter.value != '' && !row.textContent.includes(reportsTypeFilter.value)) {
+      rowVisible = false
+    }
+
+    if (moderatorFilter && moderatorFilter.value != '') {
+      const modCheck = row.querySelector("td[data-moderator] > input")
+      if (moderatorFilter.value == 'moderator' && !modCheck.checked) {
+        rowVisible = false
+      } else if (moderatorFilter.value == 'normal' && modCheck.checked) {
+        rowVisible = false
+      }
+    }
+
+    // if (!categoryFilter.value == 'Status' && !row.textContent.toLowerCase().includes(categoryFilter.value.toLowerCase())) {
+    //   rowVisible = false
+    // }
 
     row.style.display = rowVisible ? '' : 'none';
   });
@@ -962,91 +1060,91 @@ shortNewsUrl()
 
 // DELETE COMMUNITY
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const deleteButtons = document.querySelectorAll('.delete-button-hub');
-  
-  deleteButtons.forEach(button => {
-      button.closest('form').addEventListener('submit', async function(e) {
-          e.preventDefault();
-          
-          if (confirm('Are you sure you want to delete this community?')) {
-              try {
-                  const response = await fetch(this.action, {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                      },
-                      body: JSON.stringify({
-                          _method: 'DELETE'
-                      })
-                  });
-                  
-                  const result = await response.json();
-                  
-                  const notification = document.createElement('div');
-                  notification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
-                  
-                  if (response.ok) {
-                      notification.style.backgroundColor = '#c5e6a6';  
-                      notification.style.border = '2px solid #34a853';
-                  } else {
-                      notification.style.backgroundColor = '#ed6a5a';  
-                      notification.style.border = '2px solid #a30000';
-                  }
-                  
-                  const icon = document.createElement('span');
-                  icon.className = 'inline-block mr-2';
-                  icon.innerHTML = response.ok 
-                      ? '✓'  
-                      : '✕'; 
-                  icon.style.color = response.ok ? '#34a853' : '#a30000';
-                  
-                  const messageText = document.createElement('span');
-                  messageText.textContent = response.ok 
-                      ? 'Community successfully deleted!'
-                      : 'Failed to delete community. It may contain posts or you may not have permission.';
-                  messageText.style.color = '#333333';
-                  
-                  notification.appendChild(icon);
-                  notification.appendChild(messageText);
-                  
-                  document.body.appendChild(notification);
-                  
-                  setTimeout(() => {
-                      notification.remove();
-                      if (response.ok) {
-                          window.location.href = '/admin/hubs';
-                      }
-                  }, 3000);
-                  
-              } catch (error) {
-                  console.error('Error:', error);
 
-                  const errorNotification = document.createElement('div');
-                  errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
-                  errorNotification.style.backgroundColor = '#ffebee';
-                  errorNotification.style.border = '1px solid #a30000';
-                  
-                  const errorIcon = document.createElement('span');
-                  errorIcon.className = 'inline-block mr-2';
-                  errorIcon.innerHTML = '✕';
-                  errorIcon.style.color = '#a30000';
-                  
-                  const errorText = document.createElement('span');
-                  errorText.textContent = 'An error occurred while processing your request.';
-                  errorText.style.color = '#333333';
-                  
-                  errorNotification.appendChild(errorIcon);
-                  errorNotification.appendChild(errorText);
-                  document.body.appendChild(errorNotification);
-                  
-                  setTimeout(() => {
-                      errorNotification.remove();
-                  }, 3000);
-              }
+  deleteButtons.forEach(button => {
+    button.closest('form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      if (confirm('Are you sure you want to delete this community?')) {
+        try {
+          const response = await fetch(this.action, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: JSON.stringify({
+              _method: 'DELETE'
+            })
+          });
+
+          const result = await response.json();
+
+          const notification = document.createElement('div');
+          notification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+
+          if (response.ok) {
+            notification.style.backgroundColor = '#c5e6a6';
+            notification.style.border = '2px solid #34a853';
+          } else {
+            notification.style.backgroundColor = '#ed6a5a';
+            notification.style.border = '2px solid #a30000';
           }
-      });
+
+          const icon = document.createElement('span');
+          icon.className = 'inline-block mr-2';
+          icon.innerHTML = response.ok
+            ? '✓'
+            : '✕';
+          icon.style.color = response.ok ? '#34a853' : '#a30000';
+
+          const messageText = document.createElement('span');
+          messageText.textContent = response.ok
+            ? 'Community successfully deleted!'
+            : 'Failed to delete community. It may contain posts or you may not have permission.';
+          messageText.style.color = '#333333';
+
+          notification.appendChild(icon);
+          notification.appendChild(messageText);
+
+          document.body.appendChild(notification);
+
+          setTimeout(() => {
+            notification.remove();
+            if (response.ok) {
+              window.location.href = '/admin/hubs';
+            }
+          }, 3000);
+
+        } catch (error) {
+          console.error('Error:', error);
+
+          const errorNotification = document.createElement('div');
+          errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+          errorNotification.style.backgroundColor = '#ffebee';
+          errorNotification.style.border = '1px solid #a30000';
+
+          const errorIcon = document.createElement('span');
+          errorIcon.className = 'inline-block mr-2';
+          errorIcon.innerHTML = '✕';
+          errorIcon.style.color = '#a30000';
+
+          const errorText = document.createElement('span');
+          errorText.textContent = 'An error occurred while processing your request.';
+          errorText.style.color = '#333333';
+
+          errorNotification.appendChild(errorIcon);
+          errorNotification.appendChild(errorText);
+          document.body.appendChild(errorNotification);
+
+          setTimeout(() => {
+            errorNotification.remove();
+          }, 3000);
+        }
+      }
+    });
   });
 });
 
@@ -1054,30 +1152,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function handleFollowRequest(url, notificationId, action) {
   if (!confirm(`Are you sure you want to ${action} this follow request?`)) {
-      return;
+    return;
   }
 
   fetch(url, {
-      method: 'POST',
-      headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-          'Accept': 'application/json',
-      },
+    method: 'POST',
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      'Accept': 'application/json',
+    },
   })
-  .then(response => {
+    .then(response => {
       if (response.ok) {
-          document.querySelector(`[data-notification-id="${notificationId}"]`).remove();
-          alert(`Follow request ${action}ed successfully.`);
+        document.querySelector(`[data-notification-id="${notificationId}"]`).remove();
+        alert(`Follow request ${action}ed successfully.`);
       } else {
-          return response.json().then(error => {
-              throw new Error(error.message || 'Failed to process the request.');
-          });
+        return response.json().then(error => {
+          throw new Error(error.message || 'Failed to process the request.');
+        });
       }
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       alert(`Error: ${error.message}`);
-  });
-  }
+    });
+}
 
 // DELETE COMMENT
 
@@ -1085,63 +1183,63 @@ document.addEventListener('DOMContentLoaded', function () {
   const deleteCommentButtons = document.querySelectorAll('.delete-comment-button');
 
   deleteCommentButtons.forEach(button => {
-      button.closest('form').addEventListener('submit', async function (e) {
-          e.preventDefault();
+    button.closest('form').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-          if (confirm('Are you sure you want to delete this comment?')) {
-              try {
-                  const response = await fetch(this.action, {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                      },
-                      body: JSON.stringify({
-                          _method: 'PUT'
-                      })
-                  });
+      if (confirm('Are you sure you want to delete this comment?')) {
+        try {
+          const response = await fetch(this.action, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: JSON.stringify({
+              _method: 'PUT'
+            })
+          });
 
-                  const result = await response.json();
+          const result = await response.json();
 
-                  const notification = document.createElement('div');
-                  notification.className = 'fixed left-1/2 top-16 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+          const notification = document.createElement('div');
+          notification.className = 'fixed left-1/2 top-16 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
 
-                  if (result.success) {
-                      notification.style.backgroundColor = '#c5e6a6';
-                      notification.style.border = '2px solid #34a853';
-                      notification.innerHTML = `<span class="inline-block mr-2" style="color: #34a853;">✓</span> ${result.message}`;
-                  } else {
-                      notification.style.backgroundColor = '#ed6a5a';
-                      notification.style.border = '2px solid #a30000';
-                      notification.innerHTML = `<span class="inline-block mr-2" style="color: #a30000;">✕</span> ${result.message}`;
-                  }
-
-                  document.body.appendChild(notification);
-
-                  setTimeout(() => {
-                      notification.remove();
-                      if (result.success) {
-                          button.closest('.comment-container').remove();
-                      }
-                  }, 3000);
-
-              } catch (error) {
-                  console.error('Error:', error);
-
-                  const errorNotification = document.createElement('div');
-                  errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
-                  errorNotification.style.backgroundColor = '#ffebee';
-                  errorNotification.style.border = '1px solid #a30000';
-                  errorNotification.innerHTML = `<span class="inline-block mr-2" style="color: #a30000;">✕</span> An error occurred while processing your request.`;
-
-                  document.body.appendChild(errorNotification);
-
-                  setTimeout(() => {
-                      errorNotification.remove();
-                  }, 3000);
-              }
+          if (result.success) {
+            notification.style.backgroundColor = '#c5e6a6';
+            notification.style.border = '2px solid #34a853';
+            notification.innerHTML = `<span class="inline-block mr-2" style="color: #34a853;">✓</span> ${result.message}`;
+          } else {
+            notification.style.backgroundColor = '#ed6a5a';
+            notification.style.border = '2px solid #a30000';
+            notification.innerHTML = `<span class="inline-block mr-2" style="color: #a30000;">✕</span> ${result.message}`;
           }
-      });
+
+          document.body.appendChild(notification);
+
+          setTimeout(() => {
+            notification.remove();
+            if (result.success) {
+              button.closest('.comment-container').remove();
+            }
+          }, 3000);
+
+        } catch (error) {
+          console.error('Error:', error);
+
+          const errorNotification = document.createElement('div');
+          errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+          errorNotification.style.backgroundColor = '#ffebee';
+          errorNotification.style.border = '1px solid #a30000';
+          errorNotification.innerHTML = `<span class="inline-block mr-2" style="color: #a30000;">✕</span> An error occurred while processing your request.`;
+
+          document.body.appendChild(errorNotification);
+
+          setTimeout(() => {
+            errorNotification.remove();
+          }, 3000);
+        }
+      }
+    });
   });
 });
 
