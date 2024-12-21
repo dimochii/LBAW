@@ -4,7 +4,8 @@
 <span class="hidden" id="postId">{{$newsItem->post->id}}</span>
 <div class="font-grotesk divide-y-2 divide-[black]">
   @if($newsItem->post->community->privacy &&
-  !($newsItem->post->community->followers->pluck('id')->contains(Auth::user()->id)))
+  !($newsItem->post->community->followers->pluck('id')->contains(Auth::user()->id)) &&
+  !(Auth::user()->is_admin))
   <div class="text-center py-12 bg-white rounded-xl shadow-sm">
     <a class="flex items-center"
       href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">

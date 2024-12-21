@@ -152,6 +152,10 @@
            class="py-4 relative group {{ $activeTab === 'hubs' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
           hubs
         </a>
+        <a href="{{ url('/users/' . $user->id . '/profile?tab=pending') }}"
+          class="py-4 relative group {{ $activeTab === 'pending' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
+         pending
+       </a>
       </nav>
     </div>
   </div>             
@@ -172,7 +176,21 @@
     @elseif ($activeTab === 'topics')
       @if ($authored_topics->count() > 0)
         @foreach ($authored_topics as $item)
-        @if (Auth::user()->id === $user->id || $item->topic->status->value === 'accepted')
+        @if ($item->topic->status->value === 'accepted')
+          @include('partials.post', [
+            'news' => false,
+            'item' =>$item, 
+            'post' => $item->topic,
+          ])
+          @endif
+        @endforeach
+      @else
+        <p class="text-gray-500">This user has not participated in any topics yet.</p>
+      @endif
+      @elseif ($activeTab === 'pending')
+      @if ($authored_topics->count() > 0)
+        @foreach ($authored_topics as $item)
+        @if ($item->topic->status->value === 'pending')
           @include('partials.post', [
             'news' => false,
             'item' =>$item, 

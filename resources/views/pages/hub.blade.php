@@ -176,7 +176,7 @@
 
 
   <!-- Posts Section -->
-   @if($community->privacy && !($community->followers->pluck('id')->contains(Auth::user()->id)))
+   @if($community->privacy && !($community->followers->pluck('id')->contains(Auth::user()->id)) && !(Auth::user()->is_admin))
   <div class="text-center py-12 bg-white rounded-xl shadow-sm">
     <p class="text-gray-500">This hub is private.</p>
   </div>
