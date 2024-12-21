@@ -2,6 +2,10 @@
 
 @section('content')
 
+@php
+$activeTab = request()->query('tab', 'news');
+@endphp
+
 {{-- <div class="flex-1 bg-pastelRed h-12 flex items-center pl-2 md:pl-4 relative">
   <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -10,7 +14,6 @@
   <input id="search-input" type="text" placeholder="search"
     class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
 </div> --}}
-
 
 <div class="flex flex-col md:flex-row md:divide-x-2 md:divide-y-0 divide-y-2 divide-black">
   <div class="flex flex-col w-[50%]  divide-y-2 divide-black ">
@@ -44,17 +47,40 @@
     </div>
 
 
-    <div class="min-h-12 flex items-center pl-2 md:pl-4 relative border-b-2 border-black bg-pastelBlue">
+    <div class="min-h-12 flex items-center pl-2 md:pl-4 relative border-b-2 border-black bg-pastelBlue peer">
       <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
       <input id="search-input" type="text" placeholder="search"
         class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
+      @if ($activeTab == 'topics')
+      <input type="checkbox" name="filters" id="filters" class="hidden">
+      <label for="filters" class="cursor-pointer">
+        <svg class="w-5 h-5 mr-4 fill-[#F4F2ED]/80" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path d="M0 3H16V1H0V3Z"></path>
+            <path d="M2 7H14V5H2V7Z"></path>
+            <path d="M4 11H12V9H4V11Z"></path>
+            <path d="M10 15H6V13H10V15Z"></path>
+          </g>
+        </svg>
+      </label>
+      @endif
     </div>
 
-
-
+    @if ($activeTab == 'topics')
+    <div id="filters-section" class=" peer-has-[:checked]:block hidden text-base font-normal px-2">
+      <select id="status-filter" class="bg-transparent px-2 py-2 focus:outline-none">
+        <option value="" class="">Status</option>
+        <option value="Approved">Approved</option>
+        <option value="Waiting Approval">Waiting Approval</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+    </div>
+    @endif
   </div>
 
   <div class="w-[50%]">
@@ -67,9 +93,7 @@
 
 <div class="border-b-2 border-black w-full font-light text-xl tracking-tighter">
   <div class="w-full">
-    @php
-    $activeTab = request()->query('tab', 'news');
-    @endphp
+
     <nav class="max-w-7xl mx-auto px-6 flex flex-wrap gap-8 md:gap-8">
       <a href="{{ url('/admin/posts?tab=news') }}"
         class="py-4 {{ $activeTab === 'news' ? 'text-gray-900 border-b-2 border-black' : 'text-gray-500 hover:text-gray-700' }}">
@@ -163,8 +187,10 @@
           upvotes/downvotes</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           threads</th>
-        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
-          status</th>
+        <th
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500   hover:bg-gray-200 relative uppercase tracking-wider">
+          status
+        </th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           delete</th>
       </tr>

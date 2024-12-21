@@ -20,140 +20,138 @@ use Illuminate\Support\Facades\DB;
 class AdminController extends Controller
 {
   public function  makeAdmin($id)
-    {
-        
-        if (!$this->authorize('isAdmin', Auth::user())) {
-            return response()->view('errors.403', [], 403); 
-        }
-
-        $user = AuthenticatedUser::findOrFail($id);
-        $user->is_admin = true;
-        $user->save();
-
-        return response()->json(['message' => 'User gained admin privileges successfully']);
-    }
-    public function  removeAdmin($id)
-    {
-        if (!$this->authorize('isAdmin', Auth::user())) {
-            return response()->view('errors.403', [], 403); 
-        }
-
-        $user = AuthenticatedUser::findOrFail($id);
-        $user->is_admin = false;
-        $user->save();
-
-        return response()->json(['message' => 'User lost admin privileges successfully']);
-    }
-    
-    public function suspend($id, Request $request)
   {
-      if (!$this->authorize('isAdmin', Auth::user())) {
-          return response()->json(['error' => 'Unauthorized'], 403);
-      }
 
-      $request->validate([
-          'reason' => 'required|string',
-          'duration' => 'required|integer|min:1',
+    if (!$this->authorize('isAdmin', Auth::user())) {
+      return response()->view('errors.403', [], 403);
+    }
+
+    $user = AuthenticatedUser::findOrFail($id);
+    $user->is_admin = true;
+    $user->save();
+
+    return response()->json(['message' => 'User gained admin privileges successfully']);
+  }
+  public function  removeAdmin($id)
+  {
+    if (!$this->authorize('isAdmin', Auth::user())) {
+      return response()->view('errors.403', [], 403);
+    }
+
+    $user = AuthenticatedUser::findOrFail($id);
+    $user->is_admin = false;
+    $user->save();
+
+    return response()->json(['message' => 'User lost admin privileges successfully']);
+  }
+
+  public function suspend($id, Request $request)
+  {
+    if (!$this->authorize('isAdmin', Auth::user())) {
+      return response()->json(['error' => 'Unauthorized'], 403);
+    }
+
+    $request->validate([
+      'reason' => 'required|string',
+      'duration' => 'required|integer|min:1',
+    ]);
+
+    try {
+      $user = AuthenticatedUser::findOrFail($id);
+
+      $user->is_suspended = true;
+      $user->save();
+      $suspension = new Suspension([
+        'reason' => $request->input('reason'),
+        'start' => now(),
+        'duration' => $request->input('duration'),
+        'authenticated_user_id' => $user->id,
       ]);
 
-      try {
-          $user = AuthenticatedUser::findOrFail($id);
+      $suspension->save();
 
-          $user->is_suspended = true;
-          $user->save();
-          $suspension = new Suspension([
-              'reason' => $request->input('reason'),
-              'start' => now(),
-              'duration' => $request->input('duration'),
-              'authenticated_user_id' => $user->id,
-          ]);
-
-          $suspension->save();
-
-          return response()->json(['message' => 'User suspended successfully.'], 200);
-      } catch (\Exception $e) {
-          return response()->json(['error' => 'Failed to suspend user: ' . $e->getMessage()], 500);
-      }
+      return response()->json(['message' => 'User suspended successfully.'], 200);
+    } catch (\Exception $e) {
+      return response()->json(['error' => 'Failed to suspend user: ' . $e->getMessage()], 500);
+    }
   }
 
 
-    public function unsuspend($id)
-    {
-      if (!$this->authorize('isAdmin', Auth::user())) {
-        return response()->view('errors.403', [], 403); 
-      }
-
-        $user = AuthenticatedUser::findOrFail($id);
-        
-        $user->is_suspended = false;
-        $user->save();
-
-        $user->suspensions()->delete();
-
-        return response()->json(['message' => 'User unsuspended successfully.']);
+  public function unsuspend($id)
+  {
+    if (!$this->authorize('isAdmin', Auth::user())) {
+      return response()->view('errors.403', [], 403);
     }
 
-    public function deleteUserAccount(Request $request, $id) {
-      $admin = Auth::user();
-      
-      if (!$this->authorize('isAdmin', Auth::user())) {
-        return response()->view('errors.403', [], 403); 
+    $user = AuthenticatedUser::findOrFail($id);
+
+    $user->is_suspended = false;
+    $user->save();
+
+    $user->suspensions()->delete();
+
+    return response()->json(['message' => 'User unsuspended successfully.']);
+  }
+
+  public function deleteUserAccount(Request $request, $id)
+  {
+    $admin = Auth::user();
+
+    if (!$this->authorize('isAdmin', Auth::user())) {
+      return response()->view('errors.403', [], 403);
     }
-  
-      $user = AuthenticatedUser::find($id);
-      $deletedUserId = 1;
-      $deletedUser = AuthenticatedUser::find($deletedUserId);
 
-      //Update votes --> deleted user
-      if ($user->votes()->exists()) {
-          $user->votes()->update(['authenticated_user_id' => $deletedUserId]);
-      }
+    $user = AuthenticatedUser::find($id);
+    $deletedUserId = 1;
+    $deletedUser = AuthenticatedUser::find($deletedUserId);
 
-      //Update comments --> deleted user
-      if ($user->comments()->exists()) {
-          $user->comments()->update(['authenticated_user_id' => $deletedUserId]);
-      }
+    //Update votes --> deleted user
+    if ($user->votes()->exists()) {
+      $user->votes()->update(['authenticated_user_id' => $deletedUserId]);
+    }
 
-      //update post ---> solo writer --> deleted user// co-author ---> just remove
-      foreach ($user->authoredPosts as $post) {
-          $authorCount = $post->authors()->count();
-          if ($authorCount === 1) {
-              $post->update(['authenticated_user_id' => $deletedUserId]);
-              $post->authors()->syncWithoutDetaching([$deletedUserId]); 
-              $post->authors()->detach($user->id); 
-          } 
+    //Update comments --> deleted user
+    if ($user->comments()->exists()) {
+      $user->comments()->update(['authenticated_user_id' => $deletedUserId]);
+    }
 
-          else {
-              $post->authors()->detach($user); 
-              //$post->authors()->attach($deletedUser); // Add the deleted user as an author
-          }
+    //update post ---> solo writer --> deleted user// co-author ---> just remove
+    foreach ($user->authoredPosts as $post) {
+      $authorCount = $post->authors()->count();
+      if ($authorCount === 1) {
+        $post->update(['authenticated_user_id' => $deletedUserId]);
+        $post->authors()->syncWithoutDetaching([$deletedUserId]);
+        $post->authors()->detach($user->id);
+      } else {
+        $post->authors()->detach($user);
+        //$post->authors()->attach($deletedUser); // Add the deleted user as an author
       }
-   
+    }
 
-      if ($user->notifications()->exists()) {
-          $user->notifications()->update(['authenticated_user_id' => $deletedUserId]);
-      }
-  
-      if ($user->reports()->exists()) {
-          $user->reports()->delete(); 
-      }
-      if ($user->suspensions()->exists()) {
-          $user->suspensions()->delete(); 
-      }
 
-      FollowNotification::where('follower_id', $user->id)
+    if ($user->notifications()->exists()) {
+      $user->notifications()->update(['authenticated_user_id' => $deletedUserId]);
+    }
+
+    if ($user->reports()->exists()) {
+      $user->reports()->delete();
+    }
+    if ($user->suspensions()->exists()) {
+      $user->suspensions()->delete();
+    }
+
+    FollowNotification::where('follower_id', $user->id)
       ->update(['follower_id' => $deletedUserId]);
 
-      
-      $user->moderatedCommunities()->detach();
-      $user->favouritePosts()->detach();
-      $user->communities()->detach();
-      $user->follows()->detach();
-      $user->followers()->detach();
-      $user->delete();
-  
-      return redirect()->route('admin.users')->with('message', 'User account has been successfully deleted.');
-      
+
+    $user->moderatedCommunities()->detach();
+    $user->favouritePosts()->detach();
+    $user->communities()->detach();
+    $user->follows()->detach();
+    $user->followers()->detach();
+    $user->delete();
+
+    return redirect()->route('admin.users')->with('message', 'User account has been successfully deleted.');
   }
 
   private function newCommunitiesChart()
@@ -501,7 +499,7 @@ class AdminController extends Controller
 
     $topUsers = AuthenticatedUser::withCount('followers', 'authoredPosts')->orderBy('followers_count', 'desc')->take(5)->get();
     $topHubs = Community::withCount('followers')->orderBy('followers_count', 'desc')->take(5)->get();
-    
+
     $userCount = AuthenticatedUser::all()->count();
     $activeUserCount = DB::table('authenticated_users')
       ->leftJoin('authors', 'authenticated_users.id', '=', 'authors.authenticated_user_id')
@@ -540,11 +538,11 @@ class AdminController extends Controller
     $newPosts = $newNewsCount + $newTopicsCount;
 
     $mostReportedUsers = Report::select('authenticated_user_id', DB::raw('COUNT(*) as report_count'))
-    ->groupBy('authenticated_user_id')
-    ->orderByDesc('report_count')
-    ->take(5)
-    ->with('user')
-    ->get();
+      ->groupBy('authenticated_user_id')
+      ->orderByDesc('report_count')
+      ->take(5)
+      ->with('user')
+      ->get();
 
     return view('pages.admin', compact(
       'pieSuspended',

@@ -1,8 +1,9 @@
-const searchInput = document.getElementById('search-input');
-const table = document.querySelector('table');
-const tableBody = table ? table.querySelector('tbody') : null;
-const rows = tableBody ? tableBody.querySelectorAll('tr') : null;
+const searchInput = document.getElementById('search-input')
+const table = document.querySelector('table')
+const tableBody = table ? table.querySelector('tbody') : null
+const rows = tableBody ? tableBody.querySelectorAll('tr') : null
 const headers = table ? table.querySelectorAll('th') : null
+const statusFilter = document.getElementById('status-filter')
 
 const directions = headers ? Array.from(headers).map(function (header) {
   return '';
@@ -85,6 +86,12 @@ function addEventListeners() {
 
   if (table && searchInput) {
     searchInput.addEventListener('input', function () {
+      filterTable(searchInput.value)
+    })
+  }
+
+  if (statusFilter) {
+    statusFilter.addEventListener('change', () => {
       filterTable(searchInput.value)
     })
   }
@@ -497,6 +504,8 @@ function sortColumn(index) {
   updateHeaderText(index, directions[index]);
 }
 
+
+
 function filterTable(query) {
   const queryLower = query.toLowerCase();
 
@@ -512,6 +521,15 @@ function filterTable(query) {
         }
       }
     });
+
+    console.log(statusFilter.value)
+    if (statusFilter && statusFilter.value != ''  && !row.textContent.includes(statusFilter.value) ) {
+      rowVisible = false
+    }
+
+    // if (!categoryFilter.value == 'Status' && !row.textContent.toLowerCase().includes(categoryFilter.value.toLowerCase())) {
+    //   rowVisible = false
+    // }
 
     row.style.display = rowVisible ? '' : 'none';
   });
