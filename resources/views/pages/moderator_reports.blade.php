@@ -32,15 +32,45 @@
     </div>
 
 
-    <div class="min-h-12 flex items-center pl-2 md:pl-4 relative border-b-2 border-black bg-pastelBlue">
+    <div class="min-h-12 flex items-center pl-2 md:pl-4 relative border-b-2 border-black bg-pastelBlue peer">
       <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
       <input id="search-input" type="text" placeholder="search"
-        class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
+        class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none "><input
+        type="checkbox" name="filters" id="filters" class="hidden">
+      <label for="filters" class="cursor-pointer">
+        <svg class="w-5 h-5 mr-4 fill-[#F4F2ED]/80" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path d="M0 3H16V1H0V3Z"></path>
+            <path d="M2 7H14V5H2V7Z"></path>
+            <path d="M4 11H12V9H4V11Z"></path>
+            <path d="M10 15H6V13H10V15Z"></path>
+          </g>
+        </svg>
+      </label>
     </div>
+    <div id="filters-section" class=" peer-has-[:checked]:flex hidden font-normal items-center">
+      <select id="reports-type-filter"
+        class="bg-transparent px-4 focus:outline-none py-2 border-r-2 border-black appearance-none">
+        <option value="" class="font-light">Type</option>
+        <option value="News" class="font-bold">News</option>
+        <option value="Topic" class="font-bold">Topic</option>
+        <option value="Comment" class="font-bold">Comment</option>
+        <option value="User" class="font-bold">User</option>
+      </select>
 
+      <select id="reports-status-filter"
+        class="bg-transparent px-4 focus:outline-none py-2 border-r-2 border-black appearance-none">
+        <option value="" class="font-light">Status</option>
+        <option value="Open" class="font-bold">Open</option>
+        <option value="Closed" class="font-bold">Closed</option>
+      </select>
+
+    </div>
   </div>
 
   <div class="w-[50%]">
@@ -57,10 +87,12 @@
     <thead class="bg-gray-100">
       <tr>
         <th
-          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer" data-type="number">
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
+          data-type="number">
           ID</th>
         <th
-          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer" data-type="string">
+          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer"
+          data-type="string">
           Reporter</th>
         <th
           class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200 cursor-pointer">
@@ -82,9 +114,9 @@
         <td class="px-4 py-4 whitespace-nowrap">{{ $report->id }}</td>
         <td class="px-4 py-4">
           <a class="flex items-center" href="{{ route('user.profile', $report->authenticated_user_id) }}">
-          <img src="{{ asset( $report->user->image->path ?? 'images/groupdefault.jpg') }}"
-                            onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
-                                class="max-w-full rounded-full size-9 mr-3 object-cover">
+            <img src="{{ asset( $report->user->image->path ?? 'images/groupdefault.jpg') }}"
+              onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
+              class="max-w-full rounded-full size-9 mr-3 object-cover">
             <span class="break-all" data-sort>{{ '@' . $report->user->username }}</span>
           </a>
         </td>
@@ -131,7 +163,7 @@
       @endforeach
     </tbody>
   </table>
-  
+
 </div>
 
 

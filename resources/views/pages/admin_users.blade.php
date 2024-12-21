@@ -41,15 +41,41 @@
     </div>
 
 
-    <div class="min-h-12 flex items-center pl-2 md:pl-4 relative border-b-2 border-black bg-pastelBlue">
+    <div class="min-h-12 flex items-center pl-2 md:pl-4 relative border-b-2 border-black bg-pastelBlue peer">
       <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
       <input id="search-input" type="text" placeholder="search"
         class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
-    </div>
+      <input type="checkbox" name="filters" id="filters" class="hidden">
 
+      <label for="filters" class="cursor-pointer">
+        <svg class="w-5 h-5 mr-4 fill-[#F4F2ED]/80" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path d="M0 3H16V1H0V3Z"></path>
+            <path d="M2 7H14V5H2V7Z"></path>
+            <path d="M4 11H12V9H4V11Z"></path>
+            <path d="M10 15H6V13H10V15Z"></path>
+          </g>
+        </svg>
+      </label>
+    </div>
+    <div id="filters-section" class=" peer-has-[:checked]:flex hidden font-normal items-center">
+      <select id="suspension-filter" class="bg-transparent px-4 focus:outline-none py-2 border-r-2 border-black appearance-none">
+        <option value="" class="font-light">Suspension Status</option>
+        <option value="Suspend" class="font-bold">Active</option>
+        <option value="Unsuspend" class="font-bold">Suspended</option>
+      </select>
+      <select id="admin-filter" class="bg-transparent px-4 focus:outline-none py-2 border-r-2 border-black appearance-none">
+        <option value="" class="font-light">Admin Status</option>
+        <option value="admin" class="font-bold">Admin</option>
+        <option value="normal" class="font-bold">Normal</option>
+      </select>
+
+    </div>
 
 
   </div>
@@ -91,8 +117,8 @@
         <td class="px-4 py-4 whitespace-nowrap" data-sort>{{$user->id}}</td>
         <td class="px-4 py-4">
           <a class="flex items-center" href="{{ route('user.profile', $user->id) }}">
-          <img src="{{ asset( $user->image->path ?? 'images/groupdefault.jpg') }}"
-        onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
+            <img src="{{ asset( $user->image->path ?? 'images/groupdefault.jpg') }}"
+              onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
               class="max-w-full rounded-full size-9 mr-3 object-cover">
             <span class="break-all" data-sort>{{ '@' . $user->username }}</span>
           </a>
@@ -100,39 +126,35 @@
         <td class="px-4 py-4 break-all" data-sort>
           {{ $user->name }}
         </td>
-        <td class="px-4 py-4">
+        <td class="px-4 py-4" data-admin>
           <input id="admin-checkbox-{{ $user->id }}" type="checkbox" class="w-4 h-4 accent-blue-500"
             @if($user->is_admin) checked @endif
           onclick="toggleAdmin({{ $user->id }}, this.checked)"
           >
         </td>
-        <td>
+        <td data-suspension>
           @if($user->is_suspended)
-            <button type="button" 
-                    class="unsuspend-btn font-bold px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white" 
-                    data-user-id="{{$user->id}}" 
-                    onclick="unsuspendUser({{ $user->id }})">
-              Unsuspend
-            </button>
-            <button type="button" 
-                    class="suspend-btn hidden px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold" 
-                    data-user-id="{{$user->id}}" 
-                    onclick="openSuspendModal({{ $user->id }})">
-              Suspend
-            </button>
+          <button type="button"
+            class="unsuspend-btn font-bold px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white"
+            data-user-id="{{$user->id}}" onclick="unsuspendUser({{ $user->id }})">
+            Unsuspend
+          </button>
+          <button type="button"
+            class="suspend-btn hidden px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold"
+            data-user-id="{{$user->id}}" onclick="openSuspendModal({{ $user->id }})">
+            Suspend
+          </button>
           @else
-            <button type="button" 
-                    class="suspend-btn font-bold px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white" 
-                    data-user-id="{{$user->id}}" 
-                    onclick="openSuspendModal({{ $user->id }})">
-              Suspend
-            </button>
-            <button type="button" 
-                    class="unsuspend-btn hidden px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white font-bold" 
-                    data-user-id="{{$user->id}}" 
-                    onclick="unsuspendUser({{ $user->id }})">
-              Unsuspend
-            </button>
+          <button type="button"
+            class="suspend-btn font-bold px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white"
+            data-user-id="{{$user->id}}" onclick="openSuspendModal({{ $user->id }})">
+            Suspend
+          </button>
+          <button type="button"
+            class="unsuspend-btn hidden px-2 py-1 rounded-md bg-green-500/[.80] hover:bg-green-500 text-white font-bold"
+            data-user-id="{{$user->id}}" onclick="unsuspendUser({{ $user->id }})">
+            Unsuspend
+          </button>
           @endif
         </td>
 
@@ -147,39 +169,44 @@
 
               <div class="mb-4">
                 <label for="reason" class="block font-medium text-gray-700 mb-1">Reason</label>
-                <input type="text" name="reason" id="reason" class="w-full border-gray-300 rounded p-2 border-2" required>
+                <input type="text" name="reason" id="reason" class="w-full border-gray-300 rounded p-2 border-2"
+                  required>
               </div>
 
               <div class="mb-6">
                 <label for="duration" class="block font-medium text-gray-700 mb-1">Duration (in days)</label>
-                <input type="number" name="duration" id="duration" class="w-full border-gray-300 rounded p-2 border-2" required>
+                <input type="number" name="duration" id="duration" class="w-full border-gray-300 rounded p-2 border-2"
+                  required>
               </div>
 
               <div class="flex justify-end gap-4">
-                <button type="button" class="px-2 py-1 rounded-md bg-gray-300 hover:bg-gray-400/[.80] text-white font-bold" onclick="closeSuspendModal()">Cancel</button>
-                <button type="submit" class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">Suspend</button>
+                <button type="button"
+                  class="px-2 py-1 rounded-md bg-gray-300 hover:bg-gray-400/[.80] text-white font-bold"
+                  onclick="closeSuspendModal()">Cancel</button>
+                <button type="submit"
+                  class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">Suspend</button>
               </div>
             </form>
           </div>
         </div>
 
-      </div>
+</div>
 
-        <td class="px-4 py-4">
-          <form action="{{ route('admin.delete', ['id' => $user->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this account?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit"
-                    class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
-                Delete
-            </button>
-        </form>
-        
-        </td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
+<td class="px-4 py-4">
+  <form action="{{ route('admin.delete', ['id' => $user->id]) }}" method="POST"
+    onsubmit="return confirm('Are you sure you want to delete this account?')">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
+      Delete
+    </button>
+  </form>
+
+</td>
+</tr>
+@endforeach
+</tbody>
+</table>
 </div>
 
 @endsection
