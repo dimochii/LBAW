@@ -5,7 +5,6 @@
 <div class="font-grotesk divide-y-2 divide-[black]">
   @if($topicItem->post->community->privacy &&
   !($topicItem->post->community->followers->pluck('id')->contains(Auth::user()->id)) &&
-  // !($topicItem->post->authors->pluck('id')->contains(Auth::user()->id)) &&
   !(Auth::user()->is_admin))
   <div class="text-center py-12 bg-white rounded-xl shadow-sm">
     <a class="flex items-center"
