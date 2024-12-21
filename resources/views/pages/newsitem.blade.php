@@ -513,7 +513,7 @@
 </script> --}}
 
 <script>
-  function reportNews(authors) {
+  function reportNews() {
     const authors = @json($newsItem->post->authors->pluck('id'));
     const form = document.getElementById('reportForm')
     form.reset();

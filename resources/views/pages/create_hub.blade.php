@@ -12,51 +12,40 @@
 
         <form method="POST" action="{{ route('communities.store') }}" class="space-y-12" enctype="multipart/form-data">
             @csrf
-            
-            <div class="relative">
-                <label for="name" 
-                       class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
+
+            <fieldset class="space-y-6">
+                <legend class="text-3xl font-semibold pb-8 ">Hub Information</legend>
+
+                <div class="relative">
+                    <label for="name" class="absolute left-0 -top-6 text-2xl font-medium 
                               transition-all duration-300 peer-placeholder-shown:text-3xl 
                               peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
-                    Hub Name
-                </label>
-                <input type="text" 
-                       id="name" 
-                       name="name" 
-                       class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 
+                        Hub Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="name" name="name" class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 
                               focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
-                              transition-all duration-300"
-                       placeholder="Enter hub name"
-                       required>
-            </div>
+                              transition-all duration-300" placeholder="Enter hub name" required>
+                </div>
 
-            <div class="relative">
-                <label for="description" 
-                       class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
+                <div class="relative">
+                    <label for="description" class="absolute left-0 -top-3 text-2xl font-medium  
                               transition-all duration-300 peer-placeholder-shown:text-3xl 
                               peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
-                    Description
-                </label>
-                <textarea id="description" 
-                          name="description" 
-                          class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10 
-                                 focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
-                                 transition-all duration-300"
-                          placeholder="Enter description"
-                          required></textarea>
-            </div>
+                        Description <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="description" name="description" class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10 
+                                 focus:border-black focus:outline-none pb-4 pt-4 placeholder-transparent
+                                 transition-all duration-300" placeholder="Enter description" required></textarea>
+                </div>
+            </fieldset>
 
-            <div class="space-y-6 border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
+            <fieldset class="space-y-6 border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30 p-6">
+                <legend class="sr-only">Privacy</legend>
                 <label class="block text-2xl font-medium">Privacy</label>
                 <div class="flex gap-8">
                     <label class="relative group flex items-center gap-3 cursor-pointer">
-                        <input type="radio" 
-                               name="privacy" 
-                               value="public" 
-                               class="peer hidden" 
-                               checked>
-                        <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-green-400  transition-colors duration-300">
+                        <input type="radio" name="privacy" value="public" class="peer hidden" checked>
+                        <div class="w-6 h-6 border-2 border-black rounded-full relative group-hover:border-green-400  transition-colors duration-300">
                             <div class="absolute inset-1 rounded-full bg-black transform scale-0 
                                       peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
@@ -64,21 +53,19 @@
                     </label>
 
                     <label class="relative group flex items-center gap-3 cursor-pointer">
-                        <input type="radio" 
-                               name="privacy" 
-                               value="private" 
-                               class="peer hidden">
-                        <div class="w-6 h-6 border-2 border-black rounded-full relative
-                                  group-hover:border-red-500 transition-colors duration-300">
+                        <input type="radio" name="privacy" value="private" class="peer hidden">
+                        <div class="w-6 h-6 border-2 border-black rounded-full relative group-hover:border-red-500 transition-colors duration-300">
                             <div class="absolute inset-1 rounded-full bg-black transform scale-0 
                                       peer-checked:scale-100 transition-transform duration-300"></div>
                         </div>
                         <span class="text-xl group-hover:text-red-500 transition-colors duration-300">Private</span>
                     </label>
                 </div>
-            </div>
+            </fieldset>
 
-            <div>
+            <fieldset class="space-y-6">
+                <legend class="sr-only">Moderators</legend>
+
                 <div class="flex items-center mb-2">
                     <label for="moderators" class="block text-2xl font-medium mr-2">Additional Moderators</label>
                     <div class="relative inline-block">
@@ -102,33 +89,26 @@
                         </div>
                     </div>
                 </div>
-                <select 
-                    name="moderators[]" 
-                    id="moderators" 
-                    multiple 
-                    class="w-full rounded text-l border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-all duration-300"
-                >
-                @foreach(Auth::user()->follows->sortBy('name') as $potentialModerator)
-                    <option 
-                        class="hover:bg-sky-400"
-                        value="{{ $potentialModerator->id }}" 
-                        data-image="{{ $potentialModerator->profile_photo_url }}">
-                        {{ $potentialModerator->name }} ({{ $potentialModerator->username }})
-                    </option>
-                @endforeach
+                <select name="moderators[]" id="moderators" multiple 
+                        class="w-full rounded text-l border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-all duration-300">
+                    @foreach(Auth::user()->follows->sortBy('name') as $potentialModerator)
+                        <option class="hover:bg-sky-400" value="{{ $potentialModerator->id }}" 
+                                data-image="{{ $potentialModerator->profile_photo_url }}">
+                            {{ $potentialModerator->name }} ({{ $potentialModerator->username }})
+                        </option>
+                    @endforeach
                 </select>
                 <p class="text-sm text-gray-600 mt-1">Select users you follow to be additional moderators</p>
-            </div>
+            </fieldset>
 
-            <div id="selected-moderators" class="flex flex-wrap gap-2 mt-4">
-                <!-- Chips dynamically added here -->
-            </div>
+            <fieldset class="space-y-6">
+                <legend class="sr-only">Hub Image</legend>
 
-
-            <div class="space-y-6">
-                <label for="image" class="block text-2xl font-medium">Hub Image</label>
-                <input type="file" id="image" name="image" class="w-full text-xl border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-colors duration-300">
-            </div>
+                <div class="space-y-6">
+                    <label for="image" class="block text-2xl font-medium">Hub Image</label>
+                    <input type="file" id="image" name="image" class="w-full text-xl border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-colors duration-300">
+                </div>
+            </fieldset>
 
             <div class="preview-section mt-8">
                 <h2 class="text-2xl font-medium mb-4">Preview</h2>
@@ -155,16 +135,10 @@
 
             <!-- Submit Button -->
             <div class="flex justify-end">
-                <button type="submit" 
-                        class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-black text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1">
+                <button type="submit" class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-black text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1">
                     <span class="relative z-10">Create Hub</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" 
-                         class="relative z-10 h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2" 
-                         viewBox="0 0 20 20" 
-                         fill="currentColor">
-                        <path fill-rule="evenodd" 
-                              d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" 
-                              clip-rule="evenodd" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="relative z-10 h-6 w-6 transform transition-transform duration-300 group-hover:translate-x-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                     <div class="absolute inset-0 bg-wpastelGreen transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
                 </button>
@@ -172,6 +146,7 @@
         </form>
     </div>
 </div>
+
 
 <style>
     .help-tooltip {

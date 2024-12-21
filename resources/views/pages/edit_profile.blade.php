@@ -50,8 +50,8 @@
             {{-- Left Column --}}
             <div class="space-y-8">
                 {{-- Profile Image Section --}}
-                <div class="border-2 border-black p-8 group transition-all duration-300 hover:bg-gray-50">
-                    <h3 class="text-2xl font-medium mb-6">Profile Image</h3>
+                <fieldset class="border-2 border-black p-8 group transition-all duration-300 hover:bg-gray-50">
+                    <legend class="text-2xl font-medium mb-6">Profile Image</legend>
                     <div class="flex items-center space-x-8">
                         {{-- Current Image Preview --}}
                         <div class="ring-2 ring-black rounded-full p-1 transition-transform duration-300 group-hover:scale-105">
@@ -64,7 +64,6 @@
                             @endif
                         </div>
 
-                        
                         {{-- Image Upload --}}
                         <div class="flex-1">
                             <label class="cursor-pointer block">
@@ -81,11 +80,11 @@
                             </label>
                         </div>
                     </div>
-                </div>
+                </fieldset>
 
                 {{-- Basic Information --}}
-                <div class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
-                    <h3 class="text-2xl font-medium">Basic Information</h3>
+                <fieldset class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
+                    <legend class="text-2xl font-medium">Basic Information</legend>
                     {{-- Name --}}
                     <div>
                         <label for="name" class="block text-lg font-light">Name</label>
@@ -106,15 +105,15 @@
                         <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}"
                                class="mt-2 block w-full border-2 border-gray-200 p-4 font-light text-lg transition-colors duration-300 focus:border-black focus:ring-0">
                     </div>
-                </div>
+                </fieldset>
                 
             </div>
 
             {{-- Right Column --}}
             <div class="space-y-8">
                 {{-- Additional Information --}}
-                <div class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
-                    <h3 class="text-2xl font-medium">Additional Information</h3>
+                <fieldset class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
+                    <legend class="text-2xl font-medium">Additional Information</legend>
 
                     {{-- Birth Date --}}
                     <div>
@@ -129,11 +128,11 @@
                         <textarea id="description" name="description" rows="4"
                                   class="mt-2 block w-full border-2 border-gray-200 p-4 font-light text-lg transition-colors duration-300 focus:border-black focus:ring-0 resize-none">{{ old('description', $user->description) }}</textarea>
                     </div>
-                </div>
+                </fieldset>
 
                 {{-- Password Section --}}
-                <div class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
-                    <h3 class="text-2xl font-medium">Change Password</h3>
+                <fieldset class="border-2 border-black p-8 space-y-6 transition-all duration-300 hover:bg-gray-50">
+                    <legend class="text-2xl font-medium">Change Password</legend>
                     
                     {{-- Password --}}
                     <div>
@@ -149,9 +148,8 @@
                         <input type="password" id="password_confirmation" name="password_confirmation"
                                class="mt-2 block w-full border-2 border-gray-200 p-4 font-light text-lg transition-colors duration-300 focus:border-black focus:ring-0">
                     </div>
-                </div>
+                </fieldset>
             </div>
-
 
             {{-- Submit Button --}}
             <div class="md:col-span-2 flex justify-end">
@@ -180,7 +178,6 @@
             </form>
         </div>
 
-
     </div>
 </div>
 
@@ -198,15 +195,6 @@
             reader.readAsDataURL(file);
         }
     }
-
-    
-    function submitDeleteForm() {
-
-        alert(1);
-    }
-
-    
-
 </script>
 
 @endsection
