@@ -11,7 +11,7 @@
         </td>
         <td class="px-4 py-4 w-full">
         @if($notification->requestNotification && $notification->requestNotification->request)
-            <a href="{{ 'communities.show', $notification->requestNotification->request->community->id }}"
+            <a href="{{ route('communities.show', $notification->requestNotification->request->community->id) }}"
                    onclick="markAsRead({{ $notification->id }})"
                    class=" hover:text-blue-600 transition-colors">
                 <div class="flex items-center hover:text-blue-600 transition-colors">

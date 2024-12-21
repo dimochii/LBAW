@@ -148,7 +148,6 @@
                     <option value="trending" {{ $sortOption === 'trending' ? 'selected' : '' }}>Trending</option>
                 </select>
             </form>
-
         </div>
 
         </div>
