@@ -20,18 +20,23 @@
             @csrf
             @method('PUT')
 
-            <div class="relative">
-                <label for="title" class="absolute left-0 -top-6 text-2xl font-medium text-black/60 transition-all duration-300 peer-placeholder-shown:text-3xl peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">Title</label>
-                <input type="text" id="title" name="title" value="{{ old('title', $newsItem->post->title) }}" class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent transition-all duration-300" placeholder="Enter title" required>
-            </div>
+            <fieldset>
+                <legend class="sr-only">Post Details</legend>
 
-            <div id="newsUrlContainer" class="space-y-4 transform transition-all duration-500 origin-top">
-                <label for="news_url" class="block text-2xl font-medium">News URL</label>
-                <input type="url" id="news_url" name="news_url" value="{{ old('news_url', $newsItem->news_url) }}" class="w-full text-xl border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-colors duration-300" placeholder="https://" required>
-            </div>
+                <div class="relative mt-4">
+                    <label for="title" class="absolute left-0 -top-6 text-2xl font-medium transition-all duration-300 peer-placeholder-shown:text-3xl peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">Title</label>
+                    <input type="text" id="title" name="title" value="{{ old('title', $newsItem->post->title) }}" class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent transition-all duration-300" placeholder="Enter title" required>
+                </div>
 
-            <div class="space-y-12">
-                <label class="block text-2xl font-medium text-black/60">Authors</label>
+                <div id="newsUrlContainer" class="space-y-4 mt-4 transform transition-all duration-500 origin-top">
+                    <label for="news_url" class="block text-2xl font-medium">News URL</label>
+                    <input type="url" id="news_url" name="news_url" value="{{ old('news_url', $newsItem->news_url) }}" class="w-full text-xl border-b-2 border-black/10 focus:border-black focus:outline-none pb-2 transition-colors duration-300" placeholder="https://" required>
+                </div>
+            </fieldset>
+
+            <fieldset class="space-y-12">
+                <legend class="sr-only">Authors</legend>
+                <label class="block text-2xl font-medium ">Authors</label>
                 <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
                     <ul class="authors-list divide-y divide-gray-200">
                         @foreach($newsItem->post->authors as $author)
@@ -52,10 +57,12 @@
                         @endforeach
                     </ul>
                 </div>
-            </div>
+            </fieldset>
 
-            <div class="space-y-4">
-            <div class="flex items-center mb-2">
+            <fieldset class="space-y-4">
+                <legend class="sr-only">Content</legend>
+
+                <div class="flex items-center mb-2">
                     <label class="block text-2xl font-medium">Content</label>
                     <div class="px-2 relative inline-block">
                         <svg class="help-trigger w-5 h-5 text-gray-500 hover:text-gray-700 cursor-help transition-colors duration-200" 
@@ -104,7 +111,7 @@
 
                     </div>
                 </div>
-            </div>
+            </fieldset>
 
             <div class="flex justify-end">
                 <button type="submit" class="group relative overflow-hidden inline-flex items-center gap-4 px-8 py-4 bg-black text-white text-xl font-medium transition-transform duration-300 hover:-translate-y-1">
@@ -125,6 +132,7 @@
 
     </div>
 </div>
+
 
 <style>
 

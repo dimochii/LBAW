@@ -19,26 +19,30 @@
         <form method="POST" action="{{ route('topics.update', $topicItem->post->id) }}" data-post-id="{{ $topicItem->post->id }}" class="space-y-12">
             @csrf
             @method('PUT')
-            
-            <div class="relative">
-                <label for="title" 
-                       class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
-                              transition-all duration-300 peer-placeholder-shown:text-3xl 
-                              peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
-                    Title
-                </label>
-                <input type="text" 
-                       id="title" 
-                       name="title" 
-                       value="{{ old('title', $topicItem->post->title) }}"
-                       class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 
-                              focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
-                              transition-all duration-300"
-                       placeholder="Enter title"
-                       required>
-            </div>
 
-            <div class="space-y-12">
+            <fieldset>
+                <legend class="sr-only">Topic Details</legend>
+                <div class="relative">
+                    <label for="title" 
+                           class="absolute left-0 -top-6 text-2xl font-medium text-black/60 
+                                  transition-all duration-300 peer-placeholder-shown:text-3xl 
+                                  peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
+                        Title
+                    </label>
+                    <input type="text" 
+                           id="title" 
+                           name="title" 
+                           value="{{ old('title', $topicItem->post->title) }}"
+                           class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 
+                                  focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
+                                  transition-all duration-300"
+                           placeholder="Enter title"
+                           required>
+                </div>
+            </fieldset>
+
+            <fieldset class="space-y-12">
+                <legend class="sr-only">Authors</legend>
                 <label class="block text-2xl font-medium text-black/60">Authors</label>
                 <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
                     <ul class="authors-list divide-y divide-gray-200">
@@ -51,8 +55,7 @@
                                     <button 
                                         type="button" 
                                         data-author-id="{{ $author->id }}" 
-                                        class="remove-author-btn px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold"
-                                    >
+                                        class="remove-author-btn px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
                                         remove
                                     </button>
                                 @endif
@@ -60,10 +63,12 @@
                         @endforeach
                     </ul>
                 </div>
-            </div>
+            </fieldset>
 
-            <div class="space-y-4">
-            <div class="flex items-center mb-2">
+            <fieldset class="space-y-4">
+                <legend class="sr-only">Content</legend>
+
+                <div class="flex items-center mb-2">
                     <label class="block text-2xl font-medium">Content</label>
                     <div class="px-2 relative inline-block">
                         <svg class="help-trigger w-5 h-5 text-gray-500 hover:text-gray-700 cursor-help transition-colors duration-200" 
@@ -91,6 +96,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="border-2 border-black/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-black/30">
                     <div class="flex gap-4 px-6 py-3 border-b border-black/10">
                         <input type="radio" name="editor-toggle" id="write-toggle" class="hidden peer/write" checked>
@@ -106,10 +112,10 @@
 
                     <div class="relative">
                         <textarea id="editor-content" 
-                                name="content" 
-                                class="w-full h-64 p-6 text-lg font-vollkorn focus:outline-none resize-none
-                                       peer-checked/preview:hidden"
-                                placeholder="Write your topic content here...">{{ old('content', $topicItem->post->content) }}</textarea>
+                                  name="content" 
+                                  class="w-full h-64 p-6 text-lg font-vollkorn focus:outline-none resize-none
+                                         peer-checked/preview:hidden"
+                                  placeholder="Write your topic content here...">{{ old('content', $topicItem->post->content) }}</textarea>
                         <div id="preview-content" 
                              class="hidden w-full h-64 p-6 text-lg font-vollkorn overflow-y-auto
                                     prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] 
@@ -119,7 +125,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </fieldset>
 
             <div class="flex justify-end">
                 <button type="submit" 
@@ -147,9 +153,9 @@
                 </button>
             </form>
         </div>
+
     </div>
 </div>
-
 <style>
 .help-tooltip {
     visibility: hidden;
