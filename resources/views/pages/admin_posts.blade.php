@@ -72,9 +72,11 @@ $activeTab = request()->query('tab', 'news');
     </div>
 
     @if ($activeTab == 'topics')
-    <div id="filters-section" class=" peer-has-[:checked]:block hidden text-base font-normal px-2">
-      <select id="status-filter" class="bg-transparent px-2 py-2 focus:outline-none">
-        <option value="" class="">Status</option>
+
+    <div id="filters-section" class=" peer-has-[:checked]:flex hidden font-normal items-center">
+      <select id="privacy-filter"
+        class="bg-transparent px-4 focus:outline-none py-2 border-r-2 border-black appearance-none">
+        <option value="" class="font-light">Topic Status</option>
         <option value="Approved">Approved</option>
         <option value="Waiting Approval">Waiting Approval</option>
         <option value="Rejected">Rejected</option>
