@@ -652,7 +652,7 @@ function unsuspendUser(userId) {
   }
 }
 
-document.getElementById('suspend-form').addEventListener('submit', suspendUser);
+
 
 
 // function toggleSuspend(userId, isChecked) {
