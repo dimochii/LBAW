@@ -21,6 +21,9 @@ class CommentController extends Controller
             'parent_comment_id' => 'nullable|exists:comments,id'
         ]);
     
+        // Sanitize content to prevent XSS
+        $content = e($validatedData['content']); 
+    
         $post = Post::find($post_id);
     
         if (!$post) {
@@ -28,7 +31,7 @@ class CommentController extends Controller
         }
     
         $comment = Comment::create([
-            'content' => $validatedData['content'], 
+            'content' => $content, // Store sanitized content
             'post_id' => $post_id, 
             'authenticated_user_id' => auth()->user()->id, 
             'parent_comment_id' => $validatedData['parent_comment_id'], 
@@ -62,6 +65,7 @@ class CommentController extends Controller
             ]
         ]);
     }
+    
 
 
     public function update(Request $request, $id)
@@ -197,7 +201,7 @@ class CommentController extends Controller
         }
 
         $comment->authenticated_user_id = 1;
-        $comment->content = '';
+        $comment->content = 'This comment has been deleted';
         $comment->save();
 
         return response()->json(['success' => true, 'message' => 'Comment updated successfully.']);

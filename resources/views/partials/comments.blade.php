@@ -46,10 +46,17 @@
         </div>
       </summary>
       {{-- Comment Body --}}
-      <article data-text="markdown"
-        class="font-vollkorn max-w-full prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] ml-1 prose-blockquote:my-2 prose-code:my-4 prose-headings:my-4 prose-hr:my-4">
-        {{ $comment->content }}
-      </article>
+      @if ($comment->authenticated_user_id == 1)
+        <article data-text="markdown"
+          class="italic font-vollkorn max-w-full prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] ml-1 prose-blockquote:my-2 prose-code:my-4 prose-headings:my-4 prose-hr:my-4">
+          {{ $comment->content }}
+        </article>
+      @else
+        <article data-text="markdown"
+          class="font-vollkorn max-w-full prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] ml-1 prose-blockquote:my-2 prose-code:my-4 prose-headings:my-4 prose-hr:my-4">
+          {{ $comment->content }}
+        </article>
+      @endif
 
       {{-- Comment Buttons --}}
       <footer class="flex gap-x-1 items-center mt-4">
