@@ -1180,7 +1180,7 @@ function handleFollowRequest(url, notificationId, action) {
       if (response.ok) {
         document.querySelector(`[data-notification-id="${notificationId}"]`).remove();
         alert(`Follow request ${action}ed successfully.`);
-      } 
+      }
     })
     .catch(error => {
       alert(`Error: ${error.message}`);
@@ -1256,172 +1256,194 @@ document.addEventListener('DOMContentLoaded', function () {
 // create hub
 
 const nameInput = document.getElementById('name');
-    const descriptionInput = document.getElementById('description');
-    const previewName = document.getElementById('preview-name');
-    const previewDescription = document.getElementById('preview-description');
-    const previewImage = document.getElementById('preview-image');
-    const previewMembers = document.getElementById('preview-members');
-    const previewOnline = document.getElementById('preview-online');
-    const privacyIndicator = document.getElementById('privacy-indicator');
+const descriptionInput = document.getElementById('description');
+const previewName = document.getElementById('preview-name');
+const previewDescription = document.getElementById('preview-description');
+const previewImage = document.getElementById('preview-image');
+const previewMembers = document.getElementById('preview-members');
+const previewOnline = document.getElementById('preview-online');
+const privacyIndicator = document.getElementById('privacy-indicator');
 
-    function createLockSVG(isPrivate) {
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        svg.setAttribute("viewBox", "0 0 24 24");
-        svg.setAttribute("width", "24");
-        svg.setAttribute("height", "24");
-        svg.setAttribute("fill", isPrivate ? "red" : "green");
-        svg.setAttribute("class", "ml-2");
+function createLockSVG(isPrivate) {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("width", "24");
+  svg.setAttribute("height", "24");
+  svg.setAttribute("fill", isPrivate ? "red" : "green");
+  svg.setAttribute("class", "ml-2");
 
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        
-        if (isPrivate) {
-            path.setAttribute("d", "M17 10V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zM7 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v3H7V7z");
-            path.style.fill = '#EF4444'; 
-        } else {
-            path.setAttribute("d", "M17 8V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v1a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zm-9-1a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v1H8V7z");
-            path.style.fill = '#22C55E'; 
-        }
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-        svg.appendChild(path);
-        return svg;
-    }
+  if (isPrivate) {
+    path.setAttribute("d", "M17 10V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zM7 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v3H7V7z");
+    path.style.fill = '#EF4444';
+  } else {
+    path.setAttribute("d", "M17 8V7a5 5 0 0 0-5-5h-2a5 5 0 0 0-5 5v1a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zm-9-1a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v1H8V7z");
+    path.style.fill = '#22C55E';
+  }
 
-    function updatePrivacyIndicator() {
-        privacyIndicator.innerHTML = '';
+  svg.appendChild(path);
+  return svg;
+}
 
-        const selectedPrivacy = document.querySelector('input[name="privacy"]:checked').value;
-        const lockSVG = createLockSVG(selectedPrivacy === 'private');
-        privacyIndicator.appendChild(lockSVG);
-    }
+function updatePrivacyIndicator() {
+  privacyIndicator.innerHTML = '';
 
-    document.querySelectorAll('input[name="privacy"]').forEach(radio => {
-        radio.addEventListener('change', updatePrivacyIndicator);
-    });
+  const selectedPrivacy = document.querySelector('input[name="privacy"]:checked').value;
+  const lockSVG = createLockSVG(selectedPrivacy === 'private');
+  privacyIndicator.appendChild(lockSVG);
+}
 
-    nameInput.addEventListener('input', () => {
-        previewName.textContent = nameInput.value;
-    });
+if (privacyIndicator) {
+  updatePrivacyIndicator()
+}
 
-    descriptionInput.addEventListener('input', () => {
-        previewDescription.textContent = descriptionInput.value;
-    });
+const privacyRadios = document.querySelectorAll('input[name="privacy"]')
+if (privacyRadios) {
+  privacyRadios.forEach(radio => {
+    radio.addEventListener('change', updatePrivacyIndicator);
+  });
+}
 
-    const imageInput = document.getElementById('image');
-    imageInput.addEventListener('change', () => {
-        const file = imageInput.files[0];
-        previewImage.src = URL.createObjectURL(file);
-    });
 
-    previewMembers.textContent = '1 member';
-    previewOnline.textContent = '1 online';
+if (nameInput) {
+  nameInput.addEventListener('input', () => {
+    previewName.textContent = nameInput.value;
+  });
+}
 
-    updatePrivacyIndicator();
+if (descriptionInput) {
+  descriptionInput.addEventListener('input', () => {
+    previewDescription.textContent = descriptionInput.value;
+  });
+}
 
-    const moderatorsSelect = document.getElementById('moderators');
-    moderatorsSelect.multiple = true;
+const imageInput = document.getElementById('image');
+if (imageInput) {
+  imageInput.addEventListener('change', () => {
+    const file = imageInput.files[0];
+    previewImage.src = URL.createObjectURL(file);
+  });
+}
 
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        const moderatorsSelect = document.getElementById('moderators');
-        const selectedModeratorsContainer = document.getElementById('selected-moderators');
-        const previewMembers = document.getElementById('preview-members');
+if (previewMembers && previewOnline) {
+  previewMembers.textContent = '1 member'
+  previewOnline.textContent = '1 online'
+}
 
-        // Color palette inspired by news and journalism themes
-        const newsColors = [
-        { bg: '#2C3E50', text: '#ECF0F1' },  // Dark blue-gray with light text
-        { bg: '#34495E', text: '#ECF0F1' },  // Slightly lighter blue-gray
-        { bg: '#2980B9', text: '#FFFFFF' },  // Bright blue
-        { bg: '#3498DB', text: '#FFFFFF' },  // Lighter bright blue
-        { bg: '#16A085', text: '#FFFFFF' },  // Teal green
-        { bg: '#1ABC9C', text: '#FFFFFF' },  // Lighter teal
-        { bg: '#8E44AD', text: '#FFFFFF' },  // Deep purple
-        { bg: '#9B59B6', text: '#FFFFFF' }   // Lighter purple
-        ];
-        let colorIndex = 0;
 
-        moderatorsSelect.addEventListener('change', () => {
-        selectedModeratorsContainer.innerHTML = '';
-        
-        Array.from(moderatorsSelect.selectedOptions).forEach(option => {
-            // Cycle through colors
-            const currentColor = newsColors[colorIndex];
-            colorIndex = (colorIndex + 1) % newsColors.length;
 
-            // Create moderator chip with enhanced styling
-            const moderatorChip = document.createElement('div');
-            moderatorChip.className = 'moderator-chip';
-            moderatorChip.style.backgroundColor = currentColor.bg;
-            moderatorChip.style.color = currentColor.text;
 
-            // User Icon (SVG)
-            const iconSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            iconSvg.setAttribute('viewBox', '0 0 24 24');
-            iconSvg.setAttribute('width', '24');
-            iconSvg.setAttribute('height', '24');
-            iconSvg.setAttribute('fill', 'none');
-            iconSvg.setAttribute('stroke', currentColor.text);
-            iconSvg.setAttribute('stroke-width', '2');
-            iconSvg.setAttribute('stroke-linecap', 'round');
-            iconSvg.setAttribute('stroke-linejoin', 'round');
-            iconSvg.className = 'moderator-chip-icon';
+const moderatorsSelect = document.getElementById('moderators');
+if (moderatorsSelect) {
+  moderatorsSelect.multiple = true
+}
 
-            // User icon path
-            const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            iconPath.setAttribute('d', 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2');
-            const iconCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            iconCircle.setAttribute('cx', '12');
-            iconCircle.setAttribute('cy', '7');
-            iconCircle.setAttribute('r', '4');
 
-            iconSvg.appendChild(iconPath);
-            iconSvg.appendChild(iconCircle);
-            
-            // Moderator Name
-            const text = document.createElement('span');
-            text.textContent = option.text;
-            text.className = 'moderator-chip-name';
-            
-            // Remove Button with icon
-            const removeBtn = document.createElement('button');
-            removeBtn.innerHTML = '&times;';
-            removeBtn.className = 'moderator-chip-remove';
+document.addEventListener('DOMContentLoaded', () => {
+  const moderatorsSelect = document.getElementById('moderators');
+  const selectedModeratorsContainer = document.getElementById('selected-moderators');
+  const previewMembers = document.getElementById('preview-members');
 
-            // Hover and interaction effects
-            moderatorChip.addEventListener('mouseover', () => {
-            moderatorChip.style.transform = 'scale(1.05)';
-            moderatorChip.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-            });
-            
-            moderatorChip.addEventListener('mouseout', () => {
-            moderatorChip.style.transform = 'scale(1)';
-            moderatorChip.style.boxShadow = 'none';
-            });
+  // Color palette inspired by news and journalism themes
+  const newsColors = [
+    { bg: '#2C3E50', text: '#ECF0F1' },  // Dark blue-gray with light text
+    { bg: '#34495E', text: '#ECF0F1' },  // Slightly lighter blue-gray
+    { bg: '#2980B9', text: '#FFFFFF' },  // Bright blue
+    { bg: '#3498DB', text: '#FFFFFF' },  // Lighter bright blue
+    { bg: '#16A085', text: '#FFFFFF' },  // Teal green
+    { bg: '#1ABC9C', text: '#FFFFFF' },  // Lighter teal
+    { bg: '#8E44AD', text: '#FFFFFF' },  // Deep purple
+    { bg: '#9B59B6', text: '#FFFFFF' }   // Lighter purple
+  ];
+  let colorIndex = 0;
 
-            removeBtn.addEventListener('click', () => {
-            option.selected = false;
-            moderatorChip.remove();
-            updateMembersCount();
-            });
+  if (moderatorsSelect) {
+    moderatorsSelect.addEventListener('change', () => {
+      selectedModeratorsContainer.innerHTML = '';
 
-            // Append elements
-            moderatorChip.appendChild(iconSvg);
-            moderatorChip.appendChild(text);
-            moderatorChip.appendChild(removeBtn);
-            selectedModeratorsContainer.appendChild(moderatorChip);
+      Array.from(moderatorsSelect.selectedOptions).forEach(option => {
+        // Cycle through colors
+        const currentColor = newsColors[colorIndex];
+        colorIndex = (colorIndex + 1) % newsColors.length;
+
+        // Create moderator chip with enhanced styling
+        const moderatorChip = document.createElement('div');
+        moderatorChip.className = 'moderator-chip';
+        moderatorChip.style.backgroundColor = currentColor.bg;
+        moderatorChip.style.color = currentColor.text;
+
+        // User Icon (SVG)
+        const iconSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        iconSvg.setAttribute('viewBox', '0 0 24 24');
+        iconSvg.setAttribute('width', '24');
+        iconSvg.setAttribute('height', '24');
+        iconSvg.setAttribute('fill', 'none');
+        iconSvg.setAttribute('stroke', currentColor.text);
+        iconSvg.setAttribute('stroke-width', '2');
+        iconSvg.setAttribute('stroke-linecap', 'round');
+        iconSvg.setAttribute('stroke-linejoin', 'round');
+        iconSvg.className = 'moderator-chip-icon';
+
+        // User icon path
+        const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        iconPath.setAttribute('d', 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2');
+        const iconCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        iconCircle.setAttribute('cx', '12');
+        iconCircle.setAttribute('cy', '7');
+        iconCircle.setAttribute('r', '4');
+
+        iconSvg.appendChild(iconPath);
+        iconSvg.appendChild(iconCircle);
+
+        // Moderator Name
+        const text = document.createElement('span');
+        text.textContent = option.text;
+        text.className = 'moderator-chip-name';
+
+        // Remove Button with icon
+        const removeBtn = document.createElement('button');
+        removeBtn.innerHTML = '&times;';
+        removeBtn.className = 'moderator-chip-remove';
+
+        // Hover and interaction effects
+        moderatorChip.addEventListener('mouseover', () => {
+          moderatorChip.style.transform = 'scale(1.05)';
+          moderatorChip.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
         });
-        
-        updateMembersCount();
+
+        moderatorChip.addEventListener('mouseout', () => {
+          moderatorChip.style.transform = 'scale(1)';
+          moderatorChip.style.boxShadow = 'none';
         });
 
-        function updateMembersCount() {
-        const count = moderatorsSelect.selectedOptions.length + 1; // Includes creator
-        previewMembers.textContent = `${count} member${count > 1 ? 's' : ''}`;
-        }
+        removeBtn.addEventListener('click', () => {
+          option.selected = false;
+          moderatorChip.remove();
+          updateMembersCount();
+        });
 
-        // Add CSS for chip styling
-        const style = document.createElement('style');
-        style.textContent = `
+        // Append elements
+        moderatorChip.appendChild(iconSvg);
+        moderatorChip.appendChild(text);
+        moderatorChip.appendChild(removeBtn);
+        selectedModeratorsContainer.appendChild(moderatorChip);
+      });
+
+      updateMembersCount();
+    });
+  }
+
+
+  function updateMembersCount() {
+    const count = moderatorsSelect.selectedOptions.length + 1; // Includes creator
+    previewMembers.textContent = `${count} member${count > 1 ? 's' : ''}`;
+  }
+
+  // Add CSS for chip styling
+  const style = document.createElement('style');
+  style.textContent = `
         .moderator-chip {
             display: flex;
             align-items: center;
@@ -1463,8 +1485,236 @@ const nameInput = document.getElementById('name');
             background: rgba(0,0,0,0.2);
         }
         `;
-        document.head.appendChild(style);
+  document.head.appendChild(style);
+});
+
+// layout.js
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+  let debounceTimer;
+
+  if (searchInput && searchResults) {
+    const toggleSearchResults = (show) => {
+      searchResults.style.opacity = show ? '1' : '0';
+      searchResults.style.transform = show ? 'scale(1)' : 'scale(0.95)';
+      searchResults.style.pointerEvents = show ? 'auto' : 'none';
+    };
+
+    const createCommunityItem = (community) => `
+        <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer" 
+             onclick="window.location.href='${community.route}'">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full object-cover bg-green-500"></div>
+                <span class="text-sm text-gray-700">${community.name}</span>
+            </div>
+            ${community.description ? `
+                <p class="text-xs text-gray-500 mt-1 ml-4">${community.description}</p>
+            ` : ''}
+        </div>
+    `;
+
+    const createPostItem = (post) => `
+        <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+             onclick="window.location.href='${post.community_route}'">
+            <span class="text-sm text-gray-700">${post.name}</span>
+            <div class="text-xs text-gray-500 mt-1">in ${post.community}</div>
+            ${post.content ? `
+                <p class="text-xs text-gray-500 mt-1 line-clamp-2">${post.content}</p>
+            ` : ''}
+        </div>
+    `;
+
+    const createUserItem = (user) => `
+    <div class="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+         onclick="window.location.href='${user.route}'">
+        <div class="flex items-center gap-3">
+            ${user.image ? `
+                <img src="${user.image}" class="w-6 h-6 rounded-full object-cover">
+            ` : `
+                <div class="w-6 h-6 rounded-full bg-blue-500"></div>
+            `}
+            <span class="text-sm text-gray-700">@${user.name}</span>
+        </div>
+    </div>
+  `;
+
+
+    const updateSearchResults = (results) => {
+      const communitiesContainer = searchResults.querySelector('.from-red-50.to-blue-50 .space-y-2');
+      const postsContainer = searchResults.querySelector('.from-blue-50.to-green-50 .space-y-2');
+      const usersContainer = searchResults.querySelector('.from-green-50.to-red-50 .space-y-2');
+
+      // Update communities section
+      communitiesContainer.innerHTML = results.communities.length
+        ? results.communities.map(createCommunityItem).join('')
+        : '<div class="p-3 text-sm text-gray-500">No communities found</div>';
+
+      // Update posts section
+      postsContainer.innerHTML = results.posts.length
+        ? results.posts.map(createPostItem).join('')
+        : '<div class="p-3 text-sm text-gray-500">No posts found</div>';
+
+      // Update users section
+      usersContainer.innerHTML = results.users.length
+        ? results.users.map(createUserItem).join('')
+        : '<div class="p-3 text-sm text-gray-500">No users found</div>';
+
+      toggleSearchResults(true);
+    };
+
+    const performSearch = async (searchTerm) => {
+      if (!searchTerm.trim()) {
+        toggleSearchResults(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/search?search=${encodeURIComponent(searchTerm)}`, {
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          }
         });
+
+        if (!response.ok) throw new Error('Search request failed');
+
+        const results = await response.json();
+        updateSearchResults(results);
+      } catch (error) {
+        console.error('Search error:', error);
+        // Show error state in dropdown
+        searchResults.innerHTML = `
+                <div class="p-4 text-sm text-red-500">
+                    An error occurred while searching. Please try again.
+                </div>
+            `;
+        toggleSearchResults(true);
+      }
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => performSearch(e.target.value), 300);
+    });
+
+    searchInput.addEventListener('focus', () => {
+      if (searchInput.value.trim()) {
+        toggleSearchResults(true);
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!searchResults.contains(e.target) && e.target !== searchInput) {
+        toggleSearchResults(false);
+      }
+    });
+  }
+});
+
+// ---------- Responsive design ----------
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const leftSidebar = document.getElementById('left-sidebar');
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  let isMenuOpen = false;
+
+  if (leftSidebar && mobileMenuButton) {
+    // Function to toggle menu
+    function toggleMobileMenu() {
+      isMenuOpen = !isMenuOpen;
+
+      if (isMenuOpen) {
+        // Open menu
+        leftSidebar.classList.remove('-translate-x-full');
+        leftSidebar.classList.add('translate-x-0');
+        mobileMenuButton.classList.add('menu-open');
+        // Add overlay
+        createOverlay();
+      } else {
+        // Close menu
+        leftSidebar.classList.remove('translate-x-0');
+        leftSidebar.classList.add('-translate-x-full');
+        mobileMenuButton.classList.remove('menu-open');
+        // Remove overlay
+        removeOverlay();
+      }
+    }
+
+    // Create overlay function
+    function createOverlay() {
+      const overlay = document.createElement('div');
+      overlay.id = 'mobile-menu-overlay';
+      overlay.className = 'fixed inset-0 bg-black bg-opacity-50 z-30';
+      overlay.addEventListener('click', toggleMobileMenu);
+      document.body.appendChild(overlay);
+    }
+
+    function removeOverlay() {
+      const overlay = document.getElementById('mobile-menu-overlay');
+      if (overlay) {
+        overlay.remove();
+      }
+    }
+
+    mobileMenuButton.addEventListener('click', toggleMobileMenu);
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768 && isMenuOpen) {
+        toggleMobileMenu();
+      }
+    });
+  }
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const profileIcon = document.getElementById('profileIcon');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+
+  if (profileIcon) {
+    // Mostrar o dropdown ao clicar no ícone
+    profileIcon.addEventListener('click', function (event) {
+      event.preventDefault();
+      dropdownMenu.classList.toggle('hidden');
+    });
+
+    // Fechar o dropdown ao clicar fora dele
+    document.addEventListener('click', function (event) {
+      if (!dropdownMenu.contains(event.target) && !profileIcon.contains(event.target)) {
+        dropdownMenu.classList.add('hidden');
+      }
+    });
+  }
+
+});
+
+// ---------- Favorite button ----------
+
+function toggleFavorite(postId) {
+  const isChecked = document.getElementById(`favorite-${postId}`).checked;
+  const url = isChecked ? `/favorite/${postId}/add` : `/favorite/${postId}/remove`;
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id: postId })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message) {
+        console.log(data.message);
+      } else {
+        console.log('An error occurred');
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
 
 
