@@ -277,7 +277,7 @@ async function postComment(data, postId) {
 }
 
 // moderator users page
-
+// /users/{user_id}/{community_id}/make_moderator
 function toggleModerator(userId, communityId, isChecked) {
   const action = isChecked ? 'make_moderator' : 'remove_moderator';
   const confirmationMessage = isChecked
@@ -285,7 +285,7 @@ function toggleModerator(userId, communityId, isChecked) {
     : 'Are you sure you want to revoke this user\'s moderator privileges in this community?';
 
   if (confirm(confirmationMessage)) {
-    fetch(`/hub/${communityId}/${action}/${userId}`, {
+    fetch(`/users/${userId}/${communityId}/${action}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
