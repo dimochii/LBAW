@@ -23,7 +23,7 @@ class TopicController extends Controller
             'post_id' => $post->id,
         ]);
 
-        return redirect()->route('global')->with('success', 'Topic created successfully, waiting approval.');
+        return redirect()->route('topic.show', ['post_id' => $post->id])->with('success', 'Topic created successfully, waiting approval.');
     }
 
     /**
@@ -140,7 +140,9 @@ class TopicController extends Controller
         ]);
     
         $data['status'] = $data['status'] ?? TopicStatus::Pending->value;
-    
+        
+        $data['content'] = trim($data['content']);
+
         $topicItem->post->update([
             'title' => $request->title,
             'content' => $request->content,
@@ -149,7 +151,7 @@ class TopicController extends Controller
         $topicItem->update([
             'status' => $data['status'],
         ]);
-        return redirect()->route('news')->with('success', 'Topic updated successfully');
+        return redirect()->route('topic.show', ['post_id' => $post_id])->with('success', 'Topic updated successfully');
     }
 
     public function accept($id)

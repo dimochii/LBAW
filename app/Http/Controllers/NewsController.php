@@ -120,14 +120,14 @@ class NewsController extends Controller
 
     $newsItem->post->update([
       'title' => $request->title,
-      'content' => $request->content,
+      'content' => trim($request->content),
     ]);
 
     $newsItem->update([
       'news_url' => $request->news_url,
     ]);
 
-    return redirect()->route('news')->with('success', 'News updated successfully');
+    return redirect()->route('news.show', $post_id)->with('success', 'News updated successfully');
   }
 
 

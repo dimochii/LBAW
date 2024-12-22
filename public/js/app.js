@@ -151,39 +151,42 @@ function addEventListeners() {
   const editorIds = document.querySelectorAll('[id$="-editor"]')
   const replyBtns = document.querySelectorAll("[data-toggle='reply-form']")
   if (editorIds.length > 0) {
-    threadPlaceholder.addEventListener('click', function () {
-      threadPlaceholder.classList.add('hidden')
-      threadEditor.classList.remove('hidden')
-      document.getElementById('editor-thread-input').focus()
-    })
 
-    replyBtns.forEach(btn => {
-      btn.addEventListener('click', event => {
-        const target = btn.getAttribute('data-target')
-        const id = target.split('-')[0]
-
-        if (target == 'thread') {
-          threadPlaceholder.classList.add('hidden')
-          threadEditor.classList.remove('hidden')
-          document.getElementById('editor-thread-input').focus()
-
-        }
-        else {
-          const targetElement = document.getElementById(target)
-
-          if (targetElement.classList.contains('hidden')) {
-            targetElement.classList.add("block")
-            targetElement.classList.remove("hidden")
-            document.getElementById(`editor-${id}-input`).focus()
-
-          } else {
-            targetElement.classList.remove("block")
-            targetElement.classList.add("hidden")
-          }
-        }
-
+    if (threadPlaceholder) {
+      threadPlaceholder.addEventListener('click', function () {
+        threadPlaceholder.classList.add('hidden')
+        threadEditor.classList.remove('hidden')
+        document.getElementById('editor-thread-input').focus()
       })
-    })
+
+      replyBtns.forEach(btn => {
+        btn.addEventListener('click', event => {
+          const target = btn.getAttribute('data-target')
+          const id = target.split('-')[0]
+
+          if (target == 'thread') {
+            threadPlaceholder.classList.add('hidden')
+            threadEditor.classList.remove('hidden')
+            document.getElementById('editor-thread-input').focus()
+
+          }
+          else {
+            const targetElement = document.getElementById(target)
+
+            if (targetElement.classList.contains('hidden')) {
+              targetElement.classList.add("block")
+              targetElement.classList.remove("hidden")
+              document.getElementById(`editor-${id}-input`).focus()
+
+            } else {
+              targetElement.classList.remove("block")
+              targetElement.classList.add("hidden")
+            }
+          }
+
+        })
+      })
+    }
 
     editorIds.forEach(editor => {
       const id = editor.id.replace('-editor', '')
@@ -192,9 +195,10 @@ function addEventListeners() {
   }
 
   const markdownText = document.querySelectorAll('[data-text="markdown"]')
+
   if (markdownText) {
     markdownText.forEach(element => {
-      element.innerHTML = markdownToHTML(element.textContent)
+      element.innerHTML = markdownToHTML(element.textContent.trim())
     })
   }
 
@@ -356,7 +360,7 @@ function setupEditor(id) {
 
   textarea.addEventListener('input', (e) => {
     const markdownText = e.target.value
-    preview.innerHTML = markdownToHTML(markdownText, id)
+    preview.innerHTML = markdownToHTML(markdownText)
   })
 
   document.getElementById(`editor-write-toggle-${id}`).addEventListener('change', () => {
@@ -369,16 +373,20 @@ function setupEditor(id) {
     preview.classList.remove('hidden')
   })
 
-  editor.querySelector('[name="cancel-btn"]').addEventListener('click', () => {
-    editor.classList.add('hidden')
+  const cancelBtn = editor.querySelector('[name="cancel-btn"]')
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      editor.classList.add('hidden')
 
-    if (id === 'thread') {
-      document.getElementById('thread-placeholder').classList.remove('hidden')
-    }
+      if (id === 'thread') {
+        document.getElementById('thread-placeholder').classList.remove('hidden')
+      }
 
-    preview.innerHTML = ''
-    textarea.value = ''
-  })
+      preview.innerHTML = ''
+      textarea.value = ''
+    })
+  }
+
 }
 
 
@@ -1441,9 +1449,156 @@ document.addEventListener('DOMContentLoaded', () => {
     previewMembers.textContent = `${count} member${count > 1 ? 's' : ''}`;
   }
 
+  // create post
+  const newsRadio = document.getElementById('postTypeNews');
+  const topicRadio = document.getElementById('postTypeTopic');
+  const newsUrlContainer = document.getElementById('newsUrlContainer');
+  const titleInput = document.getElementById('title');
+
+  function toggleNewsUrl() {
+    if (newsUrlContainer && newsRadio) {
+      newsUrlContainer.style.display = newsRadio.checked ? 'block' : 'none';
+    }
+  }
+
+  function toggleTitleRequired() {
+    if (titleInput && topicRadio) {
+      titleInput.required = topicRadio.checked;
+    }
+  }
+
+  toggleNewsUrl();
+  toggleTitleRequired();
+
+  if (newsRadio && topicRadio) {
+    newsRadio.addEventListener('change', toggleNewsUrl);
+    topicRadio.addEventListener('change', toggleNewsUrl);
+    newsRadio.addEventListener('change', toggleTitleRequired);
+    topicRadio.addEventListener('change', toggleTitleRequired);
+  }
+
+
+
+  const authorsSelect = document.getElementById('authors');
+  const selectedAuthorsContainer = document.getElementById('selected-authors');
+
+  // Color palette for author chips
+  const authorColors = [
+    { bg: '#1D3557', text: '#F1FAEE' },  // Navy Blue
+    { bg: '#457B9D', text: '#F1FAEE' },  // Steel Blue
+    { bg: '#A8DADC', text: '#1D3557' },  // Aqua
+    { bg: '#E63946', text: '#F1FAEE' },  // Red
+    { bg: '#F4A261', text: '#264653' },  // Coral
+    { bg: '#2A9D8F', text: '#E9C46A' },  // Teal
+  ];
+
+  let colorIndexAuthors = 0;
+  if (authorsSelect) {
+    authorsSelect.addEventListener('change', () => {
+      selectedAuthorsContainer.innerHTML = '';
+
+      Array.from(authorsSelect.selectedOptions).forEach(option => {
+        const currentColor = authorColors[colorIndexAuthors];
+        colorIndexAuthors = (colorIndexAuthors + 1) % authorColors.length;
+
+        const authorChip = document.createElement('div');
+        authorChip.className = 'author-chip';
+        authorChip.style.backgroundColor = currentColor.bg;
+        authorChip.style.color = currentColor.text;
+
+        const iconSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        iconSvg.setAttribute('viewBox', '0 0 24 24');
+        iconSvg.setAttribute('width', '24');
+        iconSvg.setAttribute('height', '24');
+        iconSvg.setAttribute('fill', 'none');
+        iconSvg.setAttribute('stroke', currentColor.text);
+        iconSvg.setAttribute('stroke-width', '2');
+        iconSvg.setAttribute('stroke-linecap', 'round');
+        iconSvg.setAttribute('stroke-linejoin', 'round');
+        iconSvg.className = 'author-chip-icon';
+
+        const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        iconPath.setAttribute('d', 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2');
+        const iconCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        iconCircle.setAttribute('cx', '12');
+        iconCircle.setAttribute('cy', '7');
+        iconCircle.setAttribute('r', '4');
+
+        iconSvg.appendChild(iconPath);
+        iconSvg.appendChild(iconCircle);
+
+        const text = document.createElement('span');
+        text.textContent = option.text;
+        text.className = 'author-chip-name';
+
+        const removeBtn = document.createElement('button');
+        removeBtn.innerHTML = '&times;';
+        removeBtn.className = 'author-chip-remove';
+
+        authorChip.addEventListener('mouseover', () => {
+          authorChip.style.transform = 'scale(1.05)';
+          authorChip.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+        });
+        authorChip.addEventListener('mouseout', () => {
+          authorChip.style.transform = 'scale(1)';
+          authorChip.style.boxShadow = 'none';
+        });
+
+        removeBtn.addEventListener('click', () => {
+          option.selected = false;
+          authorChip.remove();
+          updateMembersCount();
+        });
+
+        authorChip.appendChild(iconSvg);
+        authorChip.appendChild(text);
+        authorChip.appendChild(removeBtn);
+        selectedAuthorsContainer.appendChild(authorChip);
+      });
+
+    });
+  }
+
+
   // Add CSS for chip styling
   const style = document.createElement('style');
   style.textContent = `
+  .author-chip {
+            display: flex;
+            align-items: center;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin: 4px;
+            max-width: 250px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .author-chip-icon {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 0.5rem;
+            padding: 0.25rem;
+        }
+        .author-chip-name {
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 0.5rem;
+        }
+        .author-chip-remove {
+            padding: 0.25rem 0.5rem;
+            background: rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        .author-chip-remove:hover {
+            background: rgba(0,0,0,0.2);
+        }
         .moderator-chip {
             display: flex;
             align-items: center;
@@ -1487,6 +1642,145 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
   document.head.appendChild(style);
 });
+
+
+// edit pages
+
+document.addEventListener('DOMContentLoaded', function () {
+  const postForm = document.getElementById('update-post-form')
+  const postId = postForm.getAttribute('data-post-id')
+  const authorsContainer = document.querySelector('ul.authors-list');
+  const postType = postForm.getAttribute('data-post-type')
+  
+  if (authorsContainer) {
+    authorsContainer.addEventListener('click', function (event) {
+      const removeButton = event.target.closest('.remove-author-btn');
+      if (!removeButton) return;
+
+      const authorId = removeButton.getAttribute('data-author-id');
+      const authorItem = removeButton.closest('li');
+
+      fetch(`/${postType}/${postId}/remove-authors`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          authors_to_remove: [authorId]
+        })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Not possible to remove author');
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Remove o item da lista
+          authorItem.remove();
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    });
+  }
+
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const deleteButtons = document.querySelectorAll('.delete-button');
+  if (deleteButtons) {
+    deleteButtons.forEach(button => {
+      button.closest('form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        if (confirm('Are you sure you want to delete this post?')) {
+          try {
+            const response = await fetch(this.action, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+              },
+              body: JSON.stringify({
+                _method: 'DELETE'
+              })
+            });
+
+            const result = await response.json();
+
+            const notification = document.createElement('div');
+            notification.className = 'fixed left-1/2 top-16 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+
+            if (response.ok) {
+              notification.style.backgroundColor = '#c5e6a6';
+              notification.style.border = '2px solid #34a853';
+            } else {
+              notification.style.backgroundColor = '#ed6a5a';
+              notification.style.border = '2px solid #a30000';
+            }
+
+            const icon = document.createElement('span');
+            icon.className = 'inline-block mr-2';
+            icon.innerHTML = response.ok
+              ? '✓'
+              : '✕';
+            icon.style.color = response.ok ? '#34a853' : '#a30000';
+
+            const messageText = document.createElement('span');
+            messageText.textContent = response.ok
+              ? 'Post successfully deleted!'
+              : result.message || 'Failed to delete post.';
+            messageText.style.color = '#333333';
+
+            notification.appendChild(icon);
+            notification.appendChild(messageText);
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+              notification.remove();
+              if (response.ok) {
+                window.location.href = '/global';  // Redirect after success
+              }
+            }, 3000);
+
+          } catch (error) {
+            console.error('Error:', error);
+
+            const errorNotification = document.createElement('div');
+            errorNotification.className = 'fixed left-1/2 top-4 -translate-x-1/2 w-96 p-4 rounded shadow-lg';
+            errorNotification.style.backgroundColor = '#ffebee';
+            errorNotification.style.border = '1px solid #a30000';
+
+            const errorIcon = document.createElement('span');
+            errorIcon.className = 'inline-block mr-2';
+            errorIcon.innerHTML = '✕';
+            errorIcon.style.color = '#a30000';
+
+            const errorText = document.createElement('span');
+            errorText.textContent = 'An error occurred while processing your request.';
+            errorText.style.color = '#333333';
+
+            errorNotification.appendChild(errorIcon);
+            errorNotification.appendChild(errorText);
+            document.body.appendChild(errorNotification);
+
+            setTimeout(() => {
+              errorNotification.remove();
+            }, 3000);
+          }
+        }
+      });
+    });
+  }
+
+});
+
+
+
 
 // layout.js
 
@@ -1615,7 +1909,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ---------- Responsive design ----------
 
-
 document.addEventListener('DOMContentLoaded', function () {
   const leftSidebar = document.getElementById('left-sidebar');
   const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -1715,6 +2008,9 @@ function toggleFavorite(postId) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+
+
 
 
 
