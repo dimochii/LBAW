@@ -1166,11 +1166,7 @@ function handleFollowRequest(url, notificationId, action) {
       if (response.ok) {
         document.querySelector(`[data-notification-id="${notificationId}"]`).remove();
         alert(`Follow request ${action}ed successfully.`);
-      } else {
-        return response.json().then(error => {
-          throw new Error(error.message || 'Failed to process the request.');
-        });
-      }
+      } 
     })
     .catch(error => {
       alert(`Error: ${error.message}`);
