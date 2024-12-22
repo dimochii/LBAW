@@ -8,23 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
-    public function show()
-    {  
-        $user = Auth::user();
-
-        //descomentar isto depois
-        /* 
-        if (! $user->is_admin) {
-            return redirect('/news')->with('error', 'Access denied.');
-        }*/
-
-        // Recupera todos os relatórios, ordenados por data
-        $reports = Report::orderBy('report_date', 'desc')->get();
-
-        return view('pages.reports', compact('reports'));
-    }
-
-
+    /*
+        Submits a report request from a logged in user
+    */
     public function report(Request $request)
     {
         if (!Auth::check()) {
@@ -53,7 +39,9 @@ class ReportController extends Controller
         return redirect()->back()->with('success', 'Reported successfully' );
     }
 
-
+    /*
+        Let users resolve thhe reports from open to closed
+    */
 
     public function resolve($id)
     {

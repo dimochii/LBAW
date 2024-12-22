@@ -276,7 +276,6 @@ Route::get('/request/{request_id}', [CommunityFollowRequest::class, 'show'])->mi
 
 Route::middleware(['auth', 'check.suspension'])->group(function () {
   // Viewing reports
-  Route::get('/reports', [ReportController::class, 'show']);
   // Creating a new report
   Route::post('/report', [ReportController::class, 'report'])->name('report');
   // Resolving a report

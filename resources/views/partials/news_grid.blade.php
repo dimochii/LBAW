@@ -36,31 +36,3 @@ $randomKey = array_rand($colors);
 </div>
 
 
-{{--
-<div class="flex flex-col xl:grid grid-cols-3 border-b-2 border-black divide-y-2 divide-black xl:divide-y-0">
-  @foreach($posts->values() as $index => $post)
-  <div> {{$index}} </div>
-  {{-- @if($index == 1)
-  <div class="col-span-3 col-start-1 row-start-2 xl:border-y-2 border-black">
-    @include('partials.post', ['news' => true, 'post' => $post->news, 'img' => true, 'img_left' => false, 'item' =>
-    $post])
-  </div>
-  @elseif($index == 2)
-  <div class="col-span-2 col-start-1 row-start-1 xl:border-r-2 border-black">
-    @include('partials.post', ['news' => true, 'post' => $post->news, 'img' => true, 'img_left' => true, 'item' =>
-    $post])
-  </div>
-  @elseif($index == 3)
-  <div class="col-start-3 row-start-1">
-    @include('partials.post', ['news' => true, 'post' => $post->news, 'item' => $post])
-  </div>
-  @elseif($index >= 4)
-  <div class="row-start-3 xl:border-r-2 border-black">
-    @include('partials.post', ['news' => true, 'post' => $post->news, 'item' => $post])
-  </div>
-  @elseif($index >= 6)
-  @break
-  @endif
-  @endforeach
-</div>
---}}

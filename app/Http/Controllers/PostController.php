@@ -250,11 +250,6 @@ class PostController extends Controller
   }
 
   
-
-
-
-
-
   public function upvote($post_id)
   {
     $post = Post::findOrFail($post_id);

@@ -2,14 +2,7 @@
 
 @section('content')
 <div class="divide-y-2 divide-black border-b-2 border-black">
-  <!-- Display success message if exists -->
-  {{-- @if(session('success'))
-  <div class="fixed top-0 right-0 z-50">
-    {{ session('success') }}
-  </div>
-  @endif --}}
-
-
+ 
   @php
   $activeTab = request()->query('tab', 'News'); // Default to 'News'
   @endphp

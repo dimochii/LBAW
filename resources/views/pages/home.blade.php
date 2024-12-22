@@ -9,10 +9,7 @@
   </div>
   @endif
 
-  <!-- Button to go to the post creation page -->
-  {{-- <div style="margin-bottom: 20px;">
-    <a href="{{ route('post.create') }}" class="btn btn-primary">Create New Post</a>
-  </div> --}}
+ 
 
   @php
   $activeTab = request()->query('tab', 'News'); // Default to 'News'

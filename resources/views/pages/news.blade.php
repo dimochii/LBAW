@@ -43,71 +43,8 @@
 
     @endif
   </div>
-
-
 </div>
 
-
-<script>
-  //   document.getElementById('content-type-selector').addEventListener('change', function () {
-// window.location.href = this.value;
-// });
-
-
-  // const voteButtons = document.querySelectorAll("input[type='checkbox']");
-
-  // voteButtons.forEach((button) => {
-  //   button.addEventListener("change", async function () {
-  //     const postId = this.id.split("-")[0]; 
-  //     const voteType = this.id.includes("upvote") ? "upvote" : "downvote";
-  //     const isChecked = this.checked;
-  //     const otherVote = document.getElementById(`${postId}-${voteType == "upvote" ? "downvote" : "upvote"}`)
-  //     console.log(otherVote)
-  //     console.log(button)
-
-  //     try {
-  //       const response = await fetch(`/news/${postId}/voteupdate`, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-  //         },
-  //         body: JSON.stringify({
-  //           vote_type: voteType,
-  //         }),
-  //       });
-
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         console.log(data);
-  //         console.log(data.vote === voteType)
-          
-  //         const scoreElement = document.getElementById(`${postId}-score`);
-  //         if (scoreElement) {
-  //           let newScore = data.newScore;
-  //           if (!scoreElement.textContent.includes("k")) {
-  //             let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, ''));
-  //             newScore = currentScore + newScore;
-  //             scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
-  //           }
-  //         }
-
-  //         if (data.vote === voteType) {          
-  //           this.checked = true
-  //           otherVote.checked = false // exclusive
-  //         } else {
-  //           this.checked = false
-  //         }
-
-  //       } else {
-  //         console.error("Failed to update the vote:", await response.text());
-  //       }
-  //     } catch (error) {
-  //       console.error("Error while updating the vote:", error);
-  //     }
-  //   });
-  // });
-</script>
 
 
 @endsection

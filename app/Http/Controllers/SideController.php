@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class SideController extends Controller
 {
+
+    /*
+        GET side bar, uses laravel cache storage to retrieve the hubs accessed recently  
+    */
     public static function fetchSidebarData()
     {
         $user = Auth::user();

@@ -90,16 +90,17 @@
         </div>
 
         <div>
-          <input id="{{$topicItem->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{
-            $topicItem->user_upvoted ?
-          'checked' : '' }} name="vote">
-          <label for="{{$topicItem->post_id}}-upvote"
-            class=" peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out ">
+          <input id="{{ $topicItem->post_id }}-upvote" type="checkbox" class="hidden peer/upvote"
+            {{ $topicItem->user_upvoted ? 'checked' : '' }} name="vote"
+            onclick="handleVisitor('{{ route('login') }}')">
+          <label for="{{ $topicItem->post_id }}-upvote"
+            class="peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out">
             <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21,21H3L12,3Z" />
             </svg>
           </label>
         </div>
+        
 
         <span class="mr-2" id="{{ $topicItem->post_id}}-score">
           @php
@@ -110,17 +111,17 @@
         </span>
 
         <div class="">
-          <input id="{{$topicItem->post_id}}-downvote" type="checkbox" class="hidden peer/downvote" {{
-            $topicItem->user_downvoted
-          ?
-          'checked' : '' }} name="vote">
-          <label for="{{$topicItem->post_id}}-downvote"
-            class="cursor-pointer peer-checked/downvote:fill-red-400   hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
+          <input id="{{ $topicItem->post_id }}-downvote" type="checkbox" class="hidden peer/downvote"
+            {{ $topicItem->user_downvoted ? 'checked' : '' }} name="vote"
+            onclick="handleVisitor('{{ route('login') }}')">
+          <label for="{{ $topicItem->post_id }}-downvote"
+            class="cursor-pointer peer-checked/downvote:fill-red-400 hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
             <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21,21H3L12,3Z" />
             </svg>
           </label>
         </div>
+        
 
         <button data-toggle="reply-form" data-target="thread">
           <svg class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"
@@ -165,15 +166,6 @@
 
   @isset($topicItem->post->content)
   <div id="post-content" class="py-4 px-8 flex flex-col gap-4  flex-none">
-    {{-- <div>
-      <a class="flex items-center" href="">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
-          class="max-w-full rounded-3xl min-w-[32px] mr-3  w-[32px]">
-        <span class="underline-effect">@anonymous</span>
-      </a>
-    </div> --}}
-    {{-- ml-[{{ $index * 18 }}px] --}}
-
     <div id="contributors-container" class="flex items-center space-x-2">
       <div class="flex -space-x-4 rtl:space-x-reverse items-center transition-all" id="contributors-images">
         @foreach($topicItem->post->authors->take(4) as $author)
@@ -217,43 +209,6 @@
     @include('partials.text_editor_md', [
     'id' => 'thread'
     ])
-
-    {{-- <div id="thread-editor" class="px-8 py-6 hidden">
-      <div class="flex flex-row gap-4">
-        <input type="radio" name="toggle" id="editor-write-toggle" class="hidden peer/write" checked />
-        <label for="editor-write-toggle"
-          class="underline-effect cursor-pointe  peer-checked:aria-selected peer-checked/write:font-bold">
-          write
-        </label>
-
-        <input type="radio" name="toggle" id="editor-preview-toggle" class="hidden peer/preview" />
-        <label for="editor-preview-toggle"
-          class="underline-effect cursor-pointer peer-checked:aria-selected peer-checked/preview:font-bold">
-          preview
-        </label>
-      </div>
-
-      <div class="flex flex-col h-full mt-2">
-        <!-- Textarea for Markdown Input -->
-        <textarea id="editor-thread-input" rows="6"
-          class=" w-full p-4 bg-inherit focus:outline-none resize-none font-mono text-sm border border-1 rounded-lg border-[#3C3D37]  hover:resize-y"></textarea>
-
-        <!-- Markdown Preview -->
-        <div id="editor-thread-preview"
-          class="hidden p-4 break-words max-h-80 h-full font-vollkorn overflow-y-auto prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] border border-1 rounded-lg border-[#3C3D37]">
-        </div>
-      </div>
-      <div class="justify-end flex gap-4 mt-4">
-        @include('partials.button', [
-        'id' => 'cancel-thread-btn',
-        'slot' => 'Cancel'
-        ])
-        @include('partials.button', [
-        'id' => 'submit-thread-btn',
-        'slot' => 'Submit'
-        ])
-      </div>
-    </div> --}}
   </div>
 
   {{-- comments --}}
@@ -278,298 +233,6 @@
     // document.getElementById('post-content').classList.add(`bg-${randomColor}`)
 </script>
 
-@endsection
-
-<script>
-  // // Function to convert markdown to HTML
-    // function markdownToHTML(markdown) {
-    // const headingClasses = {
-    //     1: "m-0 text-4xl font-bold",
-    //     2: "m-0 text-3xl font-bold",
-    //     3: "m-0 text-2xl font-bold",
-    //     4: "m-0 text-xl font-bold",
-    //     5: "m-0 text-lg font-bold",
-    //     6: "m-0 text-base font-bold",
-    // } 
-
-    // return markdown
-    //     .replace(/^(#{1,6})\s*(.+)$/gm, (_, hashes, content) =>
-    //         `<h${hashes.length} class="${headingClasses[hashes.length]}">${content}</h${hashes.length}>`
-    //     ) // Headings
-    //     .replace(/^>\s*(.+)$/gm, 
-    //         `<blockquote class="prose-blockquote border-l-4 border-[#4793AF]/[.50] pl-4 italic text-gray-700">$1</blockquote>`
-    //     ) // Blockquotes
-    //     .replace(/-{3,}/g, '<hr class="my-4 border-[#4793AF]/[.50]"/>')
-    //     .replace (/\[([^\[]+)\]\(([^\)]+)\)/g, '<a href=\'\$2\'>\$1</a>')
-    //     .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>') // Bold
-    //     .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>') // Italics
-    //     .replace(/`(.*?)`/g, '<code class="bg-gray-200 p-1 rounded text-[#4793AF]">$1</code>') // Inline Code
-    //     .replace(/^(?!<(h[1-6]|blockquote|hr)[^>]*>).+/gm, '$&<br>')
-    //     .replace(/(<br>\s*){2,}/g, '<br>') // Add <br> for plain text lines
-    // }
-    
-
-
-
-    // const threadPlaceholder = document.getElementById('thread-placeholder') 
-    // const threadEditor = document.getElementById('thread-editor') 
-    
-    // threadPlaceholder.addEventListener('click', function () {
-    //   threadPlaceholder.classList.add('hidden')
-    //   threadEditor.classList.remove('hidden') 
-    // }) 
-
-    // const replyBtns = document.querySelectorAll("[data-toggle='reply-form']") 
-
-    // replyBtns.forEach(btn => {
-    //   btn.addEventListener('click', event => {
-    //     const targetId = btn.getAttribute('data-target') 
-    //     const targetElement = document.getElementById(targetId) 
-    //     console.log(targetElement)
-    //     if (targetElement.classList.contains('hidden')) {
-    //       targetElement.classList.add("block")
-    //       targetElement.classList.remove("hidden")
-    //     } else 
-    //     {
-    //       targetElement.classList.remove("block")
-    //       targetElement.classList.add("hidden")
-    //     }
-    //   }) 
-    // }) 
-
-    // function setupEditor(id) {
-    //   const editor = document.getElementById(`${id}-editor`)
-    //   const textarea = document.getElementById(`editor-${id}-input`) 
-    //   const preview = document.getElementById(`editor-${id}-preview`) 
-      
-    //   // Tab key behavior for indentation in textarea
-    //   textarea.addEventListener("keydown", (e) => {
-    //     if (e.key === "Tab") {
-    //       e.preventDefault()  // Prevent default tab behavior (focus shift)
-
-    //       const start = textarea.selectionStart 
-    //       const end = textarea.selectionEnd 
-
-    //       // Insert tab character
-    //       textarea.value = textarea.value.substring(0, start) + "  " + textarea.value.substring(end) 
-
-    //       // Move the cursor after the inserted tab
-    //       textarea.selectionStart = textarea.selectionEnd = start + 2 
-    //     }
-    //   }) 
-
-    //   // Live preview: update the HTML preview on input change
-    //   textarea.addEventListener('input', (e) => {
-    //     const markdownText = e.target.value 
-    //     preview.innerHTML = markdownToHTML(markdownText, id) 
-    //   }) 
-
-    //   // Toggle editor visibility based on radio button selection
-    //   document.getElementById(`editor-write-toggle-${id}`).addEventListener('change', () => {
-    //     textarea.classList.remove('hidden') 
-    //     preview.classList.add('hidden') 
-    //   }) 
-
-    //   document.getElementById(`editor-preview-toggle-${id}`).addEventListener('change', () => {
-    //     textarea.classList.add('hidden') 
-    //     preview.classList.remove('hidden') 
-    //   }) 
-
-    //   editor.querySelector('[name="cancel-btn"]').addEventListener('click', () => {
-    //     editor.classList.add('hidden')
-
-    //     if (id === 'thread') {
-    //       document.getElementById('thread-placeholder').classList.remove('hidden')
-    //     }
-
-    //     preview.innerHTML = ''
-    //     textarea.value = ''
-    //   })
-    // }
-
-    // // Initialize editor for each specific ID
-    // const editorIds = document.querySelectorAll('[id$="-editor"]')
-
-    // editorIds.forEach(editor => {
-    //   const id = editor.id.replace('-editor', '')  // Extract the unique id (e.g., "comment-1")
-    //   setupEditor(id)  // Setup the editor for this specific instance
-    // }) 
-
-    // const markdownText = document.querySelectorAll('[data-text="markdown"]')
-    // markdownText.forEach(element => {
-    //   element.innerHTML = markdownToHTML(element.textContent)
-    // })
-
-</script>
-
-<script>
-  //   const voteButtons = document.querySelectorAll("input[type='checkbox']");
-
-  // voteButtons.forEach((button) => {
-  //   button.addEventListener("change", async function () {
-  //     const postId = this.id.split("-")[0]; // Extract the post_id from the input's ID
-  //     const voteType = this.id.includes("upvote") ? "upvote" : "downvote";
-  //     const isChecked = this.checked;
-
-  //     try {
-  //       // Make an asynchronous request to update the vote
-  //       const response = await fetch(`/news/${postId}/voteupdate`, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-  //         },
-  //         body: JSON.stringify({
-  //           vote_type: voteType,
-  //         }),
-  //       });
-
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         console.log(data);
-  //         console.log(data.vote === voteType);
-
-  //         // Update the score of the specific post
-  //         const scoreElement = document.getElementById(`${postId}-score`);
-  //         if (scoreElement) {
-  //           let newScore = data.newScore;
-
-  //           // If the score already contains a "k", don't modify it
-  //           if (!scoreElement.textContent.includes("k")) {
-  //             // If the current score doesn't have a "k", add the new score to it
-  //             let currentScore = parseInt(scoreElement.textContent.replace(/[^\d.-]/g, '')); // Get the current numerical score
-  //             newScore = currentScore + newScore; // Add the new score to the existing score
-  //             scoreElement.textContent = newScore >= 1000 ? `${(newScore / 1000).toFixed(1)}k` : newScore;
-  //           }
-  //         }
-
-  //         if (data.vote === voteType) {          
-  //           this.checked = true;
-  //         } else {
-  //           this.checked = false;
-  //         }
-  //       } else {
-  //         console.error("Failed to update the vote:", await response.text());
-  //       }
-  //     } catch (error) {
-  //       console.error("Error while updating the vote:", error);
-  //     }
-  //   });
-  // });
-
-  // const postId = {{ $topicItem->post_id }};
-
-  // // reply comments submit
-  // const nodes = document.querySelectorAll('div[data-parent-id]');
-
-  // nodes.forEach(node => {
-  //   const id = node.getAttribute('data-id');
-  //   const parentId = node.getAttribute('data-parent-id');
-  //   const commentContent = document.getElementById(`editor-${id}-input`);
-  //   const commentHtml = document.getElementById(`editor-${id}-preview`)
-
-  //   const submitBtn = document.getElementById(`${id}-editor`).querySelector("[name='submit-btn']");
-
-  //   // Make the event handler async
-  //   submitBtn.addEventListener('click', async () => {  // Use async here
-  //     // Prepare the data to send in the body of the request
-  //     const data = {
-  //       content: commentContent.value,
-  //       parent_comment_id: id,  // If parentId is "null", set it to null
-  //     };
-
-  //     try {
-  //       // Perform the AJAX call using fetch
-  //       const response = await fetch(`/news/${postId}/comment`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // Add CSRF token if needed
-  //         },
-  //         body: JSON.stringify(data), // Send the data in JSON format
-  //       });
-
-  //       if (response.ok) {
-  //         const result = await response.json();
-  //         console.log('Comment successfully posted:', result);
-          
-  //         // Assuming the response contains the ID of the newly created comment
-  //         const commentId = result.comment.id;  // Adjust based on actual response structure
-          
-  //         // Reload the page and append the new comment's ID to the URL
-  //         window.location.href = `${window.location.href.split('#')[0]}#c-${commentId}`;
-  //         location.reload(true)
-          
-  //       } else {
-  //         console.error('Failed to post comment:', await response.text());
-  //       }
-  //     } catch (error) {
-  //       console.error('Error while posting comment:', error);
-  //     }
-  //   })
-  // })
-
-  // const submitNewComment = threadEditor.querySelector('[name="submit-btn"]')
-  // const newCommentContent = document.getElementById('editor-thread-input')
-
-  // submitNewComment.addEventListener('click', async () => {
-  //     const data = {
-  //       content: newCommentContent.value,
-  //       parent_comment_id: null,  
-  //     };
-
-  //     try {
-  //       const response = await fetch(`/news/${postId}/comment`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // Add CSRF token if needed
-  //         },
-  //         body: JSON.stringify(data), // Send the data in JSON format
-  //       });
-
-  //       if (response.ok) {
-  //         const result = await response.json();
-  //         console.log('Comment successfully posted:', result);
-          
-  //         const commentId = result.comment.id;
-          
-  //         window.location.href = `${window.location.href.split('#')[0]}#c-${commentId}`;
-  //         location.reload(true)
-          
-  //       } else {
-  //         console.error('Failed to post comment:', await response.text());
-  //       }
-  //     } catch (error) {
-  //       console.error('Error while posting comment:', error);
-  //     }
-  // })
-
-  // document.getElementById('expand-button')?.addEventListener('click', function () {
-  //   const contributorsContainer = document.getElementById('contributors-images');
-  //   const authors = @json($topicItem->post->authors);
-    
-  //   contributorsContainer.innerHTML = ''; 
-    
-  //   authors.forEach(author => {
-  //     const anchor = document.createElement('a');
-  //     anchor.href = `{{ route('user.profile', ':id') }}`.replace(':id', author.id);
-  //     anchor.className = 'group';
-
-  //     const img = document.createElement('img');
-  //     img.src = `{{ asset('images/user' . ':image_id' . '.jpg') }}`.replace(':image_id', author.image_id);//nao sei mudar nisto :(, depois voltar
-  //     img.alt = author.name;
-  //     img.className = 'w-10 h-10 border-2 border-white rounded-full dark:border-gray-800';
-
-  //     anchor.appendChild(img);
-  //     contributorsContainer.appendChild(anchor);
-  //   });
-
-  //   this.remove();
-  // });
-
-
-</script>
 
 <script>
   function reportTopic() {
@@ -592,3 +255,14 @@
     }
 
 </script>
+
+
+<script>
+  function handleVisitor(loginUrl) {
+    @if (!Auth::check())
+      window.location.href = loginUrl;
+    @endif
+  }
+</script>
+
+@endsection
