@@ -67,24 +67,24 @@ Route::controller(RegisterController::class)->group(function () {
 Route::middleware(['auth', 'check.suspension'])->group(function () {
   // Authenticated User Profile and Actions
   Route::controller(AuthenticatedUserController::class)->group(function () {
-      // Profile Management
-      Route::get('/users/{id}/profile', 'show')->name('user.profile');
-      Route::get('/users/{id}/edit', 'edit')->name('user.edit');
-      Route::post('/users/{id}/update', 'update')->name('user.update');
-      Route::delete('/deletemyaccount', 'deletemyaccount')->name('user.delete');
-      Route::post('/users/{id}', 'destroy')->name('user.destroy');
+    // Profile Management
+    Route::get('/users/{id}/profile', 'show')->name('user.profile');
+    Route::get('/users/{id}/edit', 'edit')->name('user.edit');
+    Route::post('/users/{id}/update', 'update')->name('user.update');
+    Route::delete('/deletemyaccount', 'deletemyaccount')->name('user.delete');
+    Route::post('/users/{id}', 'destroy')->name('user.destroy');
 
-      // Followers & Following
-      Route::get('/users/{id}/followers', 'getFollowers')->name('user.followers');
-      Route::get('/users/{id}/following', 'getFollows')->name('user.following');
-      Route::post('/user/{id}/follow', 'follow')->name('user.follow');
+    // Followers & Following
+    Route::get('/users/{id}/followers', 'getFollowers')->name('user.followers');
+    Route::get('/users/{id}/following', 'getFollows')->name('user.following');
+    Route::post('/user/{id}/follow', 'follow')->name('user.follow');
 
-      // Favorites Management
-      Route::get('/users/{user}/profile/favorites', 'favorites');
-      Route::get('/favorites', 'favorites');
-      Route::post('/favorite/{id}/add', 'addfavorite');
-      Route::post('/favorite/{id}/remove', 'remfavorite');
-      Route::delete('/unfavorites/{id}', 'remfavorite');
+    // Favorites Management
+    Route::get('/users/{user}/profile/favorites', 'favorites');
+    Route::get('/favorites', 'favorites');
+    Route::post('/favorite/{id}/add', 'addfavorite');
+    Route::post('/favorite/{id}/remove', 'remfavorite');
+    Route::delete('/unfavorites/{id}', 'remfavorite');
   });
 });
 
@@ -98,17 +98,18 @@ Route::controller(PostController::class)->group(function () {
 
   // Post Creation and Management
   Route::middleware(['auth', 'check.suspension'])->group(function () {
-      Route::get('/posts/create', 'createPost')->name('post.create');
-      Route::post('/posts', 'create')->name('post.store');
-      Route::delete('/posts/delete/{id}', 'destroy')->name('post.delete');
+    Route::get('/posts/create', 'createPost')->name('post.create');
+    Route::post('/posts', 'create')->name('post.store');
+    Route::delete('/posts/delete/{id}', 'destroy')->name('post.delete');
 
-      // Post Voting
-      Route::post('/news/{post_id}/upvote', 'upvote')->name('news.upvote');
-      Route::post('/news/{post_id}/downvote', 'downvote')->name('news.downvote');
-      Route::post('/news/{post_id}/voteupdate', 'voteUpdate')->name('news.voteupdate');
+    // Post Voting
+    Route::post('/news/{post_id}/upvote', 'upvote')->name('news.upvote');
+    Route::post('/news/{post_id}/downvote', 'downvote')->name('news.downvote');
+    Route::post('/news/{post_id}/voteupdate', 'voteUpdate')->name('news.voteupdate');
 
-      // Post Author Management
-      Route::post('/news/{post}/remove-authors', 'removeAuthors')->name('news.remove-authors');
+    // Post Author Management
+    Route::post('/news/{post}/remove-authors', 'removeAuthors')->name('news.remove-authors');
+    Route::post('/topic/{post_id}/remove-authors', 'removeAuthors')->name('topics.remove-authors');
   });
 });
 
@@ -123,8 +124,8 @@ Route::controller(NewsController::class)->group(function () {
 
   // News Editing and Updating
   Route::middleware(['auth', 'check.suspension'])->group(function () {
-      Route::get('/news/{post_id}/edit', 'edit')->name('news.edit');
-      Route::put('/news/{post_id}', 'update')->name('news.update');
+    Route::get('/news/{post_id}/edit', 'edit')->name('news.edit');
+    Route::put('/news/{post_id}', 'update')->name('news.update');
   });
 });
 
@@ -138,15 +139,14 @@ Route::controller(TopicController::class)->group(function () {
 
   // Topic Editing and Updating
   Route::middleware(['auth', 'check.suspension'])->group(function () {
-      Route::get('/topic/{post_id}/edit', 'edit')->name('topics.edit');
-      Route::put('/topic/{post_id}', 'update')->name('topics.update');
+    Route::get('/topic/{post_id}/edit', 'edit')->name('topics.edit');
+    Route::put('/topic/{post_id}', 'update')->name('topics.update');
 
-      // Topic Author Management
-      Route::post('/topic/{post_id}/remove-authors', 'removeAuthors')->name('topics.remove-authors');
+    // Topic Author Management
 
-      // Topic Approval/Rejection
-      Route::post('/topic/{post_id}/accept', 'accept')->name('topics.accept');
-      Route::post('/topic/{post_id}/reject', 'reject')->name('topics.reject');
+    // Topic Approval/Rejection
+    Route::post('/topic/{post_id}/accept', 'accept')->name('topics.accept');
+    Route::post('/topic/{post_id}/reject', 'reject')->name('topics.reject');
   });
 });
 
@@ -157,14 +157,14 @@ Route::controller(TopicController::class)->group(function () {
 Route::controller(CommentController::class)->group(function () {
   // Comment Management
   Route::middleware(['auth', 'check.suspension'])->group(function () {
-      Route::post('/news/{post_id}/comment', 'store')->name('comments.store');
-      Route::put('/comments/{id}', 'update')->name('comments.update');
+    Route::post('/news/{post_id}/comment', 'store')->name('comments.store');
+    Route::put('/comments/{id}', 'update')->name('comments.update');
   });
 
   // Comment Voting and Deletion
   Route::middleware('auth')->group(function () {
-      Route::post('/comment/{comment_id}/voteupdate', 'voteUpdate')->name('comments.voteupdate');
-      Route::put('/comment/{comment_id}/delete', 'delete')->name('comments.delete');
+    Route::post('/comment/{comment_id}/voteupdate', 'voteUpdate')->name('comments.voteupdate');
+    Route::put('/comment/{comment_id}/delete', 'delete')->name('comments.delete');
   });
 });
 
@@ -175,18 +175,18 @@ Route::controller(CommentController::class)->group(function () {
 Route::middleware(['auth', 'check.suspension', 'check.admin'])->group(function () {
   // Admin routes handled by AdminController
   Route::controller(AdminController::class)->group(function () {
-      Route::get('/admin', 'overview')->name('admin.overview');
-      Route::match(['get', 'post'], '/admin/users', 'users')->name('admin.users');
-      Route::get('/admin/hubs', 'hubs')->name('admin.hubs');
-      Route::get('/admin/posts', 'posts')->name('admin.posts');
-      Route::get('/admin/reports', 'reports')->name('admin.reports');
+    Route::get('/admin', 'overview')->name('admin.overview');
+    Route::match(['get', 'post'], '/admin/users', 'users')->name('admin.users');
+    Route::get('/admin/hubs', 'hubs')->name('admin.hubs');
+    Route::get('/admin/posts', 'posts')->name('admin.posts');
+    Route::get('/admin/reports', 'reports')->name('admin.reports');
 
-      // User management routes
-      Route::post('/users/{id}/suspend', 'suspend')->name('users.suspend');
-      Route::post('/users/{id}/unsuspend', 'unsuspend')->name('users.unsuspend');
-      Route::post('/users/{id}/make_admin', 'makeAdmin')->name('users.make_admin');
-      Route::post('/users/{id}/remove_admin', 'removeAdmin')->name('users.remove_admin');
-      Route::delete('/deleteaccount/{id}', 'deleteUserAccount')->name('admin.delete');
+    // User management routes
+    Route::post('/users/{id}/suspend', 'suspend')->name('users.suspend');
+    Route::post('/users/{id}/unsuspend', 'unsuspend')->name('users.unsuspend');
+    Route::post('/users/{id}/make_admin', 'makeAdmin')->name('users.make_admin');
+    Route::post('/users/{id}/remove_admin', 'removeAdmin')->name('users.remove_admin');
+    Route::delete('/deleteaccount/{id}', 'deleteUserAccount')->name('admin.delete');
   });
 });
 
@@ -251,16 +251,16 @@ Route::middleware(['auth', 'check.suspension'])->group(function () {
 Route::middleware(['auth', 'check.suspension', 'check.moderator'])->group(function () {
   // Moderator-specific routes
   Route::controller(ModeratorController::class)->group(function () {
-      // Moderation overview and sections
-      Route::get('/hub/{id}/moderation', 'overview')->name('moderation.overview');
-      Route::get('/hub/{id}/moderation/users', 'users')->name('moderation.users');
-      Route::get('/hub/{id}/moderation/posts', 'posts')->name('moderation.posts');
-      Route::get('/hub/{id}/moderation/reports', 'reports')->name('moderation.reports');
+    // Moderation overview and sections
+    Route::get('/hub/{id}/moderation', 'overview')->name('moderation.overview');
+    Route::get('/hub/{id}/moderation/users', 'users')->name('moderation.users');
+    Route::get('/hub/{id}/moderation/posts', 'posts')->name('moderation.posts');
+    Route::get('/hub/{id}/moderation/reports', 'reports')->name('moderation.reports');
 
-      // User management within communities
-      Route::post('/users/{user_id}/{community_id}/make_moderator', 'makeModerator')->name('users.make_moderator');
-      Route::post('/users/{user_id}/{community_id}/remove_moderator', 'removeModerator')->name('users.remove_moderator');
-      Route::delete('/users/{user_id}/{community_id}/remove_follower', 'removeFollower')->name('community.remove_follower');
+    // User management within communities
+    Route::post('/users/{user_id}/{community_id}/make_moderator', 'makeModerator')->name('users.make_moderator');
+    Route::post('/users/{user_id}/{community_id}/remove_moderator', 'removeModerator')->name('users.remove_moderator');
+    Route::delete('/users/{user_id}/{community_id}/remove_follower', 'removeFollower')->name('community.remove_follower');
   });
 });
 
@@ -325,4 +325,3 @@ Route::get('/images/{filename}', function ($filename) {
 
   return response()->file($path);
 })->name('images.serve');
-

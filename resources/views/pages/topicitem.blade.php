@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
+@php
+    $bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'];
+    $randomColor = $bgcolors[array_rand($bgcolors)];
+@endphp
+
 <span class="hidden" id="postId">{{$topicItem->post->id}}</span>
 <div class="font-grotesk divide-y-2 divide-[black]">
   @if($topicItem->post->community->privacy &&
@@ -20,7 +26,7 @@
   </div>
   @else
   {{-- news post --}}
-  <div class=" flex flex-row" id="post-header">
+  <div class=" flex flex-row bg-{{$randomColor}}" id="post-header">
     <div class="px-8 py-4 w-1/2 flex flex-col grow">
       <div class="flex items-center h-8 relative">
         <a class="flex items-center"
@@ -185,7 +191,7 @@
 
 
     <div data-text="markdown"
-      class="break-words font-vollkorn max-w-[95%] prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded prose-code:text-[#4793AF]">
+      class="break-words text-[#3C3D37] prose-headings:text-[#3C3D37] prose:text-[#3C3D37] font-vollkorn max-w-[95%] prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded prose-code:text-[#4793AF]">
       {{ $topicItem->post->content }}
     </div>
   </div>
@@ -226,13 +232,6 @@
 
   </div>
 </div>
-<script>
-  const bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'] 
-    const randomColor = bgcolors[Math.floor(Math.random() * bgcolors.length)]
-    document.getElementById('post-header').classList.add(`bg-${randomColor}`)
-    // document.getElementById('post-content').classList.add(`bg-${randomColor}`)
-</script>
-
 
 <script>
   function reportTopic() {

@@ -222,8 +222,8 @@ class PostController extends Controller
 
     $user = Auth::user();
 
-    if (!$post->authors->contains($user->id)) {
-      return response()->json(['message' => 'Unauthorized'], 403);
+    if (!$post->authors->contains($user->id) && !Auth::user()->is_admin && !$post->community->moderators->pluck('id')->contains($user->id)) {
+      return response()->view('errors.403', [], 403);
     }
 
     if ($post->votes()->exists() || $post->comments()->exists()) {
@@ -246,7 +246,7 @@ class PostController extends Controller
     $post->authors()->detach();
     $post->delete();
 
-    return redirect('/global')->with('message', 'Post deleted successfully');
+    return redirect()->back();
   }
 
   

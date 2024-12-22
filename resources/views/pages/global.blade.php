@@ -33,9 +33,5 @@
 @endif
 @endif
 
-<script>
-
-
-</script>
 </div>
 @endsection

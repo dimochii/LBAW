@@ -153,10 +153,24 @@ $activeTab = request()->query('tab', 'news');
           {{ $item->post->comments->count() }}
         </td>
         <td class="px-4 py-4">
-          <button name="delete-button"
-            class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
+          @if ($item->post->upvote_count == 0 && $item->post->downvote_count == 0 && count($item->post->comments()) != 0
+          )
+          <form id="delete-news-form" action="{{ route('post.delete', ['id' => $item->post->id]) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button name="delete-button" type="submit"
+              class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
+              Delete
+            </button>
+          </form>
+          @else
+
+          <button name="disabled-btn"
+            class="px-2 py-1 rounded-md bg-gray-500/[.8] hover:bg-grey-500 text-white font-bold cursor-not-allowed"
+            disabled>
             Delete
           </button>
+          @endif
         </td>
       </tr>
       @endforeach
@@ -186,7 +200,7 @@ $activeTab = request()->query('tab', 'news');
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
           status</th>
         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:bg-gray-200">
-          delete</th>
+          Delete</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200">
@@ -252,10 +266,23 @@ $activeTab = request()->query('tab', 'news');
           @endif
         </td>
         <td class="px-4 py-4">
-          <button name="delete-button"
-            class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
+          @if ($topic->post->upvote_count == 0 && $topic->post->downvote_count == 0 && count($topic->post->comments()) != 0)
+          <form id="delete-topic-form" action="{{ route('post.delete', ['id' => $topic->post->id]) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button name="delete-button" type="submit"
+              class="px-2 py-1 rounded-md bg-red-500/[.80] hover:bg-red-500 text-white font-bold">
+              Delete
+            </button>
+          </form>
+          @else
+          <button name="disabled-btn"
+            class="px-2 py-1 rounded-md bg-gray-500/[.8] hover:bg-grey-500 text-white font-bold cursor-not-allowed"
+            disabled>
             Delete
           </button>
+          @endif
+
         </td>
       </tr>
       @endforeach
