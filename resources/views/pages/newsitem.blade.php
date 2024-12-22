@@ -265,13 +265,7 @@
   {{-- comments --}}
   <div class="flex flex-col px-12 py-4 font-grotesk">
 
-    <div class="relative ml-auto">
-      <input type="checkbox" class="peer hidden" id="sort-options">
-      <label for="sort-options" class="flex font-light justify-center gap-x-1.5">
-        sort by
-      </label>
-
-    </div>
+   
 
     {{-- comments wrapper --}}
     <div class="min-w-72">
