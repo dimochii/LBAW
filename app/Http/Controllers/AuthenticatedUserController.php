@@ -173,11 +173,11 @@ class AuthenticatedUserController extends Controller
     
             if ($authenticatedUser->follows()->where('followed_id', $userToFollow->id)->exists()) {
                 $authenticatedUser->follows()->detach($userToFollow->id);
-    
                 return redirect()->back()->with('success', 'You have unfollowed ' . $userToFollow->name);
-            } else {
+            } 
+            
+            else {
                 $authenticatedUser->follows()->attach($userToFollow->id);
-    
                 return redirect()->back()->with('success', 'You are now following ' . $userToFollow->name);
             }
         }
@@ -255,7 +255,8 @@ class AuthenticatedUserController extends Controller
         if ($user->comments()->exists()) {
             $user->comments()->update(['authenticated_user_id' => $deletedUserId]);
         }
-        //update post ---> solo writer --> deleted user// co-author ---> just remove
+        //update post ---> solo writer --> deleted user is the author
+        // co-author ---> just remove this user from post
         foreach ($user->authoredPosts as $post) {
             $authorCount = $post->authors()->count();
             if ($authorCount === 1) {

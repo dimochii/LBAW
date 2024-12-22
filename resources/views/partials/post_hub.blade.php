@@ -63,10 +63,6 @@ news = Bool
 
     </div>
 
-    {{-- action="{{ route('news.upvote', ['post_id' => $post->post->id]) }}"
-    @if($post->user_upvoted) fill-green-500 @else fill-[#3C3D37] group-hover:fill-blue-400 @endif"
-    --}}
-
     <footer class="flex flex-row mt-auto text-lg gap-2 items-center">
       <div>
       <input id="{{ $post->post_id }}-upvote" type="checkbox" class="hidden peer/upvote" {{ $post->user_upvoted ? 'checked' : '' }} name="vote">

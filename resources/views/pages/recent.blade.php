@@ -2,20 +2,9 @@
 
 @section('content')
 <div class="divide-y-2 divide-black border-b-2 border-black">
-  <!-- Display success message if exists -->
-  {{-- @if(session('success'))
-  <div class="alert alert-success">
-    {{ session('success') }}
-  </div>
-  @endif --}}
+ 
 
-  <!-- Button to go to the post creation page -->
-  {{-- <div style="margin-bottom: 20px;">
-    <a href="{{ route('post.create') }}" class="btn btn-primary">Create New Post</a>
-  </div> --}}
-
-  <!-- Check if there are any news items -->
-
+<!-- Check if there are any news items -->
   @php
   $activeTab = request()->query('tab', 'News'); // Default to 'News'
   @endphp

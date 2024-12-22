@@ -1,42 +1,6 @@
 @extends('layouts.admin')
 
 @section('content')
-{{-- <div class="flex-1 bg-pastelRed h-12 flex items-center pl-2 md:pl-4 relative">
-  <svg class="w-5 h-5 text-[#F4F2ED]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-  </svg>
-  <input id="search-input" type="text" placeholder="search"
-    class="w-full bg-transparent border-none text-[#F4F2ED] placeholder-[#F4F2ED] px-2 md:px-3 py-2 focus:outline-none ">
-</div> --}}
-
-{{-- <div class="p-4">
-  <div class="w-[50%] mx-auto">
-    <x-chartjs-component :chart="$chartHubs" />
-  </div>
-</div>
-
-<div class="p-4 ">
-  <div class="w-[50%] mx-auto">
-    <x-chartjs-component :chart="$chartUsers" />
-  </div>
-</div>
-
-<div class="p-4 ">
-  <div class="w-[50%] mx-auto">
-    <x-chartjs-component :chart="$postsPDay" />
-  </div>
-</div>
-<div class="p-4 ">
-  <div class="w-[50%] mx-auto">
-    <x-chartjs-component :chart="$comboPosts" />
-  </div>
-</div>
-<div class="p-4 ">
-  <div class="w-[50%] mx-auto">
-    <x-chartjs-component :chart="$chartReports" />
-  </div>
-</div> --}}
 
 <div class="flex flex-row p-4">
   <h1 class="font-medium text-5xl tracking-tighter">whatsUP <span class="text-2xl tracking-normal opacity-60">manage</span>
@@ -55,16 +19,6 @@
       <x-chartjs-component :chart="$comboPosts" />
     </div>
   </div>
-
-  {{--
-  'newPosts',
-  'activeHubCount',
-  'activeUserCount',
-  'pendingReports',
-  'userCount',
-  'hubCount',
-  'postsCount'
-  --}}
 
   <div class="px-4 py-4  border-black border-r-2 flex flex-col hover:bg-[#3C3D37] hover:text-[#F4F2ED] transition-all text-[#3C3D37]">
     <div class="text-2xl opacity-80 mb-auto ">new posts</div>
@@ -151,22 +105,5 @@
   </div>
 
 </div>
-
-{{-- <div>
-  <div class="flex flex-col *:p-2">
-    <header class="font-bold text-4xl bg-pastelRed text-[#F4F2ED]">top hubs</header>
-    @foreach ($topHubs as $hub)
-    <div class="grid grid-cols-2 items-center">
-      <a class="flex items-center gap-2" href="{{ route('communities.show', $hub->id) }}">
-        <img src="{{ asset('images/hub' . $hub->image_id . '.jpg') }}" class="rounded-full h-10 w-10">
-        <span class="break-all" data-sort>{{ 'h/' . $hub->name }}</span>
-      </a>
-      <div>
-        {{ $user->followers_count }}
-      </div>
-    </div>
-    @endforeach
-  </div>
-</div> --}}
 
 @endsection
