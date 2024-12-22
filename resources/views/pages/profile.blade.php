@@ -21,6 +21,13 @@
 
     @if ($user->id != 1)
     <div class="flex flex-col items-end bg-red-500">
+      @if (Auth::check() && Auth::user()->can('editProfile', $user) && $user->id !== 1)
+      <a href="{{ route('user.edit', $user->id) }}"
+        class="font-light underline-effect text-lg">
+        edit profile
+      </a>
+      @endif
+
       @if (!Auth::user()->can('editProfile', $user) )
       <button onclick=reportProfile()>
         <svg class="ml-auto h-4 w-4 fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] z-0"
@@ -33,9 +40,6 @@
       @include('partials.report_box',['reported_id' =>$user->id] )
       @endif
 
-      <div>
-        
-      </div>
       {{-- Followers and Following on the Same Line --}}
       <div class="flex space-x-4 text-sm">
         
@@ -70,12 +74,7 @@
       @endif
 
       {{-- Edit Profile Button --}}
-      @if (Auth::check() && Auth::user()->can('editProfile', $user) && $user->id !== 1)
-      <a href="{{ route('user.edit', $user->id) }}"
-        class="text-gray-600 hover:text-blue-600 transition-colors duration-300 text-sm underline">
-        Edit Profile
-      </a>
-      @endif
+      
     </div>
   </div>
 
