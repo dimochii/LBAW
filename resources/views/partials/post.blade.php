@@ -13,17 +13,19 @@ news = Bool
     <header class="flex items-center relative">
       <a class="flex items-center h-8"
         href="{{ route('communities.show', ['id' => $post->post->community->id ?? 'unknown']) }}">
-        <img src="{{ $post->post->community->image_id ? asset($post->post->community->image->path) : 'images/groupdefault.jpg' }}" 
-        onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';" 
+        <img
+          src="{{ $post->post->community->image_id ? asset($post->post->community->image->path) : 'images/groupdefault.jpg' }}"
+          onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
           class="size-8 rounded-full object-cover">
 
-        <span class="text-xl font-light underline-effect-light px-2">h/{{ $post->post->community->name ?? 'Unknown Community'
+        <span class="text-xl font-light underline-effect-light px-2">h/{{ $post->post->community->name ?? 'Unknown
+          Community'
           }}</span>
       </a>
       <span class="ml-2 text-xs font-semibold px-2 py-1 rounded-md 
     {{ $news ? 'bg-pastelBlue text-[#F4F2ED]' : 'bg-pastelGreen text-[#F4F2ED]' }} transition ease-out">
-    {{ $news ? 'News' : 'Topic' }}
-  </span>
+        {{ $news ? 'News' : 'Topic' }}
+      </span>
       <div class="inline cursor-pointer pb-4 group ml-auto z-0">
         <input type="checkbox" class="peer hidden" id="{{$post->post_id}}-options">
         <label for="{{$post->post_id}}-options">
@@ -34,27 +36,27 @@ news = Bool
           </svg>
         </label>
         @if (Auth::check() && Auth::user()->can('isAuthor', $post->post))
-            @if ($news)
-                @include('partials.options_dropdown', [
-                    "options" => [
-                        'edit post' => route('news.edit', ['post_id' => $post->post_id]),
-                        // 'delete post' => route() -> incluir rota para delete
-                    ]
-                ])
-            @else
-                @include('partials.options_dropdown', [
-                    "options" => [
-                        'edit post' => route('topics.edit', ['post_id' => $post->post_id])
-                    ]
-                ])
-            @endif
+        @if ($news)
+        @include('partials.options_dropdown', [
+        "options" => [
+        'edit post' => route('news.edit', ['post_id' => $post->post_id]),
+        // 'delete post' => route() -> incluir rota para delete
+        ]
+        ])
         @else
-            @include('partials.options_dropdown', [
-                "options" => [
-                    'Report post' => "javascript:reportNews()"
-                ]
-            ])
-            @include('partials.report_box', ['reported_id' => $post->post_id])
+        @include('partials.options_dropdown', [
+        "options" => [
+        'edit post' => route('topics.edit', ['post_id' => $post->post_id])
+        ]
+        ])
+        @endif
+        @else
+        @include('partials.options_dropdown', [
+        "options" => [
+        'Report post' => "javascript:reportNews()"
+        ]
+        ])
+        @include('partials.report_box', ['reported_id' => $post->post_id])
         @endif
 
       </div>
@@ -69,7 +71,8 @@ news = Bool
         {{ $post->post->title ?? 'No title available' }}</a>
 
       @if ($post->news_url)
-      {{-- <a href="{{$post->news_url}}" class="inline ml-2 text-sm lg:text-base text-[#3C3D37]/[.7] group-hover/wrapper:text-gray-300 underline-effect-light"
+      {{-- <a href="{{$post->news_url}}"
+        class="inline ml-2 text-sm lg:text-base text-[#3C3D37]/[.7] group-hover/wrapper:text-gray-300 underline-effect-light"
         data-content="news-url">{{$post->news_url}}</a> --}}
       @endif
       @else
@@ -101,14 +104,15 @@ news = Bool
           </svg>
         </label>
       </div>
-      @php 
+      @php
       if(Auth::check()){
-        $userVote = $item->userVote(Auth::user()->id);}
-      else 
+      $userVote = $item->userVote(Auth::user()->id);}
+      else
       $userVote = false;
       @endphp
       <div>
-        <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{($userVote?->upvote ?? false) ?
+        <input id="{{$post->post_id}}-upvote" type="checkbox" class="hidden peer/upvote" {{($userVote?->upvote ?? false)
+        ?
         'checked' : '' }} name="vote">
         <label for="{{$post->post_id}}-upvote"
           class=" peer-checked/upvote:fill-blue-400 cursor-pointer group-hover/wrapper:hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out group-hover/wrapper:fill-[#F4F2ED]">
@@ -126,7 +130,8 @@ news = Bool
       </span>
 
       <div class="">
-        <input id="{{$post->post_id}}-downvote" type="checkbox" class="hidden peer/downvote" {{ ($userVote ? !$userVote->upvote : false) ?
+        <input id="{{$post->post_id}}-downvote" type="checkbox" class="hidden peer/downvote" {{ ($userVote ?
+          !$userVote->upvote : false) ?
         'checked' : '' }} name="vote">
         <label for="{{$post->post_id}}-downvote"
           class="cursor-pointer peer-checked/downvote:fill-red-400  group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
@@ -136,22 +141,49 @@ news = Bool
         </label>
       </div>
 
-      <svg
-        class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
-        viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-        <g id="Layer_2" data-name="Layer 2">
-          <g id="invisible_box" data-name="invisible box">
-            <rect width="48" height="48" fill="none" />
-            <rect width="48" height="48" fill="none" />
-          </g>
-          <g id="icons_Q2" data-name="icons Q2">
-            <path
-              d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
-          </g>
-        </g>
-      </svg>
+      @if ($news)
 
-      <span>{{ $post->comments_count }}</span>
+      <a href="{{ route('news.show',['post_id' => ($post->post->id)]) ?? '#' }}" >
+        <svg
+          class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
+          viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <g id="Layer_2" data-name="Layer 2">
+            <g id="invisible_box" data-name="invisible box">
+              <rect width="48" height="48" fill="none" />
+              <rect width="48" height="48" fill="none" />
+            </g>
+            <g id="icons_Q2" data-name="icons Q2">
+              <path
+                d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
+            </g>
+          </g>
+        </svg>
+      </a>
+
+      @else
+      <a href="{{ route('topic.show',['post_id' => ($post->post->id)]) ?? '#' }}" >
+        <svg
+          class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] group-hover/wrapper:hover:fill-blue-400"
+          viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <g id="Layer_2" data-name="Layer 2">
+            <g id="invisible_box" data-name="invisible box">
+              <rect width="48" height="48" fill="none" />
+              <rect width="48" height="48" fill="none" />
+            </g>
+            <g id="icons_Q2" data-name="icons Q2">
+              <path
+                d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
+            </g>
+          </g>
+        </svg>
+      </a>
+      @endif
+
+
+      <span>{{ count($post->post->comments) }}</span>
+
+
+
 
       <div class="relative ml-auto hidden text-sm lg:text-base sm:block">
         <span>
@@ -159,7 +191,8 @@ news = Bool
           by
         </span>
         @if (count($post->post->authors) === 1)
-        <a data-name="authors" class="underline-effect-light">
+        <a data-name="authors" class="underline-effect-light"
+          href="{{ route('user.profile', $post->post->authors[0]->id) }}">
           {{ $post->post->authors[0]->username ?? 'Unknown' }}
         </a>
         @else
@@ -176,11 +209,10 @@ news = Bool
   @endif
 </div>
 
-<script> 
-
+<script>
+  
 function reportNews() {
-
-const authors = @json($post->post->authors->pluck('id')); 
+  const authors = @json($post->post->authors->pluck('id')); 
   const form = document.getElementById('reportForm'); 
   form.reset();
   authors.forEach(authorId => {
@@ -198,22 +230,22 @@ const authors = @json($post->post->authors->pluck('id'));
 }
 
 function reportTopic() {
-      const authors = @json($post->post->authors->pluck('id')); 
-      const form = document.getElementById('reportForm'); 
-      form.reset();
-      authors.forEach(authorId => {
-        const input = document.createElement('input'); 
-       input.type = 'hidden';
-        input.name = 'reported_user_id[]'; 
-        input.value = authorId; 
-        form.appendChild(input); 
-        });
-      document.getElementById('reportForm').action = '{{ route('report') }}';
-      document.getElementById('report_type').value = 'topic_report';
-      document.getElementById('reported_id').value = '{{ $post->post_id }}';
-      document.getElementById('reportTitle').textContent = 'Report all authors';
-      document.getElementById('reportModal').classList.remove('hidden');
-      
-    }
+  const authors = @json($post->post->authors->pluck('id')); 
+  const form = document.getElementById('reportForm'); 
+  form.reset();
+  authors.forEach(authorId => {
+    const input = document.createElement('input'); 
+    input.type = 'hidden';
+    input.name = 'reported_user_id[]'; 
+    input.value = authorId; 
+    form.appendChild(input); 
+    });
+  document.getElementById('reportForm').action = '{{ route('report') }}';
+  document.getElementById('report_type').value = 'topic_report';
+  document.getElementById('reported_id').value = '{{ $post->post_id }}';
+  document.getElementById('reportTitle').textContent = 'Report all authors';
+  document.getElementById('reportModal').classList.remove('hidden');
+  
+}
 
 </script>

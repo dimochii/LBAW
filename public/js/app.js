@@ -154,20 +154,34 @@ function addEventListeners() {
     threadPlaceholder.addEventListener('click', function () {
       threadPlaceholder.classList.add('hidden')
       threadEditor.classList.remove('hidden')
+      document.getElementById('editor-thread-input').focus()
     })
 
     replyBtns.forEach(btn => {
       btn.addEventListener('click', event => {
-        const targetId = btn.getAttribute('data-target')
-        const targetElement = document.getElementById(targetId)
-        console.log(targetElement)
-        if (targetElement.classList.contains('hidden')) {
-          targetElement.classList.add("block")
-          targetElement.classList.remove("hidden")
-        } else {
-          targetElement.classList.remove("block")
-          targetElement.classList.add("hidden")
+        const target = btn.getAttribute('data-target')
+        const id = target.split('-')[0]
+
+        if (target == 'thread') {
+          threadPlaceholder.classList.add('hidden')
+          threadEditor.classList.remove('hidden')
+          document.getElementById('editor-thread-input').focus()
+
         }
+        else {
+          const targetElement = document.getElementById(target)
+
+          if (targetElement.classList.contains('hidden')) {
+            targetElement.classList.add("block")
+            targetElement.classList.remove("hidden")
+            document.getElementById(`editor-${id}-input`).focus()
+
+          } else {
+            targetElement.classList.remove("block")
+            targetElement.classList.add("hidden")
+          }
+        }
+
       })
     })
 
