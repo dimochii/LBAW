@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="min-h-screen">
-  <div class="flex flex-row gap-8 p-8 border-b-2 border-black items-center relative min-w-32">
+  <div class="flex flex-row gap-8 p-8 border-b-2 border-black  relative min-w-32">
     <img src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" alt="Profile Image"
       class="rounded-full ring-2 ring-black h-36 w-36 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 object-cover">
     <div class="h-full flex flex-col gap-4 flex-grow">
@@ -20,7 +20,7 @@
     </div>
 
     @if ($user->id != 1)
-    <div class="flex flex-col items-end space-y-4">
+    <div class="flex flex-col items-end bg-red-500">
       @if (!Auth::user()->can('editProfile', $user) )
       <button onclick=reportProfile()>
         <svg class="ml-auto h-4 w-4 fill-[#3C3D37] group-hover/wrapper:fill-[#F4F2ED] z-0"
@@ -33,8 +33,12 @@
       @include('partials.report_box',['reported_id' =>$user->id] )
       @endif
 
+      <div>
+        
+      </div>
       {{-- Followers and Following on the Same Line --}}
       <div class="flex space-x-4 text-sm">
+        
         <a href="{{ route('user.followers', $user->id) }}"
           class="text-gray-700 hover:text-blue-600 transition-colors duration-300 text-xl underline-effect">
           <span class="font-semibold ">{{ $followers->count() ?? 0 }}</span> Followers
