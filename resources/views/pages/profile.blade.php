@@ -2,28 +2,45 @@
 
 @section('content')
 <div class="min-h-screen">
-  <div class="flex flex-row gap-8 p-8 border-b-2 border-black  relative min-w-32">
+  <div class="flex flex-row p-8 border-b-2 border-black  relative min-w-32">
     <img src="{{ asset(isset($user->image->path) ? $user->image->path : 'images/default.jpg') }}" alt="Profile Image"
-      class="rounded-full ring-2 ring-black h-36 w-36 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 object-cover">
-    <div class="h-full flex flex-col gap-4 flex-grow">
+      class="mr-8 rounded-full ring-2 ring-black h-36 w-36 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 object-cover">
+    <div class="h-full flex flex-col gap-2 grow">
       <div class="flex-col flex">
-        <div class="tracking-tighter font-medium text-6xl">{{ $user->name }}</div>
+        <div class="tracking-tighter font-medium text-6xl mb-1">{{ $user->name }}</div>
         <div>{{ '@' . $user->username }}</div>
-        <div class="flex items-center mt-2">
-          
-        </div>
-
       </div>
-      <p class="font-light ">
+      <p class="font-light">
         {{ $user->description }}
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus, fugiat ad aliquid dolorem quas reiciendis molestias accusantium quam neque architecto sed nesciunt vel nemo maxime corrupti, maiores fugit laudantium soluta!
       </p>
+      <div class="mt-4">
+        @if (Auth::check() && Auth::user()->id !== $user->id && $user->id !== 1)
+        @if ($isFollowing)
+        <form action="{{ route('user.follow', $user->id) }}" method="POST" class="w-full">
+          @csrf
+          <button type="submit" class="inline-flex items-center justify-center px-6 py-2  font-medium hover:text-[#F4F2ED] rounded-lg border-2 border-black hover:border-pastelRed hover:bg-pastelRed transition-colors">
+            unfollow -
+          </button>
+        </form>
+        @else
+        <form action="{{ route('user.follow', $user->id) }}" method="POST" class="w-full">
+          @csrf
+          <button type="submit" class="inline-flex items-center justify-center px-6 py-2 font-medium text-[#F4F2ED] rounded-lg bg-black hover:bg-pastelBlue transition-colors">
+            follow +
+          </button>
+        </form>
+        @endif
+        @endif
+      </div>
+      
+
     </div>
 
     @if ($user->id != 1)
-    <div class="flex flex-col items-end bg-red-500">
+    <div class="flex flex-col w-full items-end">
       @if (Auth::check() && Auth::user()->can('editProfile', $user) && $user->id !== 1)
-      <a href="{{ route('user.edit', $user->id) }}"
-        class="font-light underline-effect text-lg">
+      <a href="{{ route('user.edit', $user->id) }}" class="font-light underline-effect text-lg">
         edit profile
       </a>
       @endif
@@ -41,40 +58,21 @@
       @endif
 
       {{-- Followers and Following on the Same Line --}}
-      <div class="flex space-x-4 text-sm">
-        
-        <a href="{{ route('user.followers', $user->id) }}"
-          class="text-gray-700 hover:text-blue-600 transition-colors duration-300 text-xl underline-effect">
-          <span class="font-semibold ">{{ $followers->count() ?? 0 }}</span> Followers
-        </a>
-        <a href="{{ route('user.following', $user->id) }}"
-          class="text-gray-700 hover:text-blue-600 transition-colors duration-300 text-xl underline-effect">
-          <span class="font-semibold">{{ $following->count() ?? 0 }}</span> Following
-        </a>
+      <div class="grid grid-cols-2 mt-auto tracking-tight text-lg text-left items-center">
+        <span class="text-2xl font-medium text-right mr-2">{{ $reputation ?? 0 }}</span>
+        <span class="font-light ">reputation</span>
+
+        <span class="text-2xl font-medium text-right mr-2">{{ $followers->count() ?? 0 }}</span>
+        <a href="{{ route('user.followers', $user->id) }}" class="underline-effect font-light ">followers</a>
+
+        <span class="text-2xl text-right mr-2">{{ $following->count() ?? 0 }}</span>
+        <a href="{{ route('user.following', $user->id) }}" class="underline-effect font-light ">following</a>
       </div>
 
-      @if (Auth::check() && Auth::user()->id !== $user->id && $user->id !== 1)
-      @if ($isFollowing)
-      <form action="{{ route('user.follow', $user->id) }}" method="POST" class="w-full">
-        @csrf
-        <button type="submit" class="w-full border-2 border-black px-6 py-2 bg-gray-500 text-white object-cover rounded-full 
-                  hover:bg-gray-600 transition-all duration-300 font-semibold">
-          Following
-        </button>
-      </form>
-      @else
-      <form action="{{ route('user.follow', $user->id) }}" method="POST" class="w-full">
-        @csrf
-        <button type="submit" class="w-full border-2 border-black px-6 py-2 bg-pastelBlue text-white object-cover rounded-full 
-                  hover:bg-green-700 transition-all duration-300 font-semibold">
-          Follow
-        </button>
-      </form>
-      @endif
-      @endif
+      
 
       {{-- Edit Profile Button --}}
-      
+
     </div>
   </div>
 

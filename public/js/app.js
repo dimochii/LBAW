@@ -1649,7 +1649,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', function () {
   const postForm = document.getElementById('update-post-form')
 
-  if (authorsContainer) {
+  if (postForm) {
     const postId = postForm.getAttribute('data-post-id')
     const authorsContainer = document.querySelector('ul.authors-list');
     const postType = postForm.getAttribute('data-post-type')

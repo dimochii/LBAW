@@ -10,7 +10,7 @@ $activeTab = request()->query('tab', 'news'); // Default to 'News'
   <!-- Hub Header -->
   @if($community)
   <div class="border-b-2 border-black max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:px-8">
-    <div class="flex items-start gap-6">
+    <div class="flex gap-6 justify-between">
       <img src="{{ asset( $community->image->path ?? 'images/groupdefault.jpg') }}"
         onerror="this.onerror=null;this.src='https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png';"
         alt="Community Image"
@@ -75,18 +75,7 @@ $activeTab = request()->query('tab', 'news'); // Default to 'News'
         </div>
 
         <p class="text-gray-600 mt-2 text-sm">{{ $community->description }}</p>
-        <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
-          <div class="flex items-center">
-            <a href="{{ route('community.followers', $community->id) }}">
-              <span class="font-medium text-lg">{{ number_format($followers_count ?? 0, 0) }}</span>
-              <span class="ml-1 text-sm ">followers</span>
-            </a>
-          </div>
-          <div class="flex items-center">
-            <span class="font-medium text-lg">{{ number_format($posts_count ?? 0, 0) }}</span>
-            <span class="ml-1 text-sm t">posts</span>
-          </div>
-        </div>
+
 
         <!-- Sort by and + post button -->
         <div class="flex items-center gap-4 mt-6">
@@ -97,7 +86,7 @@ $activeTab = request()->query('tab', 'news'); // Default to 'News'
             @csrf
             @method('DELETE')
             <button type="submit"
-              class="inline-flex items-center justify-center px-3.5 py-2.5 font-medium text-black border-2 border-black rounded-lg bg-[#F4F2ED]">
+              class="inline-flex items-center justify-center px-6 py-2  font-medium hover:text-[#F4F2ED] rounded-lg border-2 border-black hover:border-pastelRed hover:bg-pastelRed transition-colors">
               unfollow -
             </button>
           </form>
@@ -112,21 +101,21 @@ $activeTab = request()->query('tab', 'news'); // Default to 'News'
           <form id="followForm" action="{{ route('communities.join', $community->id) }}" method="POST" class="inline">
             @csrf
             <button type="submit"
-              class="inline-flex items-center justify-center px-3.5 py-2.5 font-medium text-[#F4F2ED] border-2 border-black rounded-lg bg-black">
+              class="inline-flex items-center justify-center px-6 py-2 font-medium text-[#F4F2ED] rounded-lg bg-black hover:bg-pastelBlue transition-colors">
               follow +
             </button>
           </form>
           @endif
           @else
           <a href="{{ route('login') }}"
-            class="inline-flex items-center justify-center px-3.5 py-2.5 font-medium text-[#F4F2ED] border-2 border-black rounded-lg bg-black">
+            class="inline-flex items-center justify-center px-6 py-2 font-medium text-[#F4F2ED] rounded-lg bg-black hover:bg-pastelBlue transition-colors">
             follow +
           </a>
           @endauth
           @auth
           @if($is_following)
           <a href="{{ route('post.create') }}"
-            class="relative inline-flex items-center justify-center px-3.5 py-2.5 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-black rounded-lg shadow-md group bg-black text-[#F4F2ED] hover:opacity-80">
+            class="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-black rounded-lg shadow-md group bg-black text-[#F4F2ED] hover:opacity-80">
             <span
               class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-pastelGreen group-hover:translate-x-0 ease">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -139,17 +128,20 @@ $activeTab = request()->query('tab', 'news'); // Default to 'News'
               class="absolute flex items-center text-base font-semibold justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
               post +
             </span>
-            <span class="relative text-base font-semibold invisible">+ post</span>
+            <span class="relative text-base font-semibold invisible">post +</span>
           </a>
 
 
           @endif
           @endauth
-
-
-
-
         </div>
+      </div>
+      <div class="grid grid-cols-2 mt-auto tracking-tight text-lg text-left items-center">
+        <span class="text-2xl font-medium text-right mr-2">{{ number_format($followers_count ?? 0, 0) }}</span>
+        <a href="{{ route('community.followers', $community->id) }}" class="underline-effect font-light ">followers</a>
+
+        <span class="text-2xl text-right mr-2">{{ number_format($posts_count ?? 0, 0) }}</span>
+        <span class="font-light ">posts</span>
       </div>
     </div>
   </div>
@@ -192,8 +184,7 @@ $activeTab = request()->query('tab', 'news'); // Default to 'News'
   <div>
     <!-- Posts Grid -->
     <div class="divide-y-2 border-b-2 border-black divide-black">
-      @if ($activeTab === 'news')
-      @if ($newsPosts->count() > 0)
+      @if ($activeTab === 'news' && $newsPosts->count() > 0)
       @foreach ($newsPosts as $post)
       @include('partials.post', [
       'news' => 'true',
@@ -201,16 +192,13 @@ $activeTab = request()->query('tab', 'news'); // Default to 'News'
       'post' => $post->news,
       ])
       @endforeach
-      @endif
-      @elseif ($activeTab === 'topics')
-      @if ($topicPosts->count() > 0)
+      @elseif ($activeTab === 'topics' && $topicPosts->count() > 0)
       @foreach ($topicPosts as $post)
       @if ($community->moderators->pluck('id')->contains(Auth::user()->id) || Auth::user()->is_admin ||
       $post->topic->status->value === 'accepted')
       @include('partials.post', ['news' => false, 'post' => $post->topic, 'img' => false, 'item' => $post])
       @endif
       @endforeach
-      @endif
       @else
       <div class="text-center py-12 bg-white rounded-xl shadow-sm">
         <p class="text-gray-500">No posts available in this hub yet.</p>
