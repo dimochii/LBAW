@@ -35,7 +35,7 @@ class TopicController extends Controller
         $topicItem = Topic::with('post.community')
             ->where('post_id', $post_id)
             ->firstOrFail();
-        if((!Auth::user()->is_admin) && ($topicItem->status != 'accepted')){
+        if(Auth::check() && !Auth::user()->is_admin && ($topicItem->status != 'accepted')){
             return response()->view('errors.403', [], 403);
         }
         // Get upvote and downvote counts
