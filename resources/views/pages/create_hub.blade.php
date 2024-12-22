@@ -127,7 +127,7 @@
                 <div class="preview-container border border-black/10 p-6">
                     <div class="flex items-center mb-4">
                         <div class="relative w-10 h-10 rounded-full overflow-hidden mr-4">
-                            <img src="/api/placeholder/80/80" alt="Community Image" class="w-full h-full object-cover rounded-full" id="preview-image">
+                            <img src="../images/groupdefault.jpg" alt="Community Image" class="w-full h-full object-cover rounded-full" id="preview-image">
                         </div>
                         <div class="flex items-center gap-2">
                             <h3 class="text-3xl font-medium" id="preview-name">Community Name</h3>

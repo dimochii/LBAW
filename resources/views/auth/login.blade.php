@@ -92,17 +92,7 @@
                                     Forgot password?
                                 </a>
                             </p>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <input id="remember" name="remember" type="checkbox"
-                                        {{ old('remember') ? 'checked' : '' }}
-                                        class="h-4 w-4 text-pastelGreen focus:ring-pastelBlue border-gray-300 rounded">
-                                    <label for="remember" class="ml-2 block text-sm text-gray-700">
-                                        Remember me
-                                    </label>
-                                </div>
-                            </div>
-
+                            
                             @if (session('success'))
                                 <div class="rounded-md bg-green-50 p-4">
                                     <div class="flex">
