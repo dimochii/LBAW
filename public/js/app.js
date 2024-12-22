@@ -1648,11 +1648,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', function () {
   const postForm = document.getElementById('update-post-form')
-  const postId = postForm.getAttribute('data-post-id')
-  const authorsContainer = document.querySelector('ul.authors-list');
-  const postType = postForm.getAttribute('data-post-type')
-  
+
   if (authorsContainer) {
+    const postId = postForm.getAttribute('data-post-id')
+    const authorsContainer = document.querySelector('ul.authors-list');
+    const postType = postForm.getAttribute('data-post-type')
     authorsContainer.addEventListener('click', function (event) {
       const removeButton = event.target.closest('.remove-author-btn');
       if (!removeButton) return;
@@ -2009,6 +2009,33 @@ function toggleFavorite(postId) {
     .catch(error => console.error('Error:', error));
 }
 
+
+function updateImagePreview(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const profileImage = document.getElementById('currentProfileImage');
+      if (profileImage) {
+        profileImage.src = e.target.result;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function markAsRead(notificationId) {
+  fetch(`/notifications/${notificationId}/read`, {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+      },
+  }).then(response => {
+      if (response.ok) {
+          location.reload(); 
+      }
+  });
+}
 
 
 

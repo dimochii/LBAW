@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
+@php
+    $bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'];
+    $randomColor = $bgcolors[array_rand($bgcolors)];
+@endphp
+
+
 <span class="hidden" id="postId">{{$newsItem->post->id}}</span>
 <div class="font-grotesk divide-y-2 divide-[black]">
   @if($newsItem->post->community->privacy &&
@@ -18,7 +25,7 @@
   </div>
   @else
   {{-- news post --}}
-  <div class=" flex flex-row" id="post-header">
+  <div class=" flex flex-row bg-{{$randomColor}}" id="post-header" >
     <div class="px-8 py-4 w-1/2 flex flex-col grow">
       <div class="flex items-center h-8 relative">
         <a class="flex items-center"
@@ -46,12 +53,10 @@
           'edit post' => route('news.edit', ['post_id' => $newsItem->post_id]),
           ]
           ])
-
-
           @else
           @include('partials.options_dropdown', [
           "options" => [
-          'report post' => "javascript:reportNews()"
+          'Report post' => "javascript:reportNews()"
           ]
           ])
           @include('partials.report_box',['reported_id' =>$newsItem->post_id])
@@ -84,9 +89,9 @@
         </div>
 
         <div>
-          <input id="{{ $newsItem->post_id }}-upvote" type="checkbox" class="hidden peer/upvote" 
-            {{ $newsItem->user_upvoted ? 'checked' : '' }} name="vote"
-            onclick="handleVisitor('{{ route('login') }}')">
+          <input id="{{ $newsItem->post_id }}-upvote" type="checkbox" class="hidden peer/upvote" {{
+            $newsItem->user_upvoted ? 'checked' : '' }} name="vote"
+          onclick="handleVisitor('{{ route('login') }}')">
           <label for="{{ $newsItem->post_id }}-upvote"
             class="peer-checked/upvote:fill-blue-400 cursor-pointer hover:fill-blue-400 fill-[#3C3D37] transition-all ease-out">
             <svg class="h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -104,9 +109,9 @@
         </span>
 
         <div class="">
-          <input id="{{ $newsItem->post_id }}-downvote" type="checkbox" class="hidden peer/downvote" 
-            {{ $newsItem->user_downvoted ? 'checked' : '' }} name="vote"
-            onclick="handleVisitor('{{ route('login') }}')">
+          <input id="{{ $newsItem->post_id }}-downvote" type="checkbox" class="hidden peer/downvote" {{
+            $newsItem->user_downvoted ? 'checked' : '' }} name="vote"
+          onclick="handleVisitor('{{ route('login') }}')">
           <label for="{{ $newsItem->post_id }}-downvote"
             class="cursor-pointer peer-checked/downvote:fill-red-400 hover:fill-red-400 fill-[#3C3D37] transition-all ease-out">
             <svg class="h-6 rotate-180" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -208,7 +213,7 @@
   {{-- comments --}}
   <div class="flex flex-col px-12 py-4 font-grotesk">
 
-   
+
 
     {{-- comments wrapper --}}
     <div class="min-w-72">
@@ -224,15 +229,6 @@
   @endif
 </div>
 
-
-<script>
-  const bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'] 
-    const randomColor = bgcolors[Math.floor(Math.random() * bgcolors.length)]
-
-    document.getElementById('post-header').classList.add(`bg-${randomColor}`)
-   
-
-</script>
 
 <script>
   function reportNews() {

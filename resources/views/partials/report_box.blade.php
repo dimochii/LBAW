@@ -37,11 +37,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    // Show the modal
-    document.getElementById('reportModal').classList.remove('hidden');
-
-    // Hide the modal
-    document.getElementById('reportModal').classList.add('hidden');
-</script>

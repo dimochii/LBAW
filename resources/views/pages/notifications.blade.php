@@ -74,18 +74,5 @@
     </div>
 </div>
 
-<script>
-    function markAsRead(notificationId) {
-        fetch(`/notifications/${notificationId}/read`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-            },
-        }).then(response => {
-            if (response.ok) {
-                location.reload(); 
-            }
-        });
-    }
-</script>
+
 @endsection
