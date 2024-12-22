@@ -13,6 +13,8 @@
         <div>{{ '@' . $user->username }}</div>
         <div class="flex items-center mt-2">
         <div class="flex items-center mt-2">
+        @if ($user->id != 1)
+
         <div class="flex items-center space-x-4 p-3 border-2 border border-black bg-white">
         <div class="
             {{ $reputation >= 1500 ? 'bg-yellow-400 text-black' : 
@@ -37,9 +39,8 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                   <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
               </svg>
-          @endif
       </div>
-
+      @endif
       <div class="flex flex-col justify-center">
           <span class="font-bold text-lg uppercase tracking-wide 
               {{ $reputation >= 1500 ? 'text-yellow-600' :
@@ -53,13 +54,12 @@
                 ($reputation >= 100 ? 'Contributor' : 
                 ($reputation >= 0 ? 'Lurker' : 'Outcast')))) }}
           </span>
-
           <span class="text-sm text-gray-700 font-medium">
               Reputation: {{ $reputation }}
           </span>
       </div>
   </div>
-
+  @endif
 </div>
 </div>
     
@@ -69,6 +69,7 @@
       </p>
     </div>
 
+    @if ($user->id != 1)
     <div class="flex flex-col items-end space-y-4">
     @if (!Auth::user()->can('editProfile', $user) )
       <button onclick=reportProfile()>
@@ -80,7 +81,7 @@
       </button>
     @endif
     @include('partials.report_box',['reported_id' =>$user->id] )
-
+    @endif
 
       {{-- Followers and Following on the Same Line --}}
       <div class="flex space-x-4 text-sm">
