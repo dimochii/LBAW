@@ -86,7 +86,7 @@ class FeedController extends Controller
     ->whereHas('community', function ($query) {
         $query->where('privacy', false);
     })
-    ->where('creation_date', '>', now()->subHours(72))
+    // ->where('creation_date', '>', now()->subHours(72))
     ->where(function ($query) {
         $query->whereDoesntHave('topic') 
               ->orWhereHas('topic', function ($subQuery) {
@@ -127,7 +127,7 @@ class FeedController extends Controller
 
     $posts = Post::withCount('votes')
       ->whereIn('community_id', $authUser->communities->pluck('id'))
-      ->where('creation_date', '>', now()->subHours(72))
+      // ->where('creation_date', '>', now()->subHours(72))
       ->where(function ($query) {
         $query->whereDoesntHave('topic') 
               ->orWhereHas('topic', function ($subQuery) {

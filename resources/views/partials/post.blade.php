@@ -51,7 +51,7 @@ news = Bool
         @else
             @include('partials.options_dropdown', [
                 "options" => [
-                    'report post' => "javascript:reportNews()"
+                    'Report post' => "javascript:reportNews()"
                 ]
             ])
             @include('partials.report_box', ['reported_id' => $post->post_id])
@@ -69,8 +69,8 @@ news = Bool
         {{ $post->post->title ?? 'No title available' }}</a>
 
       @if ($post->news_url)
-      <a href="{{$post->news_url}}" class="inline ml-2 text-sm lg:text-base text-[#3C3D37]/[.7] group-hover/wrapper:text-gray-300 underline-effect-light"
-        data-content="news-url">{{$post->news_url}}</a>
+      {{-- <a href="{{$post->news_url}}" class="inline ml-2 text-sm lg:text-base text-[#3C3D37]/[.7] group-hover/wrapper:text-gray-300 underline-effect-light"
+        data-content="news-url">{{$post->news_url}}</a> --}}
       @endif
       @else
       <a href="{{ route('topic.show',['post_id' => ($post->post->id)]) ?? '#' }}">

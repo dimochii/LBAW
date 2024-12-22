@@ -9,20 +9,11 @@
   <div class="text-center py-12 bg-white rounded-xl shadow-sm">
     <a class="flex items-center"
       href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
-
-<<<<<<< HEAD
-          <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
-            class="size-8 rounded-full  object-cover  ring-white">
-          <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
-            Community' }}</span>
-        </a>
-=======
       <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
         class="size-8 rounded-full ring-2  ring-white">
       <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
         Community' }}</span>
     </a>
->>>>>>> a51268a7312feae517e1693d5ca2b97f3d227493
     <p class="text-gray-500">This post belongs to a private hub.</p>
   </div>
   @else
@@ -79,7 +70,7 @@
 
       </div>
       <a href="{{ $newsItem->news_url ?? '#' }}">
-        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
+        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">{{
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
 
