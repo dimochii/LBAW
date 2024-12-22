@@ -28,7 +28,7 @@
                            name="title" 
                            class="peer w-full text-4xl font-medium bg-transparent border-b-2 border-black/10 
                                   focus:border-black focus:outline-none pb-2 pt-2 placeholder-transparent
-                                  transition-all duration-300"
+                                  transition-all duration-300 mt-4"
                            placeholder="Enter title" required>
                 </div>
                 <div class="py-2"></div>
@@ -39,7 +39,7 @@
                                   peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-2xl">
                         Select Community <span class="text-red-500">*</span>
                     </label>
-                    <div class="relative group">
+                    <div class="relative group py-4">
                         <select name="community_id"
                                 id="community"
                                 class="peer w-full text-xl font-medium bg-transparent border-b-2 border-black/10
@@ -118,8 +118,8 @@
                     <input type="url" 
                            id="news_url" 
                            name="news_url" 
-                           class="w-full text-xl border-b-2 border-black/10 focus:border-black 
-                                  focus:outline-none pb-2 transition-colors duration-300 rounded-lg"
+                           class="w-full text-lg border-b-2 border-black/10 focus:border-black 
+                                  focus:outline-none py-2 px-2 transition-colors duration-300"
                            placeholder="https://">
                 </div>
 

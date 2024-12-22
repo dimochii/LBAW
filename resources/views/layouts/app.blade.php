@@ -22,7 +22,7 @@
   @vite('resources/css/app.css')
 </head>
 
-<body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk">
+<body class="bg-[#F4F2ED] text-[#3C3D37] font-grotesk ">
   <div class="min-h-screen flex flex-col">
     <!-- Top Header -->
     <header class="flex items-center justify-between h-12 border-b-2 border-black fixed top-0 left-0 right-0 z-50 bg-[#F4F2ED]">
@@ -216,7 +216,7 @@
       </button>
 
       <!-- Left Sidebar -->
-      <aside id="left-sidebar" class="text-[#3C3D37] text-lg fixed inset-y-0 left-0 w-48 bg-[#F4F2ED] border-r-2 border-black z-40 overflow-y-auto max-h-screen transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+      <aside id="left-sidebar" class="[&::-webkit-scrollbar]:hidden text-[#3C3D37] text-lg fixed inset-y-0 left-0 w-48 bg-[#F4F2ED] border-r-2 border-black z-40 overflow-y-auto max-h-screen transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
         <nav class="divide-y-2 divide-black">
           <!-- Primary Links -->
           <div class="pt-14 pb-2">
@@ -294,8 +294,12 @@
         </nav>
       </aside>
 
+      
       <!-- Main Content -->
       <main class="flex-1">
+        {{-- bug das blade templates, sem este include, z-index dos elementos fica partido, este elemento não tem efeito na pagina e resolve problema --}}
+        @include('partials.report_box', ['reported_id' => 1]) 
+
         <section id="content">
           @yield('content')
         </section>

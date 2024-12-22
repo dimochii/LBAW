@@ -10,11 +10,11 @@
     <a class="flex items-center"
       href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
 
-          <img src="{{ asset($topicItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
-            class="size-8 rounded-full object-cover ring-2  ring-white">
-          <span class="text-2xl font-light underline-effect px-2">h/{{ $topicItem->post->community->name ?? 'Unknown
-            Community' }}</span>
-        </a>
+      <img src="{{ asset($topicItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
+        class="size-8 rounded-full object-cover ring-2  ring-white">
+      <span class="text-2xl font-light underline-effect px-2">h/{{ $topicItem->post->community->name ?? 'Unknown
+        Community' }}</span>
+    </a>
     <p class="text-gray-500">This post belongs to a private hub.</p>
     <p>{{Auth::user()->is_admin}} olaaaa</p>
   </div>
@@ -23,12 +23,14 @@
   <div class=" flex flex-row" id="post-header">
     <div class="px-8 py-4 w-1/2 flex flex-col grow">
       <div class="flex items-center h-8 relative">
-      <a class="flex items-center" href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
-        <img src="{{ asset($topicItem->post->community->image->path ?? 'images/groupdefault.jpg') }}" 
-        class="size-8 rounded-full object-cover ring-2  ring-white">
-        <span class="text-2xl font-light underline-effect px-2">h/{{ $topicItem->post->community->name ?? 'Unknown Community' }}</span>
-      </a>
-     
+        <a class="flex items-center"
+          href="{{ route('communities.show', ['id' => $topicItem->post->community->id ?? 'unknown']) }}">
+          <img src="{{ asset($topicItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
+            class="size-8 rounded-full object-cover ring-2  ring-white">
+          <span class="text-2xl font-light underline-effect px-2">h/{{ $topicItem->post->community->name ?? 'Unknown
+            Community' }}</span>
+        </a>
+
         {{--
         <!-- Edit Button (only if the current authenticated user is an author) -->
         @auth
@@ -120,19 +122,21 @@
           </label>
         </div>
 
-        <svg class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"
-          viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-          <g id="Layer_2" data-name="Layer 2">
-            <g id="invisible_box" data-name="invisible box">
-              <rect width="48" height="48" fill="none" />
-              <rect width="48" height="48" fill="none" />
+        <button data-toggle="reply-form" data-target="thread">
+          <svg class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"
+            viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <g id="Layer_2" data-name="Layer 2">
+              <g id="invisible_box" data-name="invisible box">
+                <rect width="48" height="48" fill="none" />
+                <rect width="48" height="48" fill="none" />
+              </g>
+              <g id="icons_Q2" data-name="icons Q2">
+                <path
+                  d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
+              </g>
             </g>
-            <g id="icons_Q2" data-name="icons Q2">
-              <path
-                d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
-            </g>
-          </g>
-        </svg>
+          </svg>
+        </button>
 
         <span>{{ $topicItem->comments_count }}</span>
 
@@ -143,7 +147,8 @@
             {{ $topicItem->post->creation_date ? $topicItem->post->creation_date->diffForHumans() : 'Unknown date' }} by
           </span>
           @if (count($topicItem->post->authors) === 1)
-          <a data-name="authors" class="underline-effect">
+          <a data-name="authors" class="underline-effect"
+            href="{{ route('user.profile', $topicItem->post->authors[0]->id) }}">
             {{ $topicItem->post->authors[0]->username ?? 'Unknown' }}
           </a>
           </a>
@@ -185,10 +190,6 @@
         @endif
       </div>
     </div>
-    <div class="col-start-2 row-start-1">
-      contributors • {{$topicItem->post->creation_date ? $topicItem->post->creation_date->diffForHumans() : 'Unknown
-      date'}}
-    </div>
 
 
     <div data-text="markdown"
@@ -203,14 +204,14 @@
   <div class="gap-y-2">
     <div class="flex flex-row items-center cursor-text p-8" id="thread-placeholder">
       <a class="size-8 rounded-full object-cover " href="">
-        @php 
-          if(Auth::check()) {$image_id = Auth::user()->image_id;}
-          else { $image_id = 1;}
+        @php
+        if(Auth::check()) {$image_id = Auth::user()->image_id;}
+        else { $image_id = 1;}
         @endphp
-        <img src="{{ asset(Auth::user()->image->path  ?? '/images/default.jpg') }}" 
-        class="size-8 rounded-full object-cover ">
+        <img src="{{ asset(Auth::user()->image->path  ?? '/images/default.jpg') }}"
+          class="size-8 rounded-full object-cover ">
       </a>
-      <span class="text-xl font-light">start a thread</span>
+      <span class="text-xl font-light ml-4">start a thread</span>
     </div>
 
     @include('partials.text_editor_md', [

@@ -3,11 +3,11 @@
 @section('content')
 <div class="">
   <!-- Display success message if exists -->
-  @if(session('success'))
+  {{-- @if(session('success'))
   <div class="alert alert-success">
     {{ session('success') }}
   </div>
-  @endif
+  @endif --}}
   <div class="divide-y-2 divide-black border-b-2 border-black">
     @php
     $activeTab = request()->query('tab', 'News'); // Default to 'News'

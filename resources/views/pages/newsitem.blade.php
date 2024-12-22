@@ -9,20 +9,11 @@
   <div class="text-center py-12 bg-white rounded-xl shadow-sm">
     <a class="flex items-center"
       href="{{ route('communities.show', ['id' => $newsItem->post->community->id ?? 'unknown']) }}">
-
-<<<<<<< HEAD
-          <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
-            class="size-8 rounded-full  object-cover  ring-white">
-          <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
-            Community' }}</span>
-        </a>
-=======
       <img src="{{ asset($newsItem->post->community->image->path ?? 'images/groupdefault.jpg') }}"
         class="size-8 rounded-full ring-2  ring-white">
       <span class="text-2xl font-light underline-effect px-2">h/{{ $newsItem->post->community->name ?? 'Unknown
         Community' }}</span>
     </a>
->>>>>>> a51268a7312feae517e1693d5ca2b97f3d227493
     <p class="text-gray-500">This post belongs to a private hub.</p>
   </div>
   @else
@@ -79,7 +70,7 @@
 
       </div>
       <a href="{{ $newsItem->news_url ?? '#' }}">
-        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4">{{
+        <p class="my-4 text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight line-clamp-4 overflow-visible">{{
           $newsItem->post->title ?? 'No title available' }}</p>
       </a>
 
@@ -135,19 +126,21 @@
           </label>
         </div>
 
-        <svg class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"
-          viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-          <g id="Layer_2" data-name="Layer 2">
-            <g id="invisible_box" data-name="invisible box">
-              <rect width="48" height="48" fill="none" />
-              <rect width="48" height="48" fill="none" />
+        <button data-toggle="reply-form" data-target="thread">
+          <svg class="cursor-pointer ml-4 h-5 min-w-5 hover:fill-blue-400 transition-all ease-out fill-[#3C3D37]"
+            viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <g id="Layer_2" data-name="Layer 2">
+              <g id="invisible_box" data-name="invisible box">
+                <rect width="48" height="48" fill="none" />
+                <rect width="48" height="48" fill="none" />
+              </g>
+              <g id="icons_Q2" data-name="icons Q2">
+                <path
+                  d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
+              </g>
             </g>
-            <g id="icons_Q2" data-name="icons Q2">
-              <path
-                d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2Z" />
-            </g>
-          </g>
-        </svg>
+          </svg>
+        </button>
 
         <span>{{ $newsItem->comments_count }}</span>
 
@@ -158,7 +151,8 @@
             {{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown date' }} by
           </span>
           @if (count($newsItem->post->authors) === 1)
-          <a data-name="authors" class="underline-effect">
+          <a data-name="authors" class="underline-effect"
+            href="{{ route('user.profile', $newsItem->post->authors[0]->id) }}">
             {{ $newsItem->post->authors[0]->username ?? 'Unknown' }}
           </a>
           @else
@@ -180,7 +174,8 @@
   <div id="post-content" class="py-4 px-8 flex flex-col gap-4  flex-none">
     {{-- <div>
       <a class="flex items-center" href="">
-        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png" class="size-8 rounded-full object-cover ">
+        <img src="https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
+          class="size-8 rounded-full object-cover ">
         <span class="underline-effect">@anonymous</span>
       </a>
     </div> --}}
@@ -202,11 +197,6 @@
         @endif
       </div>
     </div>
-    
-    <div class="text-sm text-gray-600">
-      contributors • {{ $newsItem->post->creation_date ? $newsItem->post->creation_date->diffForHumans() : 'Unknown
-      date' }}
-    </div>
 
     <div data-text="markdown"
       class="break-words font-vollkorn max-w-[95%] prose prose-a:text-[#4793AF]/[.80] hover:prose-a:text-[#4793AF]/[1] prose-blockquote:border-l-4 prose-blockquote:border-[#4793AF]/[.50] prose-code:bg-white/[.50] prose-code:p-1 prose-code:rounded prose-code:text-[#4793AF]">
@@ -224,9 +214,10 @@
         if(Auth::check()) {$image_id = Auth::user()->image_id;}
         else { $image_id = 1;}
         @endphp
-        <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}" class="size-8 rounded-full object-cover ">
+        <img src="{{ asset(Auth::user()->image->path ?? 'images/default.jpg') }}"
+          class="size-8 rounded-full object-cover ">
       </a>
-      <span class=" px-2 text-xl font-light">start a thread</span>
+      <span class=" px-2 text-xl font-light ml-4">start a thread</span>
     </div>
 
     @include('partials.text_editor_md', [
@@ -292,9 +283,7 @@
 
 
 <script>
-
-    
-    const bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'] 
+  const bgcolors = ['pastelYellow', 'pastelGreen', 'pastelRed', 'pastelBlue'] 
     const randomColor = bgcolors[Math.floor(Math.random() * bgcolors.length)]
 
     document.getElementById('post-header').classList.add(`bg-${randomColor}`)
@@ -391,7 +380,7 @@
     // })
 
 </script>
-{{-- 
+{{--
 <script>
   const postId = {{ $newsItem->post_id }};
 

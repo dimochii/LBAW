@@ -14,7 +14,7 @@
     </label>
   </div>
 
-  <div class="flex flex-col mt-2">
+  <div class="flex flex-col mt-2" id="{{$id}}-editors">
     <!-- Textarea for Markdown Input -->
     <textarea id="editor-{{$id}}-input"
       class="min-h-32 w-full p-4 bg-inherit focus:outline-none resize-y font-mono text-sm border border-1 rounded-lg border-[#3C3D37]"></textarea>
