@@ -33,3 +33,10 @@ To test the docker image, run the following command:
 ```
 docker run -d --name lbaw2454 -p 8001:80 gitlab.up.pt:5050/lbaw/lbaw2425/lbaw2454
 ```
+
+
+https://github.com/user-attachments/assets/b6a04726-db65-4dd4-b58b-4c923121e9b0
+
+
+
+
